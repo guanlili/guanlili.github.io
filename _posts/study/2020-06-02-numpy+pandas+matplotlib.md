@@ -1,3 +1,23 @@
+---
+layout: post
+title: "数据分析三件套"
+subtitle: "numpy+pandas+matplotlib"
+author: "guanlili"
+header-img: "img/blog-cover-database.jpg"
+header-img-credit: "@WebdesignerDepot"
+header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
+header-mask: 0.4
+tags:
+  - python
+  - 数据分析
+  - numpy
+  - pandas
+  - matplotlib
+---
+
+> numpy(数据计算)+pandas(数据提取)+matplotlib(可视化图表)
+> 自学数据分析期间的学习笔记。
+
 # numpy+pandas+matplotlib
 
 ## numpy
