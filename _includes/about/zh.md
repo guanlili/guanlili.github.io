@@ -10,3 +10,7 @@ guanlili 的 Blog 就这么开通了。
 
 作为一个程序员， Blog 这种轮子要是挂在大众博客程序上就太没意思了。先后试过很多博客，CSDN，简书，开源中国等，一是觉得大部分 Blog 服务都太丑，二是觉得不能随便定制不好玩。之前因为太懒没有折腾，结果就一直连个写点东西的地儿都没有。
 
+鲁迅说：写博客的最好时间是十年前，其次是现在。
+
+希望可以通过这里，坚持写点东西，技术也好，生活也罢。借用Steve Jobs在史丹佛大学演讲的一句话:“you can't connect the dots looking forward; you can only connect them looking backwards.”
+
