@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "matplotlib学习笔记"
-subtitle: "数据分析三剑客"
+title: "数据分析之可视化展示"
+subtitle: "matplotlib学习笔记"
 author: "guanlili"
 header-img: "img/blog-cover-database.jpg"
 header-img-credit: "@WebdesignerDepot"
@@ -12,20 +12,6 @@ tags:
   - 数据分析
   - matplotlib
 ---
-
-## 数据分析
-
-### 为什么学习数据分析
-
-1.有岗位需求
-
-2.python数据科学的基础
-
-3.是机器学习课程的基础
-
-### 数据分析流程
-
-提出问题-准备数据-分析数据-获得结论-成果可视化
 
 ### matplotlib
 
