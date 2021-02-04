@@ -105,5 +105,16 @@ friends: [
     {
        title: "guanlili Blog",
         href: "https://guanlili.github.io/"
+    },
+      {
+       title: "CSDN",
+        href: "https://blog.csdn.net/outman_1921"
+    },
+      {
+       title: "jianshu",
+        href: "https://www.jianshu.com/u/22690f0de297"
+    },  {
+       title: "OSchina",
+        href: "https://my.oschina.net/u/3551659"
     }
 ]
