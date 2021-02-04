@@ -13,10 +13,10 @@ future: true
 
 # SNS settings
 RSS: false
-weibo_username:     guanlili
+csdn_username:     outman_1921
 zhihu_username:     xiao-li-ge-ge-38
 github_username:    guanlili
-twitter_username:   guanlili
+bilibli_username:   22250450
 #facebook_username:  huxpro
 #linkedin_username:  firstname-lastname-idxxxx
 
