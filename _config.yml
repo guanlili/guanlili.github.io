@@ -99,7 +99,6 @@ service-worker: true
 page-mathjax: false
 
 
-
 # Friends友链
 friends: [
     {
