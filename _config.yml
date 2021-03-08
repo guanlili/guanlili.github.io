@@ -3,7 +3,7 @@ title: guanlili Blog
 SEOTitle: 管礼礼的博客 | guanlili Blog
 header-img: img/home-bg.jpg
 email: lovelose1921@vip.qq.com
-description:  "关于程序与设计、黑客与画家 |  管礼礼，Web & Mobile Lover，Software Engineer，UX Designer | 这里是 @outman管礼礼 的个人博客，与你一起发现更大的世界。"
+description:  "关于程序与设计、测试与开发 |  管礼礼，Web & Mobile Lover，Software Engineer，UX Designer | 这里是 @outman管礼礼 的个人博客，与你一起发现更大的世界。"
 keyword: "管礼礼, outman管礼礼, outman,  outmanpro, @outmanpro, 管礼礼的博客, outman Blog, 博客, 个人网站, 互联网, Web, JavaScript, 前端, 设计"
 url: "http://outman.ink"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
@@ -78,7 +78,7 @@ ga_domain: outman.ink
 
 # Sidebar settings侧边栏
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "管礼礼，想做accepter的loler，热爱技术&生活，简单乐观爱创造。 <br> When you look up at the stars, don't forget to look down at the dust."
+sidebar-about-description: "管礼礼，热爱技术&测试，简单乐观爱创造。 <br> When you look up at the stars, don't forget to look down at the dust."
 sidebar-avatar: /img/avatar-ghl-ny.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
