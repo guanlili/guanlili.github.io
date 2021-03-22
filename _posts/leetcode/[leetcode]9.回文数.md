@@ -41,7 +41,66 @@
 
 ### 我的思路
 
-既然是一个整数，那么可以把每一个数遍历出来，把n个数存到数组里num[0]=num[n-1]，num[1]=num[n-2]以此类推。如果每一个都相等那么就是回文数输出true，如果不相等输出false。
+既然是一个整数，那么可以把每一个数遍历出来，把n个数存到数组里num[0]=num[n-1]，num[1]=num[n-2]以此类推。无论n为奇数还是偶数都判断n/2次，故不需要分情况讨论。如果每一个都相等那么就是回文数输出true，如果不相等输出false。
 
-分两种情况：当n为奇数和偶数两种情况讨论。
+### 我的代码
 
+```go
+func isPalindrome(x int)bool{
+   s :=strconv.Itoa(x)
+   n := len(s)
+   flag:=false
+   if n==1{
+      return true //只有一个数的时候返回true
+   } else {
+      numSlice := strings.Split(s, "")
+      for i:=0;i<n/2;i++ {
+         if numSlice[i]== numSlice[n-i-1]{
+            flag=true
+         }else {
+            flag= false
+            break
+            }
+      }
+   }
+   return flag
+}
+```
+
+### 自我评价
+
+第一时间想到了这个方法，转成字符串可以方便统计长度，来判断是否回文。不过缺点是需要开辟额外的空间来存放新的字符串。第一次提交错误了。原因是得到false后忘记break，导致判断flase后还可以判断为true如100021，加上break判断就成功了。**以后做题先考虑临界条件。**如本题中的负数，末尾为0，个位数。
+
+ps：一个回文数写了半天，还不如大一的时候学习acm的水平。呜呜呜呜～不过还是要擦干泪水继续向前。加油少年～
+
+### 其他思路
+
+a完之后总觉得自己的方法有点蠢，去leetcode里看别的思路。官方还推荐一种做法是将数字本身反转，然后将反转后的数字与原始数字进行比较，如果它们是相同的，那么这个数字就是回文。但是，如果反转后的数字大于 \text{int.MAX}int.MAX，我们将遇到整数溢出问题。但是可以反转整数的一半，毕竟，如果该数字是回文，其后半部分反转后应该与原始数字的前半部分相同。
+
+```
+func isPalindrome(x int) bool {
+    // 特殊情况：
+    // 如上所述，当 x < 0 时，x 不是回文数。
+    // 同样地，如果数字的最后一位是 0，为了使该数字为回文，
+    // 则其第一位数字也应该是 0
+    // 只有 0 满足这一属性
+    if x < 0 || (x % 10 == 0 && x != 0) {
+        return false
+    }
+    revertedNumber := 0
+    for x > revertedNumber {
+        revertedNumber = revertedNumber * 10 + x % 10
+        x /= 10
+    }
+    // 当数字长度为奇数时，我们可以通过 revertedNumber/10 去除处于中位的数字。
+    // 例如，当输入为 12321 时，在 while 循环的末尾我们可以得到 x = 12，revertedNumber = 123，
+    // 由于处于中位的数字不影响回文（它总是与自己相等），所以我们可以简单地将其去除。
+    return x == revertedNumber || x == revertedNumber / 10
+
+}
+```
+
+复杂度分析
+
+时间复杂度：O(\log n)O(logn)，对于每次迭代，我们会将输入除以 1010，因此时间复杂度为 O(\log n)O(logn)。
+空间复杂度：O(1)O(1)。我们只需要常数空间存放若干变量。
