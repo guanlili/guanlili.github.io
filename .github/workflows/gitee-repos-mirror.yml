@@ -20,7 +20,7 @@ jobs:
     steps:
 
     - name: Mirror the Github organization repos to Gitee.
-      uses: guanlili/hub-mirror-action@v1.0
+      uses: guanlili/guanlili.github.io@master
       with:
         # 必选，需要同步的Github用户（源）
         src: github/guanlili
