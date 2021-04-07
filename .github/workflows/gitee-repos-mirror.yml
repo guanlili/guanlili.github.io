@@ -2,7 +2,7 @@ name: Gitee repos mirror periodic job
 
 on:
 # 如果需要PR触发把push前的#去掉
-#push:
+  push:
   pull_request:
     paths:
     - '.github/workflows/**'
@@ -37,8 +37,8 @@ jobs:
         # static_list: repo_name
         # black_list: 'repo_name,repo_name2'
         # white_list: 'repo_name,repo_name2'
-        account_type: org
+        account_type: user
         timeout: 600
         debug: true
         force_update: true
-        black_list: ""
+        #black_list: ""
