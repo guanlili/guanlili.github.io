@@ -125,7 +125,7 @@ Github Action提供了[2种方式](https://help.github.com/en/actions/automating
 
 ![image-20210405112746555](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210405112746.png)
 
-3. 同理将公钥传到 Gitee 上，这样就可以实现 GitHub 和 Gitee 的通信。
+3. 将公钥（ `id_rsa.pub` ）添加到 `Gitee` 存储库。通过 `Gitee` **个人设置** 中的 `SSH公钥` 创建一个 `hub-mirror` 变量，然后将公钥内容复制到值区域。
 
 ![image-20210405113237067](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210405113237.png)
 
