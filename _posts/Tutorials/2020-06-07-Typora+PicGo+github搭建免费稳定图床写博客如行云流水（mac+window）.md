@@ -45,10 +45,12 @@ window(注意选择PicGo的路径):
 
 ![image-20210203195438354](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210203195438.png)
 
-2.github
+## 2.github图床
 
 账号应该不必说了，没有的去注册一个。
-### 新建一个图床仓库
+
+新建一个图床仓库
+
 如下配置：
 
 ![image-20210203195459842](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210203195459.png)
@@ -62,6 +64,7 @@ window(注意选择PicGo的路径):
 创建完成后复制生成一串字符 token，这个 token 只出现一次，所以要保存一下。
 
 ## 3.PicGo
+
 ### PicGo安装
 下载PicGo网址（请选择最新版本我这里是2.2.2）：https://github.com/Molunerfinn/PicGo/releases
 mac电脑选择dmg
