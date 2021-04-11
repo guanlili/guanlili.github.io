@@ -101,9 +101,13 @@ page-mathjax: false
 
 # Friends友链
 friends: [
+  {
+       title: "cnblog",
+        href: "https://www.cnblogs.com/guanlili/"
+    },
     {
        title: "guanlili Blog",
-        href: "https://guanlili.github.io/"
+        href: "https://guanlili1921.gitee.io/"
     },
       {
        title: "CSDN",
