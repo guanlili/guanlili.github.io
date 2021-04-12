@@ -1,4 +1,4 @@
-[Hux Blog](https://huangxuan.me)
+[guanlili Blog](http://guanlili.github.io)
 ================================
 
 > I never expected this becomes popular.
@@ -43,6 +43,7 @@ Other Resources
 ---------------
 
 Ports
+- [**Huxpro**](https://github.com/Huxpro/huxpro.github.io)
 - [**Hexo**](https://github.com/Kaijun/hexo-theme-huxblog) by @kaijun
 - [**React-SSR**](https://github.com/LucasIcarus/huxpro.github.io/tree/ssr) by @LucasIcarus
 
