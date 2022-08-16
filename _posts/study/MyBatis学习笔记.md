@@ -46,6 +46,19 @@ mybatis提供的功能
 
 总结：mybatis是一个sql映射框架，提供的数据库的操作能力，增强的JDBC，集中精神写sql
 
+```mermaid
+graph TD;
+  MyBatis配置文件-->SqlSessionFactory
+  SqlSessionFactory-->SqlSession
+  SqlSession-->Executor
+  Executor-->MappedStatement
+  MappedStatement-->Datebase
+
+  输入映射-->MappedStatement
+  MappedStatement-->输出映射
+
+```
+
 ## mybatis查询案例
 
 基本步骤
@@ -316,9 +329,45 @@ InputStream in = Resources.getResourceAsStream(config);
 
 
 
-dao
+
+
+为实体类注册别名
 
 
 
 
 
+## dao
+
+DAO 代表常用的数据库交互的数据访问对象。DAOs 提供一种方法来读取数据并将数据写入到数据库中，它们应该通过一个接口显示此功能，应用程序的其余部分将访问它们。
+
+
+
+## mybatis动态代理
+
+在三层架构中，业务逻辑层要通过接口访问数据访问层的功能，动态代理可以实现。
+
+动态代理的实现规范：
+
+1. UserMapper.xml与UserMapper.java的接口必须在同一个目录
+2. UserMapper.xml与UserMapper.java的接口的文件名必须一致，后缀不管
+3. UserMapper.xml文件中的标签id值与UserMapper.java的接口中方法的名称完全一致
+4. UserMapper.xml文件中的标签的parameterType属性值与UserMapper.java的接口中方法的参数类型完全一致
+5. UserMapper.xml文件中的标签的resultType值与UserMapper.java的接口中方法的返回类型完全一致
+6. UserMapper.xml文件中namespace属性必须是接口的完全限定名称com.mapper.UsersMapper
+7. 在SqlMapConfig.xml文件中注册mapper文件时，使用class=接口的完全限定名称com.mapper.UsersMapper
+
+
+
+动态代理访问的步骤
+
+1. 建表Users
+2. 新建maven工程，刷新可视化
+3. 修改目录
+4. 修改pom.xml文件
+5. 添加jdbc.propertis文件到resources目录下
+6. 添加SqlMapConfig.xml文件
+7. 添加实体类
+8. 添加mapper文件夹，新建UserMapper接口
+9. 在mapper文件夹下，新建UsersMapper.xml文件，完成增删改查功能
+10. 添加测试类测试功能
