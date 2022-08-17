@@ -295,10 +295,6 @@ Setting autocommit to false on JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl
 Committing JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@3eb7fc54]
 执行insert结果1
 
-
-
-
-
 ## 主要类的介绍
 
 - Resources：mybatis中的一个类，负责读取配置
