@@ -1,0 +1,285 @@
+# ngrinder压测工具的安装和使用
+
+## 0、说在前面
+
+由于航班保障专项整改专项，要做性能方面的评估和改进，所以需要做压测。
+
+目标：掌握常用压测工具ngrinder，熟悉ngrinder脚本开发方式，方法；将压测需要用到的私服包，统一归纳到本地工程lib引用包。
+
+## 1、nGrinder简介
+
+nGrinder是基于Grinder开源项目，由NHN公司的开发团队进行了重新设计和完善。nGrinder是一款非常易用，有简洁友好的用户界面和controller-agent分布式结构的强大的压力测试工具。
+ nGrinder测试基于python测试脚本(groovy也可)，用户按照一定规范编写测试脚本，controller会将脚本一集需要的资源分发到agent，用jython执行。并且在执行的过程中收集运行情况、相应时间、测试目标服务器的运行情况等。并且保存这些数据生成测试报告，以供查看。
+ 这款框架的一大特点就是非常的简单易用，安装也很容易，可以说是开箱即用。
+
+### 为什么用nGrinder
+
+主流的性能测试工具 LoadRunner JMeter 与 nGrinder对比
+
+Loadrunner
+
+- 基于UI操作，容易上手。早期很流行，功能强大，但是太笨重，安装很麻烦。
+- 不开源，扩展性不高，收费贵。往后的方向肯定是客户端工具逐步向平台化发展，所以已经慢慢被替代了。
+
+JMeter
+
+- 基于UI操作，容易上手，但是编程能力较弱（使用beanshell脚本语言）。
+- 其次JMeter基于线程（单进程，多线程，循环N次），单节点模拟数千用户几乎不可能。支持平台化集成，也诞生了一些开源平台，如*MeterSphere*
+
+nGrinder
+
+- 单节点可支持5000+并发（多进程，多线程）、支持分布式、可监控被测服务器、可录制脚本、开源、平台化
+- 易于二次开发
+- 参数化功能较弱
+- 对测试人员的代码要求较高
+
+| 比较点       | JMeter                                         | Ngrinder                         | LoadRunner                                         |
+| ------------ | ---------------------------------------------- | -------------------------------- | -------------------------------------------------- |
+| 实现语言     | Java                                           | java/python                      | java/VB/C/.NET                                     |
+| 使用方式     | C/S或Command                                   | B/S                              | C/S                                                |
+| 支持分布式   | master/slave                                   | controller/agent                 | master/slave                                       |
+| 开源方式     | 免费，完全开源                                 | 免费，完全开源                   | 收费                                               |
+| 支持协议     | 多种协议                                       | 多种协议                         | 多种协议                                           |
+| 资源监控     | monitor/plugin，如果二开，需要查找plugin的源码 | monitor方式                      | 自带资源监控功能                                   |
+| 社区活跃度   | 文档完善                                       | 有中文社区                       | 网上资料和相关培训很多，购买正版还可以得到技术支持 |
+| 是否需要编码 | 基本不需要                                     | 需要，Jython/Groovy              | 需要                                               |
+| 脚本的维护   | 本地                                           | 内置SVN，可以修改成git           | 本地                                               |
+| 脚本录制     | 可使用BadBoy进行录制                           | 可通过PTS插件进行录制            | 自带录制功能                                       |
+| 可扩展性     | 可增加plugin，输出结果可以再加工，扩展性强     | 可增加plugin，扩展性强           | 通过扩展函数库实现                                 |
+| 安装         | 简单，解压即可                                 | 简单，可以下载安装包或绿色包解压 | 安装包比较大，安装繁琐                             |
+| 平台化       | 有开源或云端的压测平台                         | 本身具备                         | 无                                                 |
+
+### nGrinder组成 
+
+**Controller**
+
+- 分发调度测试任务
+- 协调测试进程
+- 整理和显示测试的统计结果
+- 用户创建和修改脚本
+
+**Monitor**
+
+- 用于监控被测服务器的系统性能（例如：CPU/MEMORY）
+- 必须部署在被测服务器上
+
+**Agent**
+
+- 压测任务的拉取
+- 在代理服务器上加载运行测试进程和线程
+- 监控施压机器的系统性能（例如：CPU/MEMORY/网卡/磁盘）
+
+
+
+### nGrinder工作原理
+
+它由一个Controller 和与它相连的多个 Agent 组成。用户通过web界面管理和控制测试，以及查看测试报告。
+
+Controller 会把测试分发到每个Agent上去执行，用户可以在web管理界面中，设置多个使用多个**线程**或**进程**来并发的执行脚本。
+
+nGrinder的脚本是python语言写的。Controller把这些脚本分发到各个Agent中，然后用Jython来执行。并在执行的过程中，收集运行情况、响应时间、测试目标服务器的运行情况等，并保存数据生成报告。
+
+## 2、nGrinder安装
+
+- 环境要求
+
+  - jdk1.6 以上
+  - tomcat
+  - 端口 16001、12000~12000+、13243(monitor)、8080(tomcat)
+
+- 下载包
+
+  - 下载war包 [https://github.com/naver/ngrinder/releases](http://testingpai.com/forward?goto=https%3A%2F%2Fgithub.com%2Fnaver%2Fngrinder%2Freleases)
+  - 下载tomcat (可选操作)
+
+- 启动服务
+
+  - **方法1**：直接运行
+
+    - java -jar ngrinder-controller-xx.war
+      - 或 java -XX:MaxPermSize=200m -jar ngrinder-controller-xx.war
+
+    - 访问：http://localhost:8080 账户信息：admin/admin
+
+  - **方法2**：采用tomcat运行
+
+    - 解压tomcat包，把ngrinder的war包，放到tomcat的webapps文件夹
+    - 访问：http://localhost:8080/ngrinder-controller-3.4.4 账户信息： admin/admin
+
+![](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820101240960.png)
+
+- **安装Agents\monitor**
+  - 下载： 登录web管理界面，点击顶部导航用户信息，在下拉信息中，选择‘下载代理’，将会自动下载Agent，选择‘下载监控’，将自动下载monitor监控
+
+![image-20220820104526665](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820104526665.png)
+
+
+
+- 解压、启动Agent：双击 run_agent.bat(windows) ‘./run_agent.sh’(linux mac)
+
+```bash
+tar -zxvf ngrinder-agent-3.5.5-p1-localhost.tar
+cd ngrinder-agent
+./run_agent_bg.sh
+```
+
+- 解压、启动monitor：双击 ‘run_monitor.bat’(windows), './run_monitor.sh'(linux mac)
+
+```bash
+tar -zxvf ngrinder-monitor-3.5.5-p1.tar
+cd ngrinder-monitor
+./run_monitor_bg.sh
+```
+
+代理服务启动后，在页面 admin > 代理管理，就能看到代理服务器
+
+![image-20220820105143005](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820105143005.png)
+
+## 3、nGrinder使用
+
+目标：使用nGrinder对url做一个简单的压测。
+
+### 3.1制作测试脚本
+
+ngrinder需要先制作脚本才能进行性能测试，ngrinder支持的测试脚本主要是groovy和jpython，于是我们需要先写测试脚本。
+
+那么我们先简单的做一个简单的性能测试demo，测试目标就是我们本地的Springboot项目。（当然测试百度的网站也可以。）
+
+![image-20220820145312408](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820145312408.png)
+
+脚本名：测试脚本的名称。类型可选[groovy](https://www.w3cschool.cn/groovy/groovy_overview.html)和[jpython](https://www.jython.org/)两种。
+
+被测试的url:http开头的网址。（本地只能写127.0.0.1，不能写localhost，原因以后再研究。）
+
+![image-20220820145209819](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820145209819.png)
+
+点击创建会自动生成一个groovy脚本。
+
+![image-20220820145904647](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820145904647.png)
+
+主要是做了一些初始化的操作。
+
+初始化进程，初始化线程，初始化headers和cookies
+
+| 注解           | 描述                                            | 应用范围      | 用例                                                |
+| -------------- | ----------------------------------------------- | ------------- | --------------------------------------------------- |
+| @BeforeProcess | 定义在进程被调用之前应执行的行为                | static method | 加载被线程共享的资源文件，定义 GTest 等             |
+| @AfterProcess  | 定义在进程被终止之前应执行的行为                | static method | 关闭资源文件                                        |
+| @BeforeThread  | 定义在每个线程被调用之前应执行的行为            | member method | 登录目标系统，建立线程内的一些值，例如，Cookie 处理 |
+| @AfterThread   | 定义在每个线程被终止之前应执行的行为            | member method | 退出系统                                            |
+| @Before        | 定义每个被 @Test 注解的方法被执行前应执行的行为 | member method | 对个被 @Test 注解的方法的共享逻辑、变量设置         |
+| @After         | 定义每个被 @Test 注解的方法被执行后应执行的行为 | member method | 很少使用                                            |
+| @Test          | 定义测试行为，被执行多次                        | member method | 测试体注解                                          |
+
+然后构造最基础的测试脚本，也就是对目标的url发请求。
+
+这里可以点击右上角的验证。下方会出现脚本执行的INFO日志。看到日志中出现返回码200，则证明请求成功。
+
+```
+2022-08-20 15:00:42,165 INFO  http://127.0.0.1:9099/jdbc/userList -> 200 , 206 bytes
+```
+
+### 3.2开始性能测试
+
+脚本已经制作完成了，那么可以进行性能测试啦！
+
+点击上方的性能测试，点击创建测试。
+
+#### 测试配置
+
+![image-20220820150536281](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820150536281.png)
+
+代理：也就是我们本机安装的agent，最大值的数量就是我们安装agent的数量，默认一个agent最多支持3000并发
+
+虚拟用户数：每个代理中的虚拟用户数量，是进程乘以线程的数量。在nGrinder测试中，所有代理都有多个进程和线程来模拟并发用户。
+
+进程数：代理启动的工作进程的数量
+
+线程数：每个工作进程启动的工作线程的数量。
+
+> 想要进行负载测试，需要勾选**Ramp-Up可用** 复选框，然后才能进行负载场景配置
+>
+> 如果您选择了"Enable Ramp-up(使用斜坡)"，您可以指定进程的逐步初始化，递增线程。
+>
+> Ramp-Up：这意味着在每个间隔中增加进程的数量。 
+>
+>  Initial Sleep Time 初始等待时间
+>
+>  Initial Processes ：此属性设置要启动的工作进程的初始数量。  
+>
+> Processes Every ：此属性以毫秒为单位设置代理启动新工作进程的时间间隔。
+>
+> 请记住这是进程加速而不是线程加速!! 所以你必须有足够的过程计数来逐渐增加计数。如果设置1个代理，10进程和2个线程设置1个Ramp-Up，vuser数将增加2，4，6，8 ....如果你设置2个代理，它会是4，8，12，16…
+>
+> 进程的计数应该小于10。太多的进程需要太多的代理内存。因此您可能无法配置非常平滑的渐变。如果你需要更平滑的渐变，请考虑线程渐变。
+
+脚本：使用的测试脚本，选择我们刚刚写好的groovy脚本。
+
+脚本相关资源：空着
+
+目标主机：如果脚本中有服务器地址，则可以不选择目标主机，如果没有，则需要添加目标主机
+
+测试时间：设置目标的压测时间，一般5分钟比较合理。
+
+测试次数：设置目标的压测次数
+
+保存并运行，此时可以设置立即开始or定时任务。
+
+#### 测试过程
+
+在测试过程中关注代理状态和统计数据。
+
+![image-20220820151315022](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820151315022.png)
+
+#### 测试报告
+
+性能测试执行完成后，会生成测试报告。包含我们关注的性能指标和详细的测试结果，对本次压测的想法可以写在测试注释中。
+
+![image-20220820151800590](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820151800590.png)
+
+## 常见问题总结
+
+1.8080端口被占用？
+
+可以指定其他端口
+
+```bash
+java -XX:MaxPermSize=200m -jar ngrinder-controller-xx.war --port 指定端口号
+```
+
+2.想要后台运行
+
+```bash
+nohup java -XX:MaxPermSize=200m -jar ngrinder-controller-xx.war --port 指定端口号 &
+```
+
+3.想要用docker方式部署
+
+```bash
+$ docker run -d -v ~/ngrinder-controller:/opt/ngrinder-controller --name controller -p 80:80 -p 16001:16001 -p 12000-12009:12000-12009 ngrinder/controller
+
+$ docker pull ngrinder/agent
+docker run -d --name agent --link controller:controller ngrinder/agent
+```
+
+4.为什么要部署多个agent?
+
+当线程数量过多的时候，实际的压力可能不会提升。由于agent本身的瓶颈，导致压力下发不下去。 当压力测试结果表现为：线程数量增多，响应时间和tps数却无变化，说明agent本身已经达到瓶颈了，无法再增加更多的压力。 这时候就需要部署多个agent给被测服务。
+
+
+
+这篇文章讲了nGrinder的安装和使用，那么作为测试开发者，相信已经会做简单的压测了。
+
+那么在会使用的基础上如何做平台的二次开发呢？我们下篇见！
+
+
+
+[nGrinder 本地开发环境搭建](http://testingpai.com/article/1598696717752)
+
+[ngrinder-groovy 从数据库中获取数据 (干货继续)](http://testingpai.com/article/1622518092663)
+
+[ngrinder-groovy 读写文件 (纯技术干货，慎入 ~)](http://testingpai.com/article/1622192534448)
+
+
+
+[压力测试平台(nGrinder)入门到精通教程](https://www.jianshu.com/p/07cc702069ec)
