@@ -114,13 +114,110 @@ public class SpingConfig {}
 
 
 
+### @SpringBootApplication
+
+复合注解
+
+```java
+@SpringBootConfiguration
+@EnableAutoConfiguration
+@ComponentScan
+
+public @interface SpringBootConfiguration {
+    @AliasFor(
+        annotation = Configuration.class
+    )
+    boolean proxyBeanMethods() default true;
+}
+说明：使用了SpringBootConfiguration的对象可以当作配置文件来使用。可以使用Bean生命对象，注入到容器
+@EnableAutoConfiguration
+启用自动配置，把java对象配置好，注入到spring容器中，例如可以把mybiats对象创建好，放入到容器中，
+
+@ComponentScan
+扫描器，找到注解，根据注解的功能创建对象，给属性赋值
+默认扫描的包，@ComponentScan所在的类的包和子包。
+```
 
 
 
+## 配置文件
+
+配置文件名称：application
+
+种类：**yaml**、properties
+
+### 多环境配置文件
+
+开发环境、测试环境、线上环境每个环境不同的配置信息。
+
+使用方式：创建多个配置文件，名称规则：application-环境名称.properties(yml)
+
+创建开发环境：application-dev.properties(yml)
+
+测试环境：application-test.properties(yml)
+
+## 使用容器
+
+通过代码，从容器中获取对象。
+
+通过SpringApplication.run(DemoApplication.class, args);的返回值来获取容器。
+
+```
+public static ConfigurableApplicationContext run(Class<?> primarySource, String... args) {
+    return run(new Class[]{primarySource}, args);
+}
+ConfigurableApplicationContext：接口ApplicationContext子接口
+```
+
+## ComnandLineRunner接口，ApplcationRunner接口
+
+这两个接口都有一个run方法，执行时间在容器对象创建好后，自动执行run()方法。
+
+可以完成自定义的在容器对象创建好的操作。
+
+```java
+    public static void main(String[] args) {
+        System.out.println("准备创建容器对象");
+
+        SpringApplication.run(DemoApplication.class, args);
+        System.out.println("容器对象创建之后");
+
+    @Override
+    public void run(String... args) throws Exception {
+        String str = helloService.sayHello("lisi");
+        System.out.println("调用容器中的对象"+str);
+        //可做自定义的操作，比如读取文件，数据库等待
+        System.out.println("在容器创建好后，执行的方法。");
+
+    }
+}
+```
+
+## 3.web组件
+
+拦截器，servlet，filter
+
+### 拦截器
+
+拦截器是SpringMVC中一种对象，能拦截器对Controller的请求。
+
+拦截器框架中有系统的拦截器，还可以自定义拦截器，实现对请求预先处理。
+
+实现自定义拦截器：
+
+1.创建类实现SpringMVC框架的HandlerInterceptor接口。
+
+2.需在SpirngMVC的配置文件中，声明拦截器。
 
 
 
+### Servlet
 
+在springBoot框架中使用Servlet对象。
 
+使用步骤：
 
+创建Servlet类，创建类继承httpServlet
+
+注册Servlet，让框架找到Servlet
 

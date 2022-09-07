@@ -280,6 +280,47 @@ docker run -d --name agent --link controller:controller ngrinder/agent
 
 [ngrinder-groovy 读写文件 (纯技术干货，慎入 ~)](http://testingpai.com/article/1622192534448)
 
-
-
 [压力测试平台(nGrinder)入门到精通教程](https://www.jianshu.com/p/07cc702069ec)
+
+
+
+
+
+
+
+# Groovy 脚本使用指南
+
+### 测试依赖
+
+ngrinder 的 GroovyRunner 对每一个线程只创建一个测试用例对象，而不像 JUnit 那样为每个被 @Test 注释的方法创建单独的测试用例对象。所以，每个被 @Test 注释的方法可以共享成员变量，他们可以相互影响。在 nGrinder 测试用例中，被 @Test 注释的方法很可能依赖前一个被 @Test 注释的方法的执行结果。因此，如果你在成员变量中保存前一个测试方法的结果，那么下一个测试方法中就可以使用此变量，你可以轻松的实现测试依赖性。
+
+```groovy
+private boolean googleResult;
+
+@Test
+public void testGoogle(){
+    googleResult = false;
+    HTTPResponse result = request.GET("http://www.google.com");
+    if (result.statusCode == 301 || result.statusCode == 302) {
+        grinder.logger.warn("Warning. The response may not be correct. The response code was {}.", result.statusCode);
+    } else {
+        assertThat(result.statusCode, is(200));
+    }
+    googleResult = true;
+}
+
+@Test
+public void testYahoo(){
+    if (!googleResult) {
+        grinder.logger.warn("Just return. Because prev google test is failed.");
+        return;
+    }
+    HTTPResponse result = request.GET("http://www.yahoo.com");
+    if (result.statusCode == 301 || result.statusCode == 302) {
+        grinder.logger.warn("Warning. The response may not be correct. The response code was {}.", result.statusCode);
+    } else {
+        assertThat(result.statusCode, is(200));
+    }
+}
+```
+

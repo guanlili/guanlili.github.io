@@ -1,4 +1,4 @@
-# maven学习笔记
+# maven基本知识
 
 ## maven简介
 
@@ -95,7 +95,65 @@ mvn package -Dmaven.test.skip=true
 比如项目开发需要有多个环境，一般为开发，测试，预发，正式4个环境，在pom.xml中的配置如下:
 
 ```
+    <!--实现多环境可移植构建 -->
+    <profiles>
+        <profile>
+            <!-- 本地开发环境 -->
+            <id>dev</id>
+            <properties>
+                <profiles.active>dev</profiles.active>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <!-- 测试环境 -->
+            <id>test</id>
+            <properties>
+                <profiles.active>test</profiles.active>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <!-- 生产环境 -->
+            <id>prod</id>
+            <properties>
+                <profiles.active>prod</profiles.active>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
+    
+    <build>
+        <finalName>xxx</finalName>
 
+        <resources>
+            <resource>
+                <directory>src/main/configs/${profiles.active}</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 ```
 
 profiles 定义了各个环境的变量 id ， filters 中定义了变量配置文件的地址，其中地址中的环境 变量就是上面 profile 中定义的值， resources 中是定义哪些目录下的文件会被配置文件中定义的变 量替换。
@@ -140,3 +198,4 @@ maven_controller用来接收请求，响应数据(war)
 ## Maven的打包操作
 
 对于企业级项目，无论是进行本地测试，还是测试环境测试以及最终的项目上线，都会涉及项目的打 包操作，对于每个环境下项目打包时，对应的项目所有要的配置资源就会有所区别，对于maven 项目，我们可以用过pom.xml 配置的方式来实现打包时的环境选择，相比较其他形式打包工具，通过maven 只需要通过简单的配置，就可以轻松完成不同 环境先项目的整体打包。
+

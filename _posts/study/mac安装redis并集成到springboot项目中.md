@@ -156,3 +156,93 @@ spring:
 
 ```
 
+3、redisController.java
+
+```java
+package com.example.demo_jdbc.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * @version 1.0
+ * @auther guanhongli
+ * @date 2022/8/17 4:04 PM
+ */
+@RestController
+public class RedisController {
+    @Autowired(required = false)
+    private RedisTemplate redisTemplate;
+
+    @GetMapping("/redis/get/{key}")
+    public Object get(@PathVariable("key") String key) {
+        return redisTemplate.opsForValue().get(key);
+    }
+
+    @PostMapping("/redis/set/{key}/{value}")
+    public Object set(@PathVariable("key") String key, @PathVariable("value") String value) {
+        redisTemplate.opsForValue().set(key, value);
+        return "set success";
+    }
+
+    @GetMapping("/redis/del/{key}")
+    public Object del(@PathVariable("key") String key) {
+        redisTemplate.delete(key);
+        return "del success";
+    }
+
+    @PostMapping("/redis/getAndSet/{key}/{value}")
+    public Object getAndSet(@PathVariable("key") String key, @PathVariable("value") String value) {
+        redisTemplate.opsForValue().getAndSet(key, value);
+        return "getAndSet success";
+
+    }
+}
+```
+
+redisConfig.java
+
+```java
+package com.example.demo_jdbc.config;
+
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import javax.annotation.Resource;
+
+
+@Configuration
+public class RedisConfig extends CachingConfigurerSupport {
+
+    @Bean
+    @Resource
+    public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory redisConnectionFactory){
+        //创建RedisTemplate对象
+        RedisTemplate<String,Object> redisTemplate = new RedisTemplate<String,Object>();
+        //设置连接工厂
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        //序列化对象
+        //简单的字符串序列化
+//        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        //jdk序列化
+//        JdkSerializationRedisSerializer jdkSerializationRedisSerializer = new JdkSerializationRedisSerializer();
+        //Json序列化
+        Jackson2JsonRedisSerializer Jackson2JsonRedisSerializer  = new Jackson2JsonRedisSerializer (Object.class);
+        //设置String键的序列化方式
+//        redisTemplate.setKeySerializer(stringRedisSerializer);
+        //设置String值的序列化方式
+        redisTemplate.setValueSerializer(Jackson2JsonRedisSerializer);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        return redisTemplate;
+    }
+}
+```
