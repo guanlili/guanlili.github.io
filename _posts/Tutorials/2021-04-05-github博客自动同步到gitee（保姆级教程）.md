@@ -13,6 +13,24 @@ tags:
 ---
 # github博客自动同步到gitee（保姆级教程）
 
+## 20220907更新
+
+今天突然发现gitee官方新出了**仓库镜像管理**功能，终于可以轻松的自动同步仓库了！使用方法也很简单！
+
+### 1、添加镜像
+
+博客的仓库找到管理-仓库镜像管理-添加镜像
+
+![image-20220907172500968](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220907172500968.png)
+
+### 2、绑定github账号并获取令牌
+
+因为我们是从github（源）到gitee，所以选择Pull，然后选择同步的镜像仓库，绑定私人令牌就可以啦！
+
+![image-20220907172719361](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220907172719361.png)
+
+参考文档：[仓库镜像管理 （ Gitee <-> Github 双向同步）](https://gitee.com/help/articles/4336#article-header0)
+
 ## 前言：
 
 由于国内网访问github实在太慢！虽然在公司可以连接外网访问还算可以，但是回学校想看看博客或者分享给别人的时候经常会崩掉！于是我想可不可以把github博客迁移同步到gitee呢？我期望实现的需求是，依然用github写博客，然后push仓库后可以自动同步到gitee，结合devops流水线的工作原理，无需增加我的操作复杂度，这样国内也可以轻松的访问。完美！
