@@ -27,6 +27,8 @@ tags:
 
 因为我们是从github（源）到gitee，所以选择Pull，然后选择同步的镜像仓库，绑定私人令牌就可以啦！
 
+绑定后当github仓库有更新时，gitee就会自动拉取仓库的镜像了。
+
 ![image-20220907172719361](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220907172719361.png)
 
 参考文档：[仓库镜像管理 （ Gitee <-> Github 双向同步）](https://gitee.com/help/articles/4336#article-header0)
