@@ -1,3 +1,17 @@
+---
+layout: post
+title: "Typora(meimaid)绘制流程图"
+author: "guanlili"
+header-img-credit: "@WebdesignerDepot"
+header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
+header-mask: 0.4
+tags:
+
+  - 流程图
+  - typora
+  - meimaid
+subtitle: "每天上百条私信，我是如何自动发送校招内推进度的...."
+
 # Typora(meimaid)绘制流程图
 
 # 0、说在前面
@@ -90,3 +104,14 @@ Mermaid 官方有一个在线的工具，可以导出 SVG 和 PNG。
 
 [Mermaid 官方在线工具](https://mermaid-js.github.io/mermaid-live-editor)
 
+
+
+
+
+
+
+
+
+drawio开源免费的在线流程图
+
+https://www.diagrams.net/
