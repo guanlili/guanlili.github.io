@@ -21,7 +21,7 @@ tags:
 
 博客的仓库找到管理-仓库镜像管理-添加镜像
 
-![image-20220907172500968](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220907172500968.png)
+![image-20220907172500968](	https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220907172500968.png)
 
 ### 2、绑定github账号并获取令牌
 
@@ -29,7 +29,7 @@ tags:
 
 绑定后当github仓库有更新时，gitee就会自动拉取仓库的镜像了。
 
-![image-20220907172719361](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220907172719361.png)
+![image-20220907172719361](	https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220907172719361.png)
 
 参考文档：[仓库镜像管理 （ Gitee <-> Github 双向同步）](https://gitee.com/help/articles/4336#article-header0)
 
@@ -49,7 +49,7 @@ tags:
 >
 > 原因见https://gitee.com/help/articles/4136#article-header0常见问题1.
 
-![image-20210402200311362](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210402200318.png)
+![image-20210402200311362](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210402200318.png)
 
 同步完成后，查看仓库，点击右上角的服务下的第一个图标，GiteePages，点击进去默认配置部署就好。（无需勾选）
 
@@ -65,7 +65,7 @@ tags:
 >
 > https://gitee.com/oschina/git-osc/issues/IKH12
 
-![image-20210402202500472](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210402202500.png)
+![image-20210402202500472](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210402202500.png)
 
 虽然很简单，但是明显不够丝滑，每一次push代码都需要点一下同步。显然不是我们的预期。
 
@@ -73,7 +73,7 @@ tags:
 
 可以通过本地仓库的形式，同时推送到github和gitee，相当于执行两次commit的操作，push两次。但显然也不是我想要的。
 
-![image-20210402203842701](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210402203842.png)
+![image-20210402203842701](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210402203842.png)
 
 1、首先通过 git remote -v 查看您要同步的仓库的远程库列表，如果在列表中没有您 Gitee 的远程库地址，您需要新增一个地址
 
@@ -111,7 +111,7 @@ eg：git push gitee master
 Github Action提供了[2种方式](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/about-actions#types-of-actions)去实现Action：
 
 - Docker container. 这种方式相当于在Github提供的计算资源起个container，在container里面把功能实现。具体的原理大致如下：
-  ![image-20210402205215202](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210402205241.png)
+  ![image-20210402205215202](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210402205241.png)
 - JavaScript. 这种方式相当于在Github提供的计算资源上，直接用JS脚本去实现功能。
 
 作为以后端开发为主的我们，没太多纠结就选择了第一种类型。关于怎么构建一个Github的Action可以参考Github的官方文档[Building actions](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/building-actions)。官方文档真的写的非常详细了，并且也通了了hello-world级别的入门教程。
@@ -120,7 +120,7 @@ Github Action提供了[2种方式](https://help.github.com/en/actions/automating
 
 而最终的关键实现就是，我们需要定义这个容器运行的脚本，原理很简单：
 
-![image-20210402205304730](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210402205304.png)
+![image-20210402205304730](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210402205304.png)
 
 大致就是以上4步：
 
@@ -143,23 +143,23 @@ Github Action提供了[2种方式](https://help.github.com/en/actions/automating
 
 2. 将私钥传到 GitHub 仓库，通过设置中的 Secrets 创建一个 `GITEE_PRIVATE_KEY` 变量，将私钥内容拷贝到值区域。
 
-![image-20210405112746555](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210405112746.png)
+![image-20210405112746555](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210405112746.png)
 
 3. 将公钥（ `id_rsa.pub` ）添加到 `Gitee` 存储库。通过 `Gitee` **个人设置** 中的 `SSH公钥` 创建一个 `hub-mirror` 变量，然后将公钥内容复制到值区域。
 
-![image-20210405113237067](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210405113237.png)
+![image-20210405113237067](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210405113237.png)
 
 4. 在 Gitee 上创建一个私人令牌（token），这个记得保存，因为它只会出现一次
 
-![image-20210405113429925](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210405113429.png)
+![image-20210405113429925](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210405113429.png)
 
 5. 类似第 2 步，创建一个 `GITEE_TOKEN` 变量，将私人令牌作为值粘贴进去。
 
-![image-20210405113716590](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210405113716.png)
+![image-20210405113716590](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210405113716.png)
 
 6. 新建一个Github workflow，在这个workflow里面使用Gitee Mirror Action，复制gitee-repos-mirror.yml文件修改参数即可。
 
-![image-20210403221537067](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210403221537.png)
+![image-20210403221537067](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210403221537.png)
 
 gitee-repos-mirror.yml
 

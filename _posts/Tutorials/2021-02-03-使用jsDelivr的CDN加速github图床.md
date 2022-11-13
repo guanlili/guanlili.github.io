@@ -18,7 +18,7 @@ CDN有众多，我们选择[jsDelivr](https://www.jsdelivr.com/)。为什么？�
 
 在自定义域名内填入`https://cdn.jsdelivr.net/gh/用户名/图床仓库名` 。
 
-![image-20210410113943855](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210410113944.png)
+![image-20210410113943855](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210410113944.png)
 
 完成此设置之后在使用picgo上传图像时会自动替换外链。
 

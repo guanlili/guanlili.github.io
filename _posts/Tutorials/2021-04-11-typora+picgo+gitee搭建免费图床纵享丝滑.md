@@ -16,31 +16,31 @@
 
 设置图床名称。**注意：在是否开源处选择公开，才能通过网络访问到图片**。**初始化Readme将自动建立master主分支。然后创建**。
 
-![image-20210411131456367](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210411131456.png)
+![image-20210411131456367](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210411131456.png)
 
 **申请私人令牌，用于PicGo的令牌配置**。在右上角的个人头像处点击设置，然后在左边栏点击私人令牌，生成新令牌。（**记得保存！**）
 
-![image-20210411131621993](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210411131622.png)
+![image-20210411131621993](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210411131622.png)
 
 ## 2. PicGo安装及配置
 
 https://github.com/Molunerfinn/PicGo/releases选择最新版下载软件，安装，留意安装路径。
 
-![image-20210411131734427](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210411131734.png)
+![image-20210411131734427](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210411131734.png)
 
 打开picgo,点击插件设置，输入gitee并搜索，安装插件。
 
-![image-20210411132120566](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210411132120.png)
+![image-20210411132120566](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210411132120.png)
 
 安装完成后重启一下PicGo。点击图层设置，选择gitee。需要设置4个选项：repo为你的代码库名称，branch为代码分支，选择主分支master，token为前面申请的gitee私人令牌，path为图床在代码库中的目录，可以设为img，下面的两个选项空着，在提交时默认填入时间来标识图片名称。
 
-![image-20210411132610795](https://cdn.jsdelivr.net/gh/guanlili/PictureBed/img/didimac20210411132610.png)
+![image-20210411132610795](https://blog-1258476669.cos.ap-beijing.myqcloud.com/PictureBed-master-github/img/didimac20210411132610.png)
 
 **点击确认，设为默认图床。**这样关于gitee的图床设置完毕，可以到上传区上传一张图片试试，如果提交后在gitee中可以看到即成功配置。
 
 ## 3.设置typora
 
-![image-20210411140020921](https://gitee.com/guanlili1921/picturebed/raw/master/img/didimac/20210411140021.png)
+![image-20210411140020921](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/didimac/20210411140021.png)
 
 截个图测试一下自动上传了，纵享丝滑！
 

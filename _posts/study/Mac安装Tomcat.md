@@ -6,7 +6,7 @@
 
 版本应该随意。
 
-![image-20220813161305268](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220813161305268.png)
+![image-20220813161305268](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220813161305268.png)
 
 ## 2.解压缩
 
@@ -33,7 +33,7 @@ Tomcat started.  //出现这个就是启动成功
 
 访问方式：地址栏输入: `http://localhost:8080`,若显示如下界面，则表示成功启动；
 
-![image-20220813163858610](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220813163858610.png)
+![image-20220813163858610](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220813163858610.png)
 
 ## 4.关闭Tomcat
 
@@ -69,4 +69,4 @@ Using CATALINA_OPTS:
 
 3.apply即可！
 
-![image-20220813164803937](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220813164803937.png)
+![image-20220813164803937](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220813164803937.png)

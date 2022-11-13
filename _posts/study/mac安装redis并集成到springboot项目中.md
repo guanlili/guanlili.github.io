@@ -15,7 +15,7 @@
 brew install redis
 ```
 
-![image-20220817103423986](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220817103423986.png)
+![image-20220817103423986](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220817103423986.png)
 
 3、 查看安装及配置文件位置
 
@@ -34,7 +34,7 @@ redis-server /usr/local/etc/redis.conf
 redis-server
 ```
 
-![image-20220817103651312](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220817103651312.png)
+![image-20220817103651312](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220817103651312.png)
 
 5、查看redis服务进程
 

@@ -18,13 +18,13 @@
 
 在点对点系统中，消息被保留在队列中。 一个或多个消费者可以消耗队列中的消息，但是特定消息只能由最多一个消费者消费。 一旦消费者读取队列中的消息，它就从该队列中消失。 该系统的典型示例是订单处理系统，其中每个订单将由一个订单处理器处理，但多个订单处理器也可以同时工作。但是对于一个特定的订单，只有其中一个订单处理器可以拿到该订单进行处理。 下图描述了结构。
 
-![image-20210703211734940](https://gitee.com/guanlili1921/picturebed/raw/master/img/didimac/20210703211735.png)
+![image-20210703211734940](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/didimac/20210703211735.png)
 
 ###### 发布 - 订阅消息系统
 
 在发布 - 订阅系统中，消息被保留在主题中。 与点对点系统不同，消费者可以订阅一个或多个主题并使用该主题中的所有消息。 在发布 - 订阅系统中，消息生产者称为发布者，消息使用者称为订阅者。 一个现实生活的例子是Dish电视，它发布不同的渠道，如运动，电影，音乐等，任何人都可以订阅自己的频道集，并获得他们订阅的频道时可用。
 
-![image-20210703211741692](https://gitee.com/guanlili1921/picturebed/raw/master/img/didimac/20210703211741.png)
+![image-20210703211741692](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/didimac/20210703211741.png)
 
 ## 什么是Kafka？
 
@@ -75,7 +75,7 @@ Kafka可以在许多用例中使用。 其中一些列出如下 -
 
 另一种方案，使用环形队列法：
 
-![image-20210703223312958](https://gitee.com/guanlili1921/picturebed/raw/master/img/didimac/20210703223313.png)
+![image-20210703223312958](https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/20210703223313.png)
 
 三个重要的数据结构：
 

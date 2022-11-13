@@ -106,12 +106,12 @@ nGrinder的脚本是python语言写的。Controller把这些脚本分发到各�
     - 解压tomcat包，把ngrinder的war包，放到tomcat的webapps文件夹
     - 访问：http://localhost:8080/ngrinder-controller-3.4.4 账户信息： admin/admin
 
-![](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820101240960.png)
+![](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220820101240960.png)
 
 - **安装Agents\monitor**
   - 下载： 登录web管理界面，点击顶部导航用户信息，在下拉信息中，选择‘下载代理’，将会自动下载Agent，选择‘下载监控’，将自动下载monitor监控
 
-![image-20220820104526665](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820104526665.png)
+![image-20220820104526665](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220820104526665.png)
 
 
 
@@ -133,7 +133,7 @@ cd ngrinder-monitor
 
 代理服务启动后，在页面 admin > 代理管理，就能看到代理服务器
 
-![image-20220820105143005](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820105143005.png)
+![image-20220820105143005](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220820105143005.png)
 
 ## 3、nGrinder使用
 
@@ -145,17 +145,17 @@ ngrinder需要先制作脚本才能进行性能测试，ngrinder支持的测试�
 
 那么我们先简单的做一个简单的性能测试demo，测试目标就是我们本地的Springboot项目。（当然测试百度的网站也可以。）
 
-![image-20220820145312408](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820145312408.png)
+![image-20220820145312408](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220820145312408.png)
 
 脚本名：测试脚本的名称。类型可选[groovy](https://www.w3cschool.cn/groovy/groovy_overview.html)和[jpython](https://www.jython.org/)两种。
 
 被测试的url:http开头的网址。（本地只能写127.0.0.1，不能写localhost，原因以后再研究。）
 
-![image-20220820145209819](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820145209819.png)
+![image-20220820145209819](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220820145209819.png)
 
 点击创建会自动生成一个groovy脚本。
 
-![image-20220820145904647](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820145904647.png)
+![image-20220820145904647](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220820145904647.png)
 
 主要是做了一些初始化的操作。
 
@@ -187,7 +187,7 @@ ngrinder需要先制作脚本才能进行性能测试，ngrinder支持的测试�
 
 #### 测试配置
 
-![image-20220820150536281](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820150536281.png)
+![image-20220820150536281](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220820150536281.png)
 
 代理：也就是我们本机安装的agent，最大值的数量就是我们安装agent的数量，默认一个agent最多支持3000并发
 
@@ -229,13 +229,13 @@ ngrinder需要先制作脚本才能进行性能测试，ngrinder支持的测试�
 
 在测试过程中关注代理状态和统计数据。
 
-![image-20220820151315022](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820151315022.png)
+![image-20220820151315022](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220820151315022.png)
 
 #### 测试报告
 
 性能测试执行完成后，会生成测试报告。包含我们关注的性能指标和详细的测试结果，对本次压测的想法可以写在测试注释中。
 
-![image-20220820151800590](https://gitee.com/guanlili1921/picturebed/raw/master/img/image-20220820151800590.png)
+![image-20220820151800590](https://blog-1258476669.cos.ap-beijing.myqcloud.com/picturebed-master-gitee/img/image-20220820151800590.png)
 
 ## 常见问题总结
 
