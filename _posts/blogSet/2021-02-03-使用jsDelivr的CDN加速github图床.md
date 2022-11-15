@@ -1,3 +1,16 @@
+---
+layout: post
+title: "使用jsDelivr的CDN加速github图床"
+subtitle: "使用jsDelivr的CDN加速github图床"
+author: "guanlili"
+header-img-credit: "@WebdesignerDepot"
+header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
+header-mask: 0.4
+tags:
+  - github
+  - 图床
+---
+
 # 使用jsDelivr的CDN加速github图床
 
 ## 说在前面

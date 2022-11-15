@@ -1,3 +1,18 @@
+---
+layout: post
+title: "typora+picgo+gitee搭建免费图床纵享丝滑"
+subtitle: "typora+picgo+gitee搭建免费图床纵享丝滑"
+author: "guanlili"
+header-img-credit: "@WebdesignerDepot"
+header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
+header-mask: 0.4
+tags:
+  - gitee
+  - 博客
+  - typora
+  - picgo
+---
+
 # typora+picgo+gitee搭建免费图床纵享丝滑
 
 ## 0.写在前面
