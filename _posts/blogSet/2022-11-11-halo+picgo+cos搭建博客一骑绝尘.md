@@ -73,15 +73,7 @@ github博客自动同步到gitee（保姆级教程）
 
 ### 1.1、在 Linux 环境部署halo
 
-[在 Linux 环境部署](https://docs.halo.run/getting-started/install/linux)
-
-> 如果用docker直接按照教程完成。
->
-> 如果像我一样也用宝塔，那么看到「作为服务运行」之前就可以了。
-
-### 1.2、通过宝塔面板配置并托管halo
-
-[halo与宝塔面板配合使用](https://docs.halo.run/getting-started/install/other/bt-panel)
+使用 Docker 部署https://docs.halo.run/getting-started/install/docker
 
 ## 2、初始化halo博客
 
