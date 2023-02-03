@@ -40,7 +40,7 @@
 
 ### 我的代码
 
-```
+```go
 func twoSum(nums []int, target int) []int {
 	n :=len(nums)
 	ans := make([]int, 2)
@@ -81,7 +81,7 @@ func twoSum(nums []int, target int) []int {
 
 这样我们创建一个哈希表，对于每一个 x，我们首先查询哈希表中是否存在 target - x，然后将 x 插入到哈希表中，即可保证不会让 x 和自己匹配。
 
-```
+```go
 func twoSum(nums []int, target int) []int {
     hashTable := map[int]int{}
     for i, x := range nums {
