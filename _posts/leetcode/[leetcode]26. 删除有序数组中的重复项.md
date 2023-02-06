@@ -73,7 +73,7 @@ class Solution {
 
 ### 自我评价：
 
-没有考虑异常处理的情况
+没有考虑异常处理的情况，应该加入：
 
 ```
     if(nums == null || nums.length == 0) return 0;
