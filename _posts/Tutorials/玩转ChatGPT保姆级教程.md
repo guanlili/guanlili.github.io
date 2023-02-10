@@ -1,0 +1,99 @@
+---
+layout: post
+title: "玩转ChatGPT保姆级教程（附常见报错）"
+author: "guanlili"
+header-img-credit: "@WebdesignerDepot"
+header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
+header-mask: 0.4
+tags:
+
+  - ChatGPT
+  - 自然语言处理
+
+subtitle: "流浪地球中的MOSS，还会远吗？"
+---
+# 玩转ChatGPT保姆级教程（附常见报错）
+
+2022年底推出的ChatGPT最近突然爆火，频频热搜，已然破圈成为当前**科技界的顶流明星**。推出仅两个月后，月活已破亿大关，并称这是互联网领域发展20年来，增长最快的消费类应用。
+
+资本的炒作姑且不论，但确实身边各行各业的朋友都在注意ChatGPT，也有好多朋友想体验但是受限于美帝重重阻碍。
+
+**因此这里写一篇保姆级的教程，手把手教你体验ChatGPT！**
+
+## 0、准备工具
+
+- 科学上网，最好是美国IP。「不会的可以后台回复**科学上网**」
+- 注册openai账号「觉得麻烦可以直接公众号后台回复$\textcolor{Red}{chatgpt} $或$\textcolor{Red}{购买账号} $即可使用」
+- 外国邮箱，如gmail、outlook、iCloud邮箱等（中国的好像也行。）
+- 有一个能收到验证码的外国手机号码。如果你没有，就需要注册
+
+## 1、注册短信平台并充值
+
+1、打开 [https://sms-activate.org/](https://sms-activate.org/)点击右上角注册。
+
+![image-20230209103856233](https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20230209103856233.png)
+
+2、注册成功后点击充值。
+
+![image-20230209104010917](https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20230209104010917.png)
+
+## 2、注册 OpenAI 账号
+
+挂上科学访问打开 https://beta.openai.com/signup进行注册，如果没有科学上网会提示无法注册。
+
+> OpenAI's services are not available in your country.
+
+注册成功后会进入验证手机号页面，**选择你下一步短信平台的接码的手机国家**
+
+![image-20230209203951792](https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20230209203951792.png)
+
+## 3、在短信平台接验证码
+
+![image-20230209204027556](https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20230209204027556.png)
+
+点击小购物车，购买完成。
+
+![image-20230209204150381](https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20230209204150381.png)
+
+购买完成点击最上方的「激活」，现在你有一个可以接码的号码了，复制号码到OpenAI验证码界面。
+
+![image-20230209204329265](https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20230209204329265.png)
+
+输入接码号码，点击“send code”
+
+![image-20230209204346008](https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20230209204346008.png)
+
+然后等激活码，如果没有收到可以点OpenAI注册界面再发一次验证码，可以多试几次。
+
+注册完就可以去登录 https://chat.openai.com/auth/login
+
+现在可以愉快的使用ChatGPT了！
+
+![image-20230209204508583](https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20230209204508583.png)
+
+## 4、总结
+
+李梨同学体验了几天，确实一改人工智障的偏见，感知到了ChatGPT 的强大。等深度体验后再详细分享使用感受。
+
+最后！很重要的一点！ChatGPT 所有的数据及内容是基于2021年及2021年之前的。
+
+如果将数据全部开放并且持续学习，**流浪地球中的MOSS，还会远吗？**
+
+![image-20230208215503968](https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20230208215503968.png)
+
+## 5、常见错误
+
+1、OpenAI's services are not available in your country.
+
+> OpenAI服务暂时不支持大陆地区，因此需要科学上网来解决，最好是漂亮国IP。
+>
+> 如果科学上网后依然不行，可以尝试清空浏览器缓存和更换节点。
+
+2、ChatGPT is at capacity right now
+
+> 没啥好办法，负荷人数太多，换个时间刷新试试吧。
+
+3、An error occurred. Either the engine you requested does not exist or there was another issue processing your request. If this issue persists please contact us through our help center at help.openai.com.
+
+> 网页停滞时间久了，刷新重试即可。
+
