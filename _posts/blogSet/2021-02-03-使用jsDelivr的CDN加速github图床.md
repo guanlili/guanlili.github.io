@@ -9,6 +9,7 @@ header-mask: 0.4
 tags:
   - github
   - 图床
+  - 博客搭建
 ---
 
 # 使用jsDelivr的CDN加速github图床

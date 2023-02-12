@@ -9,7 +9,7 @@ header-mask: 0.4
 tags:
   - github
   - gitee
-  - 博客
+  - 博客搭建
 ---
 # github博客自动同步到gitee（保姆级教程）
 

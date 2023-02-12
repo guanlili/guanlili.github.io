@@ -8,7 +8,7 @@ header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-mor
 header-mask: 0.4
 tags:
   - gitee
-  - 博客
+  - 博客搭建
   - typora
   - picgo
 ---

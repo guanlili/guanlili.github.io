@@ -9,7 +9,7 @@ header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-mor
 header-mask: 0.4
 tags:
   - 图床
-  - 博客
+  - 博客搭建
 ---
 # Typora+PicGo+github搭建免费稳定图床写博客如行云流水（mac+window）
 ## 0.前言
