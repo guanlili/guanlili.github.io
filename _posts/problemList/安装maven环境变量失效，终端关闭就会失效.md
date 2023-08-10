@@ -1,3 +1,18 @@
+---
+layout: post
+title: "记mysql+springboot中emoji表情的存储之路"
+subtitle: "遇到的一个bug"
+author: "guanlili"
+header-img: "img/about-bg.jpg"
+header-img-credit: "@WebdesignerDepot"
+header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
+header-mask: 0.4
+tags:
+  - mysql
+  - springboot
+
+---
+
 # 安装maven环境变量失效，终端关闭就会失效
 
 ## 现象描述
