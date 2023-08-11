@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "imock开发指南"
+title: "基于jvm-sandbox的imock开发指南"
 subtitle: "从0到1搭建一个mock平台"
 author: "guanlili"
 header-img: "img/about-bg.jpg"
@@ -13,7 +13,7 @@ tags:
 
 ---
 
-# imock开发指南
+# 基于jvm-sandbox的imock开发指南
 
 团队今年的指标是为公司提供一个方法级的mock平台， 这个重要的任务落在了我的身上。
 
