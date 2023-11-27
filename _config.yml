@@ -16,7 +16,7 @@ RSS: false
 csdn_username:     outman_1921
 zhihu_username:     xiao-li-ge-ge-38
 github_username:    guanlili
-bilibli_username:   22250450
+# bilibli_username:   22250450
 #facebook_username:  huxpro
 #linkedin_username:  firstname-lastname-idxxxx
 
@@ -103,7 +103,7 @@ page-mathjax: false
 friends: [
   {
        title: "cnblog",
-        href: "https://www.cnblogs.com/guanlili11/"
+        href: "https://www.cnblogs.com/guanlili/"
     },
     {
        title: "guanlili Blog",
