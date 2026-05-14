@@ -129,6 +129,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         generateCatalog(".catalog-body");
+        generateCatalog(".catalog-body-mobile");
 
         var toggle = document.querySelector('.catalog-toggle');
         if (toggle) {
@@ -138,6 +139,27 @@
                 if (catalog) catalog.classList.toggle('fold');
             });
         }
+
+        // Mobile catalog drawer
+        var fab = document.getElementById('catalog-fab');
+        var overlay = document.getElementById('catalog-overlay');
+        var drawer = document.getElementById('catalog-drawer');
+        var drawerClose = document.getElementById('catalog-drawer-close');
+
+        function openDrawer() {
+            if (drawer) drawer.classList.add('active');
+            if (overlay) overlay.classList.add('active');
+            document.body.classList.add('no-scroll');
+        }
+        function closeDrawer() {
+            if (drawer) drawer.classList.remove('active');
+            if (overlay) overlay.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+        }
+
+        if (fab) fab.addEventListener('click', openDrawer);
+        if (overlay) overlay.addEventListener('click', closeDrawer);
+        if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
 
         var catalogBody = document.querySelector('.catalog-body');
         if (catalogBody) {

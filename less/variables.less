@@ -7,3 +7,16 @@
 @gray-light: lighten(black, 75%);
 
 @white-faded: fade(white, 80%);
+
+// CSS Custom Properties (for future theme switching)
+// These are output as-is in the compiled CSS.
+:root {
+  --color-primary: @brand-primary;
+  --color-primary-hover: darken(@brand-primary, 10%);
+  --color-gray: @brand-gray;
+  --color-text: @gray-dark;
+  --color-bg: #fff;
+  --color-surface: #f5f5f5;
+  --color-border: #eee;
+  --color-link: #337ab7;
+}
