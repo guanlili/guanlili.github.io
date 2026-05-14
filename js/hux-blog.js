@@ -1,101 +1,86 @@
 /*!
- * Clean Blog v1.0.0 (http://startbootstrap.com)
- * Copyright 2015 Start Bootstrap
- * Licensed under Apache 2.0 (https://github.com/IronSummitMedia/startbootstrap/blob/gh-pages/LICENSE)
+ * Hux Blog v1.8.2 (http://huxpro.github.io)
+ * Copyright 2026 Hux <huxpro@gmail.com>
+ * Licensed under Apache 2.0
  */
-
- /*!
- * Hux Blog v1.6.0 (http://startbootstrap.com)
- * Copyright 2016 @huxpro
- * Licensed under Apache 2.0 
- */
-
-// Tooltip Init
-// Unuse by Hux since V1.6: Titles now display by default so there is no need for tooltip
-// $(function() {
-//     $("[data-toggle='tooltip']").tooltip();
-// });
-
-
-// make all images responsive
-/* 
- * Unuse by Hux
- * actually only Portfolio-Pages can't use it and only post-img need it.
- * so I modify the _layout/post and CSS to make post-img responsive!
- */
-// $(function() {
-//  $("img").addClass("img-responsive");
-// });
 
 // responsive tables
-$(document).ready(function() {
-    $("table").wrap("<div class='table-responsive'></div>");
-    $("table").addClass("table");
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('table').forEach(function(table) {
+        var wrapper = document.createElement('div');
+        wrapper.className = 'table-responsive';
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+        table.classList.add('table');
+    });
 });
 
 // responsive embed videos
-$(document).ready(function() {
-    $('iframe[src*="youtube.com"]').wrap('<div class="embed-responsive embed-responsive-16by9"></div>');
-    $('iframe[src*="youtube.com"]').addClass('embed-responsive-item');
-    $('iframe[src*="vimeo.com"]').wrap('<div class="embed-responsive embed-responsive-16by9"></div>');
-    $('iframe[src*="vimeo.com"]').addClass('embed-responsive-item');
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('iframe[src*="youtube.com"], iframe[src*="vimeo.com"]').forEach(function(iframe) {
+        var wrapper = document.createElement('div');
+        wrapper.className = 'embed-responsive embed-responsive-16by9';
+        iframe.parentNode.insertBefore(wrapper, iframe);
+        wrapper.appendChild(iframe);
+        iframe.classList.add('embed-responsive-item');
+    });
 });
 
 // Navigation Scripts to Show Header on Scroll-Up
-jQuery(document).ready(function($) {
+document.addEventListener('DOMContentLoaded', function() {
     var MQL = 1170;
+    if (window.innerWidth <= MQL) return;
 
-    //primary navigation slide-in effect
-    if ($(window).width() > MQL) {
-        var headerHeight = $('.navbar-custom').height(),
-            bannerHeight  = $('.intro-header .container').height();     
-        $(window).on('scroll', {
-                previousTop: 0
-            },
-            function() {
-                var currentTop = $(window).scrollTop(),
-                    $catalog = $('.side-catalog');
+    var navbar = document.querySelector('.navbar-custom');
+    var banner = document.querySelector('.intro-header .container');
+    if (!navbar || !banner) return;
 
-                //check if user is scrolling up by mouse or keyborad
-                if (currentTop < this.previousTop) {
-                    //if scrolling up...
-                    if (currentTop > 0 && $('.navbar-custom').hasClass('is-fixed')) {
-                        $('.navbar-custom').addClass('is-visible');
-                    } else {
-                        $('.navbar-custom').removeClass('is-visible is-fixed');
-                    }
-                } else {
-                    //if scrolling down...
-                    $('.navbar-custom').removeClass('is-visible');
-                    if (currentTop > headerHeight && !$('.navbar-custom').hasClass('is-fixed')) $('.navbar-custom').addClass('is-fixed');
-                }
-                this.previousTop = currentTop;
+    var headerHeight = navbar.offsetHeight;
+    var bannerHeight = banner.offsetHeight;
+    var previousTop = 0;
 
+    window.addEventListener('scroll', function() {
+        var currentTop = window.pageYOffset;
+        var catalog = document.querySelector('.side-catalog');
 
-                //adjust the appearance of side-catalog
-                $catalog.show()
-                if (currentTop > (bannerHeight + 41)) {
-                    $catalog.addClass('fixed')
-                } else {
-                    $catalog.removeClass('fixed')
-                }
-            });
-    }
+        if (currentTop < previousTop) {
+            if (currentTop > 0 && navbar.classList.contains('is-fixed')) {
+                navbar.classList.add('is-visible');
+            } else {
+                navbar.classList.remove('is-visible', 'is-fixed');
+            }
+        } else {
+            navbar.classList.remove('is-visible');
+            if (currentTop > headerHeight && !navbar.classList.contains('is-fixed')) {
+                navbar.classList.add('is-fixed');
+            }
+        }
+        previousTop = currentTop;
+
+        if (catalog) {
+            catalog.style.display = '';
+            if (currentTop > (bannerHeight + 41)) {
+                catalog.classList.add('fixed');
+            } else {
+                catalog.classList.remove('fixed');
+            }
+        }
+    });
 });
 
 // Reading Progress Bar
-$(document).ready(function() {
-    var $progressBar = $('#reading-progress-bar');
-    if (!$progressBar.length) return;
+document.addEventListener('DOMContentLoaded', function() {
+    var progressBar = document.getElementById('reading-progress-bar');
+    if (!progressBar) return;
 
     var ticking = false;
-    $(window).on('scroll', function() {
+    window.addEventListener('scroll', function() {
         if (!ticking) {
             window.requestAnimationFrame(function() {
-                var scrollTop = $(window).scrollTop();
-                var docHeight = $(document).height() - $(window).height();
+                var scrollTop = window.pageYOffset;
+                var docHeight = document.documentElement.scrollHeight - window.innerHeight;
                 var scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-                $progressBar.width(scrollPercent + '%');
+                progressBar.style.width = scrollPercent + '%';
                 ticking = false;
             });
             ticking = true;
@@ -104,20 +89,18 @@ $(document).ready(function() {
 });
 
 // Back to Top Button
-$(document).ready(function() {
-    var $backToTop = $('#back-to-top');
-    if (!$backToTop.length) return;
+document.addEventListener('DOMContentLoaded', function() {
+    var backToTop = document.getElementById('back-to-top');
+    if (!backToTop) return;
 
-    var scrollThreshold = 400;
     var ticking = false;
-
-    $(window).on('scroll', function() {
+    window.addEventListener('scroll', function() {
         if (!ticking) {
             window.requestAnimationFrame(function() {
-                if ($(window).scrollTop() > scrollThreshold) {
-                    $backToTop.addClass('show');
+                if (window.pageYOffset > 400) {
+                    backToTop.classList.add('show');
                 } else {
-                    $backToTop.removeClass('show');
+                    backToTop.classList.remove('show');
                 }
                 ticking = false;
             });
@@ -125,118 +108,121 @@ $(document).ready(function() {
         }
     });
 
-    $backToTop.on('click', function(e) {
+    backToTop.addEventListener('click', function(e) {
         e.preventDefault();
-        $('html, body').animate({ scrollTop: 0 }, 400, 'swing');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 });
 
 // Code Block Copy Button
-$(document).ready(function() {
-    if (!$('.highlighter-rouge').length) return;
+document.addEventListener('DOMContentLoaded', function() {
+    if (!document.querySelector('.highlighter-rouge')) return;
 
-    $('.post-container .highlighter-rouge').each(function() {
-        var $block = $(this);
-        var $code = $block.find('pre').last();
+    document.querySelectorAll('.post-container .highlighter-rouge').forEach(function(block) {
+        var code = block.querySelector('pre:last-child');
+        if (!code) return;
 
-        var $btn = $('<button class="copy-btn" type="button">复制</button>');
-        $block.css('position', 'relative');
-        $block.append($btn);
+        var btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.type = 'button';
+        btn.textContent = '复制';
+        block.style.position = 'relative';
+        block.appendChild(btn);
 
-        $btn.on('click', function(e) {
+        btn.addEventListener('click', function(e) {
             e.preventDefault();
-            var text = $code.text();
+            var text = code.textContent;
 
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(function() {
-                    showCopied($btn);
+                    showCopied(btn);
                 }).catch(function() {
-                    fallbackCopy(text, $btn);
+                    fallbackCopy(text, btn);
                 });
             } else {
-                fallbackCopy(text, $btn);
+                fallbackCopy(text, btn);
             }
         });
     });
 
-    function fallbackCopy(text, $btn) {
-        var $textarea = $('<textarea>');
-        $textarea.val(text);
-        $textarea.css({
-            position: 'fixed',
-            opacity: '0',
-            left: '-9999px',
-            top: '-9999px'
-        });
-        $('body').append($textarea);
-        $textarea[0].select();
+    function fallbackCopy(text, btn) {
+        var textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.cssText = 'position:fixed;opacity:0;left:-9999px;top:-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
         try {
             document.execCommand('copy');
-            showCopied($btn);
+            showCopied(btn);
         } catch (e) {}
-        $textarea.remove();
+        document.body.removeChild(textarea);
     }
 
-    function showCopied($btn) {
-        $btn.text('已复制!');
-        $btn.addClass('copied');
+    function showCopied(btn) {
+        btn.textContent = '已复制!';
+        btn.classList.add('copied');
         setTimeout(function() {
-            $btn.text('复制');
-            $btn.removeClass('copied');
+            btn.textContent = '复制';
+            btn.classList.remove('copied');
         }, 2000);
     }
 });
 
 // Estimated Reading Time
-$(document).ready(function() {
-    var $readingTime = $('.reading-time');
-    if (!$readingTime.length) return;
+document.addEventListener('DOMContentLoaded', function() {
+    var readingTime = document.querySelector('.reading-time');
+    if (!readingTime) return;
 
-    var $container = $('.post-container');
-    if (!$container.length) return;
+    var container = document.querySelector('.post-container');
+    if (!container) return;
 
-    var text = $container.text();
+    var text = container.textContent;
     var zhCount = (text.match(/[一-鿿]/g) || []).length;
     var enText = text.replace(/[一-鿿]/g, ' ');
     var enWords = enText.split(/\s+/).filter(function(w) { return w.length > 0; }).length;
     var minutes = Math.ceil(zhCount / 500 + enWords / 200);
     if (minutes < 1) minutes = 1;
 
-    $readingTime.html('<i class="fa fa-clock-o"></i> 约 ' + minutes + ' 分钟');
+    readingTime.innerHTML = '<i class="fa fa-clock-o"></i> 约 ' + minutes + ' 分钟';
 });
 
 // Image Lazy Loading
-$(document).ready(function() {
-    $('.post-container img').each(function() {
-        if (!$(this).attr('loading')) {
-            $(this).attr('loading', 'lazy');
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.post-container img').forEach(function(img) {
+        if (!img.getAttribute('loading')) {
+            img.setAttribute('loading', 'lazy');
         }
     });
 });
 
 // Image Lightbox
-$(document).ready(function() {
-    var $lightbox = $('<div id="img-lightbox"><span class="lightbox-close">&times;</span><img></div>');
-    $('body').append($lightbox);
+document.addEventListener('DOMContentLoaded', function() {
+    var lightbox = document.createElement('div');
+    lightbox.id = 'img-lightbox';
+    lightbox.innerHTML = '<span class="lightbox-close">&times;</span><img>';
+    document.body.appendChild(lightbox);
+    var lightboxImg = lightbox.querySelector('img');
 
-    $(document).on('click', '.post-container img', function(e) {
-        e.preventDefault();
-        $('#img-lightbox img').attr('src', $(this).attr('src'));
-        $('#img-lightbox').addClass('active');
-        $('body').addClass('no-scroll');
-    });
-
-    $('#img-lightbox').on('click', function(e) {
-        if (e.target === this || $(e.target).hasClass('lightbox-close')) {
-            $('#img-lightbox').removeClass('active');
-            $('body').removeClass('no-scroll');
+    document.addEventListener('click', function(e) {
+        if (e.target.matches('.post-container img')) {
+            e.preventDefault();
+            lightboxImg.src = e.target.src;
+            lightbox.classList.add('active');
+            document.body.classList.add('no-scroll');
         }
     });
 
-    $(document).on('keydown', function(e) {
+    lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox || e.target.classList.contains('lightbox-close')) {
+            lightbox.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+        }
+    });
+
+    document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            $('#img-lightbox').removeClass('active');
-            $('body').removeClass('no-scroll');
+            lightbox.classList.remove('active');
+            document.body.classList.remove('no-scroll');
         }
     });
 });

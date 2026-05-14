@@ -1,81 +1,59 @@
-(function($) {
-
-  $.fn.tagcloud = function(options) {
-    var opts = $.extend({}, $.fn.tagcloud.defaults, options);
-    tagWeights = this.map(function(){
-      return $(this).attr("rel");
-    });
-    tagWeights = jQuery.makeArray(tagWeights).sort(compareWeights);
-    lowest = tagWeights[0];
-    highest = tagWeights.pop();
-    range = highest - lowest;
-    if(range === 0) {range = 1;}
-    // Sizes
-    if (opts.size) {
-      fontIncr = (opts.size.end - opts.size.start)/range;
+// Tag Cloud - vanilla JS replacement for jquery.tagcloud.js
+(function() {
+  function toRGB(code) {
+    if (code.length === 4) {
+      code = code[1] + code[1] + code[2] + code[2] + code[3] + code[3];
     }
-    // Colors
-    if (opts.color) {
-      colorIncr = colorIncrement (opts.color, range);
-    }
-    return this.each(function() {
-      weighting = $(this).attr("rel") - lowest;
-      if (opts.size) {
-        $(this).css({"font-size": opts.size.start + (weighting * fontIncr) + opts.size.unit});
-      }
-      if (opts.color) {
-        // change color to background-color
-        $(this).css({"backgroundColor": tagColor(opts.color, colorIncr, weighting)});
-      }
-    });
-  };
-
-  $.fn.tagcloud.defaults = {
-    size: {start: 14, end: 18, unit: "pt"}
-  };
-
-  // Converts hex to an RGB array
-  function toRGB (code) {
-    if (code.length == 4) {
-      code = jQuery.map(/\w+/.exec(code), function(el) {return el + el; }).join("");
-    }
-    hex = /(\w{2})(\w{2})(\w{2})/.exec(code);
+    var hex = /(\w{2})(\w{2})(\w{2})/.exec(code);
     return [parseInt(hex[1], 16), parseInt(hex[2], 16), parseInt(hex[3], 16)];
   }
 
-  // Converts an RGB array to hex
-  function toHex (ary) {
-    return "#" + jQuery.map(ary, function(i) {
-      hex =  i.toString(16);
-      hex = (hex.length == 1) ? "0" + hex : hex;
-      return hex;
+  function toHex(ary) {
+    return "#" + ary.map(function(i) {
+      var hex = i.toString(16);
+      return hex.length === 1 ? "0" + hex : hex;
     }).join("");
   }
 
-  function colorIncrement (color, range) {
-    return jQuery.map(toRGB(color.end), function(n, i) {
-      return (n - toRGB(color.start)[i])/range;
+  function colorIncrement(color, range) {
+    var startRGB = toRGB(color.start);
+    var endRGB = toRGB(color.end);
+    return endRGB.map(function(n, i) {
+      return (n - startRGB[i]) / range;
     });
   }
 
-  function tagColor (color, increment, weighting) {
-    rgb = jQuery.map(toRGB(color.start), function(n, i) {
-      ref = Math.round(n + (increment[i] * weighting));
-      if (ref > 255) {
-        ref = 255;
-      } else {
-        if (ref < 0) {
-          ref = 0;
-        }
+  function tagColor(color, increment, weighting) {
+    var startRGB = toRGB(color.start);
+    return toHex(startRGB.map(function(n, i) {
+      return Math.min(255, Math.max(0, Math.round(n + increment[i] * weighting)));
+    }));
+  }
+
+  window.tagcloud = function(elements, options) {
+    var defaults = { size: { start: 14, end: 18, unit: "pt" } };
+    var opts = Object.assign({}, defaults, options);
+
+    var weights = Array.from(elements).map(function(el) {
+      return parseInt(el.getAttribute('rel'), 10);
+    }).sort(function(a, b) { return a - b; });
+
+    var lowest = weights[0];
+    var highest = weights[weights.length - 1];
+    var range = highest - lowest || 1;
+
+    var fontIncr, colorIncr;
+    if (opts.size) fontIncr = (opts.size.end - opts.size.start) / range;
+    if (opts.color) colorIncr = colorIncrement(opts.color, range);
+
+    elements.forEach(function(el) {
+      var weighting = parseInt(el.getAttribute('rel'), 10) - lowest;
+      if (opts.size) {
+        el.style.fontSize = opts.size.start + (weighting * fontIncr) + opts.size.unit;
       }
-      return ref;
+      if (opts.color) {
+        el.style.backgroundColor = tagColor(opts.color, colorIncr, weighting);
+      }
     });
-    return toHex(rgb);
-  }
-
-  function compareWeights(a, b)
-  {
-    return a - b;
-  }
-
-})(jQuery);
+  };
+})();
