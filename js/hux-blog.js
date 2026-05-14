@@ -204,3 +204,39 @@ $(document).ready(function() {
 
     $readingTime.html('<i class="fa fa-clock-o"></i> 约 ' + minutes + ' 分钟');
 });
+
+// Image Lazy Loading
+$(document).ready(function() {
+    $('.post-container img').each(function() {
+        if (!$(this).attr('loading')) {
+            $(this).attr('loading', 'lazy');
+        }
+    });
+});
+
+// Image Lightbox
+$(document).ready(function() {
+    var $lightbox = $('<div id="img-lightbox"><span class="lightbox-close">&times;</span><img></div>');
+    $('body').append($lightbox);
+
+    $(document).on('click', '.post-container img', function(e) {
+        e.preventDefault();
+        $('#img-lightbox img').attr('src', $(this).attr('src'));
+        $('#img-lightbox').addClass('active');
+        $('body').addClass('no-scroll');
+    });
+
+    $('#img-lightbox').on('click', function(e) {
+        if (e.target === this || $(e.target).hasClass('lightbox-close')) {
+            $('#img-lightbox').removeClass('active');
+            $('body').removeClass('no-scroll');
+        }
+    });
+
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape') {
+            $('#img-lightbox').removeClass('active');
+            $('body').removeClass('no-scroll');
+        }
+    });
+});

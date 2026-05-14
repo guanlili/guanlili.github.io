@@ -1,0 +1,19 @@
+{% assign related_count = 0 %}
+{% for post in site.posts %}
+  {% if post.url != page.url %}
+    {% assign has_common = false %}
+    {% for tag in page.tags %}
+      {% if post.tags contains tag %}
+        {% assign has_common = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+    {% if has_common and related_count < 3 %}
+<div class="related-item">
+  <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+  <span class="related-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+</div>
+      {% assign related_count = related_count | plus: 1 %}
+    {% endif %}
+  {% endif %}
+{% endfor %}

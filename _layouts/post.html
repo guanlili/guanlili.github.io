@@ -50,6 +50,14 @@ layout: default
                 </ul>
                 <hr style="visibility: hidden;">
 
+                <!-- Related Posts -->
+                {% if page.tags %}
+                <div class="related-posts">
+                    <h4>相关文章</h4>
+                    {% include related-posts.html %}
+                </div>
+                {% endif %}
+
                 {% if site.giscus_enabled %}
                 <div class="comment">
                     <script src="https://giscus.app/client.js"
