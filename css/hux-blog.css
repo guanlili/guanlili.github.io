@@ -1,3 +1,8 @@
+/*!
+ * Hux Blog v1.8.2 (http://huxpro.github.io)
+ * Copyright 2026 Hux <huxpro@gmail.com>
+ */
+
 @media (min-width: 1200px) {
   .post-container,
   .sidebar-container {
@@ -214,7 +219,7 @@
   width: 160px;
   overflow: hidden;
   user-select: none;
-  color: #000000;
+  color: #000;
   text-transform: uppercase;
   border-radius: 3px;
   outline-color: #a3a3a3;
@@ -231,7 +236,7 @@
   height: 100%;
   /*font-family: 'Roboto';*/
   font-size: 1em;
-  color: #000000;
+  color: #000;
   text-transform: uppercase;
 }
 .paper-button.colored,
@@ -264,13 +269,13 @@ button.paper-button {
   /*font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;*/
   font-size: 1em;
   line-height: 25px;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .paper-button input[type="submit"] {
   outline-color: #a3a3a3;
 }
 .paper-button.colored.raised-button input[type="submit"] {
-  color: #ffffff;
+  color: #fff;
 }
 /** Shadows **/
 .paper-shadow-animated.paper-shadow {
@@ -776,6 +781,16 @@ samp {
 .postlist-container {
   margin-bottom: 15px;
 }
+.post-container p {
+  line-height: 1.9;
+}
+.post-container blockquote {
+  border-left: 3px solid #0085a1;
+  padding-left: 20px;
+}
+.post-container blockquote p {
+  margin: 0;
+}
 .post-container a {
   color: #337ab7;
 }
@@ -865,6 +880,9 @@ samp {
 .post-container ul ul {
   margin-bottom: 5px;
 }
+.post-container li {
+  margin-bottom: 6px;
+}
 .post-container li p {
   margin: 0;
   margin-bottom: 5px;
@@ -898,6 +916,96 @@ samp {
 .post-container .anchorjs-link {
   position: absolute;
   text-decoration: none !important;
+}
+#reading-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background-color: #0085a1;
+  z-index: 9999;
+  transition: width 0.1s linear;
+  will-change: width;
+}
+#back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: #0085a1;
+  color: #fff;
+  text-align: center;
+  line-height: 42px;
+  cursor: pointer;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+#back-to-top:hover,
+#back-to-top:focus {
+  background-color: #005b6e;
+  color: #fff;
+}
+#back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+@media (max-width: 768px) {
+  #back-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 38px;
+    height: 38px;
+    line-height: 38px;
+    font-size: 14px;
+  }
+}
+.highlighter-rouge {
+  position: relative;
+}
+.highlighter-rouge .copy-btn {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  padding: 3px 10px;
+  font-size: 12px;
+  color: #abb2bf;
+  background-color: rgba(40, 44, 52, 0.6);
+  border: 1px solid rgba(171, 178, 191, 0.4);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  z-index: 2;
+  user-select: none;
+  line-height: 1.5;
+}
+.highlighter-rouge .copy-btn:hover {
+  background-color: rgba(40, 44, 52, 0.9);
+  color: #fff;
+}
+.highlighter-rouge .copy-btn:active {
+  transform: scale(0.96);
+}
+.highlighter-rouge .copy-btn.copied {
+  background-color: #0085a1;
+  color: #fff;
+  border-color: #0085a1;
+}
+.highlighter-rouge:hover .copy-btn {
+  opacity: 1;
+}
+@media (hover: none) and (pointer: coarse) {
+  .highlighter-rouge .copy-btn {
+    opacity: 1;
+  }
 }
 @media only screen and (max-width: 767px) {
   /**

@@ -82,3 +82,125 @@ jQuery(document).ready(function($) {
             });
     }
 });
+
+// Reading Progress Bar
+$(document).ready(function() {
+    var $progressBar = $('#reading-progress-bar');
+    if (!$progressBar.length) return;
+
+    var ticking = false;
+    $(window).on('scroll', function() {
+        if (!ticking) {
+            window.requestAnimationFrame(function() {
+                var scrollTop = $(window).scrollTop();
+                var docHeight = $(document).height() - $(window).height();
+                var scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                $progressBar.width(scrollPercent + '%');
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+});
+
+// Back to Top Button
+$(document).ready(function() {
+    var $backToTop = $('#back-to-top');
+    if (!$backToTop.length) return;
+
+    var scrollThreshold = 400;
+    var ticking = false;
+
+    $(window).on('scroll', function() {
+        if (!ticking) {
+            window.requestAnimationFrame(function() {
+                if ($(window).scrollTop() > scrollThreshold) {
+                    $backToTop.addClass('show');
+                } else {
+                    $backToTop.removeClass('show');
+                }
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+
+    $backToTop.on('click', function(e) {
+        e.preventDefault();
+        $('html, body').animate({ scrollTop: 0 }, 400, 'swing');
+    });
+});
+
+// Code Block Copy Button
+$(document).ready(function() {
+    if (!$('.highlighter-rouge').length) return;
+
+    $('.post-container .highlighter-rouge').each(function() {
+        var $block = $(this);
+        var $code = $block.find('pre').last();
+
+        var $btn = $('<button class="copy-btn" type="button">复制</button>');
+        $block.css('position', 'relative');
+        $block.append($btn);
+
+        $btn.on('click', function(e) {
+            e.preventDefault();
+            var text = $code.text();
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(function() {
+                    showCopied($btn);
+                }).catch(function() {
+                    fallbackCopy(text, $btn);
+                });
+            } else {
+                fallbackCopy(text, $btn);
+            }
+        });
+    });
+
+    function fallbackCopy(text, $btn) {
+        var $textarea = $('<textarea>');
+        $textarea.val(text);
+        $textarea.css({
+            position: 'fixed',
+            opacity: '0',
+            left: '-9999px',
+            top: '-9999px'
+        });
+        $('body').append($textarea);
+        $textarea[0].select();
+        try {
+            document.execCommand('copy');
+            showCopied($btn);
+        } catch (e) {}
+        $textarea.remove();
+    }
+
+    function showCopied($btn) {
+        $btn.text('已复制!');
+        $btn.addClass('copied');
+        setTimeout(function() {
+            $btn.text('复制');
+            $btn.removeClass('copied');
+        }, 2000);
+    }
+});
+
+// Estimated Reading Time
+$(document).ready(function() {
+    var $readingTime = $('.reading-time');
+    if (!$readingTime.length) return;
+
+    var $container = $('.post-container');
+    if (!$container.length) return;
+
+    var text = $container.text();
+    var zhCount = (text.match(/[一-鿿]/g) || []).length;
+    var enText = text.replace(/[一-鿿]/g, ' ');
+    var enWords = enText.split(/\s+/).filter(function(w) { return w.length > 0; }).length;
+    var minutes = Math.ceil(zhCount / 500 + enWords / 200);
+    if (minutes < 1) minutes = 1;
+
+    $readingTime.html('<i class="fa fa-clock-o"></i> 约 ' + minutes + ' 分钟');
+});

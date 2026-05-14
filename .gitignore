@@ -1,5 +1,30 @@
+# Jekyll build output
+_site/
+.jekyll-cache/
+.jekyll-metadata
 
-_posts/.DS_Store
-_posts/.DS_Store
-_posts/.DS_Store
+# npm dependencies
+node_modules/
+
+# Sass/Less cache
+.sass-cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Claude Code
+.claude/
+
+# Bundler
+vendor/bundle/
+.bundle/
+
+# Gem
+Gemfile.lock
