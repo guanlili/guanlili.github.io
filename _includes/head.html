@@ -29,7 +29,13 @@
     <meta property="og:image" content="{{ site.url }}{{ site.sidebar-avatar }}">
     <meta property="og:url" content="{{ site.url }}{{ page.url }}">
     <meta property="og:site_name" content="{{ site.SEOTitle }}">
-    
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{% if page.title %}{{ page.title }} - {{ site.SEOTitle }}{% else %}{{ site.SEOTitle }}{% endif %}">
+    <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | truncate:200 }}{% else %}{{ site.description }}{% endif %}">
+    <meta name="twitter:image" content="{{ site.url }}{{ site.sidebar-avatar }}">
+
     <title>{% if page.title %}{{ page.title }} - {{ site.SEOTitle }}{% else %}{{ site.SEOTitle }}{% endif %}</title>
 
     <!-- Web App Manifest -->
@@ -40,6 +46,9 @@
     
     <!-- Canonical URL -->
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
+
+    <!-- RSS Feed -->
+    <link rel="alternate" type="application/rss+xml" title="{{ site.SEOTitle }}" href="{{ site.url }}/feed.xml">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="{{ "/css/bootstrap.min.css" | prepend: site.baseurl }}">
@@ -60,6 +69,44 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "{{ site.SEOTitle }}",
+      "url": "{{ site.url }}",
+      "description": "{{ site.description | strip_html }}",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "{{ site.url }}/archive/?tag={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    {% case page.layout %}
+    {% when 'post' %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "{{ page.title }}",
+      "description": "{{ page.excerpt | strip_html | truncate:200 }}",
+      "datePublished": "{{ page.date | date: '%Y-%m-%dT%H:%M:%SZ' }}",
+      "dateModified": "{{ page.date | date: '%Y-%m-%dT%H:%M:%SZ' }}",
+      "author": {
+        "@type": "Person",
+        "name": "{% if page.author %}{{ page.author }}{% else %}管礼礼{% endif %}"
+      },
+      "url": "{{ site.url }}{{ page.url }}",
+      "isPartOf": {
+        "@type": "Blog",
+        "name": "{{ site.SEOTitle }}",
+        "url": "{{ site.url }}"
+      }
+    }
+    </script>
+    {% endcase %}
     <!-- ga & ba script hoook -->
     <script></script>
 </head>
