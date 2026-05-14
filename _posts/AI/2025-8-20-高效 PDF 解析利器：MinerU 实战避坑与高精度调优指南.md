@@ -8,7 +8,8 @@ header-img: "img/about-bg.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
-tags: [AI, PDF解析, OCR]---
+tags: [AI, PDF解析, OCR]
+---
 # 高效 PDF 解析利器：MinerU 实战避坑与高精度调优指南
 
 在处理海量 PDF 文档（尤其是扫描件、统计年鉴或古籍方志）时，如何精准提取其中的文本和表格数据一直是个痛点。最近在服务器上部署并深入使用了 **MinerU**，这是一款强大的开源 PDF 提取工具。

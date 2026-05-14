@@ -8,7 +8,8 @@ header-img: "img/post-bg-css.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
-tags: [博客搭建, 图床, PicGo]---
+tags: [博客搭建, 图床, PicGo]
+---
 # Typora+PicGo+github搭建免费稳定图床写博客如行云流水（mac+window）
 ## 0.前言
 一直都在用typora写博客和技术文档，它干净整洁的洁面让我流连忘返。不过一直有一个问题困扰着我，那就是在typora中插入的图片，没有办法直接粘贴到博客上，比如⬇️
