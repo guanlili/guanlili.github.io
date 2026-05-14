@@ -3,12 +3,12 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var btn = document.getElementById('theme-toggle-btn');
-        var icon = document.getElementById('theme-icon');
-        if (!btn || !icon) return;
+        var iconSvg = document.getElementById('theme-icon-svg');
+        if (!btn || !iconSvg) return;
 
         // Set initial icon
         if (document.documentElement.getAttribute('data-theme') === 'dark') {
-            icon.className = 'fa fa-sun-o';
+            iconSvg.innerHTML = '<use href="#icon-sun"></use>';
         }
 
         btn.addEventListener('click', function() {
@@ -17,11 +17,11 @@
             if (isDark) {
                 html.removeAttribute('data-theme');
                 localStorage.setItem('theme', 'light');
-                icon.className = 'fa fa-moon-o';
+                iconSvg.innerHTML = '<use href="#icon-moon"></use>';
             } else {
                 html.setAttribute('data-theme', 'dark');
                 localStorage.setItem('theme', 'dark');
-                icon.className = 'fa fa-sun-o';
+                iconSvg.innerHTML = '<use href="#icon-sun"></use>';
             }
             // Sync Giscus theme
             var iframe = document.querySelector('.giscus-frame');
@@ -69,11 +69,7 @@
 <!-- Simple Jekyll Search -->
 <script defer src="{{ "/js/simple-jekyll-search.min.js" | prepend: site.baseurl }}"></script>
 
-<!-- Service Worker -->
-{% if site.service-worker %}
-<script src="{{ "/js/snackbar.js " | prepend: site.baseurl }}"></script>
-<script src="{{ "/js/sw-registration.js " | prepend: site.baseurl }}"></script>
-{% endif %}
+<!-- Service Worker (now bundled in hux-blog.min.js) -->
 
 
 {% if page.plchart %}

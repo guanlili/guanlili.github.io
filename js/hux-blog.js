@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var minutes = Math.ceil(zhCount / 500 + enWords / 200);
     if (minutes < 1) minutes = 1;
 
-    readingTime.innerHTML = '<i class="fa fa-clock-o"></i> 约 ' + minutes + ' 分钟';
+    readingTime.innerHTML = '<svg class="icon icon-clock"><use href="#icon-clock"></use></svg> 约 ' + minutes + ' 分钟';
 });
 
 // Image Lazy Loading
@@ -256,3 +256,79 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Code Block Language Labels
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.highlighter-rouge').forEach(function(block) {
+        var cls = block.getAttribute('class') || '';
+        var match = cls.match(/language-(\w+)/);
+        if (match) {
+            var label = document.createElement('span');
+            label.className = 'code-lang-label';
+            label.textContent = match[1];
+            block.style.position = 'relative';
+            block.appendChild(label);
+        }
+    });
+});
+
+// ===== Snackbar (merged from snackbar.js) =====
+var createSnackbar = (function() {
+  var previous = null;
+  return function(config) {
+    var message = config.message,
+      actionText = config.actionText,
+      action = config.action,
+      duration = config.duration;
+    if (previous) { previous.dismiss(); }
+    var snackbar = document.createElement('div');
+    snackbar.className = 'paper-snackbar';
+    snackbar.dismiss = function() { this.style.opacity = 0; };
+    var text = document.createTextNode(message);
+    snackbar.appendChild(text);
+    if (actionText) {
+      if (!action) { action = snackbar.dismiss.bind(snackbar); }
+      var actionButton = document.createElement('button');
+      actionButton.className = 'action';
+      actionButton.innerHTML = actionText;
+      actionButton.addEventListener('click', action);
+      snackbar.appendChild(actionButton);
+    }
+    setTimeout(function() {
+      if (previous === this) { previous.dismiss(); }
+    }.bind(snackbar), duration || 5000);
+    snackbar.addEventListener('transitionend', function(event) {
+      if (event.propertyName === 'opacity' && this.style.opacity == 0) {
+        this.parentElement.removeChild(this);
+        if (previous === this) { previous = null; }
+      }
+    }.bind(snackbar));
+    previous = snackbar;
+    document.body.appendChild(snackbar);
+    getComputedStyle(snackbar).bottom;
+    snackbar.style.bottom = '0px';
+    snackbar.style.opacity = 1;
+  };
+})();
+
+// ===== Service Worker Registration (merged from sw-registration.js) =====
+(function() {
+  if (!navigator.serviceWorker) return;
+  navigator.serviceWorker.register('/sw.js')
+    .then(function(registration) {
+      registration.onupdatefound = function() {
+        var installingWorker = registration.installing;
+        installingWorker.onstatechange = function() {
+          if (installingWorker.state !== 'installed') return;
+          if (!navigator.serviceWorker.controller) {
+            createSnackbar({ message: 'App ready for offline use.', duration: 3000 });
+          }
+        };
+      };
+    }).catch(function() {});
+  navigator.serviceWorker.onmessage = function(e) {
+    if (e.data && e.data.command === 'UPDATE_FOUND') {
+      createSnackbar({ message: 'Content updated.', actionText: 'refresh', action: function() { location.reload(); } });
+    }
+  };
+})();

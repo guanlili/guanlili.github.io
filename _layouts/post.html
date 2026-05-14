@@ -97,11 +97,11 @@ layout: default
             </div>
 
             <!-- Mobile Catalog FAB & Drawer -->
-            <div class="catalog-fab" id="catalog-fab" title="目录">
-                <i class="fa fa-list"></i>
+            <div class="catalog-fab" id="catalog-fab" title="目录" aria-label="打开目录">
+                <svg class="icon"><use href="#icon-list"></use></svg>
             </div>
             <div class="catalog-overlay" id="catalog-overlay"></div>
-            <div class="catalog-drawer" id="catalog-drawer">
+            <div class="catalog-drawer" id="catalog-drawer" role="dialog" aria-label="文章目录">
                 <div class="catalog-drawer-header">
                     <span>目录</span>
                     <button class="catalog-drawer-close" id="catalog-drawer-close">&times;</button>

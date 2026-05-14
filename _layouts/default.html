@@ -5,17 +5,21 @@
 
 <!-- hack iOS CSS :active style -->
 <body ontouchstart="">
+    {% include icons.html %}
 
+    <a href="#main-content" class="skip-nav">跳到正文</a>
     {% include nav.html %}
     {% include search.html %}
 
+    <div id="main-content">
     {{ content }}
+    </div>
 
     {% include footer.html %}
 
 <!-- Back to Top -->
 <div id="back-to-top" title="返回顶部">
-    <i class="fa fa-arrow-up"></i>
+    <svg class="icon"><use href="#icon-arrow-up"></use></svg>
 </div>
 
 <!-- Image to hack wechat -->

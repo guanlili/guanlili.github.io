@@ -1,7 +1,5 @@
-<link rel="stylesheet" href="//at.alicdn.com/t/font_2364702_frncj5sx0g.css">
-
 {% comment %}
-    @param {Boolean} center 
+    @param {Boolean} center
 {% endcomment %}
 
 {% if include.center %}
@@ -13,19 +11,9 @@
   {% if site.RSS %}
   <li>
     <a href="{{ "/feed.xml" | prepend: site.baseurl }}">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
-      </span>
-    </a>
-  </li>
-  {% endif %}
-  {% if site.bilibli_username %}
-  <li>
-    <a href="https://space.bilibili.com/{{ site.bilibli_username }}">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="iconfont icon-bilibili-fill fa-stack-1x fa-inverse" style="font-size:30px"></i>
+      <span class="sns-icon-wrap">
+        <svg class="icon icon-circle-bg"><use href="#icon-circle"></use></svg>
+        <svg class="icon icon-fg"><use href="#icon-rss"></use></svg>
       </span>
     </a>
   </li>
@@ -33,9 +21,9 @@
   {% if site.zhihu_username %}
   <li>
     <a target="_blank" href="https://www.zhihu.com/people/{{ site.zhihu_username }}">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa  fa-stack-1x fa-inverse">知</i>
+      <span class="sns-icon-wrap">
+        <svg class="icon icon-circle-bg"><use href="#icon-circle"></use></svg>
+        <span class="sns-text-fg">知</span>
       </span>
     </a>
   </li>
@@ -43,19 +31,9 @@
   {% if site.csdn_username %}
   <li>
     <a target="_blank" href="https://blog.csdn.net/{{ site.csdn_username }}">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="iconfont icon-csdn fa-stack-1x fa-inverse" style="font-size:30px"></i>
-      </span>
-    </a>
-  </li>
-  {% endif %}
-  {% if site.facebook_username %}
-  <li>
-    <a target="_blank" href="https://www.facebook.com/{{ site.facebook_username }}">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+      <span class="sns-icon-wrap">
+        <svg class="icon icon-circle-bg"><use href="#icon-circle"></use></svg>
+        <span class="sns-text-fg">C</span>
       </span>
     </a>
   </li>
@@ -63,19 +41,9 @@
   {% if site.github_username %}
   <li>
     <a target="_blank" href="https://github.com/{{ site.github_username }}">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-      </span>
-    </a>
-  </li>
-  {% endif %}
-  {% if site.linkedin_username %}
-  <li>
-    <a target="_blank" href="https://www.linkedin.com/in/{{ site.linkedin_username }}">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+      <span class="sns-icon-wrap">
+        <svg class="icon icon-circle-bg"><use href="#icon-circle"></use></svg>
+        <svg class="icon icon-fg"><use href="#icon-github"></use></svg>
       </span>
     </a>
   </li>

@@ -16,9 +16,6 @@ RSS: true
 csdn_username:     outman_1921
 zhihu_username:     xiao-li-ge-ge-38
 github_username:    guanlili
-# bilibli_username:   22250450
-#facebook_username:  huxpro
-#linkedin_username:  firstname-lastname-idxxxx
 
 
 
@@ -70,14 +67,9 @@ giscus_category_id: DIC_kwDOE_o1G84CQByl
 # Netease settings (service discontinued)
 netease_comment: false
 
-
-
 # Analytics settings
-# Baidu Analytics 
-# ba_track_id: [your track id]
-
-# Google Analytics (UA已于2023年7月停运，如需迁移至GA4请替换为G-xxxxxxxx)
-ga_track_id: ''            # 已停用，替换为 GA4 Measurement ID 即可恢复
+# Google Analytics (替换为 GA4 Measurement ID 即可恢复)
+ga_track_id: ''
 ga_domain: guanlili.github.io
 
 
