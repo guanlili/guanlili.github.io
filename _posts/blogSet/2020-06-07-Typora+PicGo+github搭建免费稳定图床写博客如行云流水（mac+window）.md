@@ -1,5 +1,6 @@
 ---
 layout: post
+date: 2020-06-07
 title: "Typora+PicGo+github搭建免费稳定图床写博客如行云流水"
 subtitle: "（mac+window）"
 author: "lili"

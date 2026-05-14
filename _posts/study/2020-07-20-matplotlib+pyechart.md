@@ -1,5 +1,6 @@
 ---
 layout: post
+date: 2020-07-20
 title: "数据分析之可视化展示"
 subtitle: "matplotlib学习笔记"
 author: "lili"

@@ -1,5 +1,6 @@
 ---
 layout: post
+date: 2021-04-05
 title: "「教程」github博客自动同步到gitee"
 subtitle: "博客自动备份在gitee，国内也能丝滑访问blog"
 author: "lili"

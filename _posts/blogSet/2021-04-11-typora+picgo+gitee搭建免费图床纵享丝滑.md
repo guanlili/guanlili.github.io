@@ -1,5 +1,6 @@
 ---
 layout: post
+date: 2021-04-11
 title: "typora+picgo+gitee搭建免费图床纵享丝滑"
 subtitle: "typora+picgo+gitee搭建免费图床纵享丝滑"
 author: "lili"

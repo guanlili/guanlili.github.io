@@ -1,5 +1,6 @@
 ---
 layout: post
+date: 2021-02-03
 title: "使用jsDelivr的CDN加速github图床"
 subtitle: "使用jsDelivr的CDN加速github图床"
 author: "lili"
