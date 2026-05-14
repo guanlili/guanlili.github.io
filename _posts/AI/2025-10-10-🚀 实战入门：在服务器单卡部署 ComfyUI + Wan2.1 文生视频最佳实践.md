@@ -2,7 +2,7 @@
 layout: post
 title: "🚀 实战入门：在服务器单卡部署 ComfyUI + Wan2.1 文生视频最佳实践"
 subtitle: "30分钟4090跑通Wan2.1，公司新媒体同事从此告别烧钱闭源工具"
-author: "guanlili"
+author: "lili"
 header-img: "img/about-bg.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"

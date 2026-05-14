@@ -2,7 +2,7 @@
 layout: post
 title: "「教程」github博客自动同步到gitee"
 subtitle: "博客自动备份在gitee，国内也能丝滑访问blog"
-author: "guanlili"
+author: "lili"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4

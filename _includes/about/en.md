@@ -1,10 +1,10 @@
 #### myself
 
-Hi, I am Guan Lili, a second year graduate student majoring in software engineering. I love technology and life, and have had two test development internship experiences. Like to record the problems encountered in study and work in the form of documents. To yourself, fight against forgetting. To others, helpful.
+Hi, I am Li Li, a second year graduate student majoring in software engineering. I love technology and life, and have had two test development internship experiences. Like to record the problems encountered in study and work in the form of documents. To yourself, fight against forgetting. To others, helpful.
 
 #### Postscript
 
-The blog of guanlili is now open.
+The blog of lili is now open.
 
 In 2019, there is finally a place to write something well.
 

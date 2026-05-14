@@ -2,7 +2,7 @@
 layout: post
 title: "🚀 实战进阶：将 ComfyUI 封装为 AI 视频生成网站 (FastAPI + WebUI)"
 subtitle: "10行代码把万兴2.1变公司内网专属视频MidJourney，同事再也不半夜@我了"
-author: "guanlili"
+author: "lili"
 header-img: "img/about-bg.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"

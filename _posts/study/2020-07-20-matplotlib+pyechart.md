@@ -2,7 +2,7 @@
 layout: post
 title: "数据分析之可视化展示"
 subtitle: "matplotlib学习笔记"
-author: "guanlili"
+author: "lili"
 header-img: "img/blog-cover-database.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"

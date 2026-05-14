@@ -2,7 +2,7 @@
 layout: post
 title: "使用基于jvm-sandbox的对三层嵌套类型的改造"
 subtitle: "遇到的一个bug"
-author: "guanlili"
+author: "lili"
 header-img: "img/about-bg.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"

@@ -2,7 +2,7 @@
 layout: post
 title: "Typora+PicGo+github搭建免费稳定图床写博客如行云流水"
 subtitle: "（mac+window）"
-author: "guanlili"
+author: "lili"
 header-img: "img/post-bg-css.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"

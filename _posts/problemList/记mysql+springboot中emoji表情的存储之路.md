@@ -2,7 +2,7 @@
 layout: post
 title: "记mysql+springboot中emoji表情的存储之路"
 subtitle: "遇到的一个bug"
-author: "guanlili"
+author: "lili"
 header-img: "img/about-bg.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"

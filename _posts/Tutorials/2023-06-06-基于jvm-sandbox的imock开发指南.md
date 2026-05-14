@@ -2,7 +2,7 @@
 layout: post
 title: "基于jvm-sandbox的imock开发指南"
 subtitle: "从0到1搭建一个mock平台"
-author: "guanlili"
+author: "lili"
 header-img: "img/about-bg.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"

@@ -2,7 +2,7 @@
 layout: post
 title: "航旅mock质量体系建设"
 subtitle: "航旅mock质量体系建设"
-author: "guanlili"
+author: "lili"
 header-img: "img/about-bg.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"

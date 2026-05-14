@@ -2,7 +2,7 @@
 layout: post
 title: "高效 PDF 解析利器：MinerU 实战避坑与高精度调优指南"
 subtitle: "解决环境冲突、搞定扫描件表格，一份给开发者的 MinerU 最佳实践"
-author: "guanlili"
+author: "lili"
 header-img: "img/about-bg.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"

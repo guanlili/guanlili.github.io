@@ -1,4 +1,4 @@
-[guanlili Blog](http://guanlili.github.io)
+[lili Blog](http://guanlili.github.io)
 ================================
 
 > I never expected this becomes popular.

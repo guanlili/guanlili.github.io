@@ -1,7 +1,7 @@
 {
-  "name": "管礼礼的博客 | guanlili Blog",
-  "short_name": "guanlili Blog",
-  "description": "关于程序与设计、测试与开发 | 管礼礼的个人博客",
+  "name": "李梨的博客 | lili Blog",
+  "short_name": "lili Blog",
+  "description": "关于程序与设计、测试与开发 | 李梨的个人博客",
   "icons": [{
     "src": "icons/128.png",
     "sizes": "128x128",
