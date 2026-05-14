@@ -11,14 +11,13 @@
 body {
   .sans-serif;
   font-size: 16px;
-  // Hux mpdify to 16px (Mobile First), and increase to 20px while 768+ width
-  color: @gray-dark;
-  //-webkit-user-select:text; //对于 Blog 还是先不开启这句。
+  color: var(--color-text);
+  background-color: var(--color-bg);
   overflow-x: hidden;
-
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 // -- Typography
@@ -64,7 +63,7 @@ article {
   overflow: hidden;
 }
 blockquote {
-  color: gray;
+  color: var(--color-quote);
   font-style: italic;
   font-size: 0.95em;
   margin: 20px 0 20px;
@@ -109,7 +108,7 @@ table.table > tbody,
 table.table > thead {
   th,
   td {
-    border: 1px solid #eee !important;
+    border: 1px solid var(--color-border) !important;
   }
 }
 @media screen and (max-width: 767px) {
@@ -156,6 +155,7 @@ samp {
   blockquote {
     border-left: 3px solid var(--color-primary);
     padding-left: 20px;
+    color: var(--color-quote);
     p {
       margin: 0;
     }
@@ -580,8 +580,8 @@ samp {
       /* when the user scrolls down, we hide the header right above the viewport */
       position: fixed;
       top: -61px;
-      background-color: fade(white, 90%);
-      border-bottom: 1px solid darken(white, 5%);
+      background-color: var(--color-nav-fixed-bg);
+      border-bottom: 1px solid var(--color-border);
       -webkit-transition: -webkit-transform 0.3s;
       -moz-transition: -moz-transform 0.3s;
       transition: transform 0.3s;
@@ -642,7 +642,7 @@ samp {
     }
   }
   background: no-repeat center center;
-  background-color: var(--color-gray);
+  background-color: var(--color-surface);
   background-attachment: scroll;
   .background-cover;
   // NOTE: Background images are set within the HTML using inline CSS!
@@ -1231,215 +1231,57 @@ img::-moz-selection {
 }
 
 // ===== Dark Mode =====
-@media (prefers-color-scheme: dark) {
-  @dark-bg: #1a1a2e;
-  @dark-surface: #16213e;
-  @dark-card: #0f3460;
-  @dark-text: #c9d1d9;
-  @dark-heading: #e6e6e6;
-  @dark-link: #58a6ff;
-  @dark-border: #30363d;
-  @dark-accent: #0db7c0;
+// All dark mode styling is driven by CSS custom properties defined in variables.less.
+// [data-theme="dark"] on <html> overrides the :root variables.
 
-  body {
-    background-color: @dark-bg;
-    color: @dark-text;
+// Mobile nav background uses surface color
+@media only screen and (max-width: 767px) {
+  .navbar-default .navbar-collapse {
+    background: var(--color-surface);
   }
+}
 
-  // Navigation
-  .navbar-custom {
-    background-color: transparent;
-    @media only screen and (min-width: 1170px) {
-      &.is-fixed {
-        background-color: fade(@dark-bg, 95%);
-        border-bottom: 1px solid @dark-border;
-        .navbar-brand, .nav li a {
-          color: @dark-text;
-        }
-      }
-    }
-    &.invert .navbar-brand,
-    &.invert .nav li a {
-      color: @dark-text;
-    }
-  }
+// Search page background
+.search-page {
+  background: var(--color-bg);
+}
 
-  // Mobile nav
-  @media only screen and (max-width: 767px) {
-    .navbar-default .navbar-collapse {
-      background: @dark-surface;
-    }
-  }
+// Search icon color
+.search-icon a,
+.search-icon-close {
+  color: var(--color-search-icon);
+}
 
-  // Header
-  .intro-header {
-    background-color: @dark-surface;
-    .post-heading,
-    .site-heading,
-    .page-heading {
-      color: @dark-text;
-      .subheading { color: @dark-text; }
-    }
-    &.style-text {
-      .site-heading,
-      .post-heading,
-      .page-heading {
-        color: @dark-text;
-      }
-    }
+// Inline code
+.post-container {
+  p code, li code {
+    background-color: var(--color-code-bg);
+    color: var(--color-code-text);
   }
+}
 
-  // Post content
-  .post-container {
-    a {
-      color: @dark-link;
-      &:hover, &:focus { color: @dark-accent; }
-    }
-    h2::before { border-bottom-color: @dark-border; }
-    blockquote {
-      color: lighten(@dark-text, 10%);
-    }
-    .pager li > a {
-      background-color: @dark-surface;
-      color: @dark-text;
-      > span { color: @dark-text; }
-      &:hover, &:focus {
-        background-color: @dark-accent;
-        color: #fff;
-        > span { color: #fff; }
-      }
-    }
-  }
+// Tables in dark
+.table-responsive table {
+  background-color: var(--color-surface);
+  th, td { border-color: var(--color-border) !important; }
+}
 
-  // Homepage post previews
-  .post-preview {
-    > a {
-      color: @dark-heading;
-      &:hover, &:focus { color: @dark-accent; }
-    }
-    .post-meta {
-      color: @dark-text;
-      > a { color: @dark-heading; }
-    }
-  }
-  .post-content-preview {
-    color: #8b949e;
-  }
+// Mini post list meta
+.mini-post-list .post-preview .post-meta {
+  color: var(--color-gray);
+}
 
-  // Tags
-  .tags a, .tags .tag {
-    border-color: @dark-border;
-    color: @dark-text;
-    &:hover, &:active {
-      color: @dark-accent;
-      border-color: @dark-accent;
-    }
-  }
-  #tag_cloud a, #tag_cloud .tag {
-    background: @dark-surface;
-    color: @dark-text;
-    &:hover, &:active, &.focus {
-      background-color: @dark-accent !important;
-      color: #fff !important;
-    }
-  }
-  .listing-seperator { color: @dark-accent; }
+// hr
+hr {
+  border-top-color: var(--color-border);
+}
 
-  // Sidebar
-  .sidebar-container {
-    color: @dark-text;
-  }
-  .short-about {
-    color: @dark-text;
-    h5 { color: @dark-heading; }
-  }
-
-  // Side catalog
-  .side-catalog {
-    .catalog-body a {
-      color: @dark-text;
-      &.active { color: @dark-accent; }
-    }
-  }
-
-  // Search
-  .search-page {
-    background-color: @dark-bg;
-    color: @dark-text;
-  }
-
-  // Footer
-  footer {
-    .copyright {
-      color: @dark-text;
-      a {
-        color: @dark-link;
-        &:hover, &:focus { color: @dark-accent; }
-      }
-    }
-  }
-
-  // Code blocks (already dark, ensure compatibility)
-  .post-container {
-    p code, li code {
-      background-color: @dark-surface;
-      color: @dark-accent;
-    }
-  }
-
-  // Tables
-  .table-responsive table {
-    background-color: @dark-surface;
-    th, td { border-color: @dark-border !important; }
-  }
-
-  // Selection
-  ::-moz-selection {
-    color: white;
-    background: @dark-accent;
-  }
-  ::selection {
-    color: white;
-    background: @dark-accent;
-  }
-
-  // Pager
-  .pager li > a {
-    color: @dark-text;
-    background-color: @dark-surface;
-    &:hover, &:focus {
-      background-color: @dark-accent;
-      color: #fff;
-    }
-  }
-
-  // Mini post list
-  .mini-post-list .post-preview .post-meta {
-    color: @dark-text;
-  }
-
-  // hr
-  hr {
-    border-top-color: @dark-border;
-  }
-
-  // Giscus dark theme
-  .giscus, .giscus-frame {
-    color-scheme: dark;
-  }
-
-  // Image lightbox
-  #img-lightbox {
-    background: rgba(0, 0, 0, 0.85);
-    @media (prefers-color-scheme: dark) {
-      background: rgba(0, 0, 0, 0.95);
-    }
-  }
-  #img-lightbox .lightbox-close {
-    color: #fff;
-    @media (prefers-color-scheme: dark) {
-      color: #ccc;
-    }
+// Theme toggle button
+.theme-toggle {
+  a {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    &:hover { opacity: 0.7; }
   }
 }
 
@@ -1496,7 +1338,7 @@ img::-moz-selection {
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 20px;
-    color: var(--color-text);
+    color: var(--color-heading);
   }
 
   .related-item {
@@ -1505,7 +1347,7 @@ img::-moz-selection {
     a {
       font-size: 16px;
       font-weight: 600;
-      color: var(--color-text);
+      color: var(--color-heading);
       &:hover { color: var(--color-primary); text-decoration: none; }
     }
 
@@ -1534,28 +1376,5 @@ img::-moz-selection {
       background: var(--color-primary);
       color: #fff;
     }
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .related-posts {
-    border-top-color: #30363d;
-    h4 { color: #e6e6e6; }
-    .related-item {
-      a { color: #e6e6e6; &:hover { color: #0db7c0; } }
-      .related-date { color: #8b949e; }
-    }
-  }
-  .post-preview .post-tags-home .tag {
-    background: #16213e;
-    color: #0db7c0;
-    &:hover {
-      background: #0db7c0;
-      color: #fff;
-    }
-  }
-  #img-lightbox {
-    background: rgba(0, 0, 0, 0.95);
-    .lightbox-close { color: #ccc; }
   }
 }

@@ -100,7 +100,7 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background-color: @brand-primary;
+    background-color: var(--color-primary);
     color: #fff;
     text-align: center;
     line-height: 44px;
@@ -111,7 +111,7 @@
     transition: transform 0.2s ease, background-color 0.2s ease;
 
     &:hover {
-      background-color: darken(@brand-primary, 10%);
+      background-color: var(--color-primary-hover);
       transform: scale(1.08);
     }
     &:active {
@@ -143,7 +143,7 @@
     width: 260px;
     max-width: 80vw;
     height: 100%;
-    background: #fff;
+    background: var(--color-bg);
     z-index: 1000;
     transform: translateX(100%);
     transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
@@ -161,7 +161,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px 20px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-heading);
     font-weight: 700;
     font-size: 16px;
   }
@@ -171,11 +172,11 @@
     border: none;
     font-size: 24px;
     cursor: pointer;
-    color: #999;
+    color: var(--color-gray);
     padding: 0;
     line-height: 1;
     &:hover {
-      color: @gray-dark;
+      color: var(--color-heading);
     }
   }
 
@@ -189,21 +190,21 @@
       a {
         display: block;
         padding: 8px 0;
-        color: @gray-dark;
+        color: var(--color-text);
         text-decoration: none;
         font-size: 14px;
         line-height: 1.5;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        border-bottom: 1px solid #f5f5f5;
+        border-bottom: 1px solid var(--color-border);
         transition: color 0.2s ease;
         &:hover {
-          color: @brand-primary;
+          color: var(--color-primary);
         }
       }
       &.active a {
-        color: @brand-primary;
+        color: var(--color-primary);
         font-weight: 600;
       }
     }
@@ -211,32 +212,5 @@
     .h3_nav { margin-left: 12px; }
     .h4_nav { margin-left: 24px; }
     .h5_nav, .h6_nav { margin-left: 36px; }
-  }
-
-  // Dark mode for mobile catalog
-  @media (prefers-color-scheme: dark) {
-    .catalog-drawer {
-      background: #16213e;
-    }
-    .catalog-drawer-header {
-      border-bottom-color: #30363d;
-      color: #e6e6e6;
-    }
-    .catalog-drawer-close {
-      color: #8b949e;
-      &:hover { color: #e6e6e6; }
-    }
-    .catalog-body-mobile li a {
-      color: #c9d1d9;
-      border-bottom-color: #30363d;
-      &:hover { color: #0db7c0; }
-    }
-    .catalog-body-mobile li.active a {
-      color: #0db7c0;
-    }
-    .catalog-fab {
-      background-color: #0db7c0;
-      &:hover { background-color: darken(#0db7c0, 10%); }
-    }
   }
 }

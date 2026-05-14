@@ -1,4 +1,45 @@
 <!-- Footer -->
+<!-- Theme Toggle -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var btn = document.getElementById('theme-toggle-btn');
+        var icon = document.getElementById('theme-icon');
+        if (!btn || !icon) return;
+
+        // Set initial icon
+        if (document.documentElement.getAttribute('data-theme') === 'dark') {
+            icon.className = 'fa fa-sun-o';
+        }
+
+        btn.addEventListener('click', function() {
+            var html = document.documentElement;
+            var isDark = html.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                icon.className = 'fa fa-moon-o';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                icon.className = 'fa fa-sun-o';
+            }
+            // Sync Giscus theme
+            var iframe = document.querySelector('.giscus-frame');
+            if (iframe) {
+                var newDark = !isDark;
+                iframe.contentWindow.postMessage({
+                    giscus: { setConfig: { theme: newDark ? 'dark' : 'light' } }
+                }, 'https://giscus.app');
+            }
+            // Sync PWA theme-color
+            var meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) {
+                meta.setAttribute('content', newDark ? '#1a1a2e' : '#000000');
+            }
+        });
+    });
+</script>
+
 <footer>
     <div class="container">
         <div class="row">
