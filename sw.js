@@ -22,7 +22,7 @@ const PRECACHE_LIST = [
   "./img/home-bg.jpg",
   "./img/404-bg.jpg",
   "./css/hux-blog.min.css",
-  "./css/bootstrap.min.css"
+  "./css/grid.min.css"
 ]
 const HOSTNAME_WHITELIST = [
   self.location.hostname,

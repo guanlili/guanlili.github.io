@@ -93,7 +93,7 @@
 
 
 {% if page.title == 'Archive' %}
-<script defer src="{{ '/js/jquery.tagcloud.min.js' | prepend: site.baseurl }}"></script>
+<script defer src="{{ '/js/jquery.tagcloud.js' | prepend: site.baseurl }}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var links = document.querySelectorAll('#tag_cloud a');
@@ -135,7 +135,7 @@
 
 <!-- Side Catalog -->
 {% unless page.no-catalog %}
-<script defer src="{{ '/js/jquery.nav.min.js' | prepend: site.baseurl }}"></script>
+<script defer src="{{ '/js/jquery.nav.js' | prepend: site.baseurl }}"></script>
 <script type="text/javascript">
     function generateCatalog(selector) {
         var containerSelector = '{{ page.multilingual }}' === 'true'

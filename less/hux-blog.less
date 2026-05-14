@@ -10,7 +10,7 @@
 
 body {
   .sans-serif;
-  font-size: 16px;
+  font-size: clamp(14px, 0.5vw + 12px, 18px);
   color: var(--color-text);
   background-color: var(--color-bg);
   overflow-x: hidden;
@@ -506,9 +506,6 @@ samp {
     }
   }
   @media only screen and (min-width: 768px) {
-    body {
-      font-size: 20px;
-    }
     background: transparent;
     border-bottom: 1px solid transparent;
     .navbar-brand {
@@ -671,7 +668,7 @@ samp {
     text-align: center;
     h1 {
       margin-top: 0;
-      font-size: 50px;
+      font-size: clamp(36px, 4vw + 18px, 80px);
     }
     .subheading {
       .sans-serif;
@@ -681,15 +678,10 @@ samp {
       font-weight: 300;
       margin: 10px 0 0;
     }
-    @media only screen and (min-width: 768px) {
-      h1 {
-        font-size: 80px;
-      }
-    }
   }
   .post-heading {
     h1 {
-      font-size: 30px;
+      font-size: clamp(24px, 2.5vw + 10px, 55px);
       margin-bottom: 24px;
     }
     .subheading,
@@ -709,20 +701,9 @@ samp {
       .serif;
       font-style: italic;
       font-weight: 300;
-      font-size: 16px;
+      font-size: clamp(14px, 0.5vw + 10px, 20px);
       a {
         color: white;
-      }
-    }
-    @media only screen and (min-width: 768px) {
-      h1 {
-        font-size: 55px;
-      }
-      .subheading {
-        font-size: 30px;
-      }
-      .meta {
-        font-size: 20px;
       }
     }
   }
@@ -1112,6 +1093,13 @@ img::-moz-selection {
       font-size: 12px;
       line-height: 12px;
     }
+    .post-date {
+      position: absolute;
+      right: 0;
+      top: 16px;
+      color: var(--color-gray);
+      font-size: 12px;
+    }
     @media only screen and (min-width: 768px) {
       margin-left: 20px;
       > a {
@@ -1126,8 +1114,32 @@ img::-moz-selection {
       .post-meta {
         font-size: 18px;
       }
+      .post-date {
+        top: 24px;
+      }
     }
   }
+}
+
+// Archive page styles
+.archive-stats {
+  text-align: center;
+  color: var(--color-gray);
+  font-size: 14px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 20px;
+}
+
+.year-count {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--color-gray);
+}
+
+.archive-hidden {
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
 /* Tags support End*/
@@ -1169,6 +1181,27 @@ img::-moz-selection {
   .icon-bar + .icon-bar {
     margin-top: 3px;
   }
+}
+
+// ===== 404 Page =====
+.error-container {
+  position: relative;
+  z-index: 10;
+  margin-top: -120px;
+}
+.error-404-number {
+  font-size: 120px;
+  font-weight: 800;
+  color: #fff;
+}
+.error-desc {
+  color: #fff;
+  opacity: 0.8;
+  font-size: 18px;
+}
+.error-btn {
+  border-radius: 20px;
+  padding: 8px 28px;
 }
 
 // Hux fullscreen mode in 404.html

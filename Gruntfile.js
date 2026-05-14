@@ -26,6 +26,15 @@ module.exports = function(grunt) {
                 files: {
                     "css/<%= pkg.name %>.min.css": "less/<%= pkg.name %>.less"
                 }
+            },
+            grid: {
+                options: {
+                    paths: ["css"],
+                    cleancss: true
+                },
+                files: {
+                    "css/grid.min.css": "less/grid.less"
+                }
             }
         },
         banner: '/*!\n' +
