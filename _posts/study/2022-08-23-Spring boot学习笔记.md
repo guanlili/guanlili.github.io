@@ -2,7 +2,7 @@
 layout: post
 title: "Spring Boot 学习笔记"
 date: 2022-08-23
-tags: [springboot, 学习笔记]
+tags: [SpringBoot, 学习笔记]
 ---
 
 # Spring boot学习笔记

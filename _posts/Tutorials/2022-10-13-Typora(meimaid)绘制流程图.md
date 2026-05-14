@@ -5,12 +5,7 @@ author: "lili"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
-tags:
-
-  - 流程图
-  - typora
-  - meimaid
-subtitle: "绘制流程图...."
+tags: [工具推荐, Markdown, 流程图]subtitle: "绘制流程图...."
 ---
 
 # Typora(meimaid)绘制流程图

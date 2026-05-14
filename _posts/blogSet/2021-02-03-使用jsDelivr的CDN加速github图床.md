@@ -6,11 +6,7 @@ author: "lili"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
-tags:
-  - github
-  - 图床
-  - 博客搭建
----
+tags: [博客搭建, CDN, 图床]---
 
 # 使用jsDelivr的CDN加速github图床
 

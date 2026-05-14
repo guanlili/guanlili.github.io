@@ -6,12 +6,7 @@ author: "lili"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
-tags:
-  - gitee
-  - 博客搭建
-  - typora
-  - picgo
----
+tags: [博客搭建, 图床, PicGo]---
 
 # typora+picgo+gitee搭建免费图床纵享丝滑
 

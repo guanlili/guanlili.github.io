@@ -7,18 +7,7 @@ header-img: "img/about-bg.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
-tags:
-
-  - Wan2.1
-  - ComfyUI
-  - 文生视频
-  - T2V
-  - 4090部署
-  - 单卡部署
-  - 国内镜像
-  - hf-mirror
-  - Screen后台运行
-
+tags: [AI, ComfyUI, 文生视频]
 ---
 # 🚀 实战入门：在服务器单卡部署 ComfyUI + Wan2.1 文生视频最佳实践
 

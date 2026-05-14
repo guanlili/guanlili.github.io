@@ -7,11 +7,7 @@ header-img: "img/blog-cover-database.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
-tags:
-  - python
-  - 数据分析
-  - matplotlib
----
+tags: [Python, 数据分析, 可视化]---
 
 
 > [numpy](http://outman.ink/2020/08/20/numpy%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/)(数据计算)+[pandas](http://outman.ink/2020/06/02/pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/)(数据提取)+[matplotlib](http://outman.ink/2020/07/20/matplotlib+pyechart/)(可视化图表)
