@@ -1533,19 +1533,24 @@ img::-moz-selection {
   }
 }
 #tag_cloud {
-  margin: 20px 0 15px 0;
+  margin: 20px 0 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
 }
 #tag_cloud a,
 #tag_cloud .tag {
-  transition-property: all;
-  transition-duration: 0.4s;
-  transition-timing-function: ease;
-  font-size: 14px;
-  border: none;
-  line-height: 28px;
-  margin: 0 2px;
-  margin-bottom: 8px;
-  background: #f3f5f5;
+  transition: all 0.2s ease;
+  font-size: 13px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  line-height: 1;
+  padding: 6px 14px;
+  margin: 0;
+  margin-bottom: 0;
+  background: #fff;
+  color: #555;
 }
 #tag_cloud a:hover,
 #tag_cloud .tag:hover,
@@ -1554,15 +1559,22 @@ img::-moz-selection {
 #tag_cloud a.focus,
 #tag_cloud .tag.focus {
   background-color: #0085a1 !important;
+  border-color: #0085a1 !important;
+  color: #fff !important;
 }
 #tag_cloud a.focus,
 #tag_cloud .tag.focus {
-  box-shadow: rgba(0, 0, 0, 0.117647) 0 1px 6px, rgba(0, 0, 0, 0.239216) 0 1px 4px;
+  background-color: #0085a1 !important;
+  border-color: #0085a1 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(0, 133, 161, 0.3);
 }
 #tag_cloud a.tag-button--all,
 #tag_cloud .tag.tag-button--all {
   font-weight: 700;
   color: #0085a1 !important;
+  border-color: #0085a1 !important;
+  background: #fff !important;
 }
 #tag_cloud a.tag-button--all:hover,
 #tag_cloud .tag.tag-button--all:hover,
@@ -1570,7 +1582,8 @@ img::-moz-selection {
 #tag_cloud .tag.tag-button--all:active,
 #tag_cloud a.tag-button--all.focus,
 #tag_cloud .tag.tag-button--all.focus {
-  background-color: #e4e4e4 !important;
+  background-color: #0085a1 !important;
+  color: #fff !important;
 }
 @media only screen and (min-width: 768px) {
   #tag_cloud {
@@ -1591,6 +1604,11 @@ img::-moz-selection {
 .listing-seperator {
   color: #0085a1;
   font-size: 21px !important;
+  font-weight: 600;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 32px 0 16px 0;
 }
 .listing-seperator::before {
   margin-right: 5px;
@@ -1606,20 +1624,27 @@ img::-moz-selection {
 }
 .mini-post-list .tag-text {
   font-weight: 200;
-  /* Hux learn from
-     *     TypeIsBeautiful,
-     *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
-     */
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
   line-height: 1.7;
 }
 .mini-post-list .post-preview {
   position: relative;
+  padding: 10px 0;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+.mini-post-list .post-preview:hover {
+  background: #fafafa;
 }
 .mini-post-list .post-preview > a .post-title {
   font-size: 16px;
   font-weight: 500;
-  margin-top: 20px;
+  margin-top: 10px;
+  color: #333;
+  transition: color 0.2s ease;
+}
+.mini-post-list .post-preview > a:hover .post-title {
+  color: #0085a1;
 }
 .mini-post-list .post-preview > a .post-subtitle {
   font-size: 13px;
@@ -1652,13 +1677,16 @@ img::-moz-selection {
   text-align: center;
   color: #999;
   font-size: 14px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   letter-spacing: 1px;
+  padding: 12px 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
 }
 .year-count {
   display: inline-block;
   font-size: 12px;
-  color: #999;
+  color: #aaa;
   margin-left: 8px;
   font-weight: 400;
 }
@@ -1669,10 +1697,11 @@ img::-moz-selection {
 .mini-post-list .post-preview .post-date {
   position: absolute;
   right: 0;
-  top: 22px;
+  top: 16px;
   font-size: 13px;
-  color: #aaa;
+  color: #bbb;
   font-weight: 300;
+  font-variant-numeric: tabular-nums;
 }
 @media only screen and (min-width: 768px) {
   .mini-post-list .post-preview .post-date {
@@ -1697,9 +1726,16 @@ img::-moz-selection {
 .archive-visible {
   opacity: 1;
 }
-#tag_cloud .tag-count-1, #tag_cloud .tag-count-2 { font-size: 11px; opacity: 0.7; }
-#tag_cloud .tag-count-3, #tag_cloud .tag-count-4 { font-size: 12px; opacity: 0.8; }
-#tag_cloud .tag-count-5, #tag_cloud .tag-count-6, #tag_cloud .tag-count-7, #tag_cloud .tag-count-8, #tag_cloud .tag-count-9 { font-size: 13px; }
+#tag_cloud .tag-count-1 sup, #tag_cloud .tag-count-2 sup { color: #aaa; }
+#tag_cloud .tag-count-3 sup, #tag_cloud .tag-count-4 sup { color: #888; }
+#tag_cloud .tag-count-5 sup, #tag_cloud .tag-count-6 sup,
+#tag_cloud .tag-count-7 sup, #tag_cloud .tag-count-8 sup,
+#tag_cloud .tag-count-9 sup { color: #666; }
+.mini-post-list .post-preview hr {
+  border: 0;
+  border-top: 1px solid #f0f0f0;
+  margin: 8px 0 0 0;
+}
 /* Tags support End*/
 /* Hux make all img responsible in post-container */
 .post-container img {
