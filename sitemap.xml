@@ -1,0 +1,24 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{% for page in site.pages %}
+  {% unless page.hide-in-nav or page.url contains 'page' %}
+  <url>
+    <loc>{{ site.url }}{{ page.url | remove: 'index.html' }}</loc>
+    <lastmod>{% if page.date %}{{ page.date | date: '%Y-%m-%d' }}{% else %}{{ site.time | date: '%Y-%m-%d' }}{% endif %}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  {% endunless %}
+{% endfor %}
+{% for post in site.posts %}
+  <url>
+    <loc>{{ site.url }}{{ post.url }}</loc>
+    <lastmod>{{ post.date | date: '%Y-%m-%d' }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+{% endfor %}
+</urlset>
