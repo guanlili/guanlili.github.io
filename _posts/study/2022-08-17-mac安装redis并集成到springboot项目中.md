@@ -1,3 +1,10 @@
+---
+layout: post
+title: "mac安装redis并集成到springboot项目中"
+date: 2022-08-17
+tags: [redis, springboot, mac]
+---
+
 # mac安装redis并集成到springboot项目中
 
 ## 使用Homebrew安装Redis

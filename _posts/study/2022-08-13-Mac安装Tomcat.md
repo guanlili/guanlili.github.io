@@ -1,3 +1,10 @@
+---
+layout: post
+title: "Mac安装Tomcat"
+date: 2022-08-13
+tags: [tomcat, mac]
+---
+
 # Mac安装Tomcat
 
 ## 1.下载安装Tomcat
