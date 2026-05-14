@@ -58,8 +58,14 @@ kramdown:
 
 
 
-# Disqus settings评论设置
-disqus_username: outman
+# Giscus settings (GitHub Discussions 评论系统)
+# 教你2步配置：1. 仓库 Settings → Features → 启用 Discussions
+#              2. 访问 https://giscus.app 填入仓库名，复制 category-id 替换下面
+giscus_enabled: true
+giscus_repo: guanlili/guanlili.github.io
+giscus_repo_id: MDEwOlJlcG9zaXRvcnkzMzUxNjQ2OTk=
+giscus_category: General
+giscus_category_id: YOUR_CATEGORY_ID
 
 # Netease settings (service discontinued)
 netease_comment: false

@@ -1802,3 +1802,191 @@ img::-moz-selection {
 .no-scroll {
   overflow-y: hidden;
 }
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1a1a2e;
+    color: #c9d1d9;
+  }
+  .navbar-custom {
+    background-color: transparent;
+  }
+  .navbar-custom.invert .navbar-brand,
+  .navbar-custom.invert .nav li a {
+    color: #c9d1d9;
+  }
+  .intro-header {
+    background-color: #16213e;
+  }
+  .intro-header .post-heading,
+  .intro-header .site-heading,
+  .intro-header .page-heading {
+    color: #c9d1d9;
+  }
+  .intro-header .post-heading .subheading,
+  .intro-header .site-heading .subheading,
+  .intro-header .page-heading .subheading {
+    color: #c9d1d9;
+  }
+  .intro-header.style-text .site-heading,
+  .intro-header.style-text .post-heading,
+  .intro-header.style-text .page-heading {
+    color: #c9d1d9;
+  }
+  .post-container a {
+    color: #58a6ff;
+  }
+  .post-container a:hover,
+  .post-container a:focus {
+    color: #0db7c0;
+  }
+  .post-container h2::before {
+    border-bottom-color: #30363d;
+  }
+  .post-container blockquote {
+    color: #e7ebee;
+  }
+  .post-container .pager li > a {
+    background-color: #16213e;
+    color: #c9d1d9;
+  }
+  .post-container .pager li > a > span {
+    color: #c9d1d9;
+  }
+  .post-container .pager li > a:hover,
+  .post-container .pager li > a:focus {
+    background-color: #0db7c0;
+    color: #fff;
+  }
+  .post-container .pager li > a:hover > span,
+  .post-container .pager li > a:focus > span {
+    color: #fff;
+  }
+  .post-preview > a {
+    color: #e6e6e6;
+  }
+  .post-preview > a:hover,
+  .post-preview > a:focus {
+    color: #0db7c0;
+  }
+  .post-preview .post-meta {
+    color: #c9d1d9;
+  }
+  .post-preview .post-meta > a {
+    color: #e6e6e6;
+  }
+  .post-content-preview {
+    color: #8b949e;
+  }
+  .tags a,
+  .tags .tag {
+    border-color: #30363d;
+    color: #c9d1d9;
+  }
+  .tags a:hover,
+  .tags .tag:hover,
+  .tags a:active,
+  .tags .tag:active {
+    color: #0db7c0;
+    border-color: #0db7c0;
+  }
+  #tag_cloud a,
+  #tag_cloud .tag {
+    background: #16213e;
+    color: #c9d1d9;
+  }
+  #tag_cloud a:hover,
+  #tag_cloud .tag:hover,
+  #tag_cloud a:active,
+  #tag_cloud .tag:active,
+  #tag_cloud a.focus,
+  #tag_cloud .tag.focus {
+    background-color: #0db7c0 !important;
+    color: #fff !important;
+  }
+  .listing-seperator {
+    color: #0db7c0;
+  }
+  .sidebar-container {
+    color: #c9d1d9;
+  }
+  .short-about {
+    color: #c9d1d9;
+  }
+  .short-about h5 {
+    color: #e6e6e6;
+  }
+  .side-catalog .catalog-body a {
+    color: #c9d1d9;
+  }
+  .side-catalog .catalog-body a.active {
+    color: #0db7c0;
+  }
+  .search-page {
+    background-color: #1a1a2e;
+    color: #c9d1d9;
+  }
+  footer .copyright {
+    color: #c9d1d9;
+  }
+  footer .copyright a {
+    color: #58a6ff;
+  }
+  footer .copyright a:hover,
+  footer .copyright a:focus {
+    color: #0db7c0;
+  }
+  .post-container p code,
+  .post-container li code {
+    background-color: #16213e;
+    color: #0db7c0;
+  }
+  .table-responsive table {
+    background-color: #16213e;
+  }
+  .table-responsive table th,
+  .table-responsive table td {
+    border-color: #30363d !important;
+  }
+  ::-moz-selection {
+    color: white;
+    background: #0db7c0;
+  }
+  ::selection {
+    color: white;
+    background: #0db7c0;
+  }
+  .pager li > a {
+    color: #c9d1d9;
+    background-color: #16213e;
+  }
+  .pager li > a:hover,
+  .pager li > a:focus {
+    background-color: #0db7c0;
+    color: #fff;
+  }
+  .mini-post-list .post-preview .post-meta {
+    color: #c9d1d9;
+  }
+  hr {
+    border-top-color: #30363d;
+  }
+  .giscus,
+  .giscus-frame {
+    color-scheme: dark;
+  }
+}
+@media (prefers-color-scheme: dark) and only screen and (min-width: 1170px) {
+  .navbar-custom.is-fixed {
+    background-color: rgba(26, 26, 46, 0.95);
+    border-bottom: 1px solid #30363d;
+  }
+  .navbar-custom.is-fixed .navbar-brand,
+  .navbar-custom.is-fixed .nav li a {
+    color: #c9d1d9;
+  }
+}
+@media (prefers-color-scheme: dark) and only screen and (max-width: 767px) {
+  .navbar-default .navbar-collapse {
+    background: #16213e;
+  }
+}
