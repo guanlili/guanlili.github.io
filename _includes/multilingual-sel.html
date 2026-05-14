@@ -1,6 +1,6 @@
                 <!-- Language Selector -->
-                <select class="sel-lang" onchange= "onLanChange(this.options[this.options.selectedIndex].value)">
-                    <option value="0" selected> 中文 | Chinese </option>
-                    <option value="1"> 英文 | English </option>
-                </select>
-
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="zh" onclick="onLanChange('zh')">中</button>
+                    <span class="lang-divider">/</span>
+                    <button class="lang-btn" data-lang="en" onclick="onLanChange('en')">En</button>
+                </div>

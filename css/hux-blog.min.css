@@ -613,9 +613,63 @@ select {
   padding: 0em 0.4em;
   background: white;
 }
-select.sel-lang {
-  min-height: 28px;
+/* Language Switcher */
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 20px;
+  padding: 8px 0;
+}
+.lang-btn {
+  background: none;
+  border: 1px solid transparent;
+  padding: 4px 14px;
   font-size: 14px;
+  color: #999;
+  cursor: pointer;
+  border-radius: 16px;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+.lang-btn:hover {
+  color: #555;
+  border-color: #e0e0e0;
+}
+.lang-btn.active {
+  color: #337ab7;
+  border-color: #337ab7;
+  background: #f0f6ff;
+}
+.lang-divider {
+  color: #ccc;
+  font-size: 14px;
+  user-select: none;
+}
+/* About Page */
+.about-content {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: aboutFadeIn 0.5s ease forwards;
+}
+@keyframes aboutFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.about-content blockquote {
+  border-left: 4px solid #337ab7;
+  margin: 24px 0;
+  padding: 12px 20px;
+  background: #f8f9fa;
+  color: #555;
+  font-style: italic;
+  border-radius: 0 4px 4px 0;
+}
+.about-content strong {
+  color: #333;
 }
 table {
   margin-top: 10px;
