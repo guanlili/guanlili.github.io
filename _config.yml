@@ -64,8 +64,8 @@ kramdown:
 giscus_enabled: true
 giscus_repo: guanlili/guanlili.github.io
 giscus_repo_id: MDEwOlJlcG9zaXRvcnkzMzUxNjQ2OTk=
-giscus_category: General
-giscus_category_id: YOUR_CATEGORY_ID
+giscus_category: Announcements
+giscus_category_id: DIC_kwDOE_o1G84CQByl
 
 # Netease settings (service discontinued)
 netease_comment: false
