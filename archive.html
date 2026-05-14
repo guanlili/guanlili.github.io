@@ -5,7 +5,7 @@ description: "「我干了什么 究竟拿了时间换了什么」"
 header-img: "img/tag-bg.jpg"
 ---
 
-<!-- 
+<!--
 Credits: this page shamelessly borrowed a lot from:
 https://github.com/kitian616/jekyll-TeXt-theme
 -->
@@ -16,10 +16,16 @@ https://github.com/kitian616/jekyll-TeXt-theme
 <div class="container">
 	<div class="row">
 		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+			<!-- Archive Stats -->
+			<div class="archive-stats">
+				共 {{ site.posts.size }} 篇文章 · {{ site.tags.size }} 个标签
+			</div>
+
 			<!-- Tags (as filter) -->
 			<div id='tag_cloud' class="tags tags-sup js-tags">
 				<a class="tag-button--all" data-encode="">
-					Show All
+					全部
 					<sup>{{site.posts.size}}</sup>
 				</a>
 
@@ -27,7 +33,7 @@ https://github.com/kitian616/jekyll-TeXt-theme
 				{% for tag in site.tags %}
 				<a data-sort="{{ site.posts.size | minus: tag[1].size | prepend: '0000' | slice: -4, 4 }}"
 					data-encode="{{ tag[0] | strip | url_encode }}"
-					class="tag-button"
+					class="tag-button tag-count-{{ tag[1].size }}"
 					title="{{ tag[0] }}" rel="{{ tag[1].size }}">
 					{{ tag[0] }}
 					<sup>{{tag[1].size}}</sup>
@@ -37,12 +43,13 @@ https://github.com/kitian616/jekyll-TeXt-theme
         {{ tags | split:'__SEPERATOR__' | sort }}
 			</div>
 
-            <!-- Article List -->
-			<div class="mini-post-list js-result d-none">
+			<!-- Article List -->
+			<div class="mini-post-list js-result archive-hidden">
 			{%- assign _sorted_list = site.posts -%}
 			{%- assign _sorted_list = _sorted_list | sort: 'date' -%}
 			{%- assign _sorted_list = _sorted_list | reverse -%}
 
+			{%- assign _year_count = 0 -%}
 
 			{%- for _article in _sorted_list -%}
 				{%- assign _tags = '' -%}
@@ -55,21 +62,26 @@ https://github.com/kitian616/jekyll-TeXt-theme
 					{%- endif -%}
 				{%- endfor -%}
 
-			{% comment %} group by year {% endcomment %}
+			{% comment %} group by year with count {% endcomment %}
 			{%- assign _currentdate = _article.date | date: '%Y' -%}
 			{%- if _currentdate != _date -%}
+				{%- if _year_count and _date -%}
+					<span class="year-count">{{ _year_count }} 篇</span>
+				{%- endif -%}
 				{%- unless forloop.first -%}</section>{%- endunless -%}
 				<section>
 				<span class="fa listing-seperator">
 					<span class="tag-text">{{ _currentdate }}</span>
 				</span>
 				{%- assign _date = _currentdate -%}
+				{%- assign _year_count = 0 -%}
 			{%- endif -%}
+			{%- assign _year_count = _year_count | plus: 1 -%}
 
 				<div class="post-preview item" data-tags="{{ _tags }}">
 				    <a href="{{ _article.url | prepend: site.baseurl }}">
 				        <h2 class="post-title">
-                            {{ _article.title }}
+				            {{ _article.title }}
 				        </h2>
 				        {% if _article.subtitle %}
 				        <h3 class="post-subtitle">
@@ -77,9 +89,13 @@ https://github.com/kitian616/jekyll-TeXt-theme
 				        </h3>
 				        {% endif %}
 				    </a>
+				    <span class="post-date">{{ _article.date | date: '%m-%d' }}</span>
 					<hr>
 				</div>
-			{%- if forloop.last -%}</section>{%- endif -%}
+			{%- if forloop.last -%}
+				<span class="year-count">{{ _year_count }} 篇</span>
+				</section>
+			{%- endif -%}
 			{% endfor %}
 			</div>
 		</div>

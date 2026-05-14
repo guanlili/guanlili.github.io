@@ -1593,6 +1593,59 @@ img::-moz-selection {
     font-size: 18px;
   }
 }
+/* Archive page enhancements */
+.archive-stats {
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+.year-count {
+  display: inline-block;
+  font-size: 12px;
+  color: #999;
+  margin-left: 8px;
+  font-weight: 400;
+}
+.mini-post-list .post-preview {
+  position: relative;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.mini-post-list .post-preview .post-date {
+  position: absolute;
+  right: 0;
+  top: 22px;
+  font-size: 13px;
+  color: #aaa;
+  font-weight: 300;
+}
+@media only screen and (min-width: 768px) {
+  .mini-post-list .post-preview .post-date {
+    top: 24px;
+  }
+}
+.mini-post-list .post-preview.item-hidden {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+.mini-post-list section.section-hidden {
+  display: none;
+}
+.archive-hidden {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.archive-visible {
+  opacity: 1;
+}
+#tag_cloud .tag-count-1, #tag_cloud .tag-count-2 { font-size: 11px; opacity: 0.7; }
+#tag_cloud .tag-count-3, #tag_cloud .tag-count-4 { font-size: 12px; opacity: 0.8; }
+#tag_cloud .tag-count-5, #tag_cloud .tag-count-6, #tag_cloud .tag-count-7, #tag_cloud .tag-count-8, #tag_cloud .tag-count-9 { font-size: 13px; }
 /* Tags support End*/
 /* Hux make all img responsible in post-container */
 .post-container img {
