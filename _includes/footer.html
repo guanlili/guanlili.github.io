@@ -166,8 +166,8 @@
         return (lang === "en" || lang === "zh") ? lang : "zh";
     }
 
-    function _render() {
-        var lang = getLang();
+    function _render(lang) {
+        if (!lang) lang = getLang();
         var showEl = lang === "en" ? $en : $zh;
         var hideEl = lang === "en" ? $zh : $en;
 
@@ -191,7 +191,7 @@
             url.searchParams.set("lang", lang);
         }
         history.replaceState(null, "", url);
-        _render();
+        _render(lang);
     }
 
     _render();
