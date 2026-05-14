@@ -31,10 +31,9 @@ description: "「离开世界之前 一切都是过程」"
     </a>
     <p class="post-meta">
         Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%B %-d, %Y" }}
-        &middot; <i class="fa fa-clock-o"></i> 约 {{ post.content | strip_html | size | divided_by: 500 | plus: 1 }} 分钟
+        &middot; <span class="reading-badge"><i class="fa fa-clock-o"></i> {{ post.content | strip_html | size | divided_by: 500 | plus: 1 }} min</span>
     </p>
 </div>
-<hr>
 {% endfor %}
 
 <!-- Pager -->

@@ -392,7 +392,8 @@ pre.highlight {
 }
 .highlighter-rouge .highlight {
   margin-bottom: 10px;
-  border-radius: 6px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.08);
 }
 .highlighter-rouge .highlight pre {
   font-size: 14px;
@@ -714,18 +715,36 @@ samp {
   line-height: 1.9;
 }
 .post-container blockquote {
-  border-left: 3px solid #0085a1;
-  padding-left: 20px;
+  border-left: 4px solid #0085a1;
+  margin: 24px 0;
+  padding: 12px 20px;
+  background: #f8f9fa;
+  border-radius: 0 6px 6px 0;
 }
 .post-container blockquote p {
   margin: 0;
 }
+.post-container p code,
+.post-container li code {
+  background: #f0f5f5;
+  color: #c7254e;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
 .post-container a {
   color: #337ab7;
+  text-decoration: none;
+  background-image: linear-gradient(#0085a1, #0085a1);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s ease, color 0.2s ease;
 }
 .post-container a:hover,
 .post-container a:focus {
   color: #0085a1;
+  background-size: 100% 1px;
 }
 .post-container h1,
 .post-container h2,
@@ -1290,6 +1309,31 @@ samp {
     bottom: 10px;
     right: 15px;
   }
+}
+/* Homepage post cards */
+.post-preview {
+  padding: 24px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  margin-bottom: 20px;
+  background: #fff;
+  transition: box-shadow 0.25s ease, transform 0.2s ease;
+}
+.post-preview:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  transform: translateY(-2px);
+}
+.reading-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #f0f5f5;
+  color: #0085a1;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
 }
 .post-preview > a {
   color: #404040;
@@ -2014,16 +2058,6 @@ img::-moz-selection {
     background: #16213e;
   }
 }
-@media (prefers-color-scheme: dark) and (prefers-color-scheme: dark) {
-  #img-lightbox {
-    background: rgba(0, 0, 0, 0.95);
-  }
-}
-@media (prefers-color-scheme: dark) and (prefers-color-scheme: dark) {
-  #img-lightbox .lightbox-close {
-    color: #ccc;
-  }
-}
 #img-lightbox {
   display: none;
   position: fixed;
@@ -2061,6 +2095,35 @@ img::-moz-selection {
 }
 #img-lightbox .lightbox-close:hover {
   opacity: 0.7;
+}
+/* 404 Page */
+.error-container {
+  position: relative;
+  z-index: 10;
+  margin-top: -120px;
+  padding-bottom: 60px;
+}
+.error-404-number {
+  font-size: 120px;
+  font-weight: 800;
+  color: #fff;
+  opacity: 0.25;
+  line-height: 1;
+  animation: float404 3s ease-in-out infinite;
+}
+@keyframes float404 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+.error-desc {
+  color: #fff;
+  opacity: 0.8;
+  font-size: 18px;
+  margin: 16px 0 24px 0;
+}
+.error-btn {
+  border-radius: 20px;
+  padding: 8px 28px;
 }
 .related-posts {
   margin-top: 40px;
@@ -2130,6 +2193,71 @@ img::-moz-selection {
   .post-preview .post-tags-home .tag:hover {
     background: #0db7c0;
     color: #fff;
+  }
+  .post-preview {
+    border-color: #30363d;
+    background: #1a1a2e;
+  }
+  .reading-badge {
+    background: #16213e;
+    color: #0db7c0;
+  }
+  .lang-btn {
+    color: #8b949e;
+  }
+  .lang-btn:hover {
+    color: #c9d1d9;
+    border-color: #444;
+  }
+  .lang-btn.active {
+    color: #58a6ff;
+    border-color: #58a6ff;
+    background: #16213e;
+  }
+  .archive-stats {
+    color: #8b949e;
+    border-color: #30363d;
+  }
+  .about-content blockquote {
+    background: #16213e;
+    border-left-color: #0db7c0;
+    color: #c9d1d9;
+  }
+  .year-count {
+    color: #8b949e;
+  }
+  .post-container blockquote {
+    background: #16213e;
+    border-left-color: #0db7c0;
+    color: #c9d1d9;
+  }
+  .post-container p code,
+  .post-container li code {
+    background: #16213e;
+    color: #f97583;
+  }
+  .post-container a {
+    color: #58a6ff;
+    background-image: linear-gradient(#58a6ff, #58a6ff);
+  }
+  .post-container a:hover,
+  .post-container a:focus {
+    color: #79c0ff;
+  }
+  .highlighter-rouge .highlight {
+    border-color: #30363d;
+  }
+  .mini-post-list .post-preview:hover {
+    background: #16213e;
+  }
+  .mini-post-list .post-preview > a .post-title {
+    color: #c9d1d9;
+  }
+  .mini-post-list .post-preview > a:hover .post-title {
+    color: #0db7c0;
+  }
+  .mini-post-list .post-preview hr {
+    border-top-color: #30363d;
   }
   #img-lightbox {
     background: rgba(0, 0, 0, 0.95);
