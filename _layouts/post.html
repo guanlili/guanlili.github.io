@@ -16,9 +16,26 @@ layout: default
     <div class="container">
         <div class="row">
 
+    <!-- Side Catalog (Left) -->
+        {% unless page.no-catalog %}
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                catalog-container
+                catalog-left">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        {% endunless %}
+
     <!-- Post Container -->
             <div class="
-                col-lg-8 col-lg-offset-2
+                {% unless page.no-catalog %}col-lg-8 col-lg-offset-0{% else %}col-lg-8 col-lg-offset-2{% endunless %}
                 col-md-10 col-md-offset-1
                 post-container">
 
@@ -79,36 +96,6 @@ layout: default
                 {% endif %}
 
             </div>  
-
-    <!-- Side Catalog Container -->
-        {% unless page.no-catalog %}
-            <div class="
-                col-lg-2 col-lg-offset-0
-                visible-lg-block
-                sidebar-container
-                catalog-container">
-                <div class="side-catalog">
-                    <hr class="hidden-sm hidden-xs">
-                    <h5>
-                        <a class="catalog-toggle" href="#">CATALOG</a>
-                    </h5>
-                    <ul class="catalog-body"></ul>
-                </div>
-            </div>
-
-            <!-- Mobile Catalog FAB & Drawer -->
-            <div class="catalog-fab" id="catalog-fab" title="目录" aria-label="打开目录">
-                <svg class="icon"><use href="#icon-list"></use></svg>
-            </div>
-            <div class="catalog-overlay" id="catalog-overlay"></div>
-            <div class="catalog-drawer" id="catalog-drawer" role="dialog" aria-label="文章目录">
-                <div class="catalog-drawer-header">
-                    <span>目录</span>
-                    <button class="catalog-drawer-close" id="catalog-drawer-close">&times;</button>
-                </div>
-                <ul class="catalog-body catalog-body-mobile"></ul>
-            </div>
-        {% endunless %}
 
     <!-- Sidebar Container -->
             <div class="
