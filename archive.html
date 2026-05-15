@@ -65,14 +65,12 @@ https://github.com/kitian616/jekyll-TeXt-theme
 			{% comment %} group by year with count {% endcomment %}
 			{%- assign _currentdate = _article.date | date: '%Y' -%}
 			{%- if _currentdate != _date -%}
-				{%- if _year_count and _date -%}
+				{%- unless forloop.first -%}
 					<span class="year-count">{{ _year_count }} 篇</span>
-				{%- endif -%}
-				{%- unless forloop.first -%}</section>{%- endunless -%}
+					</section>
+				{%- endunless -%}
 				<section>
-				<span class="fa listing-seperator">
-					<span class="tag-text">{{ _currentdate }}</span>
-				</span>
+				<span class="listing-seperator">{{ _currentdate }}</span>
 				{%- assign _date = _currentdate -%}
 				{%- assign _year_count = 0 -%}
 			{%- endif -%}
@@ -90,7 +88,6 @@ https://github.com/kitian616/jekyll-TeXt-theme
 				        {% endif %}
 				    </a>
 				    <span class="post-date">{{ _article.date | date: '%m-%d' }}</span>
-					<hr>
 				</div>
 			{%- if forloop.last -%}
 				<span class="year-count">{{ _year_count }} 篇</span>
