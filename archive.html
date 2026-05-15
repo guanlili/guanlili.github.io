@@ -22,6 +22,18 @@ https://github.com/kitian616/jekyll-TeXt-theme
 				共 {{ site.posts.size }} 篇文章 · {{ site.tags.size }} 个标签
 			</div>
 
+			<!-- Search -->
+			<div class="archive-search">
+				<svg class="icon"><use href="#icon-search"></use></svg>
+				<input type="text" id="archive-search" placeholder="搜索文章标题..." autocomplete="off">
+			</div>
+
+			<!-- Filter Info -->
+			<div class="archive-filter-info" id="archive-filter-info" style="display:none">
+				<span id="filter-info-text"></span>
+				<button id="filter-info-clear" type="button">&times;</button>
+			</div>
+
 			<!-- Tags (as filter) -->
 			<div id='tag_cloud' class="tags tags-sup js-tags">
 				<a class="tag-button--all" data-encode="">
