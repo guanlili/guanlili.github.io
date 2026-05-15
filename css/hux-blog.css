@@ -1645,14 +1645,14 @@ img::-moz-selection {
 #tag_cloud {
   margin: 12px 0 15px 0;
   display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  padding-bottom: 4px;
+  flex-wrap: wrap;
+  max-height: 62px;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  position: relative;
 }
-#tag_cloud::-webkit-scrollbar {
-  display: none;
+#tag_cloud.expanded {
+  max-height: none;
 }
 #tag_cloud a,
 #tag_cloud .tag {
@@ -1666,7 +1666,6 @@ img::-moz-selection {
   background: #f3f5f5;
   color: #555 !important;
   white-space: nowrap;
-  flex-shrink: 0;
 }
 #tag_cloud a:hover,
 #tag_cloud .tag:hover,
@@ -1716,6 +1715,23 @@ img::-moz-selection {
   .tag-comments {
     font-size: 14px;
   }
+}
+.tag-cloud-toggle {
+  display: block;
+  width: 100%;
+  padding: 6px 0;
+  margin-bottom: 8px;
+  background: none;
+  border: 1px dashed var(--color-border);
+  border-radius: 6px;
+  color: var(--color-gray);
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.tag-cloud-toggle:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 .t:first-child {
   margin-top: 0px;

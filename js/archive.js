@@ -52,6 +52,19 @@ Enhanced with search and filter feedback.
     var filterInfoClear = document.getElementById('filter-info-clear');
     var searchInput = document.getElementById('archive-search');
 
+    // Tag cloud collapse toggle
+    var tagCloudToggle = document.getElementById('tag-cloud-toggle');
+    if (tagCloudToggle && tags) {
+      var tagItems = tags.querySelectorAll('a');
+      if (tagItems.length > 10) {
+        tagCloudToggle.style.display = 'block';
+      }
+      tagCloudToggle.addEventListener('click', function() {
+        var isExpanded = tags.classList.toggle('expanded');
+        tagCloudToggle.textContent = isExpanded ? '收起标签' : '展开标签';
+      });
+    }
+
     sections.forEach(function(section) {
       sectionArticles.push(section.querySelectorAll('.item'));
     });

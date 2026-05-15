@@ -31,7 +31,7 @@ description: "「离开世界之前 一切都是过程」"
     </a>
     <p class="post-meta">
         Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%B %-d, %Y" }}
-        &middot; <span class="reading-badge"><i class="fa fa-clock-o"></i> {{ post.content | strip_html | size | divided_by: 500 | plus: 1 }} min</span>
+        &middot; <span class="reading-badge"><svg class="icon icon-clock"><use href="#icon-clock"></use></svg> {{ post.content | strip_html | size | divided_by: 500 | plus: 1 }} min</span>
     </p>
 </div>
 {% endfor %}

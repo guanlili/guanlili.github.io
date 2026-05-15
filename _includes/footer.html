@@ -69,6 +69,15 @@
 <!-- Simple Jekyll Search -->
 <script defer src="{{ "/js/simple-jekyll-search.min.js" | prepend: site.baseurl }}"></script>
 
+<!-- Lazy load post images -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.post-container img:not([loading])').forEach(function(img) {
+        img.setAttribute('loading', 'lazy');
+    });
+});
+</script>
+
 <!-- Service Worker (now bundled in hux-blog.min.js) -->
 
 
@@ -89,16 +98,7 @@
 
 
 {% if page.title == 'Archive' %}
-<script defer src="{{ '/js/jquery.tagcloud.js' | prepend: site.baseurl }}"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var links = document.querySelectorAll('#tag_cloud a');
-        tagcloud(links, {
-            color: { start: '#bbbbee', end: '#2f93b4' }
-        });
-    });
-</script>
-<script defer src='{{ "/js/archive.js " | prepend: site.baseurl }}'></script>
+<script defer src="{{ '/js/archive.js' | prepend: site.baseurl }}"></script>
 {% endif %}
 
 
@@ -257,7 +257,7 @@
             fuzzy: false,
             templateMiddleware: function (prop, value, template) {
                 if (prop === 'subtitle' || prop === 'title') {
-                    if (value.indexOf("code")) {
+                    if (value.indexOf("code") > -1) {
                         return htmlDecode(value);
                     } else {
                         return value;
