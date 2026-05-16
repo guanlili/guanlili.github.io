@@ -1190,11 +1190,15 @@ img::-moz-selection {
 
 .year-count {
   display: inline-block;
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--color-gray);
-  margin-left: 6px;
-  vertical-align: baseline;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: rgba(0, 133, 161, 0.07);
+  padding: 2px 10px;
+  border-radius: 999em;
+  margin-left: 10px;
+  vertical-align: middle;
+  letter-spacing: 0.3px;
 }
 
 .archive-hidden {
@@ -1211,22 +1215,59 @@ img::-moz-selection {
 // Timeline
 .mini-post-list section {
   position: relative;
-  padding-left: 28px;
-  margin-left: 6px;
+  padding-left: 30px;
+  margin-left: 10px;
   border-left: 2px solid var(--color-border);
+  transition: border-color 0.3s ease;
+
+  &:first-child {
+    &::before {
+      content: '';
+      position: absolute;
+      left: -2px;
+      top: 0;
+      width: 2px;
+      height: 24px;
+      background: linear-gradient(to bottom, transparent, var(--color-border));
+    }
+  }
+  &:last-child {
+    &::after {
+      content: '';
+      position: absolute;
+      left: -2px;
+      bottom: 0;
+      width: 2px;
+      height: 24px;
+      background: linear-gradient(to top, transparent, var(--color-border));
+    }
+  }
+
+  &:hover {
+    border-left-color: var(--color-primary);
+  }
+
   .listing-seperator {
-    margin-left: -36px;
+    margin-left: -40px;
     position: relative;
     &::after {
       content: '';
       position: absolute;
-      left: 26px;
+      left: 25px;
       top: 55%;
       transform: translateY(-50%);
-      width: 8px;
-      height: 8px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
+      background: var(--color-bg);
+      border: 3px solid var(--color-primary);
+      transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+      z-index: 2;
+    }
+    &:hover::after {
       background: var(--color-primary);
+      box-shadow: 0 0 0 5px rgba(0, 133, 161, 0.12), 0 0 14px rgba(0, 133, 161, 0.2);
+      transform: translateY(-50%) scale(1.15);
     }
   }
 }
@@ -1234,18 +1275,35 @@ img::-moz-selection {
 // Card-style post items
 .mini-post-list .post-preview {
   position: relative;
-  padding: 10px 14px;
+  padding: 10px 14px 10px 18px;
   border-radius: 8px;
   margin-bottom: 4px;
   background: transparent;
-  transition: background 0.2s ease, transform 0.15s ease;
+  transition: background 0.2s ease, transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
   border-bottom: none;
+
+  // Horizontal connector line from timeline
+  &::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 18px;
+    width: 10px;
+    height: 1.5px;
+    background: var(--color-border);
+    transition: background 0.2s ease, width 0.2s ease;
+  }
+
   &:last-child {
     border-bottom: none;
   }
   &:hover {
     background: var(--color-surface);
-    transform: translateX(2px);
+    transform: translateX(4px);
+    &::before {
+      background: var(--color-primary);
+      width: 14px;
+    }
   }
   > a .post-title {
     font-size: 15px;
@@ -1266,7 +1324,7 @@ img::-moz-selection {
     margin-right: 6px;
   }
   @media only screen and (min-width: 768px) {
-    padding: 12px 16px;
+    padding: 12px 16px 12px 20px;
     > a > .post-title {
       font-size: 16px;
       line-height: 1.4;
@@ -1617,5 +1675,30 @@ hr {
     background-color: inherit;
     outline: 2px solid var(--color-primary);
     outline-offset: -2px;
+  }
+}
+
+// ===== Timeline Scroll Reveal =====
+.timeline-reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.45s cubic-bezier(0.23, 1, 0.32, 1),
+              transform 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+  &.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Dark mode overrides for year-count badge
+[data-theme="dark"] {
+  .year-count {
+    background: rgba(13, 183, 192, 0.1);
+  }
+  .mini-post-list section .listing-seperator::after {
+    background: var(--color-bg);
+  }
+  .mini-post-list section .listing-seperator:hover::after {
+    box-shadow: 0 0 0 5px rgba(13, 183, 192, 0.12), 0 0 14px rgba(13, 183, 192, 0.25);
   }
 }

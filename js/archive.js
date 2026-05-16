@@ -204,5 +204,27 @@ Enhanced with search and filter feedback.
         }
       });
     }
+
+    // Scroll reveal animation for timeline cards
+    var revealItems = result.querySelectorAll('.post-preview.item');
+    if ('IntersectionObserver' in window && revealItems.length) {
+      var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!prefersReducedMotion) {
+        var revealObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('revealed');
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+        revealItems.forEach(function(item, index) {
+          item.style.transitionDelay = (index % 3) * 70 + 'ms';
+          item.classList.add('timeline-reveal');
+          revealObserver.observe(item);
+        });
+      }
+    }
   });
 })();
