@@ -38,7 +38,7 @@ h4,
 h5,
 h6 {
   .sans-serif;
-  line-height: 1.1;
+  line-height: @lh-tight;
   font-weight: bold;
 }
 h4 {
@@ -94,7 +94,7 @@ select {
   color: var(--color-link);
   border-color: var(--color-link);
   padding: 0em 0.4em;
-  background: white;
+  background: var(--color-bg);
   &.sel-lang {
     min-height: 28px;
     font-size: 14px;
@@ -122,7 +122,7 @@ hr.small {
   max-width: 100px;
   margin: 15px auto;
   border-width: 4px;
-  border-color: white;
+  border-color: var(--color-inverse);
 }
 // add by Hux
 pre,
@@ -193,7 +193,7 @@ samp {
   h4 {
     font-size: 22px;
     font-weight: 600;
-    color: gray;
+    color: var(--color-gray);
     & + p {
       margin-top: 10px;
     }
@@ -202,7 +202,7 @@ samp {
   h6 {
     font-size: 20px;
     font-weight: 600;
-    color: gray;
+    color: var(--color-gray);
     & + p {
       margin-top: 10px;
     }
@@ -258,7 +258,7 @@ samp {
     h4,
     h5,
     h6 {
-      line-height: 2;
+      line-height: @lh-base;
       margin-top: 20px;
     }
   }
@@ -323,7 +323,7 @@ samp {
   &:hover,
   &:focus {
     background-color: var(--color-primary-hover);
-    color: #fff;
+    color: var(--color-inverse);
   }
 
   &.show {
@@ -403,7 +403,7 @@ samp {
     position: absolute;
     right: 0;
     border: none;
-    background: white;
+    background: var(--color-bg);
     box-shadow: 0px 5px 10px 2px rgba(0, 0, 0, 0.2);
     box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px,
       rgba(0, 0, 0, 0.239216) 0px 1px 4px;
@@ -891,7 +891,7 @@ footer {
       font-weight: 800;
       letter-spacing: 1px;
       padding: 10px;
-      background-color: white;
+      background-color: var(--color-bg);
       border-radius: 0;
       @media only screen and (min-width: 768px) {
         font-size: 14px;
@@ -984,7 +984,7 @@ img::-moz-selection {
     &:hover,
     &:active {
       color: white;
-      border-color: white;
+      border-color: var(--color-inverse);
       background-color: rgba(255, 255, 255, 0.4);
       text-decoration: none;
     }
@@ -1021,15 +1021,15 @@ img::-moz-selection {
     border: none;
     line-height: 26px;
     margin: 0 3px;
-    background: #f3f5f5;
-    color: #555 !important;
+    background: var(--color-surface);
+    color: var(--color-text) !important;
     white-space: nowrap;
     flex-shrink: 0;
     &:hover,
     &:active,
     &.focus {
       background-color: var(--color-primary) !important;
-      color: #fff !important;
+      color: var(--color-inverse) !important;
     }
     &.focus {
       box-shadow: rgba(0, 0, 0, 0.117647) 0 1px 6px,
@@ -1041,7 +1041,7 @@ img::-moz-selection {
       &:hover,
       &:active,
       &.focus {
-        background-color: #e4e4e4 !important;
+        background-color: var(--color-surface) !important;
         color: var(--color-primary) !important;
       }
     }
@@ -1324,10 +1324,10 @@ img::-moz-selection {
 .error-404-number {
   font-size: 120px;
   font-weight: 800;
-  color: #fff;
+  color: var(--color-inverse);
 }
 .error-desc {
-  color: #fff;
+  color: var(--color-inverse);
   opacity: 0.8;
   font-size: 18px;
 }
@@ -1373,13 +1373,13 @@ img::-moz-selection {
   bottom: 0;
   padding-bottom: 20px;
   opacity: 0.6;
-  color: #fff;
+  color: var(--color-inverse);
 }
 .page-fullscreen footer .copyright {
-  color: #fff;
+  color: var(--color-inverse);
 }
 .page-fullscreen footer .copyright a {
-  color: #fff;
+  color: var(--color-inverse);
 }
 .page-fullscreen footer .copyright a:hover {
   color: #ddd;
@@ -1539,7 +1539,7 @@ hr {
     transition: background 0.2s ease, color 0.2s ease;
     &:hover {
       background: var(--color-primary);
-      color: #fff;
+      color: var(--color-inverse);
     }
   }
 }
@@ -1594,7 +1594,7 @@ hr {
   top: -100%;
   left: 0;
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-inverse);
   padding: 8px 16px;
   z-index: 10000;
   text-decoration: none;

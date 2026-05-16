@@ -9,14 +9,13 @@
 // CACHE_NAMESPACE
 // CacheStorage is shared between all sites under same domain.
 // A namespace can prevent potential name conflicts and mis-deletion.
-const CACHE_NAMESPACE = 'main-v2-'
+const CACHE_NAMESPACE = 'main-v3-'
 
 const CACHE = CACHE_NAMESPACE + 'precache-then-runtime';
 const PRECACHE_LIST = [
   "./",
   "./offline.html",
   "./js/hux-blog.min.js",
-  "./js/snackbar.js",
   "./img/icon_wechat.png",
   "./img/avatar-ghl-ny.jpg",
   "./img/home-bg.jpg",
@@ -29,7 +28,7 @@ const HOSTNAME_WHITELIST = [
   "yanshuo.io",
   "cdnjs.cloudflare.com"
 ]
-const DEPRECATED_CACHES = ['precache-v1', 'runtime', 'main-precache-v1', 'main-runtime', 'main-precache-then-runtime']
+const DEPRECATED_CACHES = ['precache-v1', 'runtime', 'main-precache-v1', 'main-runtime', 'main-precache-then-runtime', 'main-v2-precache-then-runtime']
 
 
 // The Util Function to hack URLs of intercepted requests
@@ -175,29 +174,25 @@ self.addEventListener('fetch', event => {
       return;
     }
 
-    // Stale-while-revalidate for possiblily dynamic content
-    // similar to HTTP's stale-while-revalidate: https://www.mnot.net/blog/2007/12/12/stale
-    // Upgrade from Jake's to Surma's: https://gist.github.com/surma/eb441223daaedf880801ad80006389f1
+    // Stale-while-revalidate: serve cache immediately, update in background
     const cached = caches.match(event.request);
     const fetched = fetch(getCacheBustingUrl(event.request), { cache: "no-store" });
     const fetchedCopy = fetched.then(resp => resp.clone());
-    
-    // Call respondWith() with whatever we get first.
-    // Promise.race() resolves with first one settled (even rejected)
-    // If the fetch fails (e.g disconnected), wait for the cache.
-    // If there’s nothing in cache, wait for the fetch.
-    // If neither yields a response, return offline pages.
-    event.respondWith(
-      Promise.race([fetched.catch(_ => cached), cached])
-        .then(resp => resp || fetched)
-        .catch(_ => caches.match('offline.html'))
-    );
 
-    // Update the cache with the version we fetched (only for ok status)
-    event.waitUntil(
-      Promise.all([fetchedCopy, caches.open(CACHE)])
-        .then(([response, cache]) => response.ok && cache.put(event.request, response))
-        .catch(_ => {/* eat any errors */ })
+    event.respondWith(
+      cached.then(cachedResp => {
+        // Update cache in background
+        event.waitUntil(
+          fetchedCopy.then(resp => {
+            if (resp.ok) {
+              caches.open(CACHE).then(cache => cache.put(event.request, resp));
+            }
+          }).catch(() => {})
+        );
+        // Return cached if available, otherwise wait for network
+        return cachedResp || fetched;
+      }).catch(() => fetched)
+      .catch(() => caches.match(‘offline.html’))
     );
 
     // If one request is a HTML naviagtion, checking update!

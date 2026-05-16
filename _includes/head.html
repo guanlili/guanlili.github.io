@@ -28,7 +28,7 @@
     <meta property="og:type" content="website">
     <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
     {% endcase %}
-    <meta property="og:image" content="{{ site.url }}{{ site.sidebar-avatar }}">
+    <meta property="og:image" content="{{ site.url }}{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.sidebar-avatar }}{% endif %}">
     <meta property="og:url" content="{{ site.url }}{{ page.url }}">
     <meta property="og:site_name" content="{{ site.SEOTitle }}">
 
@@ -36,7 +36,7 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="{% if page.title %}{{ page.title }} - {{ site.SEOTitle }}{% else %}{{ site.SEOTitle }}{% endif %}">
     <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | truncate:200 }}{% else %}{{ site.description }}{% endif %}">
-    <meta name="twitter:image" content="{{ site.url }}{{ site.sidebar-avatar }}">
+    <meta name="twitter:image" content="{{ site.url }}{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.sidebar-avatar }}{% endif %}">
 
     <title>{% if page.title %}{{ page.title }} - {{ site.SEOTitle }}{% else %}{{ site.SEOTitle }}{% endif %}</title>
 
@@ -84,18 +84,26 @@
       "@type": "BlogPosting",
       "headline": "{{ page.title }}",
       "description": "{{ page.excerpt | strip_html | truncate:200 }}",
+      "image": "{{ site.url }}{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.sidebar-avatar }}{% endif %}",
       "datePublished": "{{ page.date | date: '%Y-%m-%dT%H:%M:%SZ' }}",
       "dateModified": "{{ page.date | date: '%Y-%m-%dT%H:%M:%SZ' }}",
       "author": {
         "@type": "Person",
         "name": "{% if page.author %}{{ page.author }}{% else %}李梨{% endif %}"
       },
-      "url": "{{ site.url }}{{ page.url }}",
-      "isPartOf": {
-        "@type": "Blog",
+      "publisher": {
+        "@type": "Organization",
         "name": "{{ site.SEOTitle }}",
-        "url": "{{ site.url }}"
-      }
+        "logo": {
+          "@type": "ImageObject",
+          "url": "{{ site.url }}{{ site.sidebar-avatar }}"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ site.url }}{{ page.url }}"
+      },
+      "url": "{{ site.url }}{{ page.url }}"
     }
     </script>
     {% endcase %}

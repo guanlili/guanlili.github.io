@@ -7,6 +7,12 @@ module.exports = function(grunt) {
             main: {
                 src: 'js/<%= pkg.name %>.js',
                 dest: 'js/<%= pkg.name %>.min.js'
+            },
+            extras: {
+                files: {
+                    'js/archive.min.js': 'js/archive.js',
+                    'js/jquery.nav.min.js': 'js/jquery.nav.js'
+                }
             }
         },
         less: {
@@ -20,8 +26,7 @@ module.exports = function(grunt) {
             },
             minified: {
                 options: {
-                    paths: ["css"],
-                    cleancss: true
+                    paths: ["css"]
                 },
                 files: {
                     "css/<%= pkg.name %>.min.css": "less/<%= pkg.name %>.less"
@@ -29,11 +34,18 @@ module.exports = function(grunt) {
             },
             grid: {
                 options: {
-                    paths: ["css"],
-                    cleancss: true
+                    paths: ["css"]
                 },
                 files: {
                     "css/grid.min.css": "less/grid.less"
+                }
+            }
+        },
+        cssmin: {
+            target: {
+                files: {
+                    'css/<%= pkg.name %>.min.css': 'css/<%= pkg.name %>.min.css',
+                    'css/grid.min.css': 'css/grid.min.css'
                 }
             }
         },
@@ -62,7 +74,7 @@ module.exports = function(grunt) {
             },
             less: {
                 files: ['less/*.less'],
-                tasks: ['less'],
+                tasks: ['less', 'cssmin'],
                 options: {
                     spawn: false,
                 }
@@ -73,10 +85,11 @@ module.exports = function(grunt) {
     // Load the plugins.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-banner');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Default task(s).
-    grunt.registerTask('default', ['uglify', 'less', 'usebanner']);
+    grunt.registerTask('default', ['uglify', 'less', 'cssmin', 'usebanner']);
 
 };

@@ -55,7 +55,7 @@ layout: default
                         data-reactions-enabled="1"
                         data-emit-metadata="0"
                         data-input-position="bottom"
-                        data-theme="preferred_color_scheme"
+                        data-theme="light"
                         data-lang="zh-CN"
                         crossorigin="anonymous"
                         async>
@@ -81,27 +81,11 @@ layout: default
     </div>
 </article>
 
-<!-- resize header to fullscreen keynotes -->
+<!-- resize header to fullscreen keynotes (handled by initKeynoteResize in hux-blog.js) -->
 <script>
-    var $header = document.getElementsByTagName("header")[0];
-    function resize(){
-        /*
-         * leave 85px to both
-         * - told/imply users that there has more content below
-         * - let user can scroll in mobile device, seeing the keynote-view is unscrollable
-         */
-        $header.style.height = (window.innerHeight-85) + 'px';
-    }
-    document.addEventListener('DOMContentLoaded', function(){
-        resize();
-    })
-    window.addEventListener('load', function(){
-        resize();
-    })
-    window.addEventListener('resize', function(){
-        resize();
-    })
-    resize();
+    // Kept inline for immediate sizing before DOMContentLoaded
+    (function(){var h=document.getElementsByTagName("header")[0];if(h)h.style.height=(window.innerHeight-85)+'px';})();
+    window.addEventListener('resize',function(){var h=document.getElementsByTagName("header")[0];if(h)h.style.height=(window.innerHeight-85)+'px';});
 </script>
 
 

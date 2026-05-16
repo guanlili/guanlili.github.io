@@ -1,45 +1,4 @@
 <!-- Footer -->
-<!-- Theme Toggle -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var btn = document.getElementById('theme-toggle-btn');
-        var iconSvg = document.getElementById('theme-icon-svg');
-        if (!btn || !iconSvg) return;
-
-        // Set initial icon
-        if (document.documentElement.getAttribute('data-theme') === 'dark') {
-            iconSvg.innerHTML = '<use href="#icon-sun"></use>';
-        }
-
-        btn.addEventListener('click', function() {
-            var html = document.documentElement;
-            var isDark = html.getAttribute('data-theme') === 'dark';
-            if (isDark) {
-                html.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'light');
-                iconSvg.innerHTML = '<use href="#icon-moon"></use>';
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                iconSvg.innerHTML = '<use href="#icon-sun"></use>';
-            }
-            // Sync Giscus theme
-            var iframe = document.querySelector('.giscus-frame');
-            if (iframe) {
-                var newDark = !isDark;
-                iframe.contentWindow.postMessage({
-                    giscus: { setConfig: { theme: newDark ? 'dark' : 'light' } }
-                }, 'https://giscus.app');
-            }
-            // Sync PWA theme-color
-            var meta = document.querySelector('meta[name="theme-color"]');
-            if (meta) {
-                meta.setAttribute('content', newDark ? '#1a1a2e' : '#000000');
-            }
-        });
-    });
-</script>
-
 <footer>
     <div class="container">
         <div class="row">
@@ -69,17 +28,10 @@
 <!-- Simple Jekyll Search -->
 <script defer src="{{ "/js/simple-jekyll-search.min.js" | prepend: site.baseurl }}"></script>
 
-<!-- Lazy load post images -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.post-container img:not([loading])').forEach(function(img) {
-        img.setAttribute('loading', 'lazy');
-    });
-});
-</script>
-
-<!-- Service Worker (now bundled in hux-blog.min.js) -->
-
+<!-- Side Catalog -->
+{% unless page.no-catalog %}
+<script defer src="{{ '/js/jquery.nav.min.js' | prepend: site.baseurl }}"></script>
+{% endunless %}
 
 {% if page.plchart %}
 <script>
@@ -98,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 {% if page.title == 'Archive' %}
-<script defer src="{{ '/js/archive.js' | prepend: site.baseurl }}"></script>
+<script defer src="{{ '/js/archive.min.js' | prepend: site.baseurl }}"></script>
 {% endif %}
 
 
@@ -127,67 +79,6 @@ document.addEventListener('DOMContentLoaded', function() {
     })();
 </script>
 {% endif %}
-
-
-<!-- Side Catalog -->
-{% unless page.no-catalog %}
-<script defer src="{{ '/js/jquery.nav.js' | prepend: site.baseurl }}"></script>
-<script type="text/javascript">
-    function generateCatalog(selector) {
-        var containerSelector = '{{ page.multilingual }}' === 'true'
-            ? 'div.post-container.active'
-            : 'div.post-container';
-        var container = document.querySelector(containerSelector);
-        if (!container) return false;
-
-        var headings = container.querySelectorAll('h1,h2,h3,h4,h5,h6');
-        var catalogBody = document.querySelector(selector);
-        if (!catalogBody) return false;
-
-        catalogBody.innerHTML = '';
-
-        headings.forEach(function(heading) {
-            var tagName = heading.tagName.toLowerCase();
-            var id = heading.id;
-            if (!id) return;
-            var text = heading.textContent;
-            var a = document.createElement('a');
-            a.href = '#' + id;
-            a.rel = 'nofollow';
-            a.textContent = text;
-            var li = document.createElement('li');
-            li.className = tagName + '_nav';
-            li.appendChild(a);
-            catalogBody.appendChild(li);
-        });
-        return true;
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        generateCatalog(".catalog-body");
-
-        var toggle = document.querySelector('.catalog-toggle');
-        if (toggle) {
-            toggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                var catalog = document.querySelector('.side-catalog');
-                if (catalog) catalog.classList.toggle('fold');
-            });
-        }
-
-        var catalogBody = document.querySelector('.catalog-body');
-        if (catalogBody) {
-            new OnePageNav(catalogBody, {
-                currentClass: "active",
-                changeHash: false,
-                scrollSpeed: 700,
-                scrollThreshold: 0.2,
-                padding: 80
-            }).init();
-        }
-    });
-</script>
-{% endunless %}
 
 
 <!-- Multi-Lingual -->
@@ -233,63 +124,3 @@ document.addEventListener('DOMContentLoaded', function() {
     _render();
 </script>
 {% endif %}
-
-<!-- Simple Jekyll Search -->
-<script>
-    function htmlDecode(input) {
-        var e = document.createElement('textarea');
-        e.innerHTML = input;
-        return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var searchInput = document.getElementById('search-input');
-        var resultsContainer = document.getElementById('search-results');
-        if (!searchInput || !resultsContainer) return;
-
-        SimpleJekyllSearch({
-            searchInput: searchInput,
-            resultsContainer: resultsContainer,
-            json: '/search.json',
-            searchResultTemplate: '<div class="post-preview item"><a href="{url}"><h2 class="post-title">{title}</h2><h3 class="post-subtitle">{subtitle}</h3><hr></a></div>',
-            noResultsText: 'No results',
-            limit: 50,
-            fuzzy: false,
-            templateMiddleware: function (prop, value, template) {
-                if (prop === 'subtitle' || prop === 'title') {
-                    if (value.indexOf("code") > -1) {
-                        return htmlDecode(value);
-                    } else {
-                        return value;
-                    }
-                }
-            }
-        });
-
-        var searchPage = document.querySelector('.search-page');
-        var searchOpen = document.querySelector('.search-icon');
-        var searchClose = document.querySelector('.search-icon-close');
-        if (!searchPage || !searchOpen) return;
-
-        searchOpen.addEventListener('click', function (e) {
-            e.preventDefault();
-            searchPage.classList.toggle('search-active');
-            var prevClasses = document.body.className || '';
-            setTimeout(function () {
-                document.body.classList.add('no-scroll');
-            }, 400);
-
-            if (searchPage.classList.contains('search-active')) {
-                if (searchClose) {
-                    searchClose.addEventListener('click', function handler(e) {
-                        e.preventDefault();
-                        searchPage.classList.remove('search-active');
-                        document.body.className = prevClasses;
-                        searchClose.removeEventListener('click', handler);
-                    });
-                }
-                if (searchInput) searchInput.focus();
-            }
-        });
-    });
-</script>

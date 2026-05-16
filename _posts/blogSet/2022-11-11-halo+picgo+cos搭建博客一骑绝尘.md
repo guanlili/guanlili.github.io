@@ -81,15 +81,15 @@ github博客自动同步到gitee（保姆级教程）
 
 注册管理员信息和博客地址名称等
 
-<img src="https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20221114115930896.png" alt="image-20221114115930896" style="zoom: 67%;" />
+<img src="https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20221114115930896.png" alt="image-20221114115930896" width="67%" />
 
 进入后台就是一个干净整洁的管理页面，可以开始愉快的写博客了！
 
-<img src="https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20221114120212705.png" alt="image-20221114120212705" style="zoom: 67%;" />
+<img src="https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20221114120212705.png" alt="image-20221114120212705" width="67%" />
 
 让我惊喜的小工具，只需要导入本地的md文件，就可以自动生成一篇文章！开心！
 
-<img src="https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20221114120347581.png" alt="image-20221114120347581" style="zoom:67%;" />
+<img src="https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20221114120347581.png" alt="image-20221114120347581" width="67%" />
 
 
 
@@ -99,7 +99,7 @@ github博客自动同步到gitee（保姆级教程）
 
 进入到对象存储的「存储桶列表」-创建存储桶-设置名称与访问权限。
 
-<img src="https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20221114121332185.png" alt="image-20221114121332185" style="zoom:67%;" />
+<img src="https://blog-1258476669.cos.ap-beijing.myqcloud.com/cos-pictureBed/image-20221114121332185.png" alt="image-20221114121332185" width="67%" />
 
 
 

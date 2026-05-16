@@ -12,6 +12,7 @@
     "devDependencies": {
         "grunt": "^1.1.0",
         "grunt-banner": "~0.2.3",
+        "grunt-contrib-cssmin": "^5.0.0",
         "grunt-contrib-less": "^2.0.0",
         "grunt-contrib-uglify": "^4.0.1",
         "grunt-contrib-watch": "^1.1.0"
