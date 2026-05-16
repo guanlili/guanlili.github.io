@@ -259,10 +259,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Code Block Language Labels
 document.addEventListener('DOMContentLoaded', function() {
+    var skipLangs = ['plaintext', 'text', 'plain', 'default'];
     document.querySelectorAll('.highlighter-rouge').forEach(function(block) {
         var cls = block.getAttribute('class') || '';
         var match = cls.match(/language-(\w+)/);
-        if (match) {
+        if (match && skipLangs.indexOf(match[1].toLowerCase()) === -1) {
             var label = document.createElement('span');
             label.className = 'code-lang-label';
             label.textContent = match[1];
