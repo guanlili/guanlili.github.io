@@ -1,15 +1,29 @@
-// Atom's One Dark theme for Jekyll
+// Syntax highlighting — light mode default, One Dark for dark mode
 // Credits: https://github.com/mgyongyosi/OneDarkJekyll/
 
+// Light mode (default)
 .highlight,
 pre.highlight {
+  background: #f6f8fa;
+  color: #24292e;
+}
+.highlight pre {
+  background: #f6f8fa;
+}
+.highlight .hll {
+  background: #f0f1f3;
+}
+
+// Dark mode — One Dark theme
+[data-theme="dark"] .highlight,
+[data-theme="dark"] pre.highlight {
   background: #282c34;
   color: #abb2bf;
 }
-.highlight pre {
+[data-theme="dark"] .highlight pre {
   background: #282c34;
 }
-.highlight .hll {
+[data-theme="dark"] .highlight .hll {
   background: #282c34;
 }
 .highlight .c {
@@ -284,9 +298,85 @@ pre.highlight {
   top: 6px;
   right: 60px;
   font-size: 11px;
-  color: #5c6370;
+  color: #6a737d;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   pointer-events: none;
   z-index: 1;
+}
+
+// ===== Light mode syntax color overrides =====
+// One Dark colors designed for dark bg; override ones that are too pale on #f6f8fa
+.highlight {
+  .n, .o, .p { color: #24292e; }
+  .nf, .nn, .nx { color: #24292e; }
+  .w { color: #24292e; }
+  .s  { color: #032f62; }
+  .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .s1 { color: #032f62; }
+  .l { color: #005cc5; }
+  .mf, .mh, .mi, .mo, .il { color: #005cc5; }
+  .m { color: #005cc5; }
+  .na { color: #005cc5; }
+  .nb { color: #005cc5; }
+  .nc { color: #6f42c1; }
+  .no { color: #005cc5; }
+  .nd { color: #6f42c1; }
+  .ni { color: #005cc5; }
+  .ne { color: #005cc5; }
+  .nl { color: #005cc5; }
+  .py { color: #005cc5; }
+  .nt { color: #22863a; }
+  .nv { color: #e36209; }
+  .bp { color: #005cc5; }
+  .vc { color: #e36209; }
+  .vg { color: #e36209; }
+  .vi { color: #24292e; }
+  .k, .kc, .kd, .kn, .kp, .kr, .kt { color: #d73a49; }
+  .cm, .cp, .c1, .cs, .c { color: #6a737d; font-style: italic; }
+  .sr { color: #032f62; }
+  .ss { color: #032f62; }
+  .gu { color: #6a737d; }
+  .gd { color: #b31d28; }
+  .gi { color: #22863a; }
+  .ld { color: #032f62; }
+  .err { color: #b31d28; background-color: #ffeef0; }
+  .ow { font-weight: 700; }
+}
+
+// ===== Dark mode: restore One Dark colors =====
+[data-theme="dark"] .highlight {
+  .n, .o, .p { color: #abb2bf; }
+  .nf, .nn, .nx { color: #abb2bf; }
+  .w { color: #f8f8f2; }
+  .s  { color: #98c379; }
+  .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .s1 { color: #98c379; }
+  .l { color: #98c379; }
+  .mf, .mh, .mi, .mo, .il { color: #d19a66; }
+  .m { color: #d19a66; }
+  .na { color: #d19a66; }
+  .nb { color: #e5c07b; }
+  .nc { color: #e5c07b; }
+  .no { color: #e5c07b; }
+  .nd { color: #e5c07b; }
+  .ni { color: #e5c07b; }
+  .ne { color: #e5c07b; }
+  .nl { color: #e5c07b; }
+  .py { color: #e5c07b; }
+  .nt { color: #e06c75; }
+  .nv { color: #e5c07b; }
+  .bp { color: #e5c07b; }
+  .vc { color: #e5c07b; }
+  .vg { color: #e5c07b; }
+  .vi { color: #e06c75; }
+  .k, .kc, .kd, .kn, .kp, .kr, .kt { color: #c678dd; }
+  .cm, .cp, .c1, .cs, .c { color: #5c6370; font-style: italic; }
+  .sr { color: #56b6c2; }
+  .ss { color: #56b6c2; }
+  .gu { color: #75715e; }
+  .gd { color: #f92672; }
+  .gi { color: #a6e22e; }
+  .ld { color: #98c379; }
+  .err { color: #960050; background-color: #1e0010; }
+  .ow { font-weight: 700; }
+  .code-lang-label { color: #5c6370; }
 }
