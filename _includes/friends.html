@@ -1,9 +1,13 @@
 {% if site.friends %}
 <hr>
-<h5>FRIENDS</h5>
-<ul class="list-inline">
+<h5><a href="{{'/archive/' | prepend: site.baseurl }}">FRIENDS</a></h5>
+<ul class="friend-list">
   {% for friend in site.friends %}
-  <li><a href="{{friend.href}}">{{friend.title}}</a></li>
+  <li>
+    <a href="{{friend.href}}" target="_blank" rel="noopener">{{friend.title}}
+      <svg class="icon" style="width:12px;height:12px;opacity:0.4;margin-left:4px"><use href="#icon-arrow-up"></use></svg>
+    </a>
+  </li>
   {% endfor %}
 </ul>
 {% endif %}
