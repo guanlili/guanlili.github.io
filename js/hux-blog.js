@@ -408,28 +408,35 @@ function initThemeToggle() {
 
 function initCatalog() {
   var catalogBodyEl = document.querySelector('.catalog-body');
-  if (!catalogBodyEl) return;
+  var mobileCatalogBody = document.getElementById('mobile-catalog-body');
+  if (!catalogBodyEl && !mobileCatalogBody) return;
 
   var containerSelector = document.querySelector('.post-container.en') ? 'div.post-container.active' : 'div.post-container';
   var container = document.querySelector(containerSelector);
   if (!container) return;
 
   var headings = container.querySelectorAll('h1,h2,h3,h4,h5,h6');
-  catalogBodyEl.innerHTML = '';
+  if (catalogBodyEl) catalogBodyEl.innerHTML = '';
+  if (mobileCatalogBody) mobileCatalogBody.innerHTML = '';
 
   headings.forEach(function(heading) {
     var tagName = heading.tagName.toLowerCase();
     var id = heading.id;
     if (!id) return;
     var text = heading.textContent;
-    var a = document.createElement('a');
-    a.href = '#' + id;
-    a.rel = 'nofollow';
-    a.textContent = text;
-    var li = document.createElement('li');
-    li.className = tagName + '_nav';
-    li.appendChild(a);
-    catalogBodyEl.appendChild(li);
+
+    function createLi() {
+      var a = document.createElement('a');
+      a.href = '#' + id;
+      a.rel = 'nofollow';
+      a.textContent = text;
+      var li = document.createElement('li');
+      li.className = tagName + '_nav';
+      li.appendChild(a);
+      return li;
+    }
+    if (catalogBodyEl) catalogBodyEl.appendChild(createLi());
+    if (mobileCatalogBody) mobileCatalogBody.appendChild(createLi());
   });
 
   var toggle = document.querySelector('.catalog-toggle');
@@ -438,6 +445,21 @@ function initCatalog() {
       e.preventDefault();
       var catalog = document.querySelector('.side-catalog');
       if (catalog) catalog.classList.toggle('fold');
+    });
+  }
+
+  // Mobile catalog toggle
+  var mobileToggle = document.getElementById('mobile-catalog-toggle');
+  var mobileCatalog = document.getElementById('mobile-catalog');
+  if (mobileToggle && mobileCatalog) {
+    mobileToggle.addEventListener('click', function() {
+      mobileCatalog.classList.toggle('open');
+    });
+    // Close on link click
+    mobileCatalog.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') {
+        mobileCatalog.classList.remove('open');
+      }
     });
   }
 

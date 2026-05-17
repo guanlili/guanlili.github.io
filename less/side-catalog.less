@@ -96,3 +96,108 @@
     display: none;
   }
 }
+
+// Mobile Catalog — visible below 1200px
+.mobile-catalog {
+  display: none;
+  margin-bottom: 20px;
+
+  @media (max-width: 1199px) {
+    display: block;
+  }
+
+  .mobile-catalog-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 16px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    font-family: inherit;
+
+    &:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .mobile-catalog-arrow {
+      margin-left: auto;
+      width: 14px;
+      height: 14px;
+      transition: transform 0.25s ease;
+    }
+  }
+
+  &.open {
+    .mobile-catalog-toggle {
+      border-color: var(--color-primary);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    .mobile-catalog-arrow {
+      transform: rotate(180deg);
+    }
+  }
+
+  .mobile-catalog-body {
+    display: none;
+    list-style: none;
+    padding: 8px 0;
+    margin: 0;
+    border: 1px solid var(--color-primary);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    background: var(--color-bg);
+    max-height: 320px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
+    li {
+      list-style: none;
+
+      a {
+        display: block;
+        padding: 8px 16px;
+        color: var(--color-text);
+        text-decoration: none;
+        font-size: 14px;
+        line-height: 1.4;
+        transition: background 0.15s ease, color 0.15s ease;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        &:hover {
+          background: var(--color-surface);
+          color: var(--color-primary);
+        }
+      }
+
+      &.active a {
+        color: var(--color-primary);
+        background: var(--color-surface);
+        font-weight: 600;
+      }
+    }
+
+    .h3_nav { padding-left: 12px; }
+    .h4_nav { padding-left: 24px; font-size: 13px; }
+    .h5_nav, .h6_nav { padding-left: 36px; font-size: 13px; }
+  }
+
+  &.open .mobile-catalog-body {
+    display: block;
+  }
+}

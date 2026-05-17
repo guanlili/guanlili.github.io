@@ -44,6 +44,17 @@ layout: default
                     {% include multilingual-sel.html %}
                 {% endif %}
 
+                {% unless page.no-catalog %}
+                <div class="mobile-catalog" id="mobile-catalog">
+                  <button class="mobile-catalog-toggle" id="mobile-catalog-toggle" aria-label="展开目录">
+                    <svg class="icon"><use href="#icon-list"></use></svg>
+                    目录
+                    <svg class="icon mobile-catalog-arrow"><use href="#icon-chevron-down"></use></svg>
+                  </button>
+                  <ul class="mobile-catalog-body" id="mobile-catalog-body"></ul>
+                </div>
+                {% endunless %}
+
 				{{ content }}
 
                 <hr style="visibility: hidden;">
