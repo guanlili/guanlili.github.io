@@ -192,7 +192,7 @@ self.addEventListener('fetch', event => {
         // Return cached if available, otherwise wait for network
         return cachedResp || fetched;
       }).catch(() => fetched)
-      .catch(() => caches.match(‘offline.html’))
+      .catch(() => caches.match('offline.html'))
     );
 
     // If one request is a HTML naviagtion, checking update!
