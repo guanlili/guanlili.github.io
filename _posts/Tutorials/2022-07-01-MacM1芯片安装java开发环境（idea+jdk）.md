@@ -4,8 +4,6 @@ date: 2022-07-01
 title: "MacM1芯片安装java开发环境（idea+jdk）"
 subtitle: "软件安装"
 author: "lili"
-header-img-credit: "@WebdesignerDepot"
-header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
 tags: [软件安装, Java, Mac]
 ---

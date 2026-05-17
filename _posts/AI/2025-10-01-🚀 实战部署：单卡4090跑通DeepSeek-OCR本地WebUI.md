@@ -5,8 +5,6 @@ title: "🚀 实战部署：单卡4090跑通DeepSeek-OCR本地WebUI"
 subtitle: "单卡RTX 4090跑通DeepSeek-OCR本地WebUI，6大血坑实录+一键启动"
 author: "lili"
 header-img: "img/about-bg.jpg"
-header-img-credit: "@WebdesignerDepot"
-header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
 tags: [AI, OCR]
 ---

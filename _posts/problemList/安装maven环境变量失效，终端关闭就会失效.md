@@ -5,8 +5,6 @@ title: "记mysql+springboot中emoji表情的存储之路"
 subtitle: "遇到的一个bug"
 author: "lili"
 header-img: "img/about-bg.jpg"
-header-img-credit: "@WebdesignerDepot"
-header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
 tags: [踩坑记录, Java, Mac]
 ---

@@ -3,13 +3,7 @@
     @param {boolean} short
 {% endcomment %}
 
-{% assign use_gradient = false %}
-{% if site.header_style == 'gradient' or page.header-style == 'gradient' %}
-  {% assign use_gradient = true %}
-{% endif %}
-
 {% if include.type == 'post' %}
-{% unless use_gradient %}
 <style type="text/css">
     header.intro-header{
         position: relative;
@@ -26,15 +20,12 @@
     }
     {% endif %}
 </style>
-{% endunless %}
 {% if page.header-style == 'text' %}
 <header class="intro-header style-text" >
-{% elsif use_gradient %}
-<header class="intro-header style-gradient" >
 {% else %}
 <header class="intro-header" >
 {% endif %}
-    {% unless use_gradient %}<div class="header-mask"></div>{% endunless %}
+    <div class="header-mask"></div>
     {% if page.header-img-credit %}
     <div class="header-img-credit">
         Image by <a href="//{{page.header-img-credit-href}}">{{page.header-img-credit}}</a>
@@ -100,11 +91,7 @@
 {% endif %}
 
 {% if include.type == 'page' %}
-{% if use_gradient %}
-<header class="intro-header style-gradient">
-{% else %}
 <header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
-{% endif %}
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">

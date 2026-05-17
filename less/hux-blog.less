@@ -23,10 +23,10 @@ body {
 // -- Typography
 
 p {
-  margin: 30px 0;
+  margin: 24px 0;
   @media screen and (max-width: 768px) {
     & {
-      margin: 25px 0;
+      margin: 20px 0;
     }
   }
 }
@@ -187,8 +187,8 @@ samp {
     content: " ";
     display: block;
     border-bottom: 1px solid var(--color-border);
-    margin-top: 44px;
-    margin-bottom: 30px;
+    margin-top: 30px;
+    margin-bottom: 24px;
   }
   h4 {
     font-size: 22px;
@@ -625,32 +625,6 @@ samp {
 // Header
 
 .intro-header {
-  // Gradient mode — modern alternative to background images
-  &.style-gradient {
-    background: var(--gradient-header);
-    position: relative;
-    overflow: hidden;
-
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-      background-size: 24px 24px;
-      pointer-events: none;
-    }
-
-    .site-heading,
-    .post-heading,
-    .page-heading {
-      position: relative;
-      z-index: 1;
-    }
-    .header-img-credit {
-      z-index: 1;
-    }
-  }
-
   &.style-text {
     background: none;
     .site-heading,
@@ -671,23 +645,6 @@ samp {
         &:active {
           background-color: rgba(0, 0, 0, 0.05);
         }
-      }
-    }
-  }
-  // Compact height for gradient mode
-  &.style-gradient {
-    .site-heading,
-    .post-heading,
-    .page-heading {
-      padding: 60px 0 50px;
-      @media only screen and (min-width: 768px) {
-        padding: 80px 0;
-      }
-    }
-    .site-heading {
-      padding: 70px 0 50px;
-      @media only screen and (min-width: 768px) {
-        padding: 90px 0;
       }
     }
   }
@@ -893,6 +850,7 @@ samp {
 footer {
   font-size: 20px;
   padding: 50px 0 65px;
+  border-top: 1px solid var(--color-border);
   .list-inline {
     margin: 0;
     padding: 0;
@@ -1761,5 +1719,8 @@ hr {
   }
   .mini-post-list section .listing-seperator:hover::after {
     box-shadow: 0 0 0 5px rgba(13, 183, 192, 0.12), 0 0 14px rgba(13, 183, 192, 0.25);
+  }
+  .post-preview:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   }
 }
