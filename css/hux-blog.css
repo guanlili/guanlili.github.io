@@ -15,6 +15,7 @@
   --color-nav-fixed-bg: rgba(255, 255, 255, 0.9);
   --color-search-icon: #311e3e;
   --color-inverse: #fff;
+  --gradient-header: linear-gradient(135deg, #0085a1 0%, #006b82 40%, #1a3a4a 100%);
 }
 [data-theme="dark"] {
   --color-primary: #0db7c0;
@@ -33,6 +34,7 @@
   --color-nav-fixed-bg: rgba(26, 26, 46, 0.95);
   --color-search-icon: #8b949e;
   --color-inverse: #1a1a2e;
+  --gradient-header: linear-gradient(135deg, #0db7c0 0%, #0a8f96 40%, #16213e 100%);
 }
 @media (min-width: 1200px) {
   .post-container,
@@ -1181,6 +1183,28 @@ samp {
   margin-bottom: 0px;
   /* 0 on mobile, modify by Hux */
 }
+.intro-header.style-gradient {
+  background: var(--gradient-header);
+  position: relative;
+  overflow: hidden;
+}
+.intro-header.style-gradient::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+.intro-header.style-gradient .site-heading,
+.intro-header.style-gradient .post-heading,
+.intro-header.style-gradient .page-heading {
+  position: relative;
+  z-index: 1;
+}
+.intro-header.style-gradient .header-img-credit {
+  z-index: 1;
+}
 .intro-header.style-text {
   background: none;
 }
@@ -1205,6 +1229,26 @@ samp {
 .intro-header.style-text .tags a:active,
 .intro-header.style-text .tags .tag:active {
   background-color: rgba(0, 0, 0, 0.05);
+}
+.intro-header.style-gradient .site-heading,
+.intro-header.style-gradient .post-heading,
+.intro-header.style-gradient .page-heading {
+  padding: 60px 0 50px;
+}
+@media only screen and (min-width: 768px) {
+  .intro-header.style-gradient .site-heading,
+  .intro-header.style-gradient .post-heading,
+  .intro-header.style-gradient .page-heading {
+    padding: 80px 0;
+  }
+}
+.intro-header.style-gradient .site-heading {
+  padding: 70px 0 50px;
+}
+@media only screen and (min-width: 768px) {
+  .intro-header.style-gradient .site-heading {
+    padding: 90px 0;
+  }
 }
 @media only screen and (min-width: 768px) {
   .intro-header {

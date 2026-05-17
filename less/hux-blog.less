@@ -625,6 +625,32 @@ samp {
 // Header
 
 .intro-header {
+  // Gradient mode — modern alternative to background images
+  &.style-gradient {
+    background: var(--gradient-header);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+
+    .site-heading,
+    .post-heading,
+    .page-heading {
+      position: relative;
+      z-index: 1;
+    }
+    .header-img-credit {
+      z-index: 1;
+    }
+  }
+
   &.style-text {
     background: none;
     .site-heading,
@@ -645,6 +671,23 @@ samp {
         &:active {
           background-color: rgba(0, 0, 0, 0.05);
         }
+      }
+    }
+  }
+  // Compact height for gradient mode
+  &.style-gradient {
+    .site-heading,
+    .post-heading,
+    .page-heading {
+      padding: 60px 0 50px;
+      @media only screen and (min-width: 768px) {
+        padding: 80px 0;
+      }
+    }
+    .site-heading {
+      padding: 70px 0 50px;
+      @media only screen and (min-width: 768px) {
+        padding: 90px 0;
       }
     }
   }
