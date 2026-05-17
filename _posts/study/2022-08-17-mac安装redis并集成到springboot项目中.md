@@ -2,7 +2,7 @@
 layout: post
 title: "mac安装redis并集成到springboot项目中"
 date: 2022-08-17
-tags: [Redis, SpringBoot, Mac]
+tags: [数据库, Java, Mac]
 ---
 
 # mac安装redis并集成到springboot项目中

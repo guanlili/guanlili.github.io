@@ -2,7 +2,7 @@
 layout: post
 title: "Mac安装Tomcat"
 date: 2022-08-13
-tags: [软件安装, Tomcat, Mac]
+tags: [软件安装, 学习笔记, Mac]
 ---
 
 # Mac安装Tomcat

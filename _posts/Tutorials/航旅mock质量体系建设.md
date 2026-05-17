@@ -8,7 +8,7 @@ header-img: "img/about-bg.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
-tags: [测试开发, Mock, 质量保证]
+tags: [测试开发]
 ---
 
 # 航旅Mock质量体系建设

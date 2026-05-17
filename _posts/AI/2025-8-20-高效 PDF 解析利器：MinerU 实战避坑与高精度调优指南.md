@@ -8,7 +8,7 @@ header-img: "img/about-bg.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
-tags: [AI, PDF解析, OCR]
+tags: [AI, 学习笔记, OCR]
 ---
 # 高效 PDF 解析利器：MinerU 实战避坑与高精度调优指南
 

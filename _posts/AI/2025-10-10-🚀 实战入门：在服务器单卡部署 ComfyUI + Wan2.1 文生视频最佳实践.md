@@ -8,7 +8,7 @@ header-img: "img/about-bg.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
-tags: [AI, ComfyUI, 文生视频]
+tags: [AI, ComfyUI]
 ---
 # 🚀 实战入门：在服务器单卡部署 ComfyUI + Wan2.1 文生视频最佳实践
 

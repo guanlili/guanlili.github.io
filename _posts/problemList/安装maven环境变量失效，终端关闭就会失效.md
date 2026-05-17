@@ -8,7 +8,7 @@ header-img: "img/about-bg.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
-tags: [踩坑记录, Maven, Mac]
+tags: [踩坑记录, Java, Mac]
 ---
 
 # 安装maven环境变量失效，终端关闭就会失效

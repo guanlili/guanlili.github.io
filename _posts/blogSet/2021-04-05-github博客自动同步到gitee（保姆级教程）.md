@@ -7,7 +7,7 @@ author: "lili"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
-tags: [博客搭建, GitHub, Gitee]
+tags: [博客搭建, 学习笔记]
 ---
 # github博客自动同步到gitee（保姆级教程）
 

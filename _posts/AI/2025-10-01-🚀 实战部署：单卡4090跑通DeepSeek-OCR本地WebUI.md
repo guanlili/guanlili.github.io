@@ -8,7 +8,7 @@ header-img: "img/about-bg.jpg"
 header-img-credit: "@WebdesignerDepot"
 header-img-credit-href: "medium.com/@WebdesignerDepot/poll-should-css-become-more-like-a-programming-language-c74eb26a4270"
 header-mask: 0.4
-tags: [AI, DeepSeek, OCR]
+tags: [AI, OCR]
 ---
 ## 🚀 实战部署：单卡4090跑通DeepSeek-OCR本地WebUI
 
