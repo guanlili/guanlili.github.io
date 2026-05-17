@@ -7,7 +7,6 @@ description:  "关于程序与设计、测试与开发 |  李梨，Web & Mobile 
 keyword: "李梨, outman李梨, outman,  outmanpro, @outmanpro, 李梨的博客, outman Blog, 博客, 个人网站, 互联网, Web, JavaScript, 前端, 设计"
 url: "https://guanlili.github.io"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
-header_style: gradient                  # "gradient" for CSS gradient, omit for image mode
 
 # Publish posts or collection documents with a future date.
 future: true
