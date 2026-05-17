@@ -558,6 +558,7 @@ pre.highlight {
 .highlighter-rouge .highlight {
   margin-bottom: 10px;
   border-radius: 6px;
+  padding: 0;
 }
 .highlighter-rouge .highlight pre {
   font-size: 14px;
