@@ -467,7 +467,7 @@ function initSearch() {
     SimpleJekyllSearch({
       searchInput: searchInput,
       resultsContainer: resultsContainer,
-      json: '/search.json',
+      json: '/search.json?v=' + Date.now(),
       searchResultTemplate: '<div class="post-preview item"><a href="{url}"><h2 class="post-title">{title}</h2><h3 class="post-subtitle">{subtitle}</h3><hr></a></div>',
       noResultsText: 'No results',
       limit: 50,
