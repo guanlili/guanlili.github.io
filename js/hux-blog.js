@@ -473,7 +473,7 @@ function initSearch() {
       limit: 50,
       fuzzy: false,
       templateMiddleware: function(prop, value, template) {
-        if (prop === 'subtitle' || prop === 'title') {
+        if ((prop === 'subtitle' || prop === 'title') && value) {
           if (value.indexOf("code") > -1) {
             return htmlDecode(value);
           }
