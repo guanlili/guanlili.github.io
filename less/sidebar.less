@@ -19,11 +19,27 @@
 .sidebar-container {
   color: var(--color-gray);
   font-size: 14px;
+  section {
+    padding: 22px;
+    margin-bottom: 18px;
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0 14px 40px var(--color-shadow);
+    backdrop-filter: blur(14px);
+  }
+  hr {
+    display: none;
+  }
   h5 {
-    color: var(--color-gray);
-    padding-bottom: 1em;
+    color: var(--color-heading);
+    padding-bottom: 0.7em;
+    margin-top: 0;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     a {
-      color: var(--color-gray) !important;
+      color: var(--color-heading) !important;
       text-decoration: none;
     }
   }
@@ -35,21 +51,38 @@
     }
   }
   .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
     a {
-      border-color: var(--color-gray);
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      margin: 0;
+      padding: 5px 10px;
+      border-color: var(--color-border);
+      border-radius: 999px;
+      background: var(--color-surface-raised);
+      color: var(--color-muted) !important;
       &:hover,
       &:active {
         border-color: var(--color-primary);
+        background: var(--color-primary);
+        color: var(--color-inverse) !important;
       }
     }
   }
   .short-about {
     color: var(--color-text);
     img {
-      width: 80%;
+      width: 96px;
+      height: 96px;
+      object-fit: cover;
       display: block;
       border-radius: 50%;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
+      border: 3px solid var(--color-surface-raised);
+      box-shadow: 0 12px 24px var(--color-shadow-md);
     }
     p {
       margin-top: 0px;
@@ -70,8 +103,9 @@
       margin: 0;
       a {
         display: inline-block;
-        padding: 4px 12px;
-        background: var(--color-surface);
+        padding: 7px 12px;
+        background: var(--color-surface-raised);
+        border: 1px solid var(--color-border);
         border-radius: 6px;
         font-size: 13px;
         color: var(--color-text) !important;

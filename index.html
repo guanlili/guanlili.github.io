@@ -3,6 +3,24 @@ layout: page
 description: "「离开世界之前 一切都是过程」"
 ---
 
+<section class="home-intro" aria-label="博客概览">
+    <p class="home-eyebrow">Notes on code, design and everyday thinking</p>
+    <div class="home-intro-main">
+        <h2>在技术、测试、设计与生活之间，记录正在发生的学习。</h2>
+        <p>这里收集长期笔记、实践复盘和一些轻量的灵感碎片。愿每一次回看，都能比当时多看懂一点世界。</p>
+    </div>
+    <div class="home-metrics" aria-label="内容统计">
+        <span><strong>{{ site.posts | size }}</strong> 篇文章</span>
+        <span><strong>{{ site.tags | size }}</strong> 个标签</span>
+        <span><strong>GitHub</strong> Pages</span>
+    </div>
+</section>
+
+<div class="home-section-title">
+    <span>Latest Posts</span>
+    <a href="{{ site.baseurl }}/archive/">查看归档</a>
+</div>
+
 {% for post in paginator.posts %}
 <div class="post-preview">
     {% if post.tags %}
