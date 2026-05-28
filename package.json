@@ -1,26 +1,23 @@
 {
-    "name": "hux-blog",
-    "title": "Hux Blog",
-    "author": "Hux <huxpro@gmail.com>",
-    "version": "1.8.2",
-    "homepage": "http://huxpro.github.io",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Huxpro/huxpro.github.io"
-    },
-    "bugs": "https://github.com/Huxpro/huxpro.github.io/issues",
-    "devDependencies": {
-        "grunt": "^1.1.0",
-        "grunt-banner": "~0.2.3",
-        "grunt-contrib-cssmin": "^5.0.0",
-        "grunt-contrib-less": "^2.0.0",
-        "grunt-contrib-uglify": "^4.0.1",
-        "grunt-contrib-watch": "^1.1.0"
-    },
-    "scripts": {
-        "start": "bundle exec jekyll serve -w -l --host 0.0.0.0",
-        "dev": "grunt watch & npm run start",
-        "boil": "git push boilerplate boilerplate:master",
-        "push": "git push origin master --tag"
-    }
+  "name": "lili-blog",
+  "version": "2.0.0",
+  "private": true,
+  "description": "李梨的博客 | lili Blog — Astro",
+  "homepage": "https://guanlili.github.io",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.6.1",
+    "@astrojs/rss": "^4.0.11",
+    "@astrojs/sitemap": "^3.3.0"
+  },
+  "devDependencies": {
+    "less": "^4.2.2"
+  }
 }

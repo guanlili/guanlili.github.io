@@ -8,23 +8,11 @@
   z-index: 2;
   max-width: 1240px;
   margin: 0 auto;
-  padding: 64px 48px 0;
+  padding: 0 48px;
 
   @media (max-width: 760px) {
-    & { padding: 56px 22px 0; }
+    & { padding: 0 22px; }
   }
-}
-
-// The post page has no hero header, so render the (absolute, normally white)
-// navbar with readable ink text over the paper background.
-.layout-post .navbar-custom {
-  .navbar-brand,
-  .nav li a { color: var(--color-text); }
-  .navbar-brand:hover,
-  .navbar-brand:focus,
-  .nav li a:hover,
-  .nav li a:focus { color: var(--color-primary); }
-  .navbar-toggle .icon-bar { background-color: var(--color-text); }
 }
 
 ::selection { background: var(--accent); color: var(--paper); }

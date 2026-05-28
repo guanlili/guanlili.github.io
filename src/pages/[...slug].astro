@@ -1,0 +1,116 @@
+---
+import { render } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE } from "../consts";
+import { readingStats } from "../lib/permalink";
+import { getPosts } from "../lib/posts";
+
+export async function getStaticPaths() {
+  const posts = await getPosts(); // newest-first, date-prefixed only
+  return posts.map((p, i) => ({
+    params: { slug: p.route.param },
+    // older = next index, newer = previous index
+    props: { post: p.entry, older: posts[i + 1], newer: posts[i - 1] },
+  }));
+}
+
+const { post, older, newer } = Astro.props;
+const { Content, headings } = await render(post);
+const { data } = post;
+
+const d = data.date;
+const pad = (n: number) => String(n).padStart(2, "0");
+const ymd = `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())}`;
+const yy = String(d.getFullYear()).slice(-2);
+const { chars, minutes } = readingStats(post.body ?? "");
+
+const toc = headings.filter((h) => h.depth === 2);
+const olderPath = older ? older.route.path : null;
+const newerPath = newer ? newer.route.path : null;
+---
+<BaseLayout
+  title={data.title}
+  description={data.subtitle || SITE.description}
+  type="article"
+  bodyClass="layout-post"
+  article={{ date: d, author: data.author || SITE.author, tags: data.tags }}
+>
+  <div class="article-shell">
+    <section class="article-head">
+      <div class="kicker">
+        <span class="rule"></span>
+        <span>{d.getFullYear()}{data.tags.length ? ` · ${data.tags.join(" / ")}` : ""}</span>
+        <span class="rule"></span>
+      </div>
+      <h1>{data.title}</h1>
+      {data.subtitle && <p class="deck">{data.subtitle}</p>}
+      <div class="byline">
+        <span class="author">
+          <img src={SITE.avatar} alt="" />
+          <span>{data.author || "李梨 / outman"}</span>
+        </span>
+        <span class="sep"></span>
+        <span>{ymd}</span>
+        <span class="sep"></span>
+        <span>{minutes} min read</span>
+      </div>
+    </section>
+
+    <div class="article-meta-strip">
+      <div><span class="label">发表</span><span class="value">{ymd}</span></div>
+      <div><span class="label">字数</span><span class="value">约 {chars} 字</span></div>
+      <div><span class="label">阅读</span><span class="value">{minutes} min</span></div>
+      <div><span class="label">标签</span><span class="value" style="font-size:14px">{data.tags.length ? data.tags.join(" · ") : "—"}</span></div>
+    </div>
+
+    <div class="article-body">
+      <aside class="gutter" aria-hidden="true">
+        <span class="num">{yy}</span>
+        {data.tags.length > 0 && <span>{data.tags[0]}</span>}
+        <span>Vol. {d.getFullYear()}</span>
+        <span>· · ·</span>
+        <span>{ymd}</span>
+      </aside>
+
+      <div class="article-content">
+        <Content />
+      </div>
+
+      {toc.length > 0 && (
+        <nav class="toc" aria-label="文章目录">
+          <div class="lbl">In This Issue</div>
+          <ol>
+            {toc.map((h) => (
+              <li><a href={`#${h.slug}`}>{h.text}</a></li>
+            ))}
+          </ol>
+        </nav>
+      )}
+    </div>
+
+    <div class="article-end">
+      <span>— 完 —</span>
+      <span class="glyph">&#10086;</span>
+      <span>{ymd} · 北京</span>
+    </div>
+
+    <div class="next-prev">
+      {olderPath ? (
+        <a href={olderPath}>
+          <span class="nav-lbl">&larr; 上一篇 / Prev</span>
+          <span class="nav-ttl">{older!.entry.data.title}</span>
+        </a>
+      ) : (
+        <span class="np-empty"><span class="nav-lbl">已是最早</span><span class="nav-ttl">没有更早的文章了</span></span>
+      )}
+      {newerPath ? (
+        <a href={newerPath}>
+          <span class="nav-lbl">下一篇 / Next &rarr;</span>
+          <span class="nav-ttl">{newer!.entry.data.title}</span>
+        </a>
+      ) : (
+        <span class="np-empty"><span class="nav-lbl">已是最新</span><span class="nav-ttl">没有更新的文章了</span></span>
+      )}
+    </div>
+  </div>
+</BaseLayout>

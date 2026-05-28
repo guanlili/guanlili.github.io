@@ -1,0 +1,44 @@
+---
+import type { LoadedPost } from "../lib/posts";
+import { excerpt } from "../lib/posts";
+import { readingStats } from "../lib/permalink";
+
+interface Props {
+  posts: LoadedPost[];
+  offset?: number; // running index of the first item (for the №)
+}
+const { posts, offset = 0 } = Astro.props;
+const pad2 = (n: number) => String(n).padStart(2, "0");
+---
+<div class="posts">
+  {posts.map((p, i) => {
+    const d = p.entry.data.date;
+    const ymd = `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.getDate())}`;
+    const { minutes } = readingStats(p.entry.body ?? "");
+    const fill = Math.min(minutes, 60) / 60;
+    return (
+      <article class="post">
+        <div class="num">No. {pad2(offset + i + 1)}</div>
+        <div class="body">
+          {p.entry.data.tags.length > 0 && (
+            <div class="tags">
+              {p.entry.data.tags.slice(0, 3).map((t) => (
+                <a href={`/tags/#${encodeURIComponent(t)}`}>{t}</a>
+              ))}
+            </div>
+          )}
+          <h4><a href={p.route.path}>{p.entry.data.title}</a></h4>
+          {p.entry.data.subtitle && <p class="dek">{p.entry.data.subtitle}</p>}
+          <p class="preview">{excerpt(p.entry.body ?? "")}</p>
+        </div>
+        <div class="right">
+          <span class="date">{ymd}</span>
+          <span class="reading">
+            {minutes} min
+            <span class="bar"><i style={`width:${fill * 100}%`}></i></span>
+          </span>
+        </div>
+      </article>
+    );
+  })}
+</div>

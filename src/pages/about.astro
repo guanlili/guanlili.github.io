@@ -1,0 +1,61 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE } from "../consts";
+import { getPosts } from "../lib/posts";
+import { Content as About } from "../content/about.md";
+
+const posts = await getPosts();
+const tagCount = new Set(posts.flatMap((p) => p.entry.data.tags)).size;
+const years = new Date().getFullYear() - 2017;
+---
+<BaseLayout active="about" title="About" description="他单纯只想把日子过得不浪费">
+  <div class="article-shell">
+    <section class="page-head">
+      <div>
+        <div class="kicker">
+          <span class="dot"></span>
+          <span>About · 关于此人</span>
+          <span class="rule"></span>
+          <span>第一人称</span>
+        </div>
+        <h1>关于我，<br />李梨 (outman)</h1>
+        <p class="sub" set:html={SITE.aboutDescription}></p>
+      </div>
+      <div class="right">
+        <div class="big">{years}</div>
+        <div>Years Writing</div>
+        <div style="margin-top:10px">· · ·</div>
+        <div>Beijing</div>
+        <div>est. 2017</div>
+      </div>
+    </section>
+
+    <div class="about-grid">
+      <article class="long-form">
+        <About />
+      </article>
+
+      <aside class="about-side">
+        <div class="portrait">
+          <div class="img-box"><img src={SITE.avatar} alt="李梨" /></div>
+          <div class="caption">
+            <span>Guan Li Li · Outman</span>
+            <span class="accent">No. {posts.length}</span>
+          </div>
+        </div>
+
+        <div class="quotebox">
+          离开世界之前，<br />一切都是过程。
+          <span class="attr">— Site Motto</span>
+        </div>
+
+        <div class="stat-strip">
+          <div><div class="lbl">Posts</div><div class="val">{posts.length}</div></div>
+          <div><div class="lbl">Years</div><div class="val">{years}</div></div>
+          <div><div class="lbl">Tags</div><div class="val">{tagCount}</div></div>
+          <div><div class="lbl">Coffee</div><div class="val">∞</div></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</BaseLayout>
