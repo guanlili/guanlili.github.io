@@ -29,3 +29,7 @@ vendor/bundle/
 # Gem
 Gemfile.lock
 .qoder/
+
+# Astro
+.astro/
+dist/
