@@ -1,14 +1,13 @@
-// Variables — editorial "paper + ink + cinnabar" system
-// Noto Serif SC display · Noto Sans SC body · JetBrains Mono meta/code.
+// Variables
 
 // ===== Primitive Palette =====
-@brand-primary: #b8442f;       // Cinnabar 朱砂红
-@brand-primary-hover: #7a2a1c;
+@brand-primary: #0a9396;       // Teal — distinctive, modern, warm-cool balance
+@brand-primary-hover: #007f7f;
 
-@brand-gray: #6b6358;
+@brand-gray: #6b7280;
 
-@gray-dark: #1a1813;
-@gray-light: #9a9182;
+@gray-dark: #1f2937;
+@gray-light: #9ca3af;
 
 @white-faded: fade(white, 80%);
 
@@ -22,93 +21,98 @@
 @lh-base: 1.7;
 @lh-relaxed: 1.9;
 
-// ===== Raw editorial tokens + semantic aliases — Light (default) =====
+// ===== Semantic Color Tokens — Light (default) =====
 :root {
-  // ---- Raw editorial palette (consumed by the post page CSS) ----
-  --bg:        #f1ede3;
-  --bg-soft:   #e9e4d6;
-  --paper:     #f7f3ea;
-  --ink:       #1a1813;
-  --ink-2:     #3c372c;
-  --ink-3:     #6b6358;
-  --ink-4:     #9a9182;
-  --rule:      #d2cab8;
-  --rule-soft: #e1dbc8;
-  --accent:    #b8442f;
-  --accent-ink:#7a2a1c;
-  --hl:        rgba(184, 68, 47, 0.10);
-
-  --serif: "Noto Serif SC", "Source Han Serif SC", Georgia, "Songti SC", serif;
-  --sans:  "Noto Sans SC", "Source Han Sans SC", -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
-  --mono:  "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  // ---- Semantic tokens (rest of the site) aliased onto the raw palette ----
   // Brand
-  --color-primary: var(--accent);
-  --color-primary-hover: var(--accent-ink);
-  --color-accent: var(--accent);
+  --color-primary: @brand-primary;
+  --color-primary-hover: @brand-primary-hover;
+  --color-accent: #ee6c4d;          // Warm coral accent — sharp counterpoint to teal
 
   // Content
-  --color-text: var(--ink-2);
-  --color-heading: var(--ink);
-  --color-muted: var(--ink-3);
-  --color-link: var(--accent);
-  --color-link-hover: var(--accent-ink);
+  --color-text: #1f2937;
+  --color-heading: #111827;
+  --color-muted: #6b7280;           // Secondary / helper text
+  --color-link: #0a9396;
+  --color-link-hover: #007f7f;
 
   // Surfaces
-  --color-bg: var(--bg);
-  --color-surface: var(--bg-soft);
-  --color-surface-raised: var(--paper);
-  --color-surface-soft: rgba(247, 243, 234, 0.78);
-  --color-border: var(--rule);
+  --color-bg: #fafaf9;              // Warm white (stone-50)
+  --color-surface: #f5f5f4;         // Slightly warm gray (stone-100)
+  --color-surface-raised: #ffffff;   // Cards, popovers
+  --color-surface-soft: rgba(255, 255, 255, 0.72);
+  --color-border: #e7e5e4;          // Warm border (stone-200)
 
   // Code
-  --color-code-bg: var(--hl);
-  --color-code-text: var(--accent-ink);
+  --color-code-bg: #f5f5f4;
+  --color-code-text: #0a9396;
 
   // Quote
-  --color-quote: var(--ink-3);
+  --color-quote: #6b7280;
 
   // Navigation
-  --color-nav-fixed-bg: rgba(241, 237, 227, 0.92);
-  --color-search-icon: var(--ink-2);
+  --color-nav-fixed-bg: rgba(250, 250, 249, 0.92);
+  --color-search-icon: #374151;
 
   // Utility
-  --color-inverse: var(--paper);
+  --color-inverse: #ffffff;
   --color-shadow: rgba(0, 0, 0, 0.06);
   --color-shadow-md: rgba(0, 0, 0, 0.10);
-  --color-shadow-lg: rgba(26, 24, 19, 0.16);
+  --color-shadow-lg: rgba(15, 23, 42, 0.14);
   --color-overlay: rgba(0, 0, 0, 0.55);
-  --color-hero-overlay: rgba(26, 24, 19, 0.58);
+  --color-hero-overlay: rgba(12, 18, 24, 0.58);
 
   // Selection
-  --color-selection-bg: var(--accent);
-  --color-selection-text: var(--paper);
+  --color-selection-bg: @brand-primary;
+  --color-selection-text: #ffffff;
 
   // Legacy alias (used by sidebar, tags)
-  --color-gray: var(--ink-3);
+  --color-gray: #6b7280;
 }
 
-// ===== Dark — override only the raw palette; aliases above resolve to these =====
+// ===== Semantic Color Tokens — Dark =====
 [data-theme="dark"] {
-  --bg:        #15130e;
-  --bg-soft:   #1c1a14;
-  --paper:     #1b1813;
-  --ink:       #ece6d6;
-  --ink-2:     #c9c1ad;
-  --ink-3:     #8e8775;
-  --ink-4:     #5d574a;
-  --rule:      #2e2a21;
-  --rule-soft: #25221b;
-  --accent:    #e07a64;
-  --accent-ink:#f0a392;
-  --hl:        rgba(224, 122, 100, 0.14);
+  // Brand
+  --color-primary: #2dd4bf;         // Bright teal — high contrast on dark
+  --color-primary-hover: #5eead4;
+  --color-accent: #fb923c;          // Warm orange accent
 
-  --color-surface-soft: rgba(27, 24, 19, 0.78);
-  --color-nav-fixed-bg: rgba(21, 19, 14, 0.94);
+  // Content
+  --color-text: #e5e7eb;
+  --color-heading: #f9fafb;
+  --color-muted: #9ca3af;
+  --color-link: #2dd4bf;
+  --color-link-hover: #5eead4;
+
+  // Surfaces — cool-dark with subtle depth
+  --color-bg: #0f172a;              // Slate-900
+  --color-surface: #1e293b;         // Slate-800
+  --color-surface-raised: #293548;  // Slate-700-ish
+  --color-surface-soft: rgba(30, 41, 59, 0.72);
+  --color-border: #334155;          // Slate-700
+
+  // Code
+  --color-code-bg: #1e293b;
+  --color-code-text: #2dd4bf;
+
+  // Quote
+  --color-quote: #9ca3af;
+
+  // Navigation
+  --color-nav-fixed-bg: rgba(15, 23, 42, 0.94);
+  --color-search-icon: #9ca3af;
+
+  // Utility
+  --color-inverse: #0f172a;
   --color-shadow: rgba(0, 0, 0, 0.2);
   --color-shadow-md: rgba(0, 0, 0, 0.35);
   --color-shadow-lg: rgba(0, 0, 0, 0.45);
   --color-overlay: rgba(0, 0, 0, 0.75);
-  --color-hero-overlay: rgba(0, 0, 0, 0.72);
+  --color-hero-overlay: rgba(2, 6, 23, 0.72);
+
+  // Selection
+  --color-selection-bg: #2dd4bf;
+  --color-selection-text: #0f172a;
+
+  // Legacy alias
+  --color-gray: #9ca3af;
 }

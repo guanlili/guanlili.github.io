@@ -2,131 +2,185 @@
 layout: default
 ---
 
-{% assign wordcount = page.content | strip_html | strip_newlines | size %}
-{% assign minutes = wordcount | divided_by: 350 | plus: 1 %}
+<!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
 
-<div class="article-shell">
+<!-- Post Header -->
+{% include intro-header.html type='post' %}
 
-  <!-- Masthead -->
-  <section class="article-head">
-    <div class="kicker">
-      <span class="rule"></span>
-      <span>{{ page.date | date: "%Y" }}{% if page.tags.size > 0 %} · {{ page.tags | join: " / " }}{% endif %}</span>
-      <span class="rule"></span>
+<!-- Post Content -->
+<article>
+    <!-- Reading Progress Bar -->
+    <div id="reading-progress-bar"></div>
+    <div class="container">
+        <div class="row">
+
+    <!-- Side Catalog (Left) -->
+        {% unless page.no-catalog %}
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                catalog-container
+                catalog-left">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        {% endunless %}
+
+    <!-- Post Container -->
+            <div class="
+                {% unless page.no-catalog %}col-lg-8 col-lg-offset-0{% else %}col-lg-8 col-lg-offset-2{% endunless %}
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <!-- Multi-Lingual -->
+                {% if page.multilingual %}
+                    {% include multilingual-sel.html %}
+                {% endif %}
+
+                {% unless page.no-catalog %}
+                <div class="mobile-catalog" id="mobile-catalog">
+                  <button class="mobile-catalog-toggle" id="mobile-catalog-toggle" aria-label="展开目录">
+                    <svg class="icon"><use href="#icon-list"></use></svg>
+                    目录
+                    <svg class="icon mobile-catalog-arrow"><use href="#icon-chevron-down"></use></svg>
+                  </button>
+                  <ul class="mobile-catalog-body" id="mobile-catalog-body"></ul>
+                </div>
+                {% endunless %}
+
+				{{ content }}
+
+                <hr style="visibility: hidden;">
+                <ul class="pager">
+                    {% if page.previous.url %}
+                    <li class="previous">
+                        <a href="{{ page.previous.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{page.previous.title}}">
+                        Previous<br>
+                        <span>{{page.previous.title}}</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if page.next.url %}
+                    <li class="next">
+                        <a href="{{ page.next.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{page.next.title}}">
+                        Next<br>
+                        <span>{{page.next.title}}</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <hr style="visibility: hidden;">
+
+                <!-- Related Posts -->
+                {% if page.tags %}
+                <div class="related-posts">
+                    <h4>相关文章</h4>
+                    {% include related-posts.html %}
+                </div>
+                {% endif %}
+
+                {% if site.giscus_enabled %}
+                <div class="comment">
+                    <script src="https://giscus.app/client.js"
+                        data-repo="{{ site.giscus_repo }}"
+                        data-repo-id="{{ site.giscus_repo_id }}"
+                        data-category="{{ site.giscus_category }}"
+                        data-category-id="{{ site.giscus_category_id }}"
+                        data-mapping="pathname"
+                        data-strict="0"
+                        data-reactions-enabled="1"
+                        data-emit-metadata="0"
+                        data-input-position="bottom"
+                        data-theme="preferred_color_scheme"
+                        data-lang="zh-CN"
+                        crossorigin="anonymous"
+                        async>
+                    </script>
+                </div>
+                <script>
+                    function updateGiscusTheme() {
+                        var theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+                        var msg = { giscus: { setConfig: { theme: theme } } };
+                        var iframe = document.querySelector('iframe.giscus-frame');
+                        if (iframe) iframe.contentWindow.postMessage(msg, 'https://giscus.app');
+                    }
+                    window.addEventListener('message', function(e) {
+                        if (e.origin !== 'https://giscus.app') return;
+                        if (!(typeof e.data === 'object' && e.data.giscus)) return;
+                        updateGiscusTheme();
+                    });
+                    document.getElementById('theme-toggle-btn').addEventListener('click', function() {
+                        setTimeout(updateGiscusTheme, 150);
+                    });
+                </script>
+                {% endif %}
+
+            </div>  
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                {% include featured-tags.html bottom=true %}
+
+                <!-- Friends Blog -->
+                {% include friends.html %}
+            </div>
+        </div>
     </div>
-    <h1>{{ page.title }}</h1>
-    {% if page.subtitle %}
-    <p class="deck">{{ page.subtitle }}</p>
-    {% endif %}
-    <div class="byline">
-      <span class="author">
-        <img src="{{ site.sidebar-avatar | prepend: site.baseurl }}" alt="" />
-        <span>{% if page.author %}{{ page.author }}{% else %}李梨 / outman{% endif %}</span>
-      </span>
-      <span class="sep"></span>
-      <span>{{ page.date | date: "%Y.%m.%d" }}</span>
-      <span class="sep"></span>
-      <span>{{ minutes }} min read</span>
-    </div>
-  </section>
+</article>
 
-  <!-- Meta strip -->
-  <div class="article-meta-strip">
-    <div>
-      <span class="label">发表</span>
-      <span class="value">{{ page.date | date: "%Y.%m.%d" }}</span>
-    </div>
-    <div>
-      <span class="label">字数</span>
-      <span class="value">约 {{ wordcount }} 字</span>
-    </div>
-    <div>
-      <span class="label">阅读</span>
-      <span class="value">{{ minutes }} min</span>
-    </div>
-    <div>
-      <span class="label">标签</span>
-      <span class="value" style="font-size:14px">{% if page.tags.size > 0 %}{{ page.tags | join: " · " }}{% else %}—{% endif %}</span>
-    </div>
-  </div>
-
-  <!-- Body: vertical gutter rail · content · table of contents -->
-  <div class="article-body">
-    <aside class="gutter" aria-hidden="true">
-      <span class="num">{{ page.date | date: "%y" }}</span>
-      {% if page.tags.size > 0 %}<span>{{ page.tags | first }}</span>{% endif %}
-      <span>Vol. {{ page.date | date: "%Y" }}</span>
-      <span>· · ·</span>
-      <span>{{ page.date | date: "%Y.%m.%d" }}</span>
-    </aside>
-
-    <div class="article-content">
-      {{ content }}
-    </div>
-
-    <nav class="toc" id="article-toc" aria-label="文章目录">
-      <div class="lbl">In This Issue</div>
-      <ol></ol>
-    </nav>
-  </div>
-
-  <!-- End ornament -->
-  <div class="article-end">
-    <span>— 完 —</span>
-    <span class="glyph">&#10086;</span>
-    <span>{{ page.date | date: "%Y.%m.%d" }} · 北京</span>
-  </div>
-
-  <!-- Prev / Next -->
-  <div class="next-prev">
-    {% if page.previous.url %}
-    <a href="{{ page.previous.url | prepend: site.baseurl | replace: '//', '/' }}">
-      <span class="nav-lbl">&larr; 上一篇 / Prev</span>
-      <span class="nav-ttl">{{ page.previous.title }}</span>
-    </a>
-    {% else %}
-    <span class="np-empty">
-      <span class="nav-lbl">已是最新</span>
-      <span class="nav-ttl">没有更新的文章了</span>
-    </span>
-    {% endif %}
-    {% if page.next.url %}
-    <a href="{{ page.next.url | prepend: site.baseurl | replace: '//', '/' }}">
-      <span class="nav-lbl">下一篇 / Next &rarr;</span>
-      <span class="nav-ttl">{{ page.next.title }}</span>
-    </a>
-    {% else %}
-    <span class="np-empty">
-      <span class="nav-lbl">已到底</span>
-      <span class="nav-ttl">没有更早的文章了</span>
-    </span>
-    {% endif %}
-  </div>
-
-</div>
-
+<!-- add support for mathjax by voleking-->
 {% if page.mathjax %}
   {% include mathjax_support.html %}
 {% endif %}
 
-<!-- Build the table of contents from the article's h2 headings -->
+
+
+
+
+{% if site.anchorjs %}
+<!-- async load function -->
 <script>
-(function () {
-  var content = document.querySelector('.article-content');
-  var toc = document.getElementById('article-toc');
-  if (!content || !toc) return;
-  var list = toc.querySelector('ol');
-  var heads = content.querySelectorAll('h2');
-  if (!heads.length) { toc.parentNode.removeChild(toc); return; }
-  for (var i = 0; i < heads.length; i++) {
-    var h = heads[i];
-    if (!h.id) { h.id = 'sec-' + (i + 1); }
-    var li = document.createElement('li');
-    var a = document.createElement('a');
-    a.href = '#' + h.id;
-    a.textContent = (h.textContent || '').trim();
-    li.appendChild(a);
-    list.appendChild(li);
-  }
-})();
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
 </script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'right',
+          // icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+{% endif %}
