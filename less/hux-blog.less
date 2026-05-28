@@ -85,7 +85,7 @@ br + small.img-hint {
   margin-top: -40px;
 }
 img.shadow {
-  box-shadow: rgba(0, 0, 0, 0.258824) 0px 2px 5px 0px;
+  box-shadow: 0px 2px 5px 0px var(--color-shadow-md);
 }
 // Utils Style End
 
@@ -320,7 +320,7 @@ samp {
   height: 42px;
   border-radius: 50%;
   background-color: var(--color-primary);
-  color: #fff;
+  color: var(--color-inverse);
   text-align: center;
   line-height: 42px;
   cursor: pointer;
@@ -329,7 +329,7 @@ samp {
   visibility: hidden;
   transform: translateY(10px);
   transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px var(--color-shadow);
 
   &:hover,
   &:focus {
@@ -363,9 +363,9 @@ samp {
     right: 8px;
     padding: 3px 10px;
     font-size: 12px;
-    color: #abb2bf;
-    background-color: rgba(40, 44, 52, 0.6);
-    border: 1px solid rgba(171, 178, 191, 0.4);
+    color: var(--color-muted);
+    background-color: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
     border-radius: 4px;
     cursor: pointer;
     opacity: 0;
@@ -375,8 +375,8 @@ samp {
     line-height: 1.5;
 
     &:hover {
-      background-color: rgba(40, 44, 52, 0.9);
-      color: #fff;
+      background-color: var(--color-surface);
+      color: var(--color-inverse);
     }
 
     &:active {
@@ -385,7 +385,7 @@ samp {
 
     &.copied {
       background-color: var(--color-primary);
-      color: #fff;
+      color: var(--color-inverse);
       border-color: var(--color-primary);
     }
   }
@@ -415,9 +415,7 @@ samp {
     right: 0;
     border: none;
     background: var(--color-bg);
-    box-shadow: 0px 5px 10px 2px rgba(0, 0, 0, 0.2);
-    box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px,
-      rgba(0, 0, 0, 0.239216) 0px 1px 4px;
+    box-shadow: 0px 5px 10px 2px var(--color-shadow-md);
     border-radius: 2px;
     width: 170px;
   }
@@ -499,7 +497,7 @@ samp {
     height: 56px;
     line-height: 25px;
     &:hover {
-      color: rgba(255, 255, 255, 0.8);
+      color: @white-faded;
     }
   }
   .nav {
@@ -512,7 +510,7 @@ samp {
         letter-spacing: 1px;
         // only highlight in mobile
         &:active {
-          background: rgba(0, 0, 0, 0.12);
+          background: var(--color-shadow);
         }
       }
     }
@@ -548,7 +546,7 @@ samp {
   &.invert {
     .navbar-toggle {
       &:active {
-        background-color: rgba(0, 0, 0, 0.05);
+        background-color: var(--color-shadow);
       }
       .icon-bar {
         background-color: var(--color-text);
@@ -645,7 +643,7 @@ samp {
         color: @gray-dark;
         &:hover,
         &:active {
-          background-color: rgba(0, 0, 0, 0.05);
+          background-color: var(--color-shadow);
         }
       }
     }
@@ -808,7 +806,7 @@ samp {
   &:hover {
     border-left-color: var(--color-primary);
     background-color: var(--color-surface);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 8px var(--color-shadow);
   }
 
   + .post-preview {
@@ -988,10 +986,10 @@ img::-moz-selection {
   a,
   .tag {
     display: inline-block;
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border: 1px solid @white-faded;
     border-radius: 999em;
     padding: 0 10px 0 10px;
-    color: rgba(255, 255, 255, 1);
+    color: white;
     line-height: 24px;
     font-size: 12px;
     text-decoration: none;
@@ -1006,7 +1004,7 @@ img::-moz-selection {
     &:active {
       color: white;
       border-color: var(--color-inverse);
-      background-color: rgba(255, 255, 255, 0.4);
+      background-color: fade(white, 40%);
       text-decoration: none;
     }
     @media only screen and (min-width: 768px) {
@@ -1053,8 +1051,7 @@ img::-moz-selection {
       color: var(--color-inverse) !important;
     }
     &.focus {
-      box-shadow: rgba(0, 0, 0, 0.117647) 0 1px 6px,
-        rgba(0, 0, 0, 0.239216) 0 1px 4px;
+      box-shadow: 0 1px 6px var(--color-shadow-md);
     }
     &.tag-button--all {
       font-weight: 700;
@@ -1176,7 +1173,7 @@ img::-moz-selection {
     box-sizing: border-box;
     &:focus {
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(0,133,161,0.1);
+      box-shadow: 0 0 0 3px fade(@brand-primary, 10%);
     }
     &::placeholder {
       color: var(--color-gray);
@@ -1214,7 +1211,7 @@ img::-moz-selection {
   font-size: 12px;
   font-weight: 600;
   color: var(--color-primary);
-  background: rgba(0, 133, 161, 0.07);
+  background: fade(@brand-primary, 7%);
   padding: 2px 10px;
   border-radius: 999em;
   margin-left: 10px;
@@ -1351,7 +1348,7 @@ img::-moz-selection {
     background-color: inherit;
   }
   &:active {
-    background-color: rgba(255, 255, 255, 0.25);
+    background-color: fade(white, 25%);
   }
 }
 
@@ -1442,7 +1439,7 @@ img::-moz-selection {
   color: var(--color-inverse);
 }
 .page-fullscreen footer .copyright a:hover {
-  color: #ddd;
+  color: var(--color-muted);
 }
 
 // MathJax Overflow
@@ -1518,7 +1515,7 @@ hr {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.85);
+  background: var(--color-overlay);
   z-index: 9999;
   text-align: center;
   cursor: pointer;
@@ -1535,14 +1532,14 @@ hr {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 20px var(--color-shadow-md);
   }
 
   .lightbox-close {
     position: absolute;
     top: 20px;
     right: 30px;
-    color: #fff;
+    color: var(--color-inverse);
     font-size: 40px;
     font-weight: bold;
     cursor: pointer;
@@ -1630,7 +1627,7 @@ hr {
     position: absolute;
     width: 100%;
     height: 100%;
-    color: #fff;
+    color: var(--color-inverse);
   }
   .icon-fg {
     position: relative;
@@ -1695,9 +1692,9 @@ hr {
 // Dark mode overrides for year-count badge
 [data-theme="dark"] {
   .year-count {
-    background: rgba(13, 183, 192, 0.1);
+    background: fade(#2dd4bf, 10%);
   }
   .post-preview:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 8px var(--color-shadow-md);
   }
 }
