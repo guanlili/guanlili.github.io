@@ -5,6 +5,7 @@
 @import "snackbar.less";
 @import "highlight.less";
 @import "search.less";
+@import "post-article.less";
 
 // Global Components
 
@@ -14,8 +15,7 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   background-image:
-    radial-gradient(circle at top left, rgba(10, 147, 150, 0.08), transparent 34rem),
-    linear-gradient(180deg, var(--color-bg) 0%, var(--color-surface) 100%);
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
   background-attachment: fixed;
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
@@ -42,10 +42,10 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Space Grotesk", "LXGW WenKai", "PingFang SC", "Microsoft YaHei", sans-serif;
+  .serif;
   line-height: @lh-tight;
-  font-weight: 700;
-  letter-spacing: 0;
+  font-weight: 600;
+  letter-spacing: -0.005em;
 }
 h4 {
   font-size: 21px;

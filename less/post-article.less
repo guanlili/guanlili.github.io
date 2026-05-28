@@ -1,0 +1,359 @@
+// Editorial article (post) page — ported from the Claude Design handoff.
+// Paper + ink + cinnabar. Noto Serif SC display, Noto Sans SC body, JetBrains Mono meta.
+// Consumes the raw editorial tokens defined in variables.less.
+
+// ── Layout shell ───────────────────────────────────────────────
+.article-shell {
+  position: relative;
+  z-index: 2;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 64px 48px 0;
+
+  @media (max-width: 760px) {
+    & { padding: 56px 22px 0; }
+  }
+}
+
+// The post page has no hero header, so render the (absolute, normally white)
+// navbar with readable ink text over the paper background.
+.layout-post .navbar-custom {
+  .navbar-brand,
+  .nav li a { color: var(--color-text); }
+  .navbar-brand:hover,
+  .navbar-brand:focus,
+  .nav li a:hover,
+  .nav li a:focus { color: var(--color-primary); }
+  .navbar-toggle .icon-bar { background-color: var(--color-text); }
+}
+
+::selection { background: var(--accent); color: var(--paper); }
+
+// ── Masthead ───────────────────────────────────────────────────
+.article-head {
+  padding: 56px 0 32px;
+  border-bottom: 1px solid var(--rule);
+  max-width: 880px;
+  margin: 0 auto;
+  text-align: center;
+}
+.article-head .kicker {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 18px;
+  display: inline-flex; align-items: center; gap: 12px;
+}
+.article-head .kicker .rule {
+  width: 32px; height: 1px; background: var(--accent); opacity: .5;
+}
+.article-head h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(28px, 4.4vw, 52px);
+  line-height: 1.18;
+  letter-spacing: -.005em;
+  margin: 0 0 18px;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.article-head .deck {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 19px;
+  color: var(--ink-2);
+  line-height: 1.55;
+  max-width: 640px;
+  margin: 0 auto 26px;
+}
+.article-head .byline {
+  display: inline-flex; align-items: center; gap: 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: .04em;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule-soft);
+}
+.article-head .byline .author {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--ink);
+}
+.article-head .byline .author img {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 1px solid var(--rule);
+  object-fit: cover;
+}
+.article-head .byline .sep { width: 4px; height: 4px; background: var(--ink-4); border-radius: 50%; }
+
+// ── Meta strip ─────────────────────────────────────────────────
+.article-meta-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  max-width: 880px;
+  margin: 0 auto;
+}
+.article-meta-strip > div {
+  padding: 18px 22px;
+  border-right: 1px solid var(--rule-soft);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.article-meta-strip > div:last-child { border-right: 0; }
+.article-meta-strip .label {
+  text-transform: uppercase; letter-spacing: .16em;
+  color: var(--ink-4); font-size: 10px;
+}
+.article-meta-strip .value {
+  font-family: var(--serif);
+  font-size: 16px;
+  color: var(--ink);
+}
+@media (max-width: 760px) {
+  .article-meta-strip { grid-template-columns: repeat(2, 1fr); }
+  .article-meta-strip > div:nth-child(2n) { border-right: 0; }
+}
+
+// ── Body grid: gutter rail · content · TOC ─────────────────────
+.article-body {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr) 220px;
+  gap: 48px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 56px 0 64px;
+}
+@media (max-width: 1040px) {
+  .article-body { grid-template-columns: 1fr; gap: 28px; padding: 36px 0 48px; }
+}
+.article-body .gutter {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  color: var(--ink-4);
+  text-transform: uppercase;
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  display: flex; flex-direction: column; gap: 6px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+@media (max-width: 1040px) { .article-body .gutter { display: none; } }
+.article-body .gutter .num {
+  font-family: var(--serif);
+  font-size: 40px;
+  color: var(--ink);
+  writing-mode: horizontal-tb;
+  transform: rotate(0deg);
+  letter-spacing: -.02em;
+  margin-bottom: 4px;
+}
+
+// ── Article content (the rendered Markdown) ────────────────────
+.article-content {
+  max-width: 680px;
+  font-family: var(--sans);
+  font-size: 16.5px;
+  line-height: 1.85;
+  color: var(--ink-2);
+  counter-reset: h2c;
+}
+.article-content > p:first-of-type::first-letter {
+  font-family: var(--serif);
+  float: left;
+  font-size: 76px;
+  line-height: .85;
+  font-weight: 500;
+  color: var(--accent);
+  padding: 6px 10px 0 0;
+  margin-top: 6px;
+}
+.article-content p { margin: 0 0 20px; }
+.article-content p strong { color: var(--ink); font-weight: 600; }
+.article-content a {
+  color: var(--accent);
+  border-bottom: 1px solid fade(#b8442f, 35%);
+  transition: border-color .15s, color .15s;
+}
+.article-content a:hover { color: var(--accent-ink); border-bottom-color: currentColor; }
+.article-content h2 {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 600;
+  margin: 48px 0 12px;
+  color: var(--ink);
+  display: flex; align-items: baseline; gap: 14px;
+}
+.article-content h2::before {
+  content: counter(h2c, decimal-leading-zero);
+  counter-increment: h2c;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .08em;
+  color: var(--accent);
+  font-weight: 400;
+  border: 1px solid var(--accent);
+  padding: 2px 8px;
+  align-self: center;
+}
+.article-content h3 {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 600;
+  margin: 32px 0 10px;
+  color: var(--ink);
+}
+.article-content blockquote {
+  margin: 32px 0;
+  padding: 18px 24px;
+  background: var(--paper);
+  border-left: 3px solid var(--accent);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17.5px;
+  color: var(--ink);
+  line-height: 1.55;
+}
+.article-content code {
+  font-family: var(--mono);
+  font-size: 14px;
+  background: var(--hl);
+  color: var(--accent-ink);
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+.article-content pre {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 22px 24px;
+  font-family: var(--mono);
+  font-size: 13.5px;
+  line-height: 1.65;
+  overflow-x: auto;
+  margin: 24px 0;
+  border-left: 3px solid var(--accent);
+}
+.article-content pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+// Rouge-highlighted blocks keep their syntax theme; just harmonize the frame.
+.article-content .highlighter-rouge .highlight {
+  border-left: 3px solid var(--accent);
+}
+.article-content ul, .article-content ol {
+  margin: 0 0 20px;
+  padding-left: 24px;
+}
+.article-content li { margin-bottom: 6px; }
+.article-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 28px auto;
+  border: 1px solid var(--rule);
+}
+.article-content hr {
+  border: 0;
+  text-align: center;
+  margin: 40px 0;
+  position: relative;
+  height: 24px;
+}
+.article-content hr::before {
+  content: "\2766"; // ❦
+  color: var(--ink-4);
+  font-size: 18px;
+}
+
+// ── Table of contents (right rail) ─────────────────────────────
+.toc {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-3);
+  border-left: 1px solid var(--rule);
+  padding-left: 18px;
+}
+.toc .lbl {
+  font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ink-4); margin-bottom: 12px;
+}
+.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tc; }
+.toc li {
+  counter-increment: tc;
+  padding: 6px 0;
+  line-height: 1.4;
+  border-top: 1px dotted var(--rule);
+}
+.toc li:first-child { border-top: 0; }
+.toc li::before {
+  content: counter(tc, decimal-leading-zero) "  ";
+  color: var(--accent);
+}
+.toc li a { color: inherit; }
+.toc li a:hover { color: var(--accent); }
+@media (max-width: 1040px) { .toc:empty { display: none; } }
+
+// ── End ornament ───────────────────────────────────────────────
+.article-end {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px 0;
+  border-top: 1px solid var(--rule);
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: .04em;
+}
+.article-end .glyph {
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--accent);
+}
+
+// ── Prev / Next ────────────────────────────────────────────────
+.next-prev {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  margin-top: 32px;
+}
+.next-prev a, .next-prev .np-empty {
+  padding: 28px 24px;
+  display: flex; flex-direction: column; gap: 8px;
+  border-right: 1px solid var(--rule);
+}
+.next-prev .np-empty { opacity: .35; }
+.next-prev > :last-child { border-right: 0; text-align: right; align-items: flex-end; }
+.next-prev a:hover { background: var(--hl); }
+.next-prev .nav-lbl {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.next-prev .nav-ttl {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--ink);
+  line-height: 1.35;
+  max-width: 420px;
+}
+@media (max-width: 760px) {
+  .next-prev { grid-template-columns: 1fr; }
+  .next-prev > :last-child { text-align: left; align-items: flex-start; border-right: 0; border-top: 1px solid var(--rule); }
+}
