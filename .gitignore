@@ -28,3 +28,4 @@ vendor/bundle/
 
 # Gem
 Gemfile.lock
+.qoder/
