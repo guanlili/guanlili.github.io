@@ -135,6 +135,30 @@ function initLazyImages() {
   });
 }
 
+// Render ```mermaid blocks as diagrams. Mermaid is excluded from Shiki
+// (astro.config), so it arrives as <pre><code class="language-mermaid">.
+// Loaded from CDN only when a diagram exists; degrades to the code block on failure.
+function initMermaid() {
+  var codes = document.querySelectorAll('pre > code.language-mermaid');
+  if (!codes.length) return;
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs')
+    .then(function (mod) {
+      var mermaid = mod.default;
+      mermaid.initialize({ startOnLoad: false, theme: dark ? 'dark' : 'neutral', securityLevel: 'loose' });
+      var nodes = [];
+      codes.forEach(function (code) {
+        var div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        code.parentElement.replaceWith(div);
+        nodes.push(div);
+      });
+      mermaid.run({ nodes: nodes }).catch(function () {});
+    })
+    .catch(function () { /* CDN unavailable: leave the code block visible */ });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   initBackToTop();
   initThemeToggle();
@@ -142,4 +166,5 @@ document.addEventListener('DOMContentLoaded', function () {
   initResponsiveTables();
   initResponsiveVideos();
   initLazyImages();
+  initMermaid();
 });

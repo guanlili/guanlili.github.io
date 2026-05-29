@@ -12,11 +12,28 @@ export default defineConfig({
   build: { format: "directory" },
   integrations: [sitemap()],
   markdown: {
+    // Leave mermaid blocks un-highlighted so they can be rendered as diagrams
+    // client-side (see initMermaid in site.js).
+    syntaxHighlight: { type: "shiki", excludeLangs: ["mermaid"] },
     // GFM + SmartyPants are on by default. Dark code blocks on both themes
     // match the editorial design's dark `pre`; .astro-code gets framed in CSS.
     shikiConfig: {
       theme: "github-dark",
       wrap: false,
+      // Shiki is case-sensitive; map capitalized fence langs to real ids.
+      langAlias: {
+        Java: "java",
+        Plaintext: "text",
+        JavaScript: "javascript",
+        Python: "python",
+        Go: "go",
+        Bash: "bash",
+        SQL: "sql",
+        XML: "xml",
+        JSON: "json",
+        HTML: "html",
+        YAML: "yaml",
+      },
     },
   },
 });
