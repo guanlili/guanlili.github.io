@@ -1,0 +1,130 @@
+// Base element styles + shared chrome bits.
+// (Editorial page/post styles live in editorial-pages.less / post-article.less.)
+
+@import "variables.less";
+@import "mixins.less";
+@import "search.less";
+@import "post-article.less";
+
+// ── Base elements ──────────────────────────────────────────────
+body {
+  .sans-serif;
+  font-size: 16px;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  background-image: linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+  background-attachment: fixed;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+p {
+  margin: 24px 0;
+  @media screen and (max-width: 768px) {
+    & { margin: 20px 0; }
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  .serif;
+  line-height: @lh-tight;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+h4 { font-size: 21px; }
+
+a {
+  color: var(--color-text);
+  text-decoration: none;
+  &:hover,
+  &:focus { color: var(--color-primary); }
+}
+a img {
+  &:hover,
+  &:focus { cursor: zoom-in; }
+}
+
+article { overflow: hidden; }
+
+blockquote {
+  color: var(--color-quote);
+  font-style: italic;
+  font-size: 0.95em;
+  margin: 20px 0;
+  p { margin: 0; }
+}
+
+// Markdown utility classes
+small.img-hint { display: block; margin-top: -20px; text-align: center; }
+br + small.img-hint { margin-top: -40px; }
+img.shadow { box-shadow: 0 2px 5px 0 var(--color-shadow-md); }
+
+// Tables (content)
+table { margin-top: 10px; }
+table.table > tbody,
+table.table > thead {
+  th, td { border: 1px solid var(--color-border) !important; }
+}
+@media screen and (max-width: 767px) {
+  .table-responsive { border: 0; }
+}
+
+// Code
+pre,
+.table-responsive { -webkit-overflow-scrolling: touch; }
+pre code { display: block; width: auto; white-space: pre; word-wrap: normal; }
+code, kbd, pre, samp { .monospace; }
+
+// SVG icon sprite sizing (topbar, footer, back-to-top)
+.icon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  vertical-align: -0.125em;
+}
+
+// ── Back to top ────────────────────────────────────────────────
+#back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: var(--color-inverse);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 2px 8px var(--color-shadow);
+
+  .icon { width: 18px; height: 18px; }
+  &:hover,
+  &:focus {
+    background-color: var(--color-primary-hover);
+    color: var(--color-inverse);
+  }
+  &.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  @media (max-width: 768px) {
+    bottom: 20px; right: 20px; width: 38px; height: 38px;
+  }
+}
+
+// ── Text selection ─────────────────────────────────────────────
+::selection { color: white; text-shadow: none; background: var(--color-primary); }
+::-moz-selection { color: white; text-shadow: none; background: var(--color-primary); }
+img::selection { color: white; background: transparent; }
+img::-moz-selection { color: white; background: transparent; }
