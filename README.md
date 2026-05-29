@@ -1,64 +1,72 @@
-[lili Blog](http://guanlili.github.io)
-================================
+# lili Blog
 
-> I never expected this becomes popular.
+> 离开世界之前，一切都是过程。
 
-![](http://huangxuan.me/img/blog-desktop.jpg)
+[李梨 (outman) 的个人博客](https://guanlili.github.io) —— 一个写 AI、聊架构、记录踩坑日常的小角落。
+「中文编辑刊物 × 开发者博客」的编辑式设计：纸张感配色、朱砂红点缀、思源宋体标题 + JetBrains Mono 元数据，支持浅色 / 深色。
 
+Built with **[Astro](https://astro.build)**. （2026 年从 Jekyll 迁移而来。）
 
-[User Manual 👉](_doc/Manual.md)
---------------------------------------------------
+## 本地开发
 
-### Getting Started
-
-1. You will need [Ruby](https://www.ruby-lang.org/en/) and [Bundler](https://bundler.io/) to use [Jekyll](https://jekyllrb.com/). Following [Using Jekyll with Bundler](https://jekyllrb.com/tutorials/using-jekyll-with-bundler/) to fullfill the enviromental requirement.
-
-2. Installed dependencies in the `Gemfile`:
+需要 Node 18.20+ / 20.3+ / 22+。
 
 ```sh
-$ bundle install 
+npm install      # 安装依赖
+npm run dev      # 开发服务器 http://localhost:4321
+npm run build    # 构建到 dist/
+npm run preview  # 预览构建产物
 ```
 
-3. Serve the website (`localhost:4000` by default):
+## 目录结构
 
-```sh
-$ bundle exec jekyll serve  # alternatively, npm start
+```
+src/
+  pages/              # 路由
+    index.astro         # 首页（刊头 + 头条 + 文章列表 + 侧栏）
+    [...slug].astro     # 文章详情，URL = /:year/:month/:day/:title/
+    archive.astro       # 归档（按年 + 干支）
+    tags.astro          # 标签
+    about.astro         # 关于 + Follow
+    404.astro
+    feed.xml.ts         # RSS
+    search.json.ts      # 站内搜索索引
+  content/
+    blog/**/*.md        # 文章（从 Jekyll _posts 迁移，原文未改）
+    about.md            # 关于页正文
+  components/           # Nav / Footer / Icons / PostList / Feature / Sidebar
+  layouts/BaseLayout.astro
+  lib/                  # permalink（复刻 Jekyll slugify）/ posts
+  styles/
+    site.less           # 全局样式入口
+    editorial-pages.less # 列表页编辑式样式
+    less/               # 设计系统（tokens、排版、文章页样式等）
+  consts.ts             # 站点信息、导航、友链、平台等
+public/                 # 原样输出的静态资源（img / js / pwa / robots.txt）
 ```
 
-### Development (Build From Source)
+## 写文章
 
-To modify the theme, you will need [Grunt](https://gruntjs.com/). There are numbers of tasks you can find in the `Gruntfile.js`, includes minifing JavaScript, compiling `.less` to `.css`, adding banners to keep the Apache 2.0 license intact, watching for changes, etc. 
+在 `src/content/blog/` 下新建 `YYYY-MM-DD-标题.md`（日期前缀必须，沿用 Jekyll 习惯）：
 
-Yes, they were inherited and are extremely old-fashioned. There is no modularization and transpilation, etc.
+```yaml
+---
+title: "文章标题"
+date: 2026-05-13
+subtitle: "副标题（可选）"
+tags: [AI, 架构]
+---
+正文（GFM Markdown）…
+```
 
-Critical Jekyll-related code are located in `_include/` and `_layouts/`. Most of them are [Liquid](https://github.com/Shopify/liquid/wiki) templates.
+URL 会自动生成为 `/2026/05/13/标题/`，与旧 Jekyll 站一致。
 
-This theme uses the default code syntax highlighter of jekyll, [Rouge](http://rouge.jneen.net/), which is compatible with Pygments theme so just pick any pygments theme css (e.g. from [here](http://jwarby.github.io/jekyll-pygments-themes/languages/javascript.html) and replace the content of `highlight.less`.
+## 部署
 
+推送到 `master` 后，GitHub Actions（`.github/workflows/deploy.yml`）用 Astro 构建并发布到 GitHub Pages。
+需在仓库 **Settings → Pages → Source** 选择 **GitHub Actions**。
 
-### Interesting to know more? Checkout the [full user manual](_doc/Manual.md)!
+## License
 
-
-Other Resources
----------------
-
-Ports
-- [**Huxpro**](https://github.com/Huxpro/huxpro.github.io)
-- [**Hexo**](https://github.com/Kaijun/hexo-theme-huxblog) by @kaijun
-- [**React-SSR**](https://github.com/LucasIcarus/huxpro.github.io/tree/ssr) by @LucasIcarus
-
-[Starter/Boilerplate](https://github.com/huxpro/huxblog-boilerplate)
-- Out of date. Helps wanted for updating it on par with the main repo
-
-Translation
-- [🇨🇳 (somewhat outdated)](https://github.com/Huxpro/huxpro.github.io/blob/master/_doc/README.zh.md)
-
-
-License
--------
-
-Apache License 2.0.
-Copyright (c) 2015-present Huxpro
-
-Hux Blog is derived from [Clean Blog Jekyll Theme (MIT License)](https://github.com/BlackrockDigital/startbootstrap-clean-blog-jekyll/)
-Copyright (c) 2013-2016 Blackrock Digital LLC.
+Code: Apache License 2.0. 设计与文章内容版权归 李梨 所有。
+本主题最初衍生自 [Hux Blog](https://github.com/Huxpro/huxpro.github.io)（Apache 2.0），现已重写为 Astro。
