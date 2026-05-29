@@ -9,19 +9,20 @@ export async function getStaticPaths() {
   const posts = await getPosts(); // newest-first, date-prefixed only
   return posts.map((p, i) => ({
     params: { slug: p.route.param },
-    // older = next index, newer = previous index
-    props: { post: p.entry, older: posts[i + 1], newer: posts[i - 1] },
+    // older = next index, newer = previous index; n = sequence (newest = 01)
+    props: { post: p.entry, older: posts[i + 1], newer: posts[i - 1], n: i + 1 },
   }));
 }
 
-const { post, older, newer } = Astro.props;
+const { post, older, newer, n } = Astro.props;
 const { Content, headings } = await render(post);
 const { data } = post;
 
 const d = data.date;
-const pad = (n: number) => String(n).padStart(2, "0");
+const pad = (v: number) => String(v).padStart(2, "0");
 const ymd = `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())}`;
-const yy = String(d.getFullYear()).slice(-2);
+const noN = pad(n); // article number, e.g. 01 (newest)
+const vol = pad(d.getFullYear() - 2017); // years since 2017 → Vol. 09 for 2026
 const { chars, minutes } = readingStats(post.body ?? "");
 
 const toc = headings.filter((h) => h.depth === 2);
@@ -39,7 +40,7 @@ const newerPath = newer ? newer.route.path : null;
     <section class="article-head">
       <div class="kicker">
         <span class="rule"></span>
-        <span>{d.getFullYear()}{data.tags.length ? ` · ${data.tags.join(" / ")}` : ""}</span>
+        <span>No. {noN}{data.tags.length ? ` · ${data.tags.join(" / ")}` : ""}</span>
         <span class="rule"></span>
       </div>
       <h1>{data.title}</h1>
@@ -47,7 +48,7 @@ const newerPath = newer ? newer.route.path : null;
       <div class="byline">
         <span class="author">
           <img src={SITE.avatar} alt="" />
-          <span>{data.author || "李梨 / outman"}</span>
+          <span>李梨 / outman</span>
         </span>
         <span class="sep"></span>
         <span>{ymd}</span>
@@ -65,9 +66,9 @@ const newerPath = newer ? newer.route.path : null;
 
     <div class="article-body">
       <aside class="gutter" aria-hidden="true">
-        <span class="num">{yy}</span>
-        {data.tags.length > 0 && <span>{data.tags[0]}</span>}
-        <span>Vol. {d.getFullYear()}</span>
+        <span class="num">{noN}</span>
+        <span>No. {noN}</span>
+        <span>Vol. {vol}</span>
         <span>· · ·</span>
         <span>{ymd}</span>
       </aside>
@@ -95,21 +96,21 @@ const newerPath = newer ? newer.route.path : null;
     </div>
 
     <div class="next-prev">
-      {olderPath ? (
-        <a href={olderPath}>
-          <span class="nav-lbl">&larr; 上一篇 / Prev</span>
-          <span class="nav-ttl">{older!.entry.data.title}</span>
-        </a>
-      ) : (
-        <span class="np-empty"><span class="nav-lbl">已是最早</span><span class="nav-ttl">没有更早的文章了</span></span>
-      )}
       {newerPath ? (
         <a href={newerPath}>
-          <span class="nav-lbl">下一篇 / Next &rarr;</span>
+          <span class="nav-lbl">&larr; 上一篇 / Prev</span>
           <span class="nav-ttl">{newer!.entry.data.title}</span>
         </a>
       ) : (
         <span class="np-empty"><span class="nav-lbl">已是最新</span><span class="nav-ttl">没有更新的文章了</span></span>
+      )}
+      {olderPath ? (
+        <a href={olderPath}>
+          <span class="nav-lbl">下一篇 / Next &rarr;</span>
+          <span class="nav-ttl">{older!.entry.data.title}</span>
+        </a>
+      ) : (
+        <span class="np-empty"><span class="nav-lbl">已到底</span><span class="nav-ttl">没有更早的文章了</span></span>
       )}
     </div>
   </div>

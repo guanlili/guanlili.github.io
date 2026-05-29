@@ -32,6 +32,22 @@ export const FRIENDS: { title: string; href: string }[] = [
   { title: "OSchina", href: "https://my.oschina.net/u/3551659" },
 ];
 
+// "同步分发 · Also Posted To" — secondary platforms (real links only).
+export const SECONDARY_PLATFORMS: {
+  badge: string;
+  name: string;
+  en: string;
+  handle: string;
+  href: string;
+}[] = [
+  { badge: "知", name: "知乎", en: "Zhihu", handle: "@ 小李哥哥", href: "https://www.zhihu.com/people/xiao-li-ge-ge-38" },
+  { badge: "CS", name: "CSDN", en: "csdn.net", handle: "@ outman_1921", href: "https://blog.csdn.net/outman_1921" },
+  { badge: "G", name: "GitHub", en: "github.com", handle: "@ guanlili", href: "https://github.com/guanlili" },
+  { badge: "园", name: "博客园", en: "cnblogs.com", handle: "@ guanlili", href: "https://www.cnblogs.com/guanlili/" },
+  { badge: "简", name: "简书 / Gitee", en: "镜像备份", handle: "@ guanlili1921", href: "https://guanlili1921.gitee.io/" },
+  { badge: "OS", name: "OSChina", en: "oschina.net", handle: "@ outman", href: "https://my.oschina.net/u/3551659" },
+];
+
 // Sidebar "/Now" card — PLACEHOLDER content, edit freely.
 export const NOW: { ico: string; text: string }[] = [
   { ico: "读", text: "《人月神话》重读" },
