@@ -1,0 +1,114 @@
+// Variables — editorial "paper + ink + cinnabar" system
+// Noto Serif SC display · Noto Sans SC body · JetBrains Mono meta/code.
+
+// ===== Primitive Palette =====
+@brand-primary: #b8442f;       // Cinnabar 朱砂红
+@brand-primary-hover: #7a2a1c;
+
+@brand-gray: #6b6358;
+
+@gray-dark: #1a1813;
+@gray-light: #9a9182;
+
+@white-faded: fade(white, 80%);
+
+// Breakpoints
+@bp-sm: 768px;
+@bp-md: 992px;
+@bp-lg: 1200px;
+
+// Typography
+@lh-tight: 1.3;
+@lh-base: 1.7;
+@lh-relaxed: 1.9;
+
+// ===== Raw editorial tokens + semantic aliases — Light (default) =====
+:root {
+  // ---- Raw editorial palette (consumed by the post page CSS) ----
+  --bg:        #f1ede3;
+  --bg-soft:   #e9e4d6;
+  --paper:     #f7f3ea;
+  --ink:       #1a1813;
+  --ink-2:     #3c372c;
+  --ink-3:     #6b6358;
+  --ink-4:     #9a9182;
+  --rule:      #d2cab8;
+  --rule-soft: #e1dbc8;
+  --accent:    #b8442f;
+  --accent-ink:#7a2a1c;
+  --hl:        rgba(184, 68, 47, 0.10);
+
+  --serif: "Noto Serif SC", "Source Han Serif SC", Georgia, "Songti SC", serif;
+  --sans:  "Noto Sans SC", "Source Han Sans SC", -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+  --mono:  "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  // ---- Semantic tokens (rest of the site) aliased onto the raw palette ----
+  // Brand
+  --color-primary: var(--accent);
+  --color-primary-hover: var(--accent-ink);
+  --color-accent: var(--accent);
+
+  // Content
+  --color-text: var(--ink-2);
+  --color-heading: var(--ink);
+  --color-muted: var(--ink-3);
+  --color-link: var(--accent);
+  --color-link-hover: var(--accent-ink);
+
+  // Surfaces
+  --color-bg: var(--bg);
+  --color-surface: var(--bg-soft);
+  --color-surface-raised: var(--paper);
+  --color-surface-soft: rgba(247, 243, 234, 0.78);
+  --color-border: var(--rule);
+
+  // Code
+  --color-code-bg: var(--hl);
+  --color-code-text: var(--accent-ink);
+
+  // Quote
+  --color-quote: var(--ink-3);
+
+  // Navigation
+  --color-nav-fixed-bg: rgba(241, 237, 227, 0.92);
+  --color-search-icon: var(--ink-2);
+
+  // Utility
+  --color-inverse: var(--paper);
+  --color-shadow: rgba(0, 0, 0, 0.06);
+  --color-shadow-md: rgba(0, 0, 0, 0.10);
+  --color-shadow-lg: rgba(26, 24, 19, 0.16);
+  --color-overlay: rgba(0, 0, 0, 0.55);
+  --color-hero-overlay: rgba(26, 24, 19, 0.58);
+
+  // Selection
+  --color-selection-bg: var(--accent);
+  --color-selection-text: var(--paper);
+
+  // Legacy alias (used by sidebar, tags)
+  --color-gray: var(--ink-3);
+}
+
+// ===== Dark — override only the raw palette; aliases above resolve to these =====
+[data-theme="dark"] {
+  --bg:        #15130e;
+  --bg-soft:   #1c1a14;
+  --paper:     #1b1813;
+  --ink:       #ece6d6;
+  --ink-2:     #c9c1ad;
+  --ink-3:     #8e8775;
+  --ink-4:     #5d574a;
+  --rule:      #2e2a21;
+  --rule-soft: #25221b;
+  --accent:    #e07a64;
+  --accent-ink:#f0a392;
+  --hl:        rgba(224, 122, 100, 0.14);
+
+  --color-surface-soft: rgba(27, 24, 19, 0.78);
+  --color-nav-fixed-bg: rgba(21, 19, 14, 0.94);
+  --color-shadow: rgba(0, 0, 0, 0.2);
+  --color-shadow-md: rgba(0, 0, 0, 0.35);
+  --color-shadow-lg: rgba(0, 0, 0, 0.45);
+  --color-overlay: rgba(0, 0, 0, 0.75);
+  --color-hero-overlay: rgba(0, 0, 0, 0.72);
+}

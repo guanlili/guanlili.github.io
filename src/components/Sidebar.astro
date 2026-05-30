@@ -1,0 +1,55 @@
+---
+import { SITE, FRIENDS, NOW, SIDEBAR_LINKS } from "../consts";
+interface Props {
+  tags: { tag: string; size: string }[];
+}
+const { tags } = Astro.props;
+---
+<aside class="aside">
+  <div class="about-card">
+    <div class="corner"></div>
+    <div class="head">
+      <img src={SITE.avatar} alt={SITE.author} />
+      <div>
+        <div class="name">{SITE.author} · {SITE.handle}</div>
+        <div class="role">{SITE.role}</div>
+      </div>
+    </div>
+    <p class="bio">{SITE.bio}</p>
+    <p class="epigraph">{SITE.epigraph}</p>
+    <div class="links">
+      {SIDEBAR_LINKS.map((l) => (
+        <a href={l.href} title={l.title}>{l.badge}</a>
+      ))}
+    </div>
+  </div>
+
+  <div class="now-card">
+    <span class="stamp">/Now</span>
+    {NOW.map((n) => (
+      <div class="what"><span class="ico">{n.ico}</span>{n.text}</div>
+    ))}
+  </div>
+
+  <div>
+    <h5>Featured Tags / 标签</h5>
+    <div class="tag-cloud">
+      {tags.map((t) => (
+        <a href={`/tags/#${encodeURIComponent(t.tag)}`} data-size={t.size}>{t.tag}</a>
+      ))}
+    </div>
+  </div>
+
+  <div>
+    <h5>Friends / 友链</h5>
+    <div class="friends">
+      {FRIENDS.map((f) => (
+        <a href={f.href} target="_blank" rel="noopener">
+          <span class="dot"></span>
+          <span>{f.title}</span>
+          <span class="arrow">↗</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</aside>

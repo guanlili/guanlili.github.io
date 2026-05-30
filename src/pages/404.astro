@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout title="404">
+  <div class="article-shell">
+    <header class="page-head">
+      <div>
+        <div class="kicker"><span class="dot"></span><span>404 · Not Found</span><span class="rule"></span></div>
+        <h1>这一页走丢了</h1>
+        <p class="sub">链接可能已经失效，或者文章被搬到了别处。不如回首页，或翻翻归档。</p>
+      </div>
+      <div class="right"><div class="big">404</div><div>Page Not Found</div></div>
+    </header>
+    <nav class="pager-nav">
+      <a href="/">&larr; 回首页 Home</a>
+      <span class="spacer"></span>
+      <a href="/archive/">去归档 Archive &rarr;</a>
+    </nav>
+  </div>
+</BaseLayout>

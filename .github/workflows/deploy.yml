@@ -1,0 +1,43 @@
+name: Deploy to GitHub Pages
+
+# Builds the Astro site and deploys it to GitHub Pages.
+# NOTE: this only takes effect once the repo's Pages source is switched to
+# "GitHub Actions" (Settings → Pages → Build and deployment → Source).
+# Until then the classic Jekyll build keeps serving the live site.
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment, don't cancel in-progress production deploys.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build with Astro
+        uses: withastro/action@v3
+        # withastro/action runs `npm ci` + `npm run build` and uploads the
+        # dist/ artifact for Pages. Node 20+ is provided by the action.
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

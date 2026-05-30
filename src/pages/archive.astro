@@ -1,0 +1,82 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE } from "../consts";
+import { getPosts, ganzhi, type LoadedPost } from "../lib/posts";
+import { readingStats } from "../lib/permalink";
+
+const posts = await getPosts();
+const totalMin = posts.reduce(
+  (a, p) => a + readingStats(p.entry.body ?? "").minutes,
+  0,
+);
+
+const byYear = new Map<number, LoadedPost[]>();
+for (const p of posts) {
+  const y = p.entry.data.date.getFullYear();
+  if (!byYear.has(y)) byYear.set(y, []);
+  byYear.get(y)!.push(p);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+const pad2 = (n: number) => String(n).padStart(2, "0");
+const md = (d: Date) => `${pad2(d.getMonth() + 1)}.${pad2(d.getDate())}`;
+const ymd = (d: Date) => `${d.getFullYear()}.${md(d)}`;
+---
+<BaseLayout active="archive" title="归档">
+  <div class="article-shell">
+    <section class="page-head">
+      <div>
+        <div class="kicker">
+          <span class="dot"></span>
+          <span>Archive · 全部归档</span>
+          <span class="rule"></span>
+          <span>按年序排列</span>
+        </div>
+        <h1>归档手稿</h1>
+        <p class="sub">从 {SITE.since} 到今天——从测试到全栈，再到 AI 工程师。这里是所有正式发表的写作。</p>
+      </div>
+      <div class="right">
+        <div class="big">{posts.length}</div>
+        <div>Total Posts</div>
+        <div style="margin-top:10px">· · ·</div>
+        <div>{totalMin} min</div>
+        <div>{years.length} Years</div>
+      </div>
+    </section>
+
+    {years.map((y) => {
+      const list = byYear.get(y)!;
+      const yearMin = list.reduce((a, p) => a + readingStats(p.entry.body ?? "").minutes, 0);
+      const newest = list[0].entry.data.date;
+      const oldest = list[list.length - 1].entry.data.date;
+      return (
+        <section class="year-block">
+          <div class="year-rail">
+            <div class="year-num">{y}</div>
+            <div class="year-cn">{ganzhi(y)}</div>
+            <div class="year-meta">
+              <span><em>{list.length}</em> 篇 · {yearMin} min</span>
+              <span>最早 {md(oldest)} → 最新 {md(newest)}</span>
+            </div>
+          </div>
+          <div class="timeline">
+            {list.map((p) => {
+              const { minutes } = readingStats(p.entry.body ?? "");
+              return (
+                <a href={p.route.path} class="entry">
+                  <span class="date-cell">{ymd(p.entry.data.date)}</span>
+                  <div>
+                    <h4>{p.entry.data.title}</h4>
+                    <div class="meta-row">
+                      {p.entry.data.tags.slice(0, 3).map((t) => <span class="tag">{t}</span>)}
+                    </div>
+                  </div>
+                  <span class="right">{minutes}<br />min</span>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      );
+    })}
+  </div>
+</BaseLayout>

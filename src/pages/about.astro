@@ -1,0 +1,154 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE, SECONDARY_PLATFORMS } from "../consts";
+import { getPosts } from "../lib/posts";
+import { Content as About } from "../content/about.md";
+
+const posts = await getPosts();
+const tagCount = new Set(posts.flatMap((p) => p.entry.data.tags)).size;
+const years = new Date().getFullYear() - SITE.since;
+const host = new URL(SITE.url).host;
+---
+<BaseLayout active="about" title="About" description="他单纯只想把日子过得不浪费">
+  <div class="article-shell">
+    <section class="page-head">
+      <div>
+        <div class="kicker">
+          <span class="dot"></span>
+          <span>About · 关于此人</span>
+          <span class="rule"></span>
+          <span>第一人称</span>
+        </div>
+        <h1>关于我，<br />{SITE.author} ({SITE.handle})</h1>
+        <p class="sub">{SITE.author}，{SITE.bio}<br />{SITE.epigraph}</p>
+      </div>
+      <div class="right">
+        <div class="big">{years}</div>
+        <div>Years Writing</div>
+        <div style="margin-top:10px">· · ·</div>
+        <div>Beijing</div>
+        <div>est. MMXVII</div>
+      </div>
+    </section>
+
+    <div class="about-grid">
+      <article class="long-form">
+        <About />
+
+        <h2>履历 / Path</h2>
+        <div class="sub-h">Professional Trajectory</div>
+        <div class="timeline-mini">
+          <div class="row"><span class="y">NOW</span><span class="b">某互联网公司 · AI 工程师 / 架构 <small>带一个小团队做内部 AI 平台，主攻文生视频、私域知识库与代码生成。</small></span></div>
+          <div class="row"><span class="y">2023</span><span class="b">PMO → 全栈 <small>从项目管理岗位回到一线写代码。把过去两年的方法论塞回键盘，做出了几个让我自己满意的产品。</small></span></div>
+          <div class="row"><span class="y">2021</span><span class="b">测试开发 → 全栈 <small>主动转岗。从写测试用例到写业务代码，最大的收获是「永远不要相信任何上游」。</small></span></div>
+          <div class="row"><span class="y">2018</span><span class="b">毕业 · 进入第一家公司 <small>计算机相关专业。第一份工作做测试开发，被毒打得很彻底。</small></span></div>
+          <div class="row"><span class="y">2017</span><span class="b">开始写博客 <small>在博客园开了第一个号，发布了第一篇笔记，后来才把它搬到 GitHub Pages 上。</small></span></div>
+        </div>
+
+        <h2>常用 / Stack</h2>
+        <div class="sub-h">Daily Drivers, circa 2026</div>
+        <div class="stack-grid">
+          <div class="pill"><span class="lbl">主语言</span><span class="v">Python · Java · TS</span></div>
+          <div class="pill"><span class="lbl">框架</span><span class="v">FastAPI · Spring · Next</span></div>
+          <div class="pill"><span class="lbl">AI / 模型</span><span class="v">DeepSeek · Qwen · 通义</span></div>
+          <div class="pill"><span class="lbl">工作流</span><span class="v">Dify · ComfyUI · n8n</span></div>
+          <div class="pill"><span class="lbl">基础设施</span><span class="v">Ubuntu · Docker · Nginx</span></div>
+          <div class="pill"><span class="lbl">编辑器</span><span class="v">VSCode · Neovim · IDEA</span></div>
+        </div>
+
+        <h2>关于这个站 / The Site</h2>
+        <div class="sub-h">Principles of this blog</div>
+        <p>这个博客没有评论区，也没有阅读统计——倒不是清高，只是不想让数字成为写作的动机。如果你想找我聊点什么，<strong>邮件、GitHub Issue、知乎私信</strong>都行，响应速度大概是「按周计」。</p>
+        <p>技术栈很朴素：<strong>Astro + Markdown + GitHub Pages</strong>，自己写的样式，自己排的版。页面里出现的字体是 Noto Serif SC（标题）、Noto Sans SC（正文）和 JetBrains Mono（元数据）——都是开源的中文字体，不依赖系统。</p>
+
+        <h2>之外 / Outside Code</h2>
+        <div class="sub-h">When away from a keyboard</div>
+        <p>我喜欢做菜（最近在折腾川菜里的鱼香肉丝标准化）、跑步、看星星——后者大概是 ID outman 之外另一个我会反复回到的隐喻。还会拍点街头照，主要在北京西二旗到清河之间的几条街道。</p>
+        <p>如果你正好在做 AI 工程化、私有部署、或者就是想找个程序员一起喝杯茶聊聊，随时来信——<code>{SITE.email}</code>。</p>
+      </article>
+
+      <aside class="about-side">
+        <div class="portrait">
+          <div class="img-box"><img src={SITE.avatar} alt={SITE.author} /></div>
+          <div class="caption">
+            <span>Guan Li Li · Outman</span>
+            <span class="accent">No. {posts.length}</span>
+          </div>
+        </div>
+
+        <div class="quotebox">
+          离开世界之前，<br />一切都是过程。
+          <span class="attr">— Site Motto</span>
+        </div>
+
+        <div class="stat-strip">
+          <div><div class="lbl">Posts</div><div class="val">{posts.length}</div></div>
+          <div><div class="lbl">Years</div><div class="val">{years}</div></div>
+          <div><div class="lbl">Tags</div><div class="val">{tagCount}</div></div>
+          <div><div class="lbl">Coffee</div><div class="val">∞</div></div>
+        </div>
+      </aside>
+    </div>
+
+    <section id="follow" class="follow-block">
+      <header class="head">
+        <div>
+          <div class="kicker">
+            <span class="rule"></span>
+            <span>Follow · 保持联系</span>
+            <span class="rule"></span>
+          </div>
+          <h2>微信公众号 &amp; 小红书<small>两个主阵地 · Two Primary Channels</small></h2>
+        </div>
+        <div class="note">
+          长文 + 技术更新看公众号「{SITE.wechatName}」，<br />
+          生活向 + AI 折腾日常看小红书。<br />
+          其他平台同步分发，挑顺手的即可。
+        </div>
+      </header>
+
+      <div class="primary-channels">
+        <article class="channel-hero is-wechat">
+          <img src="/img/weixin-qrcode.png" alt={`微信 · ${SITE.wechatName} · 微信搜一搜搜索昵称添加`} loading="lazy" />
+          <div class="label"><span class="accent">微信搜一搜「{SITE.wechatName}」</span></div>
+        </article>
+        <article class="channel-hero is-red">
+          <img src="/img/redbook-qrcode.png" alt={`小红书 · ${SITE.wechatName} · 扫码关注`} loading="lazy" />
+          <div class="label"><span class="accent">小红书号 {SITE.redbookId}</span></div>
+        </article>
+      </div>
+
+      <section class="secondary-channels">
+        <div class="head-row">
+          <span>同步分发 · Also Posted To</span>
+          <span class="count"><em>{SECONDARY_PLATFORMS.length}</em> Platforms</span>
+        </div>
+        <ul>
+          {SECONDARY_PLATFORMS.map((p) => (
+            <li>
+              <a href={p.href} target="_blank" rel="noopener">
+                <span class="badge">{p.badge}</span>
+                <span class="nm">{p.name}<small>{p.en}</small></span>
+                <span class="handle">{p.handle}<span class="arr">↗</span></span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <div class="direct-row">
+        <div class="email-cell">
+          <span class="lbl">Direct · 邮件</span>
+          <div class="em"><a href={`mailto:${SITE.email}`}>{SITE.email}</a></div>
+          <p class="note">正事、合作、长信请走邮箱。广告与营销邮件请绕道，谢谢。</p>
+        </div>
+        <div class="rss-cell">
+          <span class="lbl">For Devs</span>
+          <span class="rs-name">RSS / Atom Feed</span>
+          <div class="url"><a href="/feed.xml">{host}/feed.xml</a></div>
+          <p class="desc">喜欢 RSS 阅读器的同行可以订阅 feed，全文输出，无追踪。</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

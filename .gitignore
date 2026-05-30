@@ -1,17 +1,14 @@
-# Jekyll build output
-_site/
-.jekyll-cache/
-.jekyll-metadata
+# Astro build output
+dist/
+.astro/
 
-# npm dependencies
+# Dependencies
 node_modules/
-
-# Sass/Less cache
-.sass-cache/
 
 # IDE
 .idea/
 .vscode/
+.qoder/
 *.swp
 *.swo
 
@@ -21,15 +18,3 @@ Thumbs.db
 
 # Claude Code
 .claude/
-
-# Bundler
-vendor/bundle/
-.bundle/
-
-# Gem
-Gemfile.lock
-.qoder/
-
-# Astro
-.astro/
-dist/

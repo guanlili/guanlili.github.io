@@ -1,0 +1,47 @@
+---
+import type { LoadedPost } from "../lib/posts";
+import { excerpt } from "../lib/posts";
+import { readingStats } from "../lib/permalink";
+import { SITE } from "../consts";
+
+const { post } = Astro.props as { post: LoadedPost };
+const { data } = post.entry;
+const d = data.date;
+const pad2 = (n: number) => String(n).padStart(2, "0");
+const ymd = `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.getDate())}`;
+const { minutes, chars } = readingStats(post.entry.body ?? "");
+const pull = data.subtitle || excerpt(post.entry.body ?? "", 60);
+---
+<article class="feature">
+  <div>
+    <div class="meta">
+      <span class="num">01</span>
+      <span>本期头条 · Featured</span>
+      <span>·</span>
+      <span>{data.tags.join(" / ")}</span>
+    </div>
+    <h2><a href={post.route.path}>{data.title}</a></h2>
+    {data.subtitle && <p class="deck">{data.subtitle}</p>}
+    <p class="excerpt">{excerpt(post.entry.body ?? "", 180)}</p>
+    <div class="byline">
+      <span class="author">
+        <img src={SITE.avatar} alt="" />
+        <span>{SITE.author}</span>
+      </span>
+      <span class="sep"></span>
+      <span>{ymd}</span>
+      <span class="sep"></span>
+      <span>{minutes} min · 约 {chars} 字</span>
+    </div>
+  </div>
+  <aside class="visual">
+    <div class="quote">
+      <div class="body">{pull}</div>
+      <div class="attr">— 本期头条</div>
+    </div>
+    <div class="tag-row">
+      <span class="lbl">Tagged</span>
+      {data.tags.map((t) => <span>{t}</span>)}
+    </div>
+  </aside>
+</article>

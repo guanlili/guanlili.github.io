@@ -1,0 +1,28 @@
+// Mixins
+
+.transition-all() {
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.background-cover() {
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+.monospace () {
+    font-family: "JetBrains Mono", "Fira Code", Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.serif() {
+	font-family: "Noto Serif SC", "Source Han Serif SC", Georgia, "Songti SC", "SimSun", serif;
+}
+
+// Body stack: Noto Sans SC (思源黑体) with system CJK fallbacks.
+.sans-serif () {
+    font-family: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "WenQuanYi Micro Hei", -apple-system, "Helvetica Neue", sans-serif;
+    line-height: 1.85;
+}

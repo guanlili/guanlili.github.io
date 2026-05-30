@@ -1,0 +1,95 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PostList from "../components/PostList.astro";
+import Feature from "../components/Feature.astro";
+import Sidebar from "../components/Sidebar.astro";
+import { getPosts } from "../lib/posts";
+import { readingStats } from "../lib/permalink";
+import { SITE } from "../consts";
+
+const posts = await getPosts();
+const featured = posts[0];
+const recent = posts.slice(1, 11);
+const host = new URL(SITE.url).host;
+
+// real metrics
+const totalChars = posts.reduce(
+  (a, p) => a + readingStats(p.entry.body ?? "").chars,
+  0,
+);
+const wan = (totalChars / 10000).toFixed(1);
+const latest = posts[0]?.entry.data.date;
+const pad2 = (n: number) => String(n).padStart(2, "0");
+const latestYmd = latest
+  ? `${latest.getFullYear()}.${pad2(latest.getMonth() + 1)}.${pad2(latest.getDate())}`
+  : "";
+
+// sidebar tag cloud (top 18 by frequency)
+const counts = new Map<string, number>();
+for (const p of posts)
+  for (const t of p.entry.data.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
+const sizeFor = (n: number) =>
+  n >= 8 ? "xl" : n >= 4 ? "lg" : n >= 2 ? "md" : "sm";
+const sidebarTags = [...counts.entries()]
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 18)
+  .map(([tag, n]) => ({ tag, size: sizeFor(n) }));
+
+// motto headline, split across two lines like the design
+const motto = "离开世界之前 一切都是过程";
+const mp = motto.split(" ");
+const line1 = mp.slice(0, Math.ceil(mp.length / 2)).join(" ");
+const line2 = mp.slice(Math.ceil(mp.length / 2)).join(" ");
+---
+<BaseLayout active="home" description={SITE.description}>
+  <div class="article-shell">
+    <section class="masthead">
+      <div class="left">
+        <div class="kicker">
+          <span class="dot"></span>
+          <span>Since {SITE.since} · 手稿 {posts.length} 篇</span>
+          <span class="rule"></span>
+          <span>{latest?.getFullYear()}</span>
+        </div>
+        <h1>
+          {line1}<br />
+          <span class="quote-mk">「</span>{line2}<span class="quote-mk">」</span>
+        </h1>
+        <p class="sub">
+          这里是 <em>{SITE.author}（{SITE.handle}）</em> 的个人博客——一个写 AI、聊架构、记录踩坑日常的小角落。写作是把模糊的思考晾在阳光下，逼自己说人话。
+        </p>
+      </div>
+      <div class="right">
+        <div class="issue">{posts.length}</div>
+        <div>篇 · ARTICLES</div>
+        <div>EST. {SITE.since} · 北京</div>
+        <div style="margin-top:10px;color:var(--ink-4)">{host}</div>
+      </div>
+      <div class="vertical-accent">仰望星空，俯首尘埃</div>
+    </section>
+
+    <div class="index-strip">
+      <div><span class="label">本期主笔</span><span class="value">{SITE.author} · {SITE.handle}</span></div>
+      <div><span class="label">累计文章</span><span class="value">{posts.length} 篇 · 约 {wan}w 字</span></div>
+      <div><span class="label">最新更新</span><span class="value">{latestYmd}</span></div>
+      <div><span class="label">订阅 · 公众号</span><span class="value">微信「{SITE.wechatName}」</span></div>
+    </div>
+
+    {featured && <Feature post={featured} />}
+
+    <div class="layout-main">
+      <section>
+        <header class="section-head">
+          <h3>近期手稿</h3>
+          <span class="latin">Recent Dispatches</span>
+          <span class="count"><em>{recent.length}</em> 篇 / 共 {posts.length} 篇</span>
+        </header>
+        <PostList posts={recent} offset={1} />
+        <div class="see-all">
+          <a href="/archive/">查看全部归档 · See All Archive ↗</a>
+        </div>
+      </section>
+      <Sidebar tags={sidebarTags} />
+    </div>
+  </div>
+</BaseLayout>

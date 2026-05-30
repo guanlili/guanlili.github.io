@@ -1,0 +1,99 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getPosts, type LoadedPost } from "../lib/posts";
+
+// Topic ledes (descriptions, not stats) — shown when a tag has one.
+const TAG_LEDE: Record<string, string> = {
+  AI: "本站的主旋律。从工程化到落地踩坑，记录所有围绕大模型的探索。",
+  学习笔记: "把模糊的知识晾在阳光下，是我学习的唯一办法。",
+  架构: "关于系统设计、解耦边界、合久必分分久必合的种种思考。",
+  ComfyUI: "工作流可视化的代表作。围绕 ComfyUI 的部署、二开与服务化。",
+  FastAPI: "Python Web 框架里最顺手的一把刀。",
+  Java: "在传统 Java 项目里塞 AI 能力时踩过的所有坑。",
+  OCR: "PDF、扫描件、古籍方志——所有非结构化纸面信息的解析心得。",
+  代码生成: "从 StarCoder 到 Tabby，代码生成模型的工程化实战。",
+  运维: "把模型从笔记本推到服务器、再到生产环境，每一步都需要踩坑。",
+  随笔: "不那么技术的部分。生活、阅读、突如其来的胡思乱想。",
+  年终总结: "一年一度的复盘，写给未来的自己。",
+  测试开发: "我入行的第一个工种，依然怀有敬意的领域。",
+  算法: "LeetCode 和工程算法的整理。",
+  LeetCode: "动态规划、回溯、图论的题解与解题思路梳理。",
+};
+
+const posts = await getPosts();
+const byTag = new Map<string, LoadedPost[]>();
+for (const p of posts)
+  for (const t of p.entry.data.tags) {
+    if (!byTag.has(t)) byTag.set(t, []);
+    byTag.get(t)!.push(p);
+  }
+const allTags = [...byTag.keys()].sort(
+  (a, b) => byTag.get(b)!.length - byTag.get(a)!.length,
+);
+const featured = allTags.filter((t) => byTag.get(t)!.length >= 2);
+const avg = (
+  posts.reduce((a, p) => a + p.entry.data.tags.length, 0) / posts.length
+).toFixed(1);
+const sizeFor = (n: number) =>
+  n >= 8 ? "xl" : n >= 4 ? "lg" : n >= 2 ? "md" : "sm";
+const pad2 = (n: number) => String(n).padStart(2, "0");
+const ymd = (d: Date) => `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.getDate())}`;
+---
+<BaseLayout active="tags" title="标签">
+  <div class="article-shell">
+    <section class="page-head">
+      <div>
+        <div class="kicker">
+          <span class="dot"></span>
+          <span>Index · 标签索引</span>
+          <span class="rule"></span>
+          <span>按主题聚类</span>
+        </div>
+        <h1>标签 · Index</h1>
+        <p class="sub">这些年写下的东西并不多，但已经能看出一些反复回到的主题。以下按出现频率排列——字号代表频率。</p>
+      </div>
+      <div class="right">
+        <div class="big">{allTags.length}</div>
+        <div>Unique Tags</div>
+        <div style="margin-top:10px">· · ·</div>
+        <div>{posts.length} Posts</div>
+        <div>Avg {avg} tags / post</div>
+      </div>
+    </section>
+
+    <section class="tags-overview">
+      <div class="cloud-big">
+        {allTags.map((t) => (
+          <a href={`#${encodeURIComponent(t)}`} data-w={sizeFor(byTag.get(t)!.length)}>{t}</a>
+        ))}
+      </div>
+      <div class="legend">
+        <p>字号越大表示文章数越多。这些是写作期间反复回到的主题——可以视为一份「我在乎什么」的地图。</p>
+        <ul>
+          <li><span class="swatch" style="height:8px"></span>XL · 8 篇及以上</li>
+          <li><span class="swatch" style="height:6px;opacity:.75"></span>L · 4 - 7 篇</li>
+          <li><span class="swatch" style="height:4px;opacity:.55"></span>M · 2 - 3 篇</li>
+          <li><span class="swatch" style="height:2px;opacity:.4"></span>S · 1 篇</li>
+        </ul>
+      </div>
+    </section>
+
+    {featured.map((t) => (
+      <section class="tag-section" id={encodeURIComponent(t)}>
+        <h3>
+          <span class="pound">#</span>{t}
+          <span class="count">{byTag.get(t)!.length} POSTS</span>
+        </h3>
+        {TAG_LEDE[t] && <p class="lede">{TAG_LEDE[t]}</p>}
+        <div class="items">
+          {byTag.get(t)!.map((p) => (
+            <a href={p.route.path}>
+              <span class="date">{ymd(p.entry.data.date)}</span>
+              <span class="ttl">{p.entry.data.title}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</BaseLayout>
