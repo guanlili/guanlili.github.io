@@ -3,6 +3,7 @@ layout: post
 title: "mac安装redis并集成到springboot项目中"
 date: 2022-08-17
 tags: [数据库, Java, Mac]
+description: "Mac 用 Homebrew 安装 Redis 并集成到 Spring Boot 项目的完整流程，含连接池配置。"
 ---
 
 # mac安装redis并集成到springboot项目中

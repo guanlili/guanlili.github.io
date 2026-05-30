@@ -4,9 +4,9 @@ date: 2025-10-10
 title: "🚀 实战入门：在服务器单卡部署 ComfyUI + Wan2.1 文生视频最佳实践"
 subtitle: "30分钟4090跑通Wan2.1，公司新媒体同事从此告别烧钱闭源工具"
 author: "lili"
-header-img: "img/about-bg.jpg"
 header-mask: 0.4
 tags: [AI, ComfyUI]
+description: "在 Ubuntu 服务器单卡 RTX 4090 上部署 ComfyUI + Wan2.1 文生视频的完整实践：环境隔离、GPU 指定、国内镜像加速，30 分钟跑通。"
 ---
 # 🚀 实战入门：在服务器单卡部署 ComfyUI + Wan2.1 文生视频最佳实践
 

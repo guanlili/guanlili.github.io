@@ -6,6 +6,7 @@ subtitle: "typora+picgo+gitee搭建免费图床纵享丝滑"
 author: "lili"
 header-mask: 0.4
 tags: [博客搭建, 运维]
+description: "Halo 博客 + PicGo + 腾讯云 COS 搭建一站式写作平台的完整方案。"
 ---
 
 # halo+picgo+cos搭建博客一骑绝尘

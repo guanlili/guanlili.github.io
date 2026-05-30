@@ -3,6 +3,7 @@ layout: post
 title: "Spring Boot 学习笔记"
 date: 2022-08-23
 tags: [Java, 学习笔记]
+description: "Spring Boot 学习笔记：自动配置原理、起步依赖与快速搭建 RESTful API 的核心知识。"
 ---
 
 # Spring boot学习笔记

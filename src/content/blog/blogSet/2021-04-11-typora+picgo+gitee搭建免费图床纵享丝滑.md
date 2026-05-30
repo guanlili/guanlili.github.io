@@ -6,6 +6,7 @@ subtitle: "typora+picgo+gitee搭建免费图床纵享丝滑"
 author: "lili"
 header-mask: 0.4
 tags: [博客搭建]
+description: "Typora + PicGo + Gitee 搭建免费图床教程，解决 GitHub 图床在国内加载慢的问题。"
 ---
 
 # typora+picgo+gitee搭建免费图床纵享丝滑

@@ -6,6 +6,7 @@ subtitle: "博客自动备份在gitee，国内也能丝滑访问blog"
 author: "lili"
 header-mask: 0.4
 tags: [博客搭建, 学习笔记]
+description: "GitHub 仓库自动同步到 Gitee 的保姆级教程，实现博客国内镜像加速访问。"
 ---
 # github博客自动同步到gitee（保姆级教程）
 

@@ -4,9 +4,9 @@ date: 2023-06-06
 title: "基于jvm-sandbox的imock开发指南"
 subtitle: "从0到1搭建一个mock平台"
 author: "lili"
-header-img: "img/about-bg.jpg"
 header-mask: 0.4
 tags: [测试开发, Java]
+description: "基于 JVM Sandbox 字节码增强技术，从零搭建方法级 Mock 平台的完整开发指南，支持无侵入式服务 Mock。"
 ---
 
 # 基于jvm-sandbox的imock开发指南

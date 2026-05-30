@@ -6,6 +6,7 @@ author: "lili"
 header-mask: 0.4
 tags: [工具, 学习笔记, 接口文档]
 subtitle: "绘制流程图...."
+description: "在 Typora 中用 Mermaid 语法绘制流程图、时序图、甘特图，告别第三方画图工具的依赖。"
 ---
 
 # Typora(meimaid)绘制流程图

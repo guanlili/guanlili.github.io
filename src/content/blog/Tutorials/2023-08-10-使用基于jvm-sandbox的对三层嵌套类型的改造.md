@@ -4,9 +4,9 @@ date: 2023-08-10
 title: "使用基于jvm-sandbox的对三层嵌套类型的改造"
 subtitle: "遇到的一个bug"
 author: "lili"
-header-img: "img/about-bg.jpg"
 header-mask: 0.4
 tags: [测试开发, Java]
+description: "基于 JVM Sandbox 的 iMock 工具在处理三层嵌套泛型返回值时遇到的类型擦除问题及字节码层面的修复方案。"
 ---
 
 # 使用基于jvm-sandbox的对三层嵌套类型的改造
