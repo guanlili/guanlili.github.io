@@ -5,7 +5,7 @@ title: "高效 PDF 解析利器：MinerU 实战避坑与高精度调优指南"
 subtitle: "解决环境冲突、搞定扫描件表格，一份给开发者的 MinerU 最佳实践"
 author: "lili"
 header-mask: 0.4
-tags: [AI, 学习笔记, OCR]
+tags: [AI, OCR]
 description: "开源 PDF 解析工具 MinerU 的实战踩坑与调优记录：解决 Conda 环境冲突、扫描件表格识别，实现高精度中文文档提取。"
 ---
 # 高效 PDF 解析利器：MinerU 实战避坑与高精度调优指南

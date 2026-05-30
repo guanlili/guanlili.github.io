@@ -2,7 +2,7 @@
 layout: post
 title: "Mac安装Tomcat"
 date: 2022-08-13
-tags: [软件安装, 学习笔记, Mac]
+tags: [软件安装, Mac]
 description: "Mac 环境安装 Apache Tomcat 的图文教程：下载、配置环境变量与启动验证。"
 ---
 
