@@ -1,8 +1,9 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
-import rehypeImageAttrs from "./src/lib/rehype-image-attrs.mjs";
+import remarkImageAttrs from "./src/lib/remark-image-attrs.mjs";
 import remarkShiftHeadings from "./src/lib/remark-shift-headings.mjs";
+import imageCacheIntegration from "./src/lib/astro-image-cache.mjs";
 
 // https://astro.build
 export default defineConfig({
@@ -12,10 +13,9 @@ export default defineConfig({
   // Match the old Jekyll `permalink: pretty` URLs: /a/b/c/ → /a/b/c/index.html
   trailingSlash: "always",
   build: { format: "directory" },
-  integrations: [sitemap()],
+  integrations: [sitemap(), imageCacheIntegration()],
   markdown: {
-    remarkPlugins: [remarkShiftHeadings],
-    rehypePlugins: [rehypeImageAttrs],
+    remarkPlugins: [remarkShiftHeadings, remarkImageAttrs],
     // Leave mermaid blocks un-highlighted so they can be rendered as diagrams
     // client-side (see initMermaid in site.js).
     syntaxHighlight: { type: "shiki", excludeLangs: ["mermaid"] },
