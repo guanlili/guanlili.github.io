@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Spring Boot 学习笔记"
-subtitle: "快速构建微服务应用"
+subtitle: "Spring Boot核心：快速构建微服务应用的现代Java框架"
 date: 2022-08-23
 tags: [Java]
 description: "Spring Boot 学习笔记：自动配置原理、起步依赖与快速搭建 RESTful API 的核心知识。"

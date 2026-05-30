@@ -2,7 +2,7 @@
 layout: post
 date: 2023-06-06
 title: "基于jvm-sandbox的imock开发指南"
-subtitle: "从0到1搭建一个mock平台"
+subtitle: "jvm-sandbox+imock：Java应用无侵入式Mock开发指南"
 author: "lili"
 header-mask: 0.4
 tags: [测试开发, Java]

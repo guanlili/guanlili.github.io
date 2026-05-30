@@ -2,7 +2,7 @@
 layout: post
 date: 2022-11-11
 title: "typora+picgo+gitee搭建免费图床纵享丝滑"
-subtitle: "typora+picgo+gitee搭建免费图床纵享丝滑"
+subtitle: "稳定图床配置方案：告别免费图床的不稳定时代"
 author: "lili"
 header-mask: 0.4
 tags: [博客搭建, 运维]

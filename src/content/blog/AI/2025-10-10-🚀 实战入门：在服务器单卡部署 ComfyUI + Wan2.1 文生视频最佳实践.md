@@ -2,7 +2,7 @@
 layout: post
 date: 2025-10-10
 title: "🚀 实战入门：在服务器单卡部署 ComfyUI + Wan2.1 文生视频最佳实践"
-subtitle: "30分钟4090跑通Wan2.1，公司新媒体同事从此告别烧钱闭源工具"
+subtitle: "ComfyUI + Wan2.1：服务器单卡部署的文生视频最佳实践"
 author: "lili"
 header-mask: 0.4
 tags: [AI, ComfyUI]

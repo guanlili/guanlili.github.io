@@ -2,7 +2,7 @@
 layout: post
 date: 2021-02-03
 title: "使用jsDelivr的CDN加速github图床"
-subtitle: "使用jsDelivr的CDN加速github图床"
+subtitle: "稳定图床配置方案：告别免费图床的不稳定时代"
 author: "lili"
 header-mask: 0.4
 tags: [博客搭建, 运维]

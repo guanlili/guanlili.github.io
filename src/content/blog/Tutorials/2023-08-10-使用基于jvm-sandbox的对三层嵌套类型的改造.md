@@ -2,7 +2,7 @@
 layout: post
 date: 2023-08-10
 title: "使用基于jvm-sandbox的对三层嵌套类型的改造"
-subtitle: "遇到的一个bug"
+subtitle: "jvm-sandbox改造三层嵌套类型：复杂场景的Mock实践"
 author: "lili"
 header-mask: 0.4
 tags: [测试开发, Java]

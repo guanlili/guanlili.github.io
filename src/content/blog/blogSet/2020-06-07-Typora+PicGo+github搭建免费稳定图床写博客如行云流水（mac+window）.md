@@ -2,7 +2,7 @@
 layout: post
 date: 2020-06-07
 title: "Typora+PicGo+github搭建免费稳定图床写博客如行云流水"
-subtitle: "（mac+window）"
+subtitle: "稳定图床配置方案：告别免费图床的不稳定时代"
 author: "lili"
 header-mask: 0.4
 tags: [博客搭建]

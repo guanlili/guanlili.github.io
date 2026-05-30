@@ -2,7 +2,7 @@
 layout: post
 date: 2021-04-05
 title: "「教程」github博客自动同步到gitee"
-subtitle: "博客自动备份在gitee，国内也能丝滑访问blog"
+subtitle: "GitHub博客自动同步到Gitee：国内快速访问的保姆级教程"
 author: "lili"
 header-mask: 0.4
 tags: [博客搭建]
