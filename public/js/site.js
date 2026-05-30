@@ -451,6 +451,70 @@ function initLazyImages() {
   });
 }
 
+// ===== Image lightbox (zero-dependency) =====
+function initLightbox() {
+  var overlay = null;
+  var currentImg = null;
+
+  function open(src, alt) {
+    if (overlay) return;
+    overlay = document.createElement('div');
+    overlay.className = 'img-lightbox';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-label', '图片放大');
+    var img = document.createElement('img');
+    img.src = src;
+    img.alt = alt || '';
+    overlay.appendChild(img);
+    document.body.appendChild(overlay);
+    // Trigger reflow then animate in
+    overlay.offsetHeight;
+    overlay.classList.add('open');
+    document.body.classList.add('no-scroll');
+  }
+
+  function close() {
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    var el = overlay;
+    setTimeout(function () {
+      el.remove();
+    }, 260);
+    overlay = null;
+    currentImg = null;
+    document.body.classList.remove('no-scroll');
+  }
+
+  // Click on article images
+  document.addEventListener('click', function (e) {
+    var img = e.target;
+    if (img.tagName !== 'IMG') return;
+    // Only article / long-form images
+    var scope = img.closest('.article-content, .long-form');
+    if (!scope) return;
+    // Don't lightbox cover images (they have fetchpriority)
+    if (img.getAttribute('fetchpriority')) return;
+    // Don't lightbox images already inside links
+    if (img.closest('a')) return;
+
+    e.preventDefault();
+    currentImg = img;
+    open(img.src, img.alt);
+  });
+
+  // Close: click overlay background
+  document.addEventListener('click', function (e) {
+    if (!overlay) return;
+    // Click on overlay bg (not the img itself)
+    if (e.target === overlay) close();
+  });
+
+  // Close: Escape key
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay) close();
+  });
+}
+
 // Render ```mermaid blocks as diagrams. Mermaid is excluded from Shiki
 // (astro.config), so it arrives as <pre><code class="language-mermaid">.
 // Loaded from CDN only when a diagram exists; degrades to the code block on failure.
@@ -483,5 +547,6 @@ document.addEventListener('DOMContentLoaded', function () {
   initResponsiveTables();
   initResponsiveVideos();
   initLazyImages();
+  initLightbox();
   initMermaid();
 });

@@ -273,6 +273,39 @@
   display: block;
   margin: 28px auto;
   border: 1px solid var(--rule);
+  cursor: zoom-in;
+  transition: opacity .2s, box-shadow .2s;
+}
+.article-content img:hover {
+  opacity: .92;
+  box-shadow: 0 4px 20px var(--color-shadow-md);
+}
+
+// ── Image lightbox ─────────────────────────────────────────────
+.img-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, .82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity .25s ease;
+  cursor: zoom-out;
+}
+.img-lightbox.open { opacity: 1; }
+.img-lightbox img {
+  max-width: 92vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border: 0;
+  border-radius: 3px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, .4);
+  cursor: default;
+  margin: 0;
 }
 .article-content hr {
   border: 0;
