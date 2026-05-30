@@ -159,6 +159,10 @@ const recommendedPosts = allPosts.slice(0, 8).map((p) => ({
 
   <script is:inline defer src="/js/site.js"></script>
 
+  <script is:inline>
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }
+  </script>
+
   {GA_TRACK_ID && (
     <>
       <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACK_ID}`}></script>

@@ -522,3 +522,51 @@
   .next-prev { grid-template-columns: 1fr; }
   .next-prev > :last-child { text-align: left; align-items: flex-start; border-right: 0; border-top: 1px solid var(--rule); }
 }
+
+// ── Print styles ────────────────────────────────────────────────
+@media print {
+  // Hide non-content elements
+  .topbar,
+  .article-head .kicker,
+  .article-meta-strip,
+  .gutter,
+  .toc,
+  .toc-fab,
+  .toc-sheet,
+  .article-end,
+  .next-prev,
+  .site-footer,
+  .img-lightbox,
+  #back-to-top,
+  .search-page,
+  .skip-nav { display: none !important; }
+
+  body { background: #fff; color: #000; font-size: 12pt; }
+  .article-shell { max-width: 100%; }
+  .article-head { border-bottom: 2pt solid #000; padding-bottom: 16pt; }
+  .article-head h1 { font-size: 18pt; color: #000; }
+  .article-head .deck { font-size: 12pt; }
+  .article-head .byline { font-size: 9pt; }
+
+  .article-cover img { max-height: 200pt; border: 0; }
+  .article-content { max-width: 100%; }
+  .article-content img {
+    max-width: 100%;
+    border: 0;
+    margin: 12pt auto;
+    page-break-inside: avoid;
+    cursor: default;
+  }
+  .article-content img:hover { opacity: 1; box-shadow: none; }
+  .article-content h2 { page-break-before: auto; font-size: 14pt; }
+
+  // Show link URLs inline
+  .article-content a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555;
+  }
+
+  pre, code { border: 1pt solid #ccc; }
+  .table-responsive { overflow: visible; }
+}
