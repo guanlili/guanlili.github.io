@@ -94,10 +94,30 @@ const coverImage =
           <div class="lbl">In This Issue</div>
           <ol>
             {toc.map((h) => (
-              <li><a href={`#${h.slug}`}>{h.text}</a></li>
+              <li data-depth={h.depth}><a href={`#${h.slug}`}>{h.text}</a></li>
             ))}
           </ol>
         </nav>
+      )}
+
+      {toc.length > 0 && (
+        <button class="toc-fab" aria-label="打开目录" title="目录">
+          <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="3" y1="4" x2="17" y2="4"/><line x1="3" y1="8" x2="14" y2="8"/><line x1="3" y1="12" x2="17" y2="12"/><line x1="3" y1="16" x2="14" y2="16"/></svg>
+        </button>
+      )}
+
+      {toc.length > 0 && (
+        <div class="toc-sheet" aria-hidden="true">
+          <div class="toc-sheet-head">
+            <span>目录 / Contents</span>
+            <button class="toc-sheet-close" aria-label="关闭目录">&times;</button>
+          </div>
+          <ol>
+            {toc.map((h) => (
+              <li data-depth={h.depth}><a href={`#${h.slug}`}>{h.text}</a></li>
+            ))}
+          </ol>
+        </div>
       )}
     </div>
 

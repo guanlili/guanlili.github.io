@@ -307,6 +307,122 @@ function initSearch() {
   });
 }
 
+// ===== TOC: scroll highlight · h3 collapse · mobile sheet =====
+function initTOC() {
+  var desktopNav = document.querySelector('.article-body > .toc');
+  var sheet = document.querySelector('.toc-sheet');
+  var fab = document.querySelector('.toc-fab');
+  if (!desktopNav && !sheet) return;
+
+  var desktopItems = desktopNav ? desktopNav.querySelectorAll('li') : [];
+  var sheetItems = sheet ? sheet.querySelectorAll('li') : [];
+
+  // ── Scroll highlight (IntersectionObserver) ──────────────────
+  var headings = document.querySelectorAll('.article-content h2, .article-content h3');
+  if (headings.length) {
+    var currentSlug = null;
+
+    function setActive(slug) {
+      if (slug === currentSlug) return;
+      currentSlug = slug;
+      desktopItems.forEach(function (li) {
+        var a = li.querySelector('a');
+        li.classList.toggle('toc-active', a && a.getAttribute('href') === '#' + slug);
+      });
+      sheetItems.forEach(function (li) {
+        var a = li.querySelector('a');
+        li.classList.toggle('toc-active', a && a.getAttribute('href') === '#' + slug);
+      });
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          setActive(entry.target.id);
+        }
+      });
+    }, {
+      rootMargin: '-80px 0px -66% 0px',
+      threshold: 0
+    });
+    headings.forEach(function (h) { if (h.id) observer.observe(h); });
+  }
+
+  // ── H3 collapse for long TOCs (desktop) ─────────────────────
+  if (desktopNav && desktopItems.length > 10) {
+    var h2Items = [];
+    // Group h3s under their preceding h2
+    desktopItems.forEach(function (li) {
+      if (li.getAttribute('data-depth') === '2') {
+        h2Items.push({ el: li, children: [] });
+      } else if (h2Items.length) {
+        h2Items[h2Items.length - 1].children.push(li);
+      }
+    });
+
+    h2Items.forEach(function (group) {
+      if (group.children.length <= 1) return; // don't collapse single h3
+      var link = group.el.querySelector('a');
+      if (!link) return;
+
+      // Start collapsed
+      group.children.forEach(function (c) { c.style.display = 'none'; });
+      group.el.classList.add('toc-collapsed');
+
+      // Add toggle
+      var toggle = document.createElement('span');
+      toggle.className = 'toc-toggle';
+      toggle.textContent = '+';
+      toggle.setAttribute('role', 'button');
+      toggle.setAttribute('aria-label', '展开子标题');
+      link.parentNode.insertBefore(toggle, link.nextSibling);
+
+      toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var collapsed = group.el.classList.contains('toc-collapsed');
+        group.children.forEach(function (c) { c.style.display = collapsed ? '' : 'none'; });
+        group.el.classList.toggle('toc-collapsed', !collapsed);
+        group.el.classList.toggle('toc-expanded', collapsed);
+        toggle.textContent = collapsed ? '−' : '+';
+      });
+    });
+  }
+
+  // ── Mobile: FAB → bottom sheet ───────────────────────────────
+  if (fab && sheet) {
+    // Create backdrop
+    var backdrop = document.createElement('div');
+    backdrop.className = 'toc-sheet-backdrop';
+    sheet.parentNode.insertBefore(backdrop, sheet);
+
+    function openSheet() {
+      sheet.classList.add('toc-sheet-open');
+      sheet.setAttribute('aria-hidden', 'false');
+      backdrop.classList.add('open');
+    }
+    function closeSheet() {
+      sheet.classList.remove('toc-sheet-open');
+      sheet.setAttribute('aria-hidden', 'true');
+      backdrop.classList.remove('open');
+    }
+
+    fab.addEventListener('click', openSheet);
+    backdrop.addEventListener('click', closeSheet);
+    sheet.querySelector('.toc-sheet-close').addEventListener('click', closeSheet);
+
+    // Click a link in sheet → close sheet
+    sheet.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { closeSheet(); });
+    });
+
+    // Escape closes sheet
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && sheet.classList.contains('toc-sheet-open')) closeSheet();
+    });
+  }
+}
+
 // ===== Content enhancements =====
 function initResponsiveTables() {
   document.querySelectorAll('.article-content table, .long-form table').forEach(function (table) {
@@ -363,6 +479,7 @@ document.addEventListener('DOMContentLoaded', function () {
   initBackToTop();
   initThemeToggle();
   initSearch();
+  initTOC();
   initResponsiveTables();
   initResponsiveVideos();
   initLazyImages();
