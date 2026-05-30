@@ -3,6 +3,7 @@ import { SITE, GA_TRACK_ID, BAIDU_TRACK_ID } from "../consts";
 import Icons from "../components/Icons.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import { absoluteUrl, siteImage } from "../lib/media";
 import "../styles/site.less";
 
 interface Props {
@@ -27,7 +28,8 @@ const {
 
 const pageTitle = title ? `${title} - ${SITE.seoTitle}` : SITE.seoTitle;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
-const ogImage = new URL(image, SITE.url).href;
+const normalizedImage = siteImage(image) ?? SITE.avatar;
+const ogImage = absoluteUrl(normalizedImage, SITE.url);
 ---
 <!DOCTYPE html>
 <html lang={SITE.locale}>
@@ -70,14 +72,9 @@ const ogImage = new URL(image, SITE.url).href;
   <link rel="canonical" href={canonical} />
   <link rel="alternate" type="application/rss+xml" title={SITE.seoTitle} href={`${SITE.url}/feed.xml`} />
 
-  <!-- Fonts: Noto Serif SC (display) + Noto Sans SC (body) + JetBrains Mono (meta/code) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" />
-
   <!-- JSON-LD -->
   {type === "article" ? (
-    <script type="application/ld+json" set:html={JSON.stringify({
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       headline: title,
@@ -91,7 +88,7 @@ const ogImage = new URL(image, SITE.url).href;
       url: canonical,
     })} />
   ) : (
-    <script type="application/ld+json" set:html={JSON.stringify({
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: SITE.seoTitle,
@@ -113,12 +110,14 @@ const ogImage = new URL(image, SITE.url).href;
 </head>
 
 <body ontouchstart="" class={bodyClass}>
-  <Icons />
-  <a href="#main-content" class="skip-nav">跳到正文</a>
-  <Nav active={active} />
+  <div data-pagefind-ignore>
+    <Icons />
+    <a href="#main-content" class="skip-nav">跳到正文</a>
+    <Nav active={active} />
+  </div>
 
   <!-- Search overlay -->
-  <div class="search-page">
+  <div class="search-page" data-pagefind-ignore>
     <div class="search-icon-close-container">
       <span class="search-icon-close"><svg class="icon"><use href="#icon-chevron-down"></use></svg></span>
     </div>
@@ -132,18 +131,19 @@ const ogImage = new URL(image, SITE.url).href;
     </div>
   </div>
 
-  <main id="main-content">
+  <main id="main-content" data-pagefind-body>
     <slot />
   </main>
 
-  <Footer />
+  <div data-pagefind-ignore>
+    <Footer />
+  </div>
 
-  <div id="back-to-top" title="返回顶部" aria-label="返回顶部" role="button" tabindex="0">
+  <div id="back-to-top" title="返回顶部" aria-label="返回顶部" role="button" tabindex="0" data-pagefind-ignore>
     <svg class="icon"><use href="#icon-arrow-up"></use></svg>
   </div>
 
   <script is:inline defer src="/js/site.js"></script>
-  <script is:inline defer src="/js/simple-jekyll-search.min.js"></script>
 
   {GA_TRACK_ID && (
     <>

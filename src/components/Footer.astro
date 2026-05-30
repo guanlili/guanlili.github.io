@@ -6,6 +6,7 @@ const year = new Date().getFullYear();
   <div class="footer-mark">{SITE.brand} · {SITE.title}</div>
   <nav class="footer-nav" aria-label="页脚导航">
     {NAV.map((l) => <a href={l.href}>{l.label.split(" ")[0]}</a>)}
+    <a href="/feed.xml">RSS</a>
     <a href={`mailto:${SITE.email}`}>来信</a>
   </nav>
   <div class="footer-meta">
@@ -13,6 +14,6 @@ const year = new Date().getFullYear();
     <span class="sep" aria-hidden="true">·</span>
     <a href="https://beian.miit.gov.cn/">{SITE.beian}</a>
     <span class="sep" aria-hidden="true">·</span>
-    <span>Set in Noto Serif SC &amp; JetBrains Mono</span>
+    <span>Set in system serif &amp; mono</span>
   </div>
 </footer>

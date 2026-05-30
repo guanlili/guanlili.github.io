@@ -55,36 +55,85 @@ function initThemeToggle() {
   });
 }
 
-// ===== Search overlay (SimpleJekyllSearch over /search.json) =====
+// ===== Search overlay (Pagefind over static index) =====
 function initSearch() {
   var searchInput = document.getElementById('search-input');
   var resultsContainer = document.getElementById('search-results');
   if (!searchInput || !resultsContainer) return;
 
-  function htmlDecode(input) {
-    var e = document.createElement('textarea');
-    e.innerHTML = input;
-    return e.childNodes.length === 0 ? '' : e.childNodes[0].nodeValue;
-  }
+  var pagefind = null;
+  var loading = null;
+  var seq = 0;
+  var timer = null;
 
-  if (typeof SimpleJekyllSearch !== 'undefined') {
-    SimpleJekyllSearch({
-      searchInput: searchInput,
-      resultsContainer: resultsContainer,
-      json: '/search.json?v=' + Date.now(),
-      searchResultTemplate:
-        '<a class="search-result" href="{url}"><span class="sr-t">{title}</span><span class="sr-s">{subtitle}</span></a>',
-      noResultsText: '没有找到相关文章',
-      limit: 50,
-      fuzzy: false,
-      templateMiddleware: function (prop, value) {
-        if ((prop === 'subtitle' || prop === 'title') && value && value.indexOf('code') > -1) {
-          return htmlDecode(value);
-        }
-        return value;
-      }
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, function (ch) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
     });
   }
+
+  function loadPagefind() {
+    if (pagefind) return Promise.resolve(pagefind);
+    if (!loading) {
+      loading = import('/pagefind/pagefind.js').then(function (mod) {
+        pagefind = mod;
+        return pagefind;
+      });
+    }
+    return loading;
+  }
+
+  function renderLoading() {
+    resultsContainer.innerHTML = '<div class="search-note">搜索中...</div>';
+  }
+
+  function renderError() {
+    resultsContainer.innerHTML = '<div class="search-note">搜索暂时不可用</div>';
+  }
+
+  function renderEmpty(text) {
+    resultsContainer.innerHTML = text ? '<div class="search-note">没有找到相关文章</div>' : '';
+  }
+
+  function runSearch() {
+    var query = searchInput.value.trim();
+    var current = ++seq;
+    if (!query) {
+      renderEmpty('');
+      return;
+    }
+
+    renderLoading();
+    loadPagefind().then(function (pf) {
+      return pf.search(query);
+    }).then(function (search) {
+      if (current !== seq) return;
+      var results = (search.results || []).slice(0, 50);
+      if (!results.length) {
+        renderEmpty(query);
+        return;
+      }
+      return Promise.all(results.map(function (r) { return r.data(); })).then(function (items) {
+        if (current !== seq) return;
+        resultsContainer.innerHTML = items.map(function (item) {
+          var title = escapeHtml(item.meta && item.meta.title ? item.meta.title : item.url);
+          var excerpt = item.excerpt || '';
+          var url = escapeHtml(item.url);
+          return '<a class="search-result" href="' + url + '">' +
+            '<span class="sr-t">' + title + '</span>' +
+            '<span class="sr-e">' + excerpt + '</span>' +
+            '</a>';
+        }).join('');
+      });
+    }).catch(function () {
+      if (current === seq) renderError();
+    });
+  }
+
+  searchInput.addEventListener('input', function () {
+    clearTimeout(timer);
+    timer = setTimeout(runSearch, 180);
+  });
 
   var searchPage = document.querySelector('.search-page');
   var searchOpen = document.querySelector('.search-icon');

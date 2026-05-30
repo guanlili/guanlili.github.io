@@ -1,6 +1,8 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
+import rehypeImageAttrs from "./src/lib/rehype-image-attrs.mjs";
+import remarkShiftHeadings from "./src/lib/remark-shift-headings.mjs";
 
 // https://astro.build
 export default defineConfig({
@@ -12,6 +14,8 @@ export default defineConfig({
   build: { format: "directory" },
   integrations: [sitemap()],
   markdown: {
+    remarkPlugins: [remarkShiftHeadings],
+    rehypePlugins: [rehypeImageAttrs],
     // Leave mermaid blocks un-highlighted so they can be rendered as diagrams
     // client-side (see initMermaid in site.js).
     syntaxHighlight: { type: "shiki", excludeLangs: ["mermaid"] },

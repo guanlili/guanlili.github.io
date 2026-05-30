@@ -3,7 +3,8 @@ import { render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { SITE } from "../consts";
 import { readingStats } from "../lib/permalink";
-import { getPosts } from "../lib/posts";
+import { excerpt, firstImage, getPosts } from "../lib/posts";
+import { siteImage } from "../lib/media";
 
 export async function getStaticPaths() {
   const posts = await getPosts(); // newest-first, date-prefixed only
@@ -25,13 +26,19 @@ const noN = pad(n); // article number, e.g. 01 (newest)
 const vol = pad(d.getFullYear() - SITE.since); // years since SITE.since → Vol. 09 for 2026
 const { chars, minutes } = readingStats(post.body ?? "");
 
-const toc = headings.filter((h) => h.depth === 2);
+const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 const olderPath = older ? older.route.path : null;
 const newerPath = newer ? newer.route.path : null;
+const description = data.description || data.subtitle || excerpt(post.body ?? "", 155);
+const coverImage =
+  siteImage(data.cover) ??
+  siteImage(data["header-img"]) ??
+  siteImage(firstImage(post.body ?? ""));
 ---
 <BaseLayout
   title={data.title}
-  description={data.subtitle || SITE.description}
+  description={description || SITE.description}
+  image={coverImage ?? SITE.avatar}
   type="article"
   bodyClass="layout-post"
   article={{ date: d, author: data.author || SITE.author, tags: data.tags }}
@@ -56,6 +63,12 @@ const newerPath = newer ? newer.route.path : null;
         <span>{minutes} min read</span>
       </div>
     </section>
+
+    {coverImage && (
+      <figure class="article-cover">
+        <img src={coverImage} alt="" loading="eager" decoding="async" fetchpriority="high" />
+      </figure>
+    )}
 
     <div class="article-meta-strip">
       <div><span class="label">发表</span><span class="value">{ymd}</span></div>

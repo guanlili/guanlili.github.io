@@ -8,11 +8,13 @@ const blog = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
+    description: z.string().optional(),
     subtitle: z.string().optional(),
     author: z.string().optional(),
     tags: z
       .union([z.array(z.string()), z.string().transform((s) => [s])])
       .default([]),
+    cover: z.string().optional(),
     "header-img": z.string().optional(),
     "header-mask": z.number().optional(),
     mathjax: z.boolean().optional(),
