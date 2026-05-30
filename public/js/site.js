@@ -539,6 +539,58 @@ function initMermaid() {
     .catch(function () { /* CDN unavailable: leave the code block visible */ });
 }
 
+// ===== Code blocks: copy button + language label =====
+function initCodeBlocks() {
+  document.querySelectorAll('.article-content pre.astro-code').forEach(function (pre) {
+    var code = pre.querySelector('code');
+    if (!code) return;
+
+    // Language label
+    var lang = pre.getAttribute('data-language') || '';
+    if (lang && lang !== 'plaintext' && lang !== 'text') {
+      var label = document.createElement('span');
+      label.className = 'code-lang';
+      label.textContent = lang;
+      pre.appendChild(label);
+    }
+
+    // Copy button
+    var btn = document.createElement('button');
+    btn.className = 'code-copy';
+    btn.setAttribute('aria-label', '复制代码');
+    btn.setAttribute('title', '复制');
+    btn.textContent = 'Copy';
+    pre.appendChild(btn);
+
+    btn.addEventListener('click', function () {
+      navigator.clipboard.writeText(code.textContent).then(function () {
+        btn.textContent = 'Copied!';
+        btn.classList.add('code-copy-done');
+        setTimeout(function () {
+          btn.textContent = 'Copy';
+          btn.classList.remove('code-copy-done');
+        }, 1500);
+      });
+    });
+  });
+}
+
+// ===== Reading progress bar =====
+function initProgressBar() {
+  var bar = document.querySelector('.progress-fill');
+  var content = document.querySelector('.article-content');
+  if (!bar || !content) return;
+
+  onScroll(function () {
+    var rect = content.getBoundingClientRect();
+    var total = content.scrollHeight;
+    var visible = window.innerHeight;
+    var scrolled = -rect.top;
+    var pct = Math.min(Math.max(scrolled / (total - visible), 0), 1);
+    bar.style.width = (pct * 100) + '%';
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   initBackToTop();
   initThemeToggle();
@@ -548,5 +600,7 @@ document.addEventListener('DOMContentLoaded', function () {
   initResponsiveVideos();
   initLazyImages();
   initLightbox();
+  initCodeBlocks();
+  initProgressBar();
   initMermaid();
 });

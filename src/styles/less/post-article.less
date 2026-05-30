@@ -2,6 +2,26 @@
 // Paper + ink + cinnabar. Noto Serif SC display, Noto Sans SC body, JetBrains Mono meta.
 // Consumes the raw editorial tokens defined in variables.less.
 
+// ── Reading progress bar (article pages only) ──────────────────
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 9001;
+  background: transparent;
+  pointer-events: none;
+  display: none;  // hidden by default, shown only on article pages
+}
+.layout-post .reading-progress { display: block; }
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width .1s linear;
+}
+
 // Rendered mermaid diagrams (see initMermaid in site.js)
 .article-content .mermaid {
   margin: 28px 0;
@@ -252,6 +272,7 @@
   overflow-x: auto;
   margin: 24px 0;
   border-left: 3px solid var(--accent);
+  position: relative;
 }
 .article-content pre code {
   background: transparent;
@@ -262,6 +283,40 @@
 .article-content .highlighter-rouge .highlight {
   border-left: 3px solid var(--accent);
 }
+
+// ── Code block: language label + copy button ────────────────────
+.code-lang {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  opacity: .6;
+  pointer-events: none;
+  user-select: none;
+}
+.code-copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: 1px solid var(--ink-3);
+  border-radius: 4px;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 8px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.article-content pre:hover .code-copy { opacity: .8; }
+.code-copy:hover { opacity: 1 !important; color: var(--accent); border-color: var(--accent); }
+.code-copy-done { opacity: 1 !important; color: var(--accent); border-color: var(--accent); }
+.article-content pre:hover .code-lang { opacity: .3; }
 .article-content ul, .article-content ol {
   margin: 0 0 20px;
   padding-left: 24px;
@@ -486,6 +541,59 @@
   font-family: var(--serif);
   font-size: 22px;
   color: var(--accent);
+}
+
+// ── Related posts ──────────────────────────────────────────────
+.related-posts {
+  border-top: 1px solid var(--rule);
+  padding-top: 28px;
+  margin-top: 28px;
+}
+.related-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 16px;
+}
+.related-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.related-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 0;
+  border-bottom: 1px dotted var(--rule-soft);
+  text-decoration: none;
+  color: var(--ink-2);
+  transition: color .15s;
+}
+.related-card:hover { color: var(--accent); }
+.related-card:last-child { border-bottom: 0; }
+.rc-title {
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.45;
+}
+.rc-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+}
+.rc-tag {
+  background: var(--hl);
+  color: var(--accent-ink);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 9.5px;
 }
 
 // ── Prev / Next ────────────────────────────────────────────────

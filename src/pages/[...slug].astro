@@ -8,14 +8,34 @@ import { siteImage } from "../lib/media";
 
 export async function getStaticPaths() {
   const posts = await getPosts(); // newest-first, date-prefixed only
-  return posts.map((p, i) => ({
-    params: { slug: p.route.param },
-    // older = next index, newer = previous index; n = sequence (newest = 01)
-    props: { post: p.entry, older: posts[i + 1], newer: posts[i - 1], n: i + 1 },
-  }));
+  return posts.map((p, i) => {
+    // Related articles: top 3 by tag overlap (≥1 shared tag), excluding self
+    const myTags = new Set(p.entry.data.tags || []);
+    const related = posts
+      .filter((q) => q.route.path !== p.route.path)
+      .map((q) => {
+        const overlap = (q.entry.data.tags || []).filter((t: string) => myTags.has(t)).length;
+        return { post: q, overlap };
+      })
+      .filter((r) => r.overlap > 0)
+      .sort((a, b) => b.overlap - a.overlap || b.post.entry.data.date.getTime() - a.post.entry.data.date.getTime())
+      .slice(0, 3)
+      .map((r) => ({
+        title: r.post.entry.data.title,
+        path: r.post.route.path,
+        tags: r.post.entry.data.tags || [],
+        date: r.post.entry.data.date,
+      }));
+
+    return {
+      params: { slug: p.route.param },
+      // older = next index, newer = previous index; n = sequence (newest = 01)
+      props: { post: p.entry, older: posts[i + 1], newer: posts[i - 1], n: i + 1, related },
+    };
+  });
 }
 
-const { post, older, newer, n } = Astro.props;
+const { post, older, newer, n, related } = Astro.props;
 const { Content, headings } = await render(post);
 const { data } = post;
 
@@ -126,6 +146,27 @@ const coverImage =
       <span class="glyph">&#10086;</span>
       <span>{ymd} · 北京</span>
     </div>
+
+    {related.length > 0 && (
+      <section class="related-posts">
+        <div class="related-label">相关推荐 / Related</div>
+        <div class="related-list">
+          {related.map((r: { title: string; path: string; tags: string[]; date: Date }) => {
+            const rd = r.date;
+            const rymd = `${rd.getFullYear()}.${String(rd.getMonth() + 1).padStart(2, "0")}.${String(rd.getDate()).padStart(2, "0")}`;
+            return (
+              <a class="related-card" href={r.path}>
+                <span class="rc-title">{r.title}</span>
+                <span class="rc-meta">
+                  {r.tags.slice(0, 3).map((t: string) => <span class="rc-tag">{t}</span>)}
+                  <span class="rc-date">{rymd}</span>
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
 
     <div class="next-prev">
       {newerPath ? (
