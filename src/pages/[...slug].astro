@@ -22,7 +22,7 @@ const d = data.date;
 const pad = (v: number) => String(v).padStart(2, "0");
 const ymd = `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())}`;
 const noN = pad(n); // article number, e.g. 01 (newest)
-const vol = pad(d.getFullYear() - 2017); // years since 2017 → Vol. 09 for 2026
+const vol = pad(d.getFullYear() - SITE.since); // years since SITE.since → Vol. 09 for 2026
 const { chars, minutes } = readingStats(post.body ?? "");
 
 const toc = headings.filter((h) => h.depth === 2);
@@ -48,7 +48,7 @@ const newerPath = newer ? newer.route.path : null;
       <div class="byline">
         <span class="author">
           <img src={SITE.avatar} alt="" />
-          <span>李梨 / outman</span>
+          <span>{SITE.author} / {SITE.handle}</span>
         </span>
         <span class="sep"></span>
         <span>{ymd}</span>

@@ -3,14 +3,14 @@ import { SITE, NAV } from "../consts";
 const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
-  <div class="footer-mark">梨园 · {SITE.title}</div>
+  <div class="footer-mark">{SITE.brand} · {SITE.title}</div>
   <nav class="footer-nav" aria-label="页脚导航">
     {NAV.map((l) => <a href={l.href}>{l.label.split(" ")[0]}</a>)}
     <a href="/feed.xml">RSS</a>
-    <a href={`mailto:${"lovelose1921@vip.qq.com"}`}>来信</a>
+    <a href={`mailto:${SITE.email}`}>来信</a>
   </nav>
   <div class="footer-meta">
-    <span>© 2017–{year} {SITE.title}</span>
+    <span>© {SITE.since}–{year} {SITE.title}</span>
     <span class="sep" aria-hidden="true">·</span>
     <a href="https://beian.miit.gov.cn/">{SITE.beian}</a>
     <span class="sep" aria-hidden="true">·</span>

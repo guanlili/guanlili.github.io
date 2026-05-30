@@ -1,11 +1,11 @@
 ---
-import { NAV } from "../consts";
+import { NAV, SITE } from "../consts";
 const { active } = Astro.props as { active?: string };
 ---
 <header class="topbar">
   <div class="brand">
-    <a href="/" class="mark">梨园</a>
-    <span class="latin">lili.blog / since 2017</span>
+    <a href="/" class="mark">{SITE.brand}</a>
+    <span class="latin">{SITE.latinBrand} / since {SITE.since}</span>
   </div>
   <nav aria-label="主导航">
     {NAV.map((l) => (

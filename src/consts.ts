@@ -9,13 +9,31 @@ export const SITE = {
   keywords:
     "李梨, outman李梨, outman, outmanpro, @outmanpro, 李梨的博客, outman Blog, 博客, 个人网站, 互联网, Web, JavaScript, 前端, 设计",
   author: "李梨",
+  handle: "outman",
+  brand: "梨园",
+  latinBrand: "lili.blog",
+  wechatName: "李梨同学",
+  redbookId: "2920300268",
+  email: "lovelose1921@vip.qq.com",
+  since: 2019,
+  locale: "zh-CN",
   avatar: "/img/avatar-ghl-ny.jpg",
-  aboutDescription:
-    "李梨，热爱技术&测试，简单乐观爱创造。<br> When you look up at the stars, don't forget to look down at the dust.",
+  role: "SOFTWARE ENG · UX",
+  bio: "热爱技术与测试，简单乐观，爱创造。Web & Mobile Lover，业余写代码、做菜、看星星。",
+  epigraph:
+    "When you look up at the stars, don't forget to look down at the dust.",
   beian: "京ICP备2022033467号-2",
   themeColor: "#000000",
   perPage: 10,
 };
+
+// Sidebar /About 卡片下方 4 个快捷链接(社交三连 + 联系订阅锚点)
+export const SIDEBAR_LINKS: { badge: string; title: string; href: string }[] = [
+  { badge: "GH", title: "GitHub", href: "https://github.com/guanlili" },
+  { badge: "知", title: "知乎", href: "https://www.zhihu.com/people/xiao-li-ge-ge-38" },
+  { badge: "CS", title: "CSDN", href: "https://blog.csdn.net/outman_1921" },
+  { badge: "@", title: "联系 / 订阅", href: "/about/#follow" },
+];
 
 export const NAV: { label: string; href: string; key: string }[] = [
   { label: "首页 Home", href: "/", key: "home" },

@@ -10,6 +10,7 @@ import { SITE } from "../consts";
 const posts = await getPosts();
 const featured = posts[0];
 const recent = posts.slice(1, 11);
+const host = new URL(SITE.url).host;
 
 // real metrics
 const totalChars = posts.reduce(
@@ -46,7 +47,7 @@ const line2 = mp.slice(Math.ceil(mp.length / 2)).join(" ");
       <div class="left">
         <div class="kicker">
           <span class="dot"></span>
-          <span>Since 2017 · 手稿 {posts.length} 篇</span>
+          <span>Since {SITE.since} · 手稿 {posts.length} 篇</span>
           <span class="rule"></span>
           <span>{latest?.getFullYear()}</span>
         </div>
@@ -55,23 +56,23 @@ const line2 = mp.slice(Math.ceil(mp.length / 2)).join(" ");
           <span class="quote-mk">「</span>{line2}<span class="quote-mk">」</span>
         </h1>
         <p class="sub">
-          这里是 <em>李梨（outman）</em> 的个人博客——一个写 AI、聊架构、记录踩坑日常的小角落。写作是把模糊的思考晾在阳光下，逼自己说人话。
+          这里是 <em>{SITE.author}（{SITE.handle}）</em> 的个人博客——一个写 AI、聊架构、记录踩坑日常的小角落。写作是把模糊的思考晾在阳光下，逼自己说人话。
         </p>
       </div>
       <div class="right">
         <div class="issue">{posts.length}</div>
         <div>篇 · ARTICLES</div>
-        <div>EST. 2017 · 北京</div>
-        <div style="margin-top:10px;color:var(--ink-4)">guanlili.github.io</div>
+        <div>EST. {SITE.since} · 北京</div>
+        <div style="margin-top:10px;color:var(--ink-4)">{host}</div>
       </div>
       <div class="vertical-accent">仰望星空，俯首尘埃</div>
     </section>
 
     <div class="index-strip">
-      <div><span class="label">本期主笔</span><span class="value">李梨 · outman</span></div>
+      <div><span class="label">本期主笔</span><span class="value">{SITE.author} · {SITE.handle}</span></div>
       <div><span class="label">累计文章</span><span class="value">{posts.length} 篇 · 约 {wan}w 字</span></div>
       <div><span class="label">最新更新</span><span class="value">{latestYmd}</span></div>
-      <div><span class="label">订阅 · 公众号</span><span class="value">微信「李梨」</span></div>
+      <div><span class="label">订阅 · 公众号</span><span class="value">微信「{SITE.wechatName}」</span></div>
     </div>
 
     {featured && <Feature post={featured} />}

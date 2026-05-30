@@ -30,7 +30,7 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const ogImage = new URL(image, SITE.url).href;
 ---
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang={SITE.locale}>
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />

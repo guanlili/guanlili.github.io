@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE } from "../consts";
 import { getPosts, ganzhi, type LoadedPost } from "../lib/posts";
 import { readingStats } from "../lib/permalink";
 
@@ -31,7 +32,7 @@ const ymd = (d: Date) => `${d.getFullYear()}.${md(d)}`;
           <span>按年序排列</span>
         </div>
         <h1>归档手稿</h1>
-        <p class="sub">从 2017 到今天——从测试到全栈，再到 AI 工程师。这里是所有正式发表的写作。</p>
+        <p class="sub">从 {SITE.since} 到今天——从测试到全栈，再到 AI 工程师。这里是所有正式发表的写作。</p>
       </div>
       <div class="right">
         <div class="big">{posts.length}</div>

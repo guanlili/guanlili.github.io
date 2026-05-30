@@ -6,7 +6,8 @@ import { Content as About } from "../content/about.md";
 
 const posts = await getPosts();
 const tagCount = new Set(posts.flatMap((p) => p.entry.data.tags)).size;
-const years = new Date().getFullYear() - 2017;
+const years = new Date().getFullYear() - SITE.since;
+const host = new URL(SITE.url).host;
 ---
 <BaseLayout active="about" title="About" description="他单纯只想把日子过得不浪费">
   <div class="article-shell">
@@ -18,8 +19,8 @@ const years = new Date().getFullYear() - 2017;
           <span class="rule"></span>
           <span>第一人称</span>
         </div>
-        <h1>关于我，<br />李梨 (outman)</h1>
-        <p class="sub" set:html={SITE.aboutDescription}></p>
+        <h1>关于我，<br />{SITE.author} ({SITE.handle})</h1>
+        <p class="sub">{SITE.author}，{SITE.bio}<br />{SITE.epigraph}</p>
       </div>
       <div class="right">
         <div class="big">{years}</div>
@@ -63,12 +64,12 @@ const years = new Date().getFullYear() - 2017;
         <h2>之外 / Outside Code</h2>
         <div class="sub-h">When away from a keyboard</div>
         <p>我喜欢做菜（最近在折腾川菜里的鱼香肉丝标准化）、跑步、看星星——后者大概是 ID outman 之外另一个我会反复回到的隐喻。还会拍点街头照，主要在北京西二旗到清河之间的几条街道。</p>
-        <p>如果你正好在做 AI 工程化、私有部署、或者就是想找个程序员一起喝杯茶聊聊，随时来信——<code>lovelose1921@vip.qq.com</code>。</p>
+        <p>如果你正好在做 AI 工程化、私有部署、或者就是想找个程序员一起喝杯茶聊聊，随时来信——<code>{SITE.email}</code>。</p>
       </article>
 
       <aside class="about-side">
         <div class="portrait">
-          <div class="img-box"><img src={SITE.avatar} alt="李梨" /></div>
+          <div class="img-box"><img src={SITE.avatar} alt={SITE.author} /></div>
           <div class="caption">
             <span>Guan Li Li · Outman</span>
             <span class="accent">No. {posts.length}</span>
@@ -100,7 +101,7 @@ const years = new Date().getFullYear() - 2017;
           <h2>微信公众号 &amp; 小红书<small>两个主阵地 · Two Primary Channels</small></h2>
         </div>
         <div class="note">
-          长文 + 技术更新看公众号「李梨同学」，<br />
+          长文 + 技术更新看公众号「{SITE.wechatName}」，<br />
           生活向 + AI 折腾日常看小红书。<br />
           其他平台同步分发，挑顺手的即可。
         </div>
@@ -108,12 +109,12 @@ const years = new Date().getFullYear() - 2017;
 
       <div class="primary-channels">
         <article class="channel-hero is-wechat">
-          <img src="/img/weixin-qrcode.png" alt="微信 · 李梨同学 · 微信搜一搜搜索昵称添加" loading="lazy" />
-          <div class="label"><span class="accent">微信搜一搜「李梨同学」</span></div>
+          <img src="/img/weixin-qrcode.png" alt={`微信 · ${SITE.wechatName} · 微信搜一搜搜索昵称添加`} loading="lazy" />
+          <div class="label"><span class="accent">微信搜一搜「{SITE.wechatName}」</span></div>
         </article>
         <article class="channel-hero is-red">
-          <img src="/img/redbook-qrcode.png" alt="小红书 · 李梨同学 · 扫码关注" loading="lazy" />
-          <div class="label"><span class="accent">小红书号 2920300268</span></div>
+          <img src="/img/redbook-qrcode.png" alt={`小红书 · ${SITE.wechatName} · 扫码关注`} loading="lazy" />
+          <div class="label"><span class="accent">小红书号 {SITE.redbookId}</span></div>
         </article>
       </div>
 
@@ -138,13 +139,13 @@ const years = new Date().getFullYear() - 2017;
       <div class="direct-row">
         <div class="email-cell">
           <span class="lbl">Direct · 邮件</span>
-          <div class="em"><a href="mailto:lovelose1921@vip.qq.com">lovelose1921@vip.qq.com</a></div>
+          <div class="em"><a href={`mailto:${SITE.email}`}>{SITE.email}</a></div>
           <p class="note">正事、合作、长信请走邮箱。广告与营销邮件请绕道，谢谢。</p>
         </div>
         <div class="rss-cell">
           <span class="lbl">For Devs</span>
           <span class="rs-name">RSS / Atom Feed</span>
-          <div class="url"><a href="/feed.xml">guanlili.github.io/feed.xml</a></div>
+          <div class="url"><a href="/feed.xml">{host}/feed.xml</a></div>
           <p class="desc">喜欢 RSS 阅读器的同行可以订阅 feed，全文输出，无追踪。</p>
         </div>
       </div>

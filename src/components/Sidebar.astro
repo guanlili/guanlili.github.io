@@ -1,5 +1,5 @@
 ---
-import { SITE, FRIENDS, NOW } from "../consts";
+import { SITE, FRIENDS, NOW, SIDEBAR_LINKS } from "../consts";
 interface Props {
   tags: { tag: string; size: string }[];
 }
@@ -9,19 +9,18 @@ const { tags } = Astro.props;
   <div class="about-card">
     <div class="corner"></div>
     <div class="head">
-      <img src={SITE.avatar} alt="李梨" />
+      <img src={SITE.avatar} alt={SITE.author} />
       <div>
-        <div class="name">李梨 · outman</div>
-        <div class="role">SOFTWARE ENG · UX</div>
+        <div class="name">{SITE.author} · {SITE.handle}</div>
+        <div class="role">{SITE.role}</div>
       </div>
     </div>
-    <p class="bio">热爱技术与测试，简单乐观，爱创造。Web &amp; Mobile Lover，业余写字、做菜、看星星。</p>
-    <p class="epigraph">When you look up at the stars, don't forget to look down at the dust.</p>
+    <p class="bio">{SITE.bio}</p>
+    <p class="epigraph">{SITE.epigraph}</p>
     <div class="links">
-      <a href="https://github.com/guanlili" title="GitHub">GH</a>
-      <a href="https://www.zhihu.com/people/xiao-li-ge-ge-38" title="知乎">知</a>
-      <a href="https://blog.csdn.net/outman_1921" title="CSDN">CS</a>
-      <a href="/about/#follow" title="联系 / 订阅">@</a>
+      {SIDEBAR_LINKS.map((l) => (
+        <a href={l.href} title={l.title}>{l.badge}</a>
+      ))}
     </div>
   </div>
 
