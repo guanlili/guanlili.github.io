@@ -221,18 +221,24 @@ function initCodeBlocks() {
 
 // ===== Reading progress bar =====
 function initProgressBar() {
-  var bar = document.querySelector('.progress-fill');
+  var gutter = document.querySelector('.article-body .gutter');
+  var bar = gutter ? gutter.querySelector('.progress-fill') : null;
+  var label = gutter ? gutter.querySelector('.progress-label') : null;
   var content = document.querySelector('.article-content');
-  if (!bar || !content) return;
+  if (!gutter || !bar || !content) return;
 
-  onScroll(function () {
+  function update() {
     var rect = content.getBoundingClientRect();
-    var total = content.scrollHeight;
-    var visible = window.innerHeight;
-    var scrolled = -rect.top;
-    var pct = Math.min(Math.max(scrolled / (total - visible), 0), 1);
-    bar.style.width = (pct * 100) + '%';
-  });
+    var scrollable = Math.max(1, rect.height - window.innerHeight);
+    var pct = Math.min(Math.max(-rect.top / scrollable, 0), 1);
+    var percent = Math.round(pct * 100);
+    gutter.style.setProperty('--article-progress', percent + '%');
+    if (label) label.textContent = percent + '%';
+  }
+
+  update();
+  onScroll(update);
+  window.addEventListener('resize', update);
 }
 
 // ===== Mermaid diagrams (loaded from CDN only when needed) =====

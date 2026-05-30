@@ -3,21 +3,31 @@ import { render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { SITE } from "../consts";
 import { readingStats } from "../lib/permalink";
-import { excerpt, firstImage, getPosts } from "../lib/posts";
+import { excerpt, firstImage, getPosts, type LoadedPost } from "../lib/posts";
 import { siteImage } from "../lib/media";
 
 export async function getStaticPaths() {
   const posts = await getPosts(); // newest-first, date-prefixed only
+  const postsByTag = new Map<string, LoadedPost[]>();
+  for (const post of posts) {
+    for (const tag of post.entry.data.tags || []) {
+      if (!postsByTag.has(tag)) postsByTag.set(tag, []);
+      postsByTag.get(tag)!.push(post);
+    }
+  }
+
   return posts.map((p, i) => {
-    // Related articles: top 3 by tag overlap (≥1 shared tag), excluding self
-    const myTags = new Set(p.entry.data.tags || []);
-    const related = posts
-      .filter((q) => q.route.path !== p.route.path)
-      .map((q) => {
-        const overlap = (q.entry.data.tags || []).filter((t: string) => myTags.has(t)).length;
-        return { post: q, overlap };
-      })
-      .filter((r) => r.overlap > 0)
+    // Related articles: score only posts sharing at least one tag.
+    const candidates = new Map<LoadedPost, number>();
+    for (const tag of p.entry.data.tags || []) {
+      for (const q of postsByTag.get(tag) || []) {
+        if (q.route.path === p.route.path) continue;
+        candidates.set(q, (candidates.get(q) ?? 0) + 1);
+      }
+    }
+
+    const related = [...candidates.entries()]
+      .map(([post, overlap]) => ({ post, overlap }))
       .sort((a, b) => b.overlap - a.overlap || b.post.entry.data.date.getTime() - a.post.entry.data.date.getTime())
       .slice(0, 3)
       .map((r) => ({
@@ -43,7 +53,6 @@ const d = data.date;
 const pad = (v: number) => String(v).padStart(2, "0");
 const ymd = `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())}`;
 const noN = pad(n); // article number, e.g. 01 (newest)
-const vol = pad(d.getFullYear() - SITE.since); // years since SITE.since → Vol. 09 for 2026
 const { chars, minutes } = readingStats(post.body ?? "");
 
 const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
@@ -100,9 +109,8 @@ const coverImage =
     <div class="article-body">
       <aside class="gutter" aria-hidden="true">
         <span class="num">{noN}</span>
-        <span>Vol. {vol}</span>
-        <span>· · ·</span>
-        <span>{ymd}</span>
+        <span class="progress-track"><span class="progress-fill"></span></span>
+        <span class="progress-label">0%</span>
       </aside>
 
       <div class="article-content">

@@ -166,27 +166,46 @@
   .article-body { grid-template-columns: 1fr; gap: 28px; padding: 36px 0 48px; }
 }
 .article-body .gutter {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  letter-spacing: .12em;
-  color: var(--ink-4);
-  text-transform: uppercase;
   position: sticky;
   top: 24px;
   align-self: start;
-  display: flex; flex-direction: column; gap: 6px;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
+  min-height: 280px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
+  gap: 14px;
 }
 @media (max-width: 1040px) { .article-body .gutter { display: none; } }
 .article-body .gutter .num {
   font-family: var(--serif);
   font-size: 40px;
   color: var(--ink);
-  writing-mode: horizontal-tb;
-  transform: rotate(0deg);
   letter-spacing: -.02em;
-  margin-bottom: 4px;
+  line-height: 1;
+}
+.article-body .gutter .progress-track {
+  width: 2px;
+  min-height: 180px;
+  height: min(46vh, 360px);
+  background: color-mix(in srgb, var(--ink) 14%, transparent);
+  position: relative;
+  overflow: hidden;
+}
+.article-body .gutter .progress-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: var(--article-progress, 0%);
+  background: var(--ink);
+  transition: height .12s linear;
+}
+.article-body .gutter .progress-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: var(--ink-4);
+  line-height: 1;
 }
 
 // ── Article content (the rendered Markdown) ────────────────────

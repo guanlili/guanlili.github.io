@@ -1,7 +1,12 @@
 // lili Blog — Service Worker
 // Cache-first for static assets, network-first for HTML, stale-while-revalidate for search index.
 
-var CACHE = 'lili-blog-v1';
+var CACHE = 'lili-blog-v2';
+var PRECACHE = [
+  '/js/site.js',
+  '/img/favicon.ico',
+  '/img/avatar-ghl-ny.jpg'
+];
 
 // Static assets: cache on first request, serve from cache thereafter.
 var CACHE_FIRST = [
@@ -15,11 +20,7 @@ var CACHE_FIRST = [
 self.addEventListener('install', function (e) {
   e.waitUntil(
     caches.open(CACHE).then(function (c) {
-      return c.addAll([
-        '/js/site.js',
-        '/img/favicon.ico',
-        '/img/avatar-ghl-ny.jpg'
-      ]);
+      return c.addAll(PRECACHE);
     })
   );
   self.skipWaiting();
@@ -39,22 +40,29 @@ self.addEventListener('activate', function (e) {
 
 // Fetch
 self.addEventListener('fetch', function (e) {
+  if (e.request.method !== 'GET') return;
+
   var url = new URL(e.request.url);
 
   // Only handle same-origin requests.
   if (url.origin !== self.location.origin) return;
 
   var path = url.pathname;
+  var accept = e.request.headers.get('accept') || '';
 
   // HTML pages: network-first (always fresh content).
-  if (e.request.headers.get('accept').indexOf('text/html') !== -1) {
+  if (accept.indexOf('text/html') !== -1) {
     e.respondWith(
       fetch(e.request).then(function (res) {
-        var clone = res.clone();
-        caches.open(CACHE).then(function (c) { c.put(e.request, clone); });
+        if (res && res.ok) {
+          var clone = res.clone();
+          caches.open(CACHE).then(function (c) { c.put(e.request, clone); });
+        }
         return res;
       }).catch(function () {
-        return caches.match(e.request);
+        return caches.match(e.request).then(function (cached) {
+          return cached || caches.match('/');
+        });
       })
     );
     return;
@@ -66,7 +74,7 @@ self.addEventListener('fetch', function (e) {
       caches.open(CACHE).then(function (c) {
         return c.match(e.request).then(function (cached) {
           var fetchPromise = fetch(e.request).then(function (res) {
-            c.put(e.request, res.clone());
+            if (res && res.ok) c.put(e.request, res.clone());
             return res;
           }).catch(function () { return cached; });
           return cached || fetchPromise;
@@ -83,9 +91,13 @@ self.addEventListener('fetch', function (e) {
       caches.match(e.request).then(function (cached) {
         if (cached) return cached;
         return fetch(e.request).then(function (res) {
-          var clone = res.clone();
-          caches.open(CACHE).then(function (c) { c.put(e.request, clone); });
+          if (res && res.ok) {
+            var clone = res.clone();
+            caches.open(CACHE).then(function (c) { c.put(e.request, clone); });
+          }
           return res;
+        }).catch(function () {
+          return Response.error();
         });
       })
     );
