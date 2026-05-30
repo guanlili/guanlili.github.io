@@ -6,6 +6,29 @@
 @import "search.less";
 @import "post-article.less";
 
+// ── Skip-to-content link (a11y, WCAG 2.4.1) ────────────────────
+// Visually hidden until focused, then surfaces top-left for keyboard users.
+.skip-nav {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 9999;
+  padding: 8px 14px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 4px;
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 13px;
+  transform: translateY(-150%);
+  transition: transform 0.15s ease;
+  &:focus {
+    transform: translateY(0);
+    outline: 2px solid var(--accent-ink);
+    outline-offset: 2px;
+  }
+}
+
 // ── Base elements ──────────────────────────────────────────────
 body {
   .sans-serif;

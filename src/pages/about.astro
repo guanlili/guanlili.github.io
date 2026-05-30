@@ -38,40 +38,20 @@ const host = new URL(SITE.url).host;
         <h2>履历 / Path</h2>
         <div class="sub-h">Professional Trajectory</div>
         <div class="timeline-mini">
-          <div class="row"><span class="y">NOW</span><span class="b">某互联网公司 · AI 工程师 / 架构 <small>带一个小团队做内部 AI 平台，主攻文生视频、私域知识库与代码生成。</small></span></div>
-          <div class="row"><span class="y">2023</span><span class="b">PMO → 全栈 <small>从项目管理岗位回到一线写代码。把过去两年的方法论塞回键盘，做出了几个让我自己满意的产品。</small></span></div>
-          <div class="row"><span class="y">2021</span><span class="b">测试开发 → 全栈 <small>主动转岗。从写测试用例到写业务代码，最大的收获是「永远不要相信任何上游」。</small></span></div>
-          <div class="row"><span class="y">2018</span><span class="b">毕业 · 进入第一家公司 <small>计算机相关专业。第一份工作做测试开发，被毒打得很彻底。</small></span></div>
-          <div class="row"><span class="y">2017</span><span class="b">开始写博客 <small>在博客园开了第一个号，发布了第一篇笔记，后来才把它搬到 GitHub Pages 上。</small></span></div>
+          <div class="row"><span class="y">NOW</span><span class="b">超级个体 · AI 研发 / 架构 <small>带一支小队做内部 AI 平台，主攻文生视频、私域知识库与代码生成三条主线。</small></span></div>
+          <div class="row"><span class="y">2025</span><span class="b">PMO → All in AI <small>从管人到管 AI。把过去两年的管理沉淀塞回键盘，做出几个让自己满意的 AI 产品。</small></span></div>
+          <div class="row"><span class="y">2024</span><span class="b">全栈 → PMO <small>从「螺丝钉」抬头看「流水线」。换个视角，第一次看清公司是怎么运转的，账是怎么算的。</small></span></div>
+          <div class="row"><span class="y">2022</span><span class="b">校招 · 测试开发 → 全栈 <small>从测试岗回到代码一线。先后落地 API 平台、Mock 质量体系、AI 编码助手——串起来就是一句「研发提效」。</small></span></div>
+          <div class="row"><span class="y">2020</span><span class="b">QA 实习 · 进入第一家大厂 <small>实习两年，熬成组里最老的「员工」。分单、定价、导流，覆盖网约车交易引擎全部业务——被毒打得很彻底，也长得很快。</small></span></div>
+          <div class="row"><span class="y">2019</span><span class="b">进京读研 · 开始写博客 <small>要学的知识太多。于自己，对抗遗忘；于他人，多少有点用。</small></span></div>
         </div>
-
-        <h2>常用 / Stack</h2>
-        <div class="sub-h">Daily Drivers, circa 2026</div>
-        <div class="stack-grid">
-          <div class="pill"><span class="lbl">主语言</span><span class="v">Python · Java · TS</span></div>
-          <div class="pill"><span class="lbl">框架</span><span class="v">FastAPI · Spring · Next</span></div>
-          <div class="pill"><span class="lbl">AI / 模型</span><span class="v">DeepSeek · Qwen · 通义</span></div>
-          <div class="pill"><span class="lbl">工作流</span><span class="v">Dify · ComfyUI · n8n</span></div>
-          <div class="pill"><span class="lbl">基础设施</span><span class="v">Ubuntu · Docker · Nginx</span></div>
-          <div class="pill"><span class="lbl">编辑器</span><span class="v">VSCode · Neovim · IDEA</span></div>
-        </div>
-
-        <h2>关于这个站 / The Site</h2>
-        <div class="sub-h">Principles of this blog</div>
-        <p>这个博客没有评论区，也没有阅读统计——倒不是清高，只是不想让数字成为写作的动机。如果你想找我聊点什么，<strong>邮件、GitHub Issue、知乎私信</strong>都行，响应速度大概是「按周计」。</p>
-        <p>技术栈很朴素：<strong>Astro + Markdown + GitHub Pages</strong>，自己写的样式，自己排的版。页面里出现的字体是 Noto Serif SC（标题）、Noto Sans SC（正文）和 JetBrains Mono（元数据）——都是开源的中文字体，不依赖系统。</p>
-
-        <h2>之外 / Outside Code</h2>
-        <div class="sub-h">When away from a keyboard</div>
-        <p>我喜欢做菜（最近在折腾川菜里的鱼香肉丝标准化）、跑步、看星星——后者大概是 ID outman 之外另一个我会反复回到的隐喻。还会拍点街头照，主要在北京西二旗到清河之间的几条街道。</p>
-        <p>如果你正好在做 AI 工程化、私有部署、或者就是想找个程序员一起喝杯茶聊聊，随时来信——<code>{SITE.email}</code>。</p>
       </article>
 
       <aside class="about-side">
         <div class="portrait">
           <div class="img-box"><img src={SITE.avatar} alt={SITE.author} /></div>
           <div class="caption">
-            <span>Guan Li Li · Outman</span>
+            <span>Li Li </span>
             <span class="accent">No. {posts.length}</span>
           </div>
         </div>
@@ -136,19 +116,24 @@ const host = new URL(SITE.url).host;
         </ul>
       </section>
 
-      <div class="direct-row">
-        <div class="email-cell">
-          <span class="lbl">Direct · 邮件</span>
-          <div class="em"><a href={`mailto:${SITE.email}`}>{SITE.email}</a></div>
-          <p class="note">正事、合作、长信请走邮箱。广告与营销邮件请绕道，谢谢。</p>
+      <section class="contact-letter" aria-labelledby="contact-heading">
+        <div class="body">
+          <div class="kicker">Direct · 来信</div>
+          <h3 id="contact-heading">想说点什么，就写一封吧。</h3>
+          <a class="cta" href={`mailto:${SITE.email}`}>
+            <span class="addr">{SITE.email}</span>
+            <span class="arrow">写信 ↗</span>
+          </a>
+          <p class="note">正事、合作、长信请走邮箱，响应大概「按周计」。广告与营销邮件请绕道，谢谢。</p>
         </div>
-        <div class="rss-cell">
-          <span class="lbl">For Devs</span>
-          <span class="rs-name">RSS / Atom Feed</span>
-          <div class="url"><a href="/feed.xml">{host}/feed.xml</a></div>
-          <p class="desc">喜欢 RSS 阅读器的同行可以订阅 feed，全文输出，无追踪。</p>
-        </div>
-      </div>
+        <aside class="stamp" aria-hidden="true">
+          <div class="seal">{SITE.brand.slice(0, 1)}</div>
+          <div class="postmark">
+            <span>{host}</span>
+            <span>EST. {SITE.since}</span>
+          </div>
+        </aside>
+      </section>
     </section>
   </div>
 </BaseLayout>

@@ -2,7 +2,7 @@
 
 > 离开世界之前，一切都是过程。
 
-[李梨 (outman) 的个人博客](https://guanlili.github.io) —— 一个写 AI、聊架构、记录踩坑日常的小角落。
+[李梨的个人博客](https://guanlili.github.io) —— 一个写 AI、聊架构、记录踩坑日常的小角落。
 「中文编辑刊物 × 开发者博客」的编辑式设计：纸张感配色、朱砂红点缀、思源宋体标题 + JetBrains Mono 元数据，支持浅色 / 深色。
 
 Built with **[Astro](https://astro.build)**. （2026 年从 Jekyll 迁移而来。）

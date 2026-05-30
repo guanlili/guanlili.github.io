@@ -7,7 +7,7 @@ export const SITE = {
   description:
     "关于程序与设计、测试与开发 | 李梨，Web & Mobile Lover，Software Engineer，UX Designer | 这里是 @outman李梨 的个人博客，与你一起发现更大的世界。",
   keywords:
-    "李梨, outman李梨, outman, outmanpro, @outmanpro, 李梨的博客, outman Blog, 博客, 个人网站, 互联网, Web, JavaScript, 前端, 设计",
+    "李梨, 李梨的博客, 李梨Blog, 博客, 个人网站, 互联网, Web, JavaScript, 前端, 设计",
   author: "李梨",
   handle: "outman",
   brand: "梨园",
@@ -19,7 +19,7 @@ export const SITE = {
   locale: "zh-CN",
   avatar: "/img/avatar-ghl-ny.jpg",
   role: "SOFTWARE ENG · UX",
-  bio: "热爱技术与测试，简单乐观，爱创造。Web & Mobile Lover，业余写代码、做菜、看星星。",
+  bio: "热爱技术与生活，简单乐观，爱创造。Web & Mobile Lover，业余写代码、做菜、看星星。",
   epigraph:
     "When you look up at the stars, don't forget to look down at the dust.",
   beian: "京ICP备2022033467号-2",

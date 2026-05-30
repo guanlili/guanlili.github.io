@@ -6,7 +6,6 @@ const year = new Date().getFullYear();
   <div class="footer-mark">{SITE.brand} · {SITE.title}</div>
   <nav class="footer-nav" aria-label="页脚导航">
     {NAV.map((l) => <a href={l.href}>{l.label.split(" ")[0]}</a>)}
-    <a href="/feed.xml">RSS</a>
     <a href={`mailto:${SITE.email}`}>来信</a>
   </nav>
   <div class="footer-meta">

@@ -270,11 +270,12 @@
 .tag-section .items a .date { font-family: var(--mono); font-size: 10.5px; color: var(--ink-4); letter-spacing: .04em; }
 
 // ── About ──────────────────────────────────────────────────────
-.about-grid { display: grid; grid-template-columns: 1fr 320px; gap: 64px; padding: 56px 0 64px; }
-@media (max-width: 980px) { .about-grid { grid-template-columns: 1fr; gap: 40px; } }
+.about-grid { display: grid; grid-template-columns: 1fr 320px; gap: 48px; padding: 36px 0 48px; align-items: start; }
+@media (max-width: 980px) { .about-grid { grid-template-columns: 1fr; gap: 32px; } }
 .long-form { font-family: var(--sans); font-size: 16px; line-height: 1.85; color: var(--ink-2); max-width: 680px; }
+
 .long-form .drop, .long-form > p:first-of-type::first-letter { font-family: var(--serif); float: left; font-size: 84px; line-height: .85; font-weight: 500; color: var(--accent); padding: 8px 12px 0 0; margin-top: 6px; }
-.long-form h2 { font-family: var(--serif); font-size: 28px; font-weight: 600; margin: 56px 0 12px; color: var(--ink); letter-spacing: -.005em; display: flex; align-items: baseline; gap: 16px; }
+.long-form h2 { font-family: var(--serif); font-size: 26px; font-weight: 600; margin: 36px 0 10px; color: var(--ink); letter-spacing: -.005em; display: flex; align-items: baseline; gap: 16px; }
 .long-form h2::before { content: "§"; color: var(--accent); font-weight: 400; font-size: 22px; }
 .long-form h2 + .sub-h { font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-4); margin: -4px 0 18px; }
 .long-form h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; margin: 28px 0 10px; color: var(--ink); }
@@ -293,14 +294,10 @@
 .timeline-mini .row .b { font-family: var(--serif); font-size: 16px; color: var(--ink); line-height: 1.45; }
 .timeline-mini .row .b small { display: block; font-family: var(--sans); font-size: 13px; color: var(--ink-3); margin-top: 3px; }
 
-.stack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; margin-top: 14px; }
-.stack-grid .pill { border: 1px solid var(--rule); padding: 12px 14px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); letter-spacing: .04em; position: relative; background: var(--paper); }
-.stack-grid .pill .lbl { font-family: var(--mono); color: var(--accent); text-transform: uppercase; font-size: 9.5px; letter-spacing: .2em; display: block; margin-bottom: 4px; }
-.stack-grid .pill .v { font-family: var(--serif); font-size: 14px; color: var(--ink); }
-
-.about-side { display: flex; flex-direction: column; gap: 32px; }
-.about-side .portrait { position: relative; background: var(--paper); border: 1px solid var(--rule); padding: 18px; }
-.about-side .portrait .img-box { aspect-ratio: 3/4; background: var(--bg-soft) center / cover; position: relative; overflow: hidden; }
+.about-side { display: flex; flex-direction: column; gap: 24px; position: sticky; top: 80px; align-self: start; }
+@media (max-width: 980px) { .about-side { position: static; } }
+.about-side .portrait { position: relative; background: var(--paper); border: 1px solid var(--rule); padding: 14px; }
+.about-side .portrait .img-box { aspect-ratio: 1/1; background: var(--bg-soft) center / cover; position: relative; overflow: hidden; }
 .about-side .portrait .img-box img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(.2) contrast(1.02); }
 .about-side .portrait .caption { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-top: 12px; display: flex; justify-content: space-between; }
 .about-side .portrait .caption .accent { color: var(--accent); }
@@ -316,7 +313,7 @@
 .about-side .stat-strip .val { font-family: var(--serif); font-size: 24px; color: var(--ink); margin-top: 4px; font-variant-numeric: lining-nums; }
 
 // ── Follow / Subscribe (about #follow) ─────────────────────────
-.follow-block { padding: 56px 0 24px; border-top: 1px solid var(--rule); }
+.follow-block { padding: 36px 0 24px; border-top: 1px solid var(--rule); }
 .follow-block .head { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-bottom: 28px; }
 @media (max-width: 760px) { .follow-block .head { grid-template-columns: 1fr; gap: 16px; } }
 .follow-block .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
@@ -365,21 +362,80 @@
 .secondary-channels a:hover .handle .arr { color: var(--accent); }
 
 // Direct contact + RSS footnote row (ported from design)
-.direct-row { display: grid; grid-template-columns: 2fr 1fr; border: 1px solid var(--rule); }
-@media (max-width: 760px) { .direct-row { grid-template-columns: 1fr; } }
-.direct-row .email-cell { padding: 24px 28px; border-right: 1px solid var(--rule); display: flex; flex-direction: column; gap: 8px; }
-@media (max-width: 760px) { .direct-row .email-cell { border-right: 0; border-bottom: 1px solid var(--rule); } }
-.direct-row .email-cell .lbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-3); }
-.direct-row .email-cell .em { font-family: var(--serif); font-size: 22px; color: var(--ink); font-weight: 500; letter-spacing: -.005em; word-break: break-all; }
-.direct-row .email-cell .em a { color: var(--accent); border-bottom: 1px solid var(--accent); }
-.direct-row .email-cell .note { font-family: var(--sans); font-size: 13px; color: var(--ink-3); line-height: 1.6; margin-top: 2px; }
-.direct-row .rss-cell { padding: 24px 28px; background: var(--bg-soft); display: flex; flex-direction: column; gap: 6px; position: relative; }
-.direct-row .rss-cell::before { content: "P.S."; position: absolute; top: 24px; right: 28px; font-family: var(--mono); font-size: 10px; letter-spacing: .22em; color: var(--ink-4); }
-.direct-row .rss-cell .lbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-4); }
-.direct-row .rss-cell .rs-name { font-family: var(--serif); font-size: 17px; color: var(--ink); font-weight: 500; }
-.direct-row .rss-cell .url { font-family: var(--mono); font-size: 11px; color: var(--ink-2); background: var(--paper); border: 1px solid var(--rule); padding: 6px 10px; margin-top: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.direct-row .rss-cell .url a { color: var(--accent); }
-.direct-row .rss-cell .desc { font-family: var(--sans); font-size: 12.5px; color: var(--ink-3); line-height: 1.55; margin-top: 2px; }
+// ── Contact letter (.contact-letter) — editorial 信封 / letterhead card
+.contact-letter {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 36px;
+  align-items: center;
+  padding: 30px 34px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  box-shadow: inset 0 0 0 1px var(--bg-soft);
+}
+@media (max-width: 760px) {
+  .contact-letter { grid-template-columns: 1fr; gap: 22px; padding: 22px; }
+}
+.contact-letter .body { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.contact-letter .body .kicker {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--accent);
+}
+.contact-letter .body h3 {
+  font-family: var(--serif); font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 600; color: var(--ink); margin: 0; line-height: 1.3;
+}
+.contact-letter .cta {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 14px 18px; margin-top: 4px;
+  border: 1px solid var(--ink); background: var(--bg-soft);
+  text-decoration: none;
+  transition: background .14s, color .14s, border-color .14s;
+}
+.contact-letter .cta:hover { background: var(--accent); border-color: var(--accent); }
+.contact-letter .cta .addr {
+  font-family: var(--mono); font-size: 15px; color: var(--ink);
+  word-break: break-all; letter-spacing: -.005em;
+  transition: color .14s;
+}
+.contact-letter .cta .arrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--accent); white-space: nowrap;
+  transition: color .14s;
+}
+.contact-letter .cta:hover .addr,
+.contact-letter .cta:hover .arrow { color: var(--paper); }
+.contact-letter .body .note {
+  font-family: var(--sans); font-size: 13px; color: var(--ink-3);
+  line-height: 1.65; margin: 4px 0 0;
+}
+
+.contact-letter .stamp {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+@media (max-width: 760px) {
+  .contact-letter .stamp { flex-direction: row; justify-content: flex-start; gap: 16px; }
+}
+.contact-letter .seal {
+  width: 64px; height: 64px;
+  display: grid; place-items: center;
+  font-family: var(--serif); font-size: 30px; font-weight: 600;
+  color: var(--paper); background: var(--accent);
+  border: 2px solid var(--accent-ink);
+  letter-spacing: -.02em;
+  transform: rotate(-4deg);
+  box-shadow: 2px 2px 0 var(--accent-ink);
+}
+.contact-letter .postmark {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-family: var(--mono); font-size: 9.5px;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--ink-4);
+  text-align: center;
+}
+@media (max-width: 760px) {
+  .contact-letter .postmark { align-items: flex-start; text-align: left; }
+}
 
 // ── Pager (page/[n]) ───────────────────────────────────────────
 .pager-nav { display: flex; justify-content: space-between; gap: 16px; padding: 32px 0 64px; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
