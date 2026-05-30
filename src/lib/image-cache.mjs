@@ -3,7 +3,7 @@
 // The rehype plugin then reads dimensions synchronously from the cache file.
 
 import { writeFileSync, readFileSync, existsSync } from "node:fs";
-import { resolve, join, relative } from "node:path";
+import { resolve, join } from "node:path";
 import { readdir } from "node:fs/promises";
 import probe from "probe-image-size";
 

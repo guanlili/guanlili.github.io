@@ -20,6 +20,8 @@ export function initSearch() {
 
   // Recommended articles (injected at build time)
   var recommendedData = null;
+  var catalogData = null;
+  var catalogByUrl = null;
 
   function escapeHtml(value) {
     return String(value || '').replace(/[&<>"']/g, function (ch) {
@@ -58,6 +60,28 @@ export function initSearch() {
     if (!script) return;
     try { recommendedData = JSON.parse(script.textContent); }
     catch (e) { recommendedData = []; }
+  }
+
+  function normalizeUrl(url) {
+    var value = String(url || '');
+    try {
+      value = new URL(value, window.location.origin).pathname;
+    } catch (e) {}
+    if (!value.startsWith('/')) value = '/' + value;
+    return value.endsWith('/') ? value : value + '/';
+  }
+
+  function loadCatalog() {
+    if (catalogByUrl) return catalogByUrl;
+    catalogByUrl = {};
+    var script = document.getElementById('search-catalog');
+    if (!script) return catalogByUrl;
+    try { catalogData = JSON.parse(script.textContent) || []; }
+    catch (e) { catalogData = []; }
+    catalogData.forEach(function (item) {
+      catalogByUrl[normalizeUrl(item.url)] = item;
+    });
+    return catalogByUrl;
   }
 
   function renderRecommendedCards(items, headerText) {
@@ -141,7 +165,7 @@ export function initSearch() {
     resultsContainer.innerHTML = '<div class="search-note">搜索暂时不可用</div>';
   }
 
-  function renderEmpty(query) {
+  function renderEmpty() {
     loadRecommended();
     var html = '<div class="search-note">没有找到相关文章</div>';
     if (recommendedData && recommendedData.length) {
@@ -170,18 +194,29 @@ export function initSearch() {
       if (current !== seq) return;
       var results = (search.results || []).slice(0, 50);
       if (!results.length) {
-        renderEmpty(query);
+        renderEmpty();
         return;
       }
       return Promise.all(results.map(function (r) { return r.data(); })).then(function (items) {
         if (current !== seq) return;
+        var catalog = loadCatalog();
         resultsContainer.innerHTML = items.map(function (item) {
+          var meta = catalog[normalizeUrl(item.url)] || {};
           var rawTitle = (item.meta && item.meta.title) ? item.meta.title : item.url;
           var title = highlightText(rawTitle, query);
           var excerpt = item.excerpt || '';
           var url = escapeHtml(item.url);
+          var tags = meta.tags ? meta.tags.map(function (t) {
+            return '<span class="sr-tag">#' + escapeHtml(t) + '</span>';
+          }).join(' ') : '';
+          var metaHtml = (meta.date || tags) ?
+            '<span class="sr-meta">' +
+              (meta.date ? '<span class="sr-date">' + escapeHtml(meta.date) + '</span>' : '') +
+              tags +
+            '</span>' : '';
           return '<a class="search-result" href="' + url + '">' +
             '<span class="sr-t">' + title + '</span>' +
+            metaHtml +
             '<span class="sr-e">' + excerpt + '</span>' +
             '</a>';
         }).join('');
@@ -204,6 +239,7 @@ export function initSearch() {
     searchInput.focus();
     loadTagFilters();
     if (!searchInput.value.trim() && !activeTags.length) renderRecommended();
+    else runSearch();
   }
 
   function close() {

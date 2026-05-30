@@ -1,8 +1,10 @@
 // lili Blog — Service Worker
 // Cache-first for static assets, network-first for HTML, stale-while-revalidate for search index.
 
-var CACHE = 'lili-blog-v2';
+var CACHE = 'lili-blog-v3';
 var PRECACHE = [
+  '/',
+  '/offline/',
   '/js/site.js',
   '/img/favicon.ico',
   '/img/avatar-ghl-ny.jpg'
@@ -15,6 +17,41 @@ var CACHE_FIRST = [
   '/img/',
   '/_astro/'
 ];
+
+async function cacheOk(request, response) {
+  if (response && response.ok) {
+    var cache = await caches.open(CACHE);
+    await cache.put(request, response.clone());
+  }
+  return response;
+}
+
+async function networkFirstHtml(request) {
+  try {
+    return await cacheOk(request, await fetch(request));
+  } catch {
+    return await caches.match(request) || await caches.match('/offline/') || await caches.match('/');
+  }
+}
+
+async function staleWhileRevalidate(request) {
+  var cache = await caches.open(CACHE);
+  var cached = await cache.match(request);
+  var fresh = fetch(request)
+    .then(function (res) { return cacheOk(request, res); })
+    .catch(function () { return cached; });
+  return cached || fresh;
+}
+
+async function cacheFirst(request) {
+  var cached = await caches.match(request);
+  if (cached) return cached;
+  try {
+    return await cacheOk(request, await fetch(request));
+  } catch {
+    return Response.error();
+  }
+}
 
 // Install: pre-cache the shell.
 self.addEventListener('install', function (e) {
@@ -52,55 +89,20 @@ self.addEventListener('fetch', function (e) {
 
   // HTML pages: network-first (always fresh content).
   if (accept.indexOf('text/html') !== -1) {
-    e.respondWith(
-      fetch(e.request).then(function (res) {
-        if (res && res.ok) {
-          var clone = res.clone();
-          caches.open(CACHE).then(function (c) { c.put(e.request, clone); });
-        }
-        return res;
-      }).catch(function () {
-        return caches.match(e.request).then(function (cached) {
-          return cached || caches.match('/');
-        });
-      })
-    );
+    e.respondWith(networkFirstHtml(e.request));
     return;
   }
 
   // Pagefind search index: stale-while-revalidate.
   if (path.indexOf('/pagefind/') === 0) {
-    e.respondWith(
-      caches.open(CACHE).then(function (c) {
-        return c.match(e.request).then(function (cached) {
-          var fetchPromise = fetch(e.request).then(function (res) {
-            if (res && res.ok) c.put(e.request, res.clone());
-            return res;
-          }).catch(function () { return cached; });
-          return cached || fetchPromise;
-        });
-      })
-    );
+    e.respondWith(staleWhileRevalidate(e.request));
     return;
   }
 
   // Static assets: cache-first.
   var isStatic = CACHE_FIRST.some(function (prefix) { return path.indexOf(prefix) === 0; });
   if (isStatic) {
-    e.respondWith(
-      caches.match(e.request).then(function (cached) {
-        if (cached) return cached;
-        return fetch(e.request).then(function (res) {
-          if (res && res.ok) {
-            var clone = res.clone();
-            caches.open(CACHE).then(function (c) { c.put(e.request, clone); });
-          }
-          return res;
-        }).catch(function () {
-          return Response.error();
-        });
-      })
-    );
+    e.respondWith(cacheFirst(e.request));
     return;
   }
 });

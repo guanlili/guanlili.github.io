@@ -43,8 +43,9 @@ npm run dev
 ```sh
 npm run check    # Astro 类型与内容检查
 npm run build    # 构建 dist/，并生成 Pagefind 索引
+npm run check:dist # 检查关键构建产物是否存在
 npm run preview  # 预览构建产物
-npm run verify   # check + build
+npm run verify   # check + build + check:dist
 ```
 
 ## 目录结构
@@ -57,6 +58,7 @@ src/
     archive.astro     # 归档页
     tags.astro        # 标签页
     about.astro       # 关于页
+    offline.astro     # 离线兜底页
     feed.xml.ts       # RSS
     404.astro
   content/
@@ -75,6 +77,9 @@ src/
     editorial-pages.less
     less/             # 变量、基础样式、文章页、搜索等
   consts.ts           # 站点信息、导航、友链、平台配置
+
+scripts/
+  check-dist.mjs      # CI / 本地构建产物健康检查
 
 public/
   img/                # 静态图片
@@ -126,6 +131,10 @@ URL 会按文件名自动生成，例如：
 
 搜索入口由 `public/js/site.js` 懒加载 `public/js/site-search.js`，首次点击搜索按钮、按下 `Cmd/Ctrl + K` 或 `/` 时才加载搜索模块。
 
+## 构建健康检查
+
+`npm run verify` 会依次执行类型检查、站点构建、Pagefind 索引生成和 `dist/` 产物检查。`scripts/check-dist.mjs` 会确认首页、RSS、sitemap、离线页、Pagefind、PWA manifest 和 Service Worker 等关键文件存在且非空。
+
 ## 图片与内容维护
 
 构建时会通过 `src/lib/astro-image-cache.mjs` 探测图片尺寸，并把结果写入 `.image-dimensions.json`。这个文件用于稳定文章图片布局。
@@ -141,7 +150,7 @@ npm ci
 npm run verify
 ```
 
-构建产物 `dist/` 会通过 `.github/workflows/deploy.yml` 发布到 GitHub Pages。
+构建产物 `dist/` 会通过 `.github/workflows/deploy.yml` 发布到 GitHub Pages。部署前会执行 `npm run verify`，确保构建和关键产物检查都通过。
 
 仓库需要在 GitHub 的 Settings -> Pages 中选择 GitHub Actions 作为部署来源。
 

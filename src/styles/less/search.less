@@ -103,6 +103,25 @@
     color: var(--ink-3);
     margin-top: 8px;
   }
+  .search-result .sr-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+    margin-top: 6px;
+    font-size: 11.5px;
+    color: var(--ink-4);
+  }
+  .search-result .sr-tag {
+    .monospace;
+    color: var(--accent);
+    font-size: 10.5px;
+  }
+  .search-result .sr-date {
+    .monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+  }
   .search-result mark {
     background: var(--hl);
     color: var(--accent-ink);
@@ -165,21 +184,6 @@
 }
 .search-rec .sr-meta {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 6px;
-  font-size: 11.5px;
-  color: var(--ink-4);
-}
-.search-rec .sr-tag {
-  .monospace;
-  color: var(--accent);
-  font-size: 10.5px;
-}
-.search-rec .sr-date {
-  .monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.04em;
 }
 
 // Search icon + keyboard shortcut badge

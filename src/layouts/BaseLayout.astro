@@ -34,12 +34,13 @@ const ogImage = absoluteUrl(normalizedImage, SITE.url);
 
 // Recommended articles for search empty state (build-time)
 const allPosts = await getPosts();
-const recommendedPosts = allPosts.slice(0, 8).map((p) => ({
+const searchPosts = allPosts.map((p) => ({
   title: p.entry.data.title,
   url: p.route.path,
   tags: p.entry.data.tags.slice(0, 3),
   date: p.entry.data.date.toISOString().slice(0, 10).replace(/-/g, "."),
 }));
+const recommendedPosts = searchPosts.slice(0, 8);
 ---
 <!DOCTYPE html>
 <html lang={SITE.locale}>
@@ -50,6 +51,9 @@ const recommendedPosts = allPosts.slice(0, 8).map((p) => ({
   <meta name="description" content={description} />
   <meta name="keywords" content={SITE.keywords} />
   <meta name="theme-color" content={SITE.themeColor} />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta name="format-detection" content="telephone=no" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
 
   <!-- Open Graph -->
@@ -130,7 +134,8 @@ const recommendedPosts = allPosts.slice(0, 8).map((p) => ({
   </div>
 
   <!-- Search recommended articles data (build-time) -->
-  <script id="search-recommended" type="application/json" set:html={JSON.stringify(recommendedPosts)} data-pagefind-ignore></script>
+  <script is:inline id="search-recommended" type="application/json" set:html={JSON.stringify(recommendedPosts)} data-pagefind-ignore></script>
+  <script is:inline id="search-catalog" type="application/json" set:html={JSON.stringify(searchPosts)} data-pagefind-ignore></script>
 
   <!-- Search overlay -->
   <div class="search-page" data-pagefind-ignore>

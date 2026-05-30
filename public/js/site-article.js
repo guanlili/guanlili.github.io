@@ -132,7 +132,6 @@ function initTOC() {
 // ===== Image lightbox (zero-dependency) =====
 function initLightbox() {
   var overlay = null;
-  var currentImg = null;
 
   function open(src, alt) {
     if (overlay) return;
@@ -158,7 +157,6 @@ function initLightbox() {
       el.remove();
     }, 260);
     overlay = null;
-    currentImg = null;
     document.body.classList.remove('no-scroll');
   }
 
@@ -171,7 +169,6 @@ function initLightbox() {
     if (img.closest('a')) return;
 
     e.preventDefault();
-    currentImg = img;
     open(img.src, img.alt);
   });
 
