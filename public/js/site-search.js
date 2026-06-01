@@ -21,7 +21,9 @@ export function initSearch() {
   // Recommended articles (injected at build time)
   var recommendedData = null;
   var catalogByUrl = null;
+  var catalogItems = [];
   var catalogLoading = null;
+  var quickSearches = ['Dify', 'RAG', 'PDF解析', '本地部署', '代码生成', 'ComfyUI'];
 
   function escapeHtml(value) {
     return String(value || '').replace(/[&<>"']/g, function (ch) {
@@ -40,6 +42,48 @@ export function initSearch() {
     }).join('|');
     var re = new RegExp('(' + pattern + ')', 'gi');
     return escaped.replace(re, '<mark>$1</mark>');
+  }
+
+  function normalizedText(value) {
+    return String(value || '').toLowerCase();
+  }
+
+  function searchTerms(query) {
+    return normalizedText(query).split(/\s+/).filter(Boolean);
+  }
+
+  function includesAny(value, terms) {
+    var text = normalizedText(value);
+    return terms.some(function (term) {
+      return text.indexOf(term) !== -1;
+    });
+  }
+
+  function scoreSearchItem(item, query, excerpt, originalIndex) {
+    var terms = searchTerms(query);
+    var exact = normalizedText(query);
+    var title = normalizedText(item.title);
+    var tags = normalizedText((item.tags || []).join(' '));
+    var search = normalizedText(item.search || '');
+    var body = normalizedText(excerpt || '');
+    var score = Math.max(0, 50 - originalIndex);
+
+    if (exact && title.indexOf(exact) !== -1) score += 140;
+    if (exact && tags.indexOf(exact) !== -1) score += 90;
+    if (exact && search.indexOf(exact) !== -1) score += 45;
+
+    terms.forEach(function (term) {
+      if (title.indexOf(term) !== -1) score += 55;
+      if (tags.indexOf(term) !== -1) score += 35;
+      if (search.indexOf(term) !== -1) score += 18;
+      if (body.indexOf(term) !== -1) score += 4;
+    });
+
+    activeTags.forEach(function (tag) {
+      if ((item.tags || []).indexOf(tag) !== -1) score += 25;
+    });
+
+    return score;
   }
 
   function loadPagefind() {
@@ -81,7 +125,8 @@ export function initSearch() {
         })
         .then(function (items) {
           catalogByUrl = {};
-          (items || []).forEach(function (item) {
+          catalogItems = items || [];
+          catalogItems.forEach(function (item) {
             catalogByUrl[normalizeUrl(item.url)] = item;
           });
           return catalogByUrl;
@@ -120,6 +165,24 @@ export function initSearch() {
       return;
     }
     resultsContainer.innerHTML = renderRecommendedCards(recommendedData, '推荐阅读 / Recommended');
+  }
+
+  // ── Quick searches ────────────────────────────────────────────
+  function renderQuickSearches() {
+    var quickContainer = document.getElementById('search-quick');
+    if (!quickContainer) return;
+    quickContainer.innerHTML = quickSearches.map(function (label) {
+      return '<button class="search-quick-chip" data-query="' + escapeHtml(label) + '">' +
+        escapeHtml(label) + '</button>';
+    }).join('');
+    quickContainer.querySelectorAll('.search-quick-chip').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var query = btn.getAttribute('data-query') || '';
+        searchInput.value = query;
+        runSearch();
+        searchInput.focus();
+      });
+    });
   }
 
   // ── Tag filter chips ──────────────────────────────────────────
@@ -184,6 +247,20 @@ export function initSearch() {
     resultsContainer.innerHTML = html;
   }
 
+  function hitKind(meta, query, excerpt, rawTitle) {
+    var terms = searchTerms(query);
+    if (!terms.length) return { label: '筛选结果', className: 'filter' };
+
+    var tags = (meta.tags || []).join(' ');
+    var aliases = (meta.aliases || []).join(' ');
+    if (includesAny(rawTitle, terms)) return { label: '标题命中', className: 'title' };
+    if (includesAny(tags, terms)) return { label: '标签命中', className: 'tag' };
+    if (includesAny(aliases, terms)) return { label: '别名命中', className: 'alias' };
+    if (meta.url && includesAny(meta.search || '', terms)) return { label: '资料命中', className: 'meta' };
+    if (includesAny(excerpt || '', terms)) return { label: '正文命中', className: 'body' };
+    return meta.url ? { label: '相关结果', className: 'related' } : { label: '页面结果', className: 'page' };
+  }
+
   // ── Core search ───────────────────────────────────────────────
   function runSearch() {
     var query = searchInput.value.trim();
@@ -208,27 +285,75 @@ export function initSearch() {
         return;
       }
       return Promise.all([
-        Promise.all(results.map(function (r) { return r.data(); })),
+        Promise.all(results.map(function (r, i) {
+          return r.data().then(function (item) {
+            return { item: item, pagefindRank: i };
+          });
+        })),
         loadCatalog()
       ]).then(function (loaded) {
         if (current !== seq) return;
-        var items = loaded[0];
+        var loadedItems = loaded[0];
         var catalog = loaded[1];
-        resultsContainer.innerHTML = items.map(function (item) {
-          var meta = catalog[normalizeUrl(item.url)] || {};
+        var byUrl = {};
+        var merged = loadedItems.map(function (entry) {
+          var item = entry.item;
+          var normalized = normalizeUrl(item.url);
+          var meta = catalog[normalized] || {};
+          var enriched = { item: item, meta: meta, pagefindRank: entry.pagefindRank };
+          byUrl[normalized] = enriched;
+          return enriched;
+        });
+
+        // Blend in catalog-only matches for tag aliases and metadata phrases.
+        if (query) {
+          catalogItems.forEach(function (meta, i) {
+            var normalized = normalizeUrl(meta.url);
+            if (byUrl[normalized]) return;
+            var score = scoreSearchItem(meta, query, '', 500 + i);
+            if (score > 0 && searchTerms(query).some(function (term) {
+              return normalizedText(meta.search).indexOf(term) !== -1;
+            })) {
+              var fallback = {
+                item: { url: meta.url, meta: { title: meta.title }, excerpt: '' },
+                meta: meta,
+                pagefindRank: 500 + i,
+              };
+              byUrl[normalized] = fallback;
+              merged.push(fallback);
+            }
+          });
+        }
+
+        merged.sort(function (a, b) {
+          var aTitle = (a.item.meta && a.item.meta.title) ? a.item.meta.title : a.meta.title;
+          var bTitle = (b.item.meta && b.item.meta.title) ? b.item.meta.title : b.meta.title;
+          var aScore = scoreSearchItem({ ...a.meta, title: aTitle }, query, a.item.excerpt, a.pagefindRank);
+          var bScore = scoreSearchItem({ ...b.meta, title: bTitle }, query, b.item.excerpt, b.pagefindRank);
+          if (!a.meta.url) aScore -= 80;
+          if (!b.meta.url) bScore -= 80;
+          return bScore - aScore;
+        });
+
+        resultsContainer.innerHTML = merged.slice(0, 50).map(function (entry) {
+          var item = entry.item;
+          var meta = entry.meta || {};
           var rawTitle = (item.meta && item.meta.title) ? item.meta.title : item.url;
           var title = highlightText(rawTitle, query);
           var excerpt = item.excerpt || '';
           var url = escapeHtml(item.url);
+          var hit = hitKind(meta, query, excerpt, rawTitle);
           var tags = meta.tags ? meta.tags.map(function (t) {
             return '<span class="sr-tag">#' + escapeHtml(t) + '</span>';
           }).join(' ') : '';
-          var metaHtml = (meta.date || tags) ?
+          var hitHtml = '<span class="sr-hit ' + escapeHtml(hit.className) + '">' + escapeHtml(hit.label) + '</span>';
+          var metaHtml = (meta.date || tags || hitHtml) ?
             '<span class="sr-meta">' +
+              hitHtml +
               (meta.date ? '<span class="sr-date">' + escapeHtml(meta.date) + '</span>' : '') +
               tags +
             '</span>' : '';
-          return '<a class="search-result" href="' + url + '">' +
+          return '<a class="search-result' + (meta.url ? '' : ' page-result') + '" href="' + url + '">' +
             '<span class="sr-t">' + title + '</span>' +
             metaHtml +
             '<span class="sr-e">' + excerpt + '</span>' +
@@ -251,6 +376,7 @@ export function initSearch() {
     searchPage.classList.add('search-active');
     document.body.classList.add('no-scroll');
     searchInput.focus();
+    renderQuickSearches();
     loadTagFilters();
     if (!searchInput.value.trim() && !activeTags.length) renderRecommended();
     else runSearch();

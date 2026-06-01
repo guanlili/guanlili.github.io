@@ -44,7 +44,10 @@ npm run dev
 npm run check    # Astro 类型与内容检查
 npm run build    # 构建 dist/，并生成 Pagefind 索引
 npm run check:content # 检查文章路径、日期、重复链接和不可发布的本地图片引用
+npm run check:links # 检查 Markdown 中的本地链接；远程探测用 check:links:remote
 npm run check:dist # 检查关键构建产物是否存在
+npm run images:report # 汇总文章图片、尺寸缓存和失败探测
+npm run profile:build # 分段统计内容检查、Astro 构建、Pagefind 等耗时
 npm run preview  # 预览构建产物
 npm run verify   # check:content + check + build + check:dist
 ```
@@ -132,13 +135,19 @@ URL 会按文件名自动生成，例如：
 
 搜索入口由 `public/js/site.js` 懒加载 `public/js/site-search.js`，首次点击搜索按钮、按下 `Cmd/Ctrl + K` 或 `/` 时才加载搜索模块。
 
+搜索结果会融合 Pagefind 正文索引和 `search-catalog.json` 的文章元数据，标题、标签、别名和正文命中会使用不同权重排序。
+
 ## 构建健康检查
 
 `npm run verify` 会依次执行类型检查、站点构建、Pagefind 索引生成和 `dist/` 产物检查。`scripts/check-dist.mjs` 会确认首页、RSS、sitemap、离线页、Pagefind、PWA manifest 和 Service Worker 等关键文件存在且非空。
 
+`npm run check:links` 默认检查本地资源路径，并统计远程 URL。需要真实探测外链状态时运行 `npm run check:links:remote`。
+
 ## 图片与内容维护
 
 构建时会通过 `src/lib/astro-image-cache.mjs` 探测图片尺寸，并把结果写入 `.image-dimensions.json`。这个文件用于稳定文章图片布局。
+
+`npm run images:report` 可以查看本地缺失图片、远程图片尺寸缓存、最近探测失败和未探测图片；需要生成临时 Markdown 报告时运行 `npm run images:report:write`。
 
 历史文章中仍有一些迁移前就缺失的图片，记录在 `BROKEN-IMAGES.md`。补图时把对应文件放到 `public/img/`，或把正文里的图片地址改成可访问外链。
 
