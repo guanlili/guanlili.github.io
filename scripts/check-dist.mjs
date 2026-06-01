@@ -4,6 +4,7 @@ import { join } from "node:path";
 const required = [
   "index.html",
   "feed.xml",
+  "search-catalog.json",
   "sitemap-index.xml",
   "offline/index.html",
   "pagefind/pagefind.js",

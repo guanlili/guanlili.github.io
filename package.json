@@ -5,6 +5,9 @@
   "description": "李梨的博客 | lili Blog — Astro",
   "homepage": "https://guanlili.github.io",
   "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -15,14 +18,17 @@
     "preview": "astro preview",
     "astro": "astro"
   },
+  "overrides": {
+    "yaml-language-server": "1.23.0"
+  },
   "dependencies": {
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.3.0",
-    "astro": "^5.6.1",
+    "astro": "^6.4.2",
     "probe-image-size": "^7.3.0"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.4",
+    "@astrojs/check": "^0.9.9",
     "less": "^4.2.2",
     "pagefind": "^1.5.2"
   }

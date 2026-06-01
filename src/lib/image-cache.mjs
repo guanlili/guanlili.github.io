@@ -10,6 +10,8 @@ import probe from "probe-image-size";
 const CACHE_FILE = resolve(".image-dimensions.json");
 const TIMEOUT_MS = 8000;
 const CONCURRENCY = 12;
+const FAILED_KEY = "__failed";
+const RETRY_AFTER_MS = 7 * 24 * 60 * 60 * 1000;
 
 let cache = {};
 
@@ -26,7 +28,10 @@ export function loadCache() {
 }
 
 export function getCached(url) {
-  return cache[url] || null;
+  const entry = cache[url];
+  return entry && typeof entry.w === "number" && typeof entry.h === "number"
+    ? entry
+    : null;
 }
 
 // ── Pre-build population ─────────────────────────────────────────
@@ -50,30 +55,49 @@ async function findMarkdownFiles(dir) {
 async function collectImageUrls(dir) {
   const files = await findMarkdownFiles(dir);
   const urls = new Set();
-  const imgRe = /!\[.*?\]\((https?:\/\/[^)]+)\)/g;
+  const mdImageRe = /!\[[^\]]*\]\((https?:\/\/[^\s)]+)(?:\s+["'][^"']*["'])?\)/g;
+  const htmlImageRe = /<img\b[^>]*\bsrc=["'](https?:\/\/[^"']+)["'][^>]*>/gi;
   for (const f of files) {
     const text = readFileSync(f, "utf8");
     let m;
-    while ((m = imgRe.exec(text)) !== null) {
+    while ((m = mdImageRe.exec(text)) !== null) {
+      urls.add(m[1]);
+    }
+    while ((m = htmlImageRe.exec(text)) !== null) {
       urls.add(m[1]);
     }
   }
   return [...urls];
 }
 
+function failedCache() {
+  cache[FAILED_KEY] ||= {};
+  return cache[FAILED_KEY];
+}
+
+function recentlyFailed(url) {
+  const failedAt = failedCache()[url];
+  return typeof failedAt === "number" && Date.now() - failedAt < RETRY_AFTER_MS;
+}
+
 /** Probe a single URL, return { url, w, h } or null */
 async function probeOne(url) {
-  if (cache[url]) return cache[url];
+  const cached = getCached(url);
+  if (cached) return cached;
+  if (recentlyFailed(url)) return null;
+
   try {
     const r = await probe(url, { timeout: TIMEOUT_MS });
     if (r && r.width && r.height) {
       const entry = { w: r.width, h: r.height };
       cache[url] = entry;
+      delete failedCache()[url];
       return entry;
     }
   } catch {
     // timeout, non-image, DNS fail — skip silently
   }
+  failedCache()[url] = Date.now();
   return null;
 }
 
@@ -99,19 +123,30 @@ async function probeAll(urls) {
  */
 export async function preheat(contentDir) {
   loadCache();
-  const cachedCount = Object.keys(cache).length;
+  const failed = failedCache();
+  const cachedCount = Object.keys(cache).filter((k) => k !== FAILED_KEY).length;
 
   const urls = await collectImageUrls(contentDir);
-  const uncached = urls.filter((u) => !cache[u]);
+  const uncached = urls.filter((u) => !getCached(u) && !recentlyFailed(u));
+  const skippedFailed = urls.length - cachedCount - uncached.length;
 
   if (uncached.length === 0) {
-    console.log(`[image-cache] All ${urls.length} image dimensions cached (${cachedCount} entries).`);
+    console.log(
+      `[image-cache] All ${urls.length} image dimensions cached or recently failed ` +
+        `(${cachedCount} cached, ${Object.keys(failed).length} failed).`,
+    );
     return;
   }
 
-  console.log(`[image-cache] Probing ${uncached.length} images (cache has ${cachedCount})...`);
+  console.log(
+    `[image-cache] Probing ${uncached.length} images ` +
+      `(${cachedCount} cached, ${Math.max(0, skippedFailed)} skipped failed)...`,
+  );
   const results = await probeAll(uncached);
-  console.log(`[image-cache] Got ${results.length}/${uncached.length} dimensions. Saving cache.`);
+  console.log(
+    `[image-cache] Got ${results.length}/${uncached.length} dimensions; ` +
+      `${uncached.length - results.length} marked failed. Saving cache.`,
+  );
 
   writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2));
 }

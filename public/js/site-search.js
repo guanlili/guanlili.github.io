@@ -20,8 +20,8 @@ export function initSearch() {
 
   // Recommended articles (injected at build time)
   var recommendedData = null;
-  var catalogData = null;
   var catalogByUrl = null;
+  var catalogLoading = null;
 
   function escapeHtml(value) {
     return String(value || '').replace(/[&<>"']/g, function (ch) {
@@ -72,16 +72,26 @@ export function initSearch() {
   }
 
   function loadCatalog() {
-    if (catalogByUrl) return catalogByUrl;
-    catalogByUrl = {};
-    var script = document.getElementById('search-catalog');
-    if (!script) return catalogByUrl;
-    try { catalogData = JSON.parse(script.textContent) || []; }
-    catch (e) { catalogData = []; }
-    catalogData.forEach(function (item) {
-      catalogByUrl[normalizeUrl(item.url)] = item;
-    });
-    return catalogByUrl;
+    if (catalogByUrl) return Promise.resolve(catalogByUrl);
+    if (!catalogLoading) {
+      catalogLoading = fetch('/search-catalog.json', { credentials: 'same-origin' })
+        .then(function (res) {
+          if (!res.ok) throw new Error('catalog unavailable');
+          return res.json();
+        })
+        .then(function (items) {
+          catalogByUrl = {};
+          (items || []).forEach(function (item) {
+            catalogByUrl[normalizeUrl(item.url)] = item;
+          });
+          return catalogByUrl;
+        })
+        .catch(function () {
+          catalogByUrl = {};
+          return catalogByUrl;
+        });
+    }
+    return catalogLoading;
   }
 
   function renderRecommendedCards(items, headerText) {
@@ -197,9 +207,13 @@ export function initSearch() {
         renderEmpty();
         return;
       }
-      return Promise.all(results.map(function (r) { return r.data(); })).then(function (items) {
+      return Promise.all([
+        Promise.all(results.map(function (r) { return r.data(); })),
+        loadCatalog()
+      ]).then(function (loaded) {
         if (current !== seq) return;
-        var catalog = loadCatalog();
+        var items = loaded[0];
+        var catalog = loaded[1];
         resultsContainer.innerHTML = items.map(function (item) {
           var meta = catalog[normalizeUrl(item.url)] || {};
           var rawTitle = (item.meta && item.meta.title) ? item.meta.title : item.url;
