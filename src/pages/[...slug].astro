@@ -50,6 +50,7 @@ const { Content, headings } = await render(post);
 const { data } = post;
 
 const d = data.date;
+const updated = data.updated ?? d;
 const pad = (v: number) => String(v).padStart(2, "0");
 const ymd = `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())}`;
 const noN = pad(n); // article number, e.g. 01 (newest)
@@ -70,7 +71,7 @@ const coverImage =
   image={coverImage ?? SITE.avatar}
   type="article"
   bodyClass="layout-post"
-  article={{ date: d, author: data.author || SITE.author, tags: data.tags }}
+  article={{ date: d, updated, author: data.author || SITE.author, tags: data.tags }}
 >
   <div class="article-shell">
     <section class="article-head">
@@ -79,8 +80,8 @@ const coverImage =
         <span>No. {noN}{data.tags.length ? ` · ${data.tags.join(" / ")}` : ""}</span>
         <span class="rule"></span>
       </div>
-      <h1>{data.title}</h1>
-      {data.subtitle && <p class="deck">{data.subtitle}</p>}
+      <h1 data-pagefind-meta="title" data-pagefind-weight="10">{data.title}</h1>
+      {data.subtitle && <p class="deck" data-pagefind-weight="3">{data.subtitle}</p>}
       <div class="byline">
         <span class="author">
           <img src={SITE.avatar} alt="" />
@@ -103,7 +104,7 @@ const coverImage =
       <div><span class="label">发表</span><span class="value">{ymd}</span></div>
       <div><span class="label">字数</span><span class="value">约 {chars} 字</span></div>
       <div><span class="label">阅读</span><span class="value">{minutes} min</span></div>
-      <div><span class="label">标签</span><span class="value" style="font-size:14px">{data.tags.length ? data.tags.join(" · ") : "—"}</span></div>
+      <div><span class="label">标签</span><span class="value" style="font-size:14px" data-pagefind-weight="4">{data.tags.length ? data.tags.join(" · ") : "—"}</span></div>
     </div>
 
     <div class="article-body">

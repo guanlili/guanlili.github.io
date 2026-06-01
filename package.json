@@ -12,9 +12,10 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build && pagefind --site dist",
+    "check:content": "node scripts/check-content.mjs",
     "check": "astro check",
     "check:dist": "node scripts/check-dist.mjs",
-    "verify": "npm run check && npm run build && npm run check:dist",
+    "verify": "npm run check:content && npm run check && npm run build && npm run check:dist",
     "preview": "astro preview",
     "astro": "astro"
   },

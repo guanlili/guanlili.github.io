@@ -43,9 +43,10 @@ npm run dev
 ```sh
 npm run check    # Astro 类型与内容检查
 npm run build    # 构建 dist/，并生成 Pagefind 索引
+npm run check:content # 检查文章路径、日期、重复链接和不可发布的本地图片引用
 npm run check:dist # 检查关键构建产物是否存在
 npm run preview  # 预览构建产物
-npm run verify   # check + build + check:dist
+npm run verify   # check:content + check + build + check:dist
 ```
 
 ## 目录结构

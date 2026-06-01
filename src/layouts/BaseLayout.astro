@@ -5,6 +5,7 @@ import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import { absoluteUrl, siteImage } from "../lib/media";
 import { getPosts } from "../lib/posts";
+import pkg from "../../package.json";
 import "../styles/site.less";
 
 interface Props {
@@ -14,7 +15,7 @@ interface Props {
   type?: "website" | "article";
   active?: string;
   bodyClass?: string;
-  article?: { date?: Date; author?: string; tags?: string[] };
+  article?: { date?: Date; updated?: Date; author?: string; tags?: string[] };
 }
 
 const {
@@ -31,6 +32,7 @@ const pageTitle = title ? `${title} - ${SITE.seoTitle}` : SITE.seoTitle;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const normalizedImage = siteImage(image) ?? SITE.avatar;
 const ogImage = absoluteUrl(normalizedImage, SITE.url);
+const swVersion = process.env.GITHUB_SHA || pkg.version;
 
 // Recommended articles for search empty state (build-time)
 const allPosts = await getPosts();
@@ -95,7 +97,7 @@ const recommendedPosts = searchPosts.slice(0, 8);
       description,
       image: ogImage,
       datePublished: article?.date?.toISOString(),
-      dateModified: article?.date?.toISOString(),
+      dateModified: (article?.updated ?? article?.date)?.toISOString(),
       author: { "@type": "Person", name: article?.author || SITE.author },
       publisher: { "@type": "Organization", name: SITE.seoTitle, logo: { "@type": "ImageObject", url: `${SITE.url}${SITE.avatar}` } },
       mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
@@ -166,8 +168,8 @@ const recommendedPosts = searchPosts.slice(0, 8);
 
   <script is:inline defer src="/js/site.js"></script>
 
-  <script is:inline>
-    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }
+  <script is:inline define:vars={{ swVersion }}>
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js?v=' + encodeURIComponent(swVersion)); }
   </script>
 
   {GA_TRACK_ID && (

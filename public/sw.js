@@ -1,7 +1,8 @@
 // lili Blog — Service Worker
 // Cache-first for static assets, network-first for HTML, stale-while-revalidate for search index.
 
-var CACHE = 'lili-blog-v3';
+var VERSION = new URL(self.location.href).searchParams.get('v') || 'dev';
+var CACHE = 'lili-blog-' + VERSION;
 var PRECACHE = [
   '/',
   '/offline/',
