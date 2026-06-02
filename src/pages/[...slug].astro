@@ -5,6 +5,7 @@ import { SITE } from "../consts";
 import { readingStats } from "../lib/permalink";
 import { excerpt, firstImage, getPosts, type LoadedPost } from "../lib/posts";
 import { siteImage } from "../lib/media";
+import "../styles/less/post-article.less";
 
 export async function getStaticPaths() {
   const posts = await getPosts(); // newest-first, date-prefixed only
