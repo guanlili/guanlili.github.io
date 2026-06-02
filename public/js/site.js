@@ -127,11 +127,25 @@ document.querySelector('.search-icon')?.addEventListener('click', function (e) {
   loadSearch();
 });
 
-// ===== Init core =====
-document.addEventListener('DOMContentLoaded', function () {
+// ===== Init core (View Transitions compatible) =====
+var _pageInited = false;
+function initPage() {
+  if (_pageInited) return;
+  _pageInited = true;
   initBackToTop();
   initThemeToggle();
   initResponsiveTables();
   initResponsiveVideos();
   initLazyImages();
+}
+
+document.addEventListener('astro:after-swap', function () {
+  _pageInited = false;
+  window._scrollCallbacks = [];
+  window._scrollTicking = false;
+  searchLoaded = false;
+  searchQueue = null;
 });
+
+document.addEventListener('astro:page-load', initPage);
+document.addEventListener('DOMContentLoaded', initPage);

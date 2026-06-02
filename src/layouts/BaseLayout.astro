@@ -6,6 +6,7 @@ import Footer from "../components/Footer.astro";
 import { absoluteUrl, siteImage } from "../lib/media";
 import { getPosts } from "../lib/posts";
 import pkg from "../../package.json";
+import { ClientRouter } from "astro:transitions";
 import "../styles/site.less";
 
 interface Props {
@@ -57,6 +58,7 @@ const recommendedPosts = searchPosts.slice(0, 8);
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="format-detection" content="telephone=no" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <ClientRouter />
 
   <!-- Open Graph -->
   <meta property="og:title" content={title ? `${title} - ${SITE.seoTitle}` : SITE.seoTitle} />
@@ -88,8 +90,52 @@ const recommendedPosts = searchPosts.slice(0, 8);
   <link rel="canonical" href={canonical} />
   <link rel="alternate" type="application/rss+xml" title={SITE.seoTitle} href={`${SITE.url}/feed.xml`} />
 
-  <!-- JSON-LD -->
-  {type === "article" ? (
+  <!-- JSON-LD: Person (author entity, all pages) -->
+  <script is:inline type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: SITE.author,
+    url: SITE.url,
+    image: `${SITE.url}${SITE.avatar}`,
+    sameAs: [
+      "https://github.com/guanlili",
+      "https://www.zhihu.com/people/xiao-li-ge-ge-38",
+      "https://blog.csdn.net/outman_1921",
+    ],
+    jobTitle: "Software Engineer · UX",
+    description: SITE.bio,
+  })} />
+
+  <!-- JSON-LD: WebSite + SearchAction (all pages) -->
+  <script is:inline type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE.seoTitle,
+    url: SITE.url,
+    description: SITE.description,
+    publisher: { "@type": "Person", name: SITE.author, url: SITE.url },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: { "@type": "EntryPoint", urlTemplate: `${SITE.url}/?q={search_term_string}` },
+      "query-input": "required name=search_term_string",
+    },
+  })} />
+
+  <!-- JSON-LD: BreadcrumbList (article pages) -->
+  {type === "article" && (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "首页", item: SITE.url },
+        ...(article?.tags?.length ? [{ "@type": "ListItem", position: 2, name: article.tags[0], item: `${SITE.url}/tags/#${encodeURIComponent(article.tags[0])}` }] : []),
+        { "@type": "ListItem", position: article?.tags?.length ? 3 : 2, name: title, item: canonical },
+      ],
+    })} />
+  )}
+
+  <!-- JSON-LD: BlogPosting (article pages) -->
+  {type === "article" && (
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "BlogPosting",
@@ -98,19 +144,10 @@ const recommendedPosts = searchPosts.slice(0, 8);
       image: ogImage,
       datePublished: article?.date?.toISOString(),
       dateModified: (article?.updated ?? article?.date)?.toISOString(),
-      author: { "@type": "Person", name: article?.author || SITE.author },
+      author: { "@type": "Person", name: article?.author || SITE.author, url: SITE.url },
       publisher: { "@type": "Organization", name: SITE.seoTitle, logo: { "@type": "ImageObject", url: `${SITE.url}${SITE.avatar}` } },
       mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
       url: canonical,
-    })} />
-  ) : (
-    <script is:inline type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: SITE.seoTitle,
-      url: SITE.url,
-      description: SITE.description,
-      potentialAction: { "@type": "SearchAction", target: `${SITE.url}/tags/`, "query-input": "required name=search_term_string" },
     })} />
   )}
 
@@ -123,6 +160,13 @@ const recommendedPosts = searchPosts.slice(0, 8);
       }
     })();
   </script>
+  <!-- Critical above-the-fold styles to prevent FOUC while main CSS loads -->
+  <style is:inline>
+    :root{--bg:#f1ede3;--bg-soft:#e9e4d6;--ink-2:#3c372c;--accent:#b8442f;--sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC","Source Han Sans SC","Helvetica Neue",Arial,sans-serif;--serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","Times New Roman",ui-serif,serif}
+    [data-theme="dark"]{--bg:#15130e;--bg-soft:#1c1a14;--ink-2:#c9c1ad;--accent:#e07a64}
+    body{margin:0;background-color:var(--bg);background-image:linear-gradient(180deg,var(--bg) 0%,var(--bg-soft) 100%);color:var(--ink-2);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+    .reading-progress{display:none}
+  </style>
   <link rel="preconnect" href="https://blog-1258476669.cos.ap-beijing.myqcloud.com" />
   <link rel="dns-prefetch" href="https://blog-1258476669.cos.ap-beijing.myqcloud.com" />
 </head>
@@ -177,11 +221,14 @@ const recommendedPosts = searchPosts.slice(0, 8);
     <>
       <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACK_ID}`}></script>
       <script is:inline define:vars={{ GA_TRACK_ID }}>
+        window.GA_TRACK_ID = GA_TRACK_ID;
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag("js", new Date());
         gtag("config", GA_TRACK_ID);
       </script>
+      <!-- Web Vitals → GA (LCP/FID/CLS/INP/TTFB) -->
+      <script is:inline defer src="/js/web-vitals.js"></script>
     </>
   )}
   {BAIDU_TRACK_ID && (

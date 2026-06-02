@@ -260,11 +260,21 @@ function initMermaid() {
     .catch(function () {});
 }
 
-// ===== Init all article features =====
-document.addEventListener('DOMContentLoaded', function () {
+// ===== Init all article features (View Transitions compatible) =====
+var _articleInited = false;
+function initArticlePage() {
+  if (_articleInited) return;
+  _articleInited = true;
   initTOC();
   initLightbox();
   initCodeBlocks();
   initProgressBar();
   initMermaid();
+}
+
+document.addEventListener('astro:after-swap', function () {
+  _articleInited = false;
 });
+
+document.addEventListener('astro:page-load', initArticlePage);
+document.addEventListener('DOMContentLoaded', initArticlePage);
