@@ -260,6 +260,43 @@ function initMermaid() {
     .catch(function () {});
 }
 
+// ===== Heading anchors — hover-reveal a link that copies a deep URL =====
+function initHeadingAnchors() {
+  var content = document.querySelector('.article-content');
+  if (!content) return;
+  content.querySelectorAll('h2[id], h3[id]').forEach(function (h) {
+    if (h.querySelector('.heading-anchor')) return;
+    var a = document.createElement('a');
+    a.className = 'heading-anchor';
+    a.href = '#' + h.id;
+    a.textContent = '#';
+    a.setAttribute('aria-label', '复制本节链接');
+    a.addEventListener('click', function () {
+      if (!navigator.clipboard) return;
+      var url = location.origin + location.pathname + '#' + h.id;
+      navigator.clipboard.writeText(url).then(function () {
+        a.classList.add('copied');
+        setTimeout(function () { a.classList.remove('copied'); }, 1200);
+      }).catch(function () {});
+    });
+    h.appendChild(a);
+  });
+}
+
+// ===== Content links — open external links safely in a new tab =====
+function initContentLinks() {
+  var content = document.querySelector('.article-content');
+  if (!content) return;
+  content.querySelectorAll('a[href]').forEach(function (a) {
+    var href = a.getAttribute('href') || '';
+    if (!/^https?:\/\//i.test(href)) return;       // skip in-page / relative
+    if (a.hostname === location.hostname) return;   // skip same-site
+    a.setAttribute('target', '_blank');
+    a.setAttribute('rel', 'noopener noreferrer');
+    a.classList.add('external-link');
+  });
+}
+
 // ===== Init all article features (View Transitions compatible) =====
 var _articleInited = false;
 function initArticlePage() {
@@ -269,6 +306,8 @@ function initArticlePage() {
   initLightbox();
   initCodeBlocks();
   initProgressBar();
+  initHeadingAnchors();
+  initContentLinks();
   initMermaid();
 }
 

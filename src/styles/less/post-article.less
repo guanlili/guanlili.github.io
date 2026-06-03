@@ -213,6 +213,9 @@
   color: var(--ink-2);
   counter-reset: h2c;
   overflow-wrap: break-word;
+  // Hang opening punctuation (quotes / 「」) into the margin on first lines —
+  // a typographic nicety for Chinese prose (progressive; Safari-only today).
+  hanging-punctuation: first allow-end;
 }
 .article-content p { text-wrap: pretty; }
 .article-content > p:first-of-type::first-letter {
@@ -259,6 +262,49 @@
   font-weight: 600;
   margin: 32px 0 10px;
   color: var(--ink);
+  position: relative;
+}
+
+// ── Heading anchor link (hover-revealed, click = copy deep URL) ─
+.article-content h2 .heading-anchor,
+.article-content h3 .heading-anchor {
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: .58em;
+  line-height: 1;
+  margin-left: 10px;
+  color: var(--accent);
+  border-bottom: 0;
+  opacity: 0;
+  transition: opacity .15s ease;
+  user-select: none;
+}
+.article-content h2:hover .heading-anchor,
+.article-content h3:hover .heading-anchor { opacity: .55; }
+.article-content .heading-anchor:hover,
+.article-content .heading-anchor:focus-visible { opacity: 1; border-bottom: 0; }
+.article-content .heading-anchor.copied { opacity: 1; }
+.article-content .heading-anchor.copied::after {
+  content: " 已复制";
+  font-size: .8em;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+}
+@media (hover: none) {
+  // Touch devices have no hover — keep anchors faintly visible.
+  .article-content h2 .heading-anchor,
+  .article-content h3 .heading-anchor { opacity: .35; }
+}
+
+// ── External links — subtle out-bound glyph ────────────────────
+.article-content a.external-link::after {
+  content: "↗";
+  font-family: var(--mono);
+  font-size: .82em;
+  margin-left: 1px;
+  vertical-align: .04em;
+  color: var(--ink-3);
+  border-bottom: 0;
 }
 .article-content blockquote {
   margin: 32px 0;
