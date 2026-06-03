@@ -58,6 +58,30 @@ function initThemeToggle() {
   });
 }
 
+// ===== Mobile nav (hamburger dropdown) =====
+function initNavToggle() {
+  var btn = document.getElementById('nav-toggle-btn');
+  var bar = document.querySelector('.topbar');
+  var icon = document.getElementById('nav-toggle-icon');
+  if (!btn || !bar) return;
+
+  function setOpen(open) {
+    bar.classList.toggle('nav-open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (icon) icon.innerHTML = '<use href="#icon-' + (open ? 'x' : 'menu') + '"></use>';
+  }
+  btn.addEventListener('click', function () {
+    setOpen(!bar.classList.contains('nav-open'));
+  });
+  // Dismiss on link tap or Escape.
+  bar.querySelectorAll('#primary-nav a').forEach(function (a) {
+    a.addEventListener('click', function () { setOpen(false); });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && bar.classList.contains('nav-open')) setOpen(false);
+  });
+}
+
 // ===== Content enhancements (lightweight) =====
 function initResponsiveTables() {
   document.querySelectorAll('.article-content table, .long-form table').forEach(function (table) {
@@ -134,6 +158,7 @@ function initPage() {
   _pageInited = true;
   initBackToTop();
   initThemeToggle();
+  initNavToggle();
   initResponsiveTables();
   initResponsiveVideos();
   initLazyImages();

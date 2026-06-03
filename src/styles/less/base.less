@@ -34,6 +34,12 @@
 }
 
 // ── Base elements ──────────────────────────────────────────────
+// Smooth in-page navigation (tag anchors, archive year jumps, article TOC),
+// with breathing room so a targeted heading doesn't land flush against the top.
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+:target, [id] { scroll-margin-top: 32px; }
+
 body {
   .sans-serif;
   font-size: 16px;

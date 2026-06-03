@@ -33,23 +33,16 @@
 }
 
 // ── Layout shell ───────────────────────────────────────────────
-.article-shell {
-  position: relative;
-  z-index: 2;
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 0 48px;
-
-  @media (max-width: 760px) {
-    & { padding: 0 22px; }
-  }
-}
+// NOTE: the `.article-shell` container box (max-width / padding) is defined
+// globally in editorial-pages.less so the listing pages — which reuse this
+// class but don't import this file — stay constrained. Here we only layer on
+// article-specific descendants.
 
 ::selection { background: var(--accent); color: var(--paper); }
 
 // ── Masthead ───────────────────────────────────────────────────
 .article-head {
-  padding: 56px 0 32px;
+  padding: 72px 0 40px;
   border-bottom: 1px solid var(--rule);
   max-width: 880px;
   margin: 0 auto;
@@ -156,11 +149,14 @@
 // ── Body grid: gutter rail · content · TOC ─────────────────────
 .article-body {
   display: grid;
-  grid-template-columns: 80px minmax(0, 1fr) 220px;
-  gap: 48px;
-  max-width: 1080px;
+  // The reading column is capped (var(--read-col)); the gutter + TOC rails are
+  // fixed. On wide shells the whole group simply centers (justify-content),
+  // so prose never stretches past a legible measure on big displays.
+  grid-template-columns: 64px minmax(0, var(--read-col)) 200px;
+  justify-content: center;
+  gap: 44px;
   margin: 0 auto;
-  padding: 56px 0 64px;
+  padding: 72px 0 88px;
 }
 @media (max-width: 1040px) {
   .article-body { grid-template-columns: 1fr; gap: 28px; padding: 36px 0 48px; }
@@ -210,13 +206,15 @@
 
 // ── Article content (the rendered Markdown) ────────────────────
 .article-content {
-  max-width: 680px;
+  max-width: var(--read-col);
   font-family: var(--sans);
   font-size: 16.5px;
-  line-height: 1.85;
+  line-height: 1.88;
   color: var(--ink-2);
   counter-reset: h2c;
+  overflow-wrap: break-word;
 }
+.article-content p { text-wrap: pretty; }
 .article-content > p:first-of-type::first-letter {
   font-family: var(--serif);
   float: left;

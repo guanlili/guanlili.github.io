@@ -42,6 +42,15 @@
   --sans:  -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Source Han Sans SC", "Helvetica Neue", Arial, sans-serif;
   --mono:  ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "JetBrains Mono", "Liberation Mono", monospace;
 
+  // ---- Layout: fluid magazine width ----
+  // Scales with the viewport so the page fills more of large displays
+  // (e.g. ~1300px on a 13.6" laptop, capped ~1500px on a 27" monitor) while
+  // staying comfortable on smaller screens. Tune the cap/cap-rate here only.
+  --shell-max: clamp(960px, 86vw, 1500px);
+  // Article reading column cap — kept independent so prose stays legible
+  // even as the shell widens (Chinese body ~36 chars/line at this measure).
+  --read-col: 700px;
+
   // ---- Semantic tokens (rest of the site) aliased onto the raw palette ----
   // Brand
   --color-primary: var(--accent);
