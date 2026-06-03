@@ -4,9 +4,42 @@
 @import "variables.less";
 @import "mixins.less";
 @import "search.less";
-@import "post-article.less";
+
+// Reading-progress is in the layout HTML on every page but only visible on
+// article pages (via .layout-post).  Keep the hide rule here so the empty
+// div never takes up space on non-article pages.
+.reading-progress { display: none; }
+
+// ── Skip-to-content link (a11y, WCAG 2.4.1) ────────────────────
+// Visually hidden until focused, then surfaces top-left for keyboard users.
+.skip-nav {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 9999;
+  padding: 8px 14px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 4px;
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 13px;
+  transform: translateY(-150%);
+  transition: transform 0.15s ease;
+  &:focus {
+    transform: translateY(0);
+    outline: 2px solid var(--accent-ink);
+    outline-offset: 2px;
+  }
+}
 
 // ── Base elements ──────────────────────────────────────────────
+// Smooth in-page navigation (tag anchors, archive year jumps, article TOC),
+// with breathing room so a targeted heading doesn't land flush against the top.
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+:target, [id] { scroll-margin-top: 32px; }
+
 body {
   .sans-serif;
   font-size: 16px;
@@ -20,6 +53,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.3s ease, color 0.3s ease;
   font-feature-settings: "kern" 1, "liga" 1;
+}
+body.no-scroll {
+  overflow: hidden;
 }
 
 p {
@@ -128,3 +164,33 @@ code, kbd, pre, samp { .monospace; }
 ::-moz-selection { color: white; text-shadow: none; background: var(--color-primary); }
 img::selection { color: white; background: transparent; }
 img::-moz-selection { color: white; background: transparent; }
+
+// ── Keyboard focus (a11y, WCAG 2.4.7) ──────────────────────────
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+// ── View Transitions (astro:transitions) ────────────────────────
+// Subtle paper-like fade for SPA navigation.
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes vt-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+::view-transition-old(root) {
+  animation: vt-fade-out 0.15s ease-out both;
+}
+::view-transition-new(root) {
+  animation: vt-fade-in 0.2s ease-in both;
+}
+// Prevent Ultra-Low-Power mode on Safari from blocking transitions
+@supports (backdrop-filter: blur(1px)) {
+  ::view-transition-group(root) { will-change: opacity; }
+}

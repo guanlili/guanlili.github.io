@@ -2,11 +2,11 @@
 layout: post
 date: 2020-06-07
 title: "Typora+PicGo+github搭建免费稳定图床写博客如行云流水"
-subtitle: "（mac+window）"
+subtitle: "稳定图床配置方案：告别免费图床的不稳定时代"
 author: "lili"
-header-img: "img/post-bg-css.jpg"
 header-mask: 0.4
 tags: [博客搭建]
+description: "Typora + PicGo + GitHub 搭建免费图床的完整教程（Mac + Windows），让 Markdown 写作插入图片自动上传。"
 ---
 # Typora+PicGo+github搭建免费稳定图床写博客如行云流水（mac+window）
 ## 0.前言

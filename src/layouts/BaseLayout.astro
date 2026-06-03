@@ -3,6 +3,10 @@ import { SITE, GA_TRACK_ID, BAIDU_TRACK_ID } from "../consts";
 import Icons from "../components/Icons.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import { absoluteUrl, siteImage } from "../lib/media";
+import { getPosts } from "../lib/posts";
+import pkg from "../../package.json";
+import { ClientRouter } from "astro:transitions";
 import "../styles/site.less";
 
 interface Props {
@@ -12,7 +16,7 @@ interface Props {
   type?: "website" | "article";
   active?: string;
   bodyClass?: string;
-  article?: { date?: Date; author?: string; tags?: string[] };
+  article?: { date?: Date; updated?: Date; author?: string; tags?: string[] };
 }
 
 const {
@@ -27,7 +31,19 @@ const {
 
 const pageTitle = title ? `${title} - ${SITE.seoTitle}` : SITE.seoTitle;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
-const ogImage = new URL(image, SITE.url).href;
+const normalizedImage = siteImage(image) ?? SITE.avatar;
+const ogImage = absoluteUrl(normalizedImage, SITE.url);
+const swVersion = process.env.GITHUB_SHA || pkg.version;
+
+// Recommended articles for search empty state (build-time)
+const allPosts = await getPosts();
+const searchPosts = allPosts.map((p) => ({
+  title: p.entry.data.title,
+  url: p.route.path,
+  tags: p.entry.data.tags.slice(0, 3),
+  date: p.entry.data.date.toISOString().slice(0, 10).replace(/-/g, "."),
+}));
+const recommendedPosts = searchPosts.slice(0, 8);
 ---
 <!DOCTYPE html>
 <html lang={SITE.locale}>
@@ -38,7 +54,11 @@ const ogImage = new URL(image, SITE.url).href;
   <meta name="description" content={description} />
   <meta name="keywords" content={SITE.keywords} />
   <meta name="theme-color" content={SITE.themeColor} />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta name="format-detection" content="telephone=no" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <ClientRouter />
 
   <!-- Open Graph -->
   <meta property="og:title" content={title ? `${title} - ${SITE.seoTitle}` : SITE.seoTitle} />
@@ -51,7 +71,7 @@ const ogImage = new URL(image, SITE.url).href;
     <meta property="article:author" content={article.author} />
   )}
   {type === "article" && article?.tags?.map((t) => (
-    <meta property="article:tag" content={t} />
+    <meta property="article:tag" content={t} data-pagefind-filter="tag[content]" />
   ))}
   <meta property="og:image" content={ogImage} />
   <meta property="og:url" content={canonical} />
@@ -70,34 +90,64 @@ const ogImage = new URL(image, SITE.url).href;
   <link rel="canonical" href={canonical} />
   <link rel="alternate" type="application/rss+xml" title={SITE.seoTitle} href={`${SITE.url}/feed.xml`} />
 
-  <!-- Fonts: Noto Serif SC (display) + Noto Sans SC (body) + JetBrains Mono (meta/code) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" />
+  <!-- JSON-LD: Person (author entity, all pages) -->
+  <script is:inline type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: SITE.author,
+    url: SITE.url,
+    image: `${SITE.url}${SITE.avatar}`,
+    sameAs: [
+      "https://github.com/guanlili",
+      "https://www.zhihu.com/people/xiao-li-ge-ge-38",
+      "https://blog.csdn.net/outman_1921",
+    ],
+    jobTitle: "Software Engineer · UX",
+    description: SITE.bio,
+  })} />
 
-  <!-- JSON-LD -->
-  {type === "article" ? (
-    <script type="application/ld+json" set:html={JSON.stringify({
+  <!-- JSON-LD: WebSite + SearchAction (all pages) -->
+  <script is:inline type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE.seoTitle,
+    url: SITE.url,
+    description: SITE.description,
+    publisher: { "@type": "Person", name: SITE.author, url: SITE.url },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: { "@type": "EntryPoint", urlTemplate: `${SITE.url}/?q={search_term_string}` },
+      "query-input": "required name=search_term_string",
+    },
+  })} />
+
+  <!-- JSON-LD: BreadcrumbList (article pages) -->
+  {type === "article" && (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "首页", item: SITE.url },
+        ...(article?.tags?.length ? [{ "@type": "ListItem", position: 2, name: article.tags[0], item: `${SITE.url}/tags/#${encodeURIComponent(article.tags[0])}` }] : []),
+        { "@type": "ListItem", position: article?.tags?.length ? 3 : 2, name: title, item: canonical },
+      ],
+    })} />
+  )}
+
+  <!-- JSON-LD: BlogPosting (article pages) -->
+  {type === "article" && (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       headline: title,
       description,
       image: ogImage,
       datePublished: article?.date?.toISOString(),
-      dateModified: article?.date?.toISOString(),
-      author: { "@type": "Person", name: article?.author || SITE.author },
+      dateModified: (article?.updated ?? article?.date)?.toISOString(),
+      author: { "@type": "Person", name: article?.author || SITE.author, url: SITE.url },
       publisher: { "@type": "Organization", name: SITE.seoTitle, logo: { "@type": "ImageObject", url: `${SITE.url}${SITE.avatar}` } },
       mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
       url: canonical,
-    })} />
-  ) : (
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: SITE.seoTitle,
-      url: SITE.url,
-      description: SITE.description,
-      potentialAction: { "@type": "SearchAction", target: `${SITE.url}/tags/`, "query-input": "required name=search_term_string" },
     })} />
   )}
 
@@ -110,50 +160,75 @@ const ogImage = new URL(image, SITE.url).href;
       }
     })();
   </script>
+  <!-- Critical above-the-fold styles to prevent FOUC while main CSS loads -->
+  <style is:inline>
+    :root{--bg:#f1ede3;--bg-soft:#e9e4d6;--ink-2:#3c372c;--accent:#b8442f;--sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC","Source Han Sans SC","Helvetica Neue",Arial,sans-serif;--serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","Times New Roman",ui-serif,serif}
+    [data-theme="dark"]{--bg:#15130e;--bg-soft:#1c1a14;--ink-2:#c9c1ad;--accent:#e07a64}
+    body{margin:0;background-color:var(--bg);background-image:linear-gradient(180deg,var(--bg) 0%,var(--bg-soft) 100%);color:var(--ink-2);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+    .reading-progress{display:none}
+  </style>
+  <link rel="preconnect" href="https://blog-1258476669.cos.ap-beijing.myqcloud.com" />
+  <link rel="dns-prefetch" href="https://blog-1258476669.cos.ap-beijing.myqcloud.com" />
 </head>
 
 <body ontouchstart="" class={bodyClass}>
-  <Icons />
-  <a href="#main-content" class="skip-nav">跳到正文</a>
-  <Nav active={active} />
+  <div class="reading-progress" aria-hidden="true"><div class="progress-fill"></div></div>
+  <div data-pagefind-ignore>
+    <Icons />
+    <a href="#main-content" class="skip-nav">跳到正文</a>
+    <Nav active={active} />
+  </div>
+
+  <!-- Search recommended articles data (build-time) -->
+  <script is:inline id="search-recommended" type="application/json" set:html={JSON.stringify(recommendedPosts)} data-pagefind-ignore></script>
 
   <!-- Search overlay -->
-  <div class="search-page">
+  <div class="search-page" data-pagefind-ignore>
     <div class="search-icon-close-container">
       <span class="search-icon-close"><svg class="icon"><use href="#icon-chevron-down"></use></svg></span>
     </div>
     <div class="search-main container">
       <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-          <input type="text" id="search-input" placeholder="$ grep..." aria-label="搜索文章" />
+          <input type="text" id="search-input" placeholder="搜索文章..." aria-label="搜索文章" />
+          <div id="search-quick" class="search-quick"></div>
+          <div id="search-tags" class="search-tags"></div>
           <div id="search-results" class="mini-post-list"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <main id="main-content">
+  <main id="main-content" data-pagefind-body>
     <slot />
   </main>
 
-  <Footer />
+  <div data-pagefind-ignore>
+    <Footer />
+  </div>
 
-  <div id="back-to-top" title="返回顶部" aria-label="返回顶部" role="button" tabindex="0">
+  <div id="back-to-top" title="返回顶部" aria-label="返回顶部" role="button" tabindex="0" data-pagefind-ignore>
     <svg class="icon"><use href="#icon-arrow-up"></use></svg>
   </div>
 
   <script is:inline defer src="/js/site.js"></script>
-  <script is:inline defer src="/js/simple-jekyll-search.min.js"></script>
+
+  <script is:inline define:vars={{ swVersion }}>
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js?v=' + encodeURIComponent(swVersion)); }
+  </script>
 
   {GA_TRACK_ID && (
     <>
       <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACK_ID}`}></script>
       <script is:inline define:vars={{ GA_TRACK_ID }}>
+        window.GA_TRACK_ID = GA_TRACK_ID;
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag("js", new Date());
         gtag("config", GA_TRACK_ID);
       </script>
+      <!-- Web Vitals → GA (LCP/FID/CLS/INP/TTFB) -->
+      <script is:inline defer src="/js/web-vitals.js"></script>
     </>
   )}
   {BAIDU_TRACK_ID && (

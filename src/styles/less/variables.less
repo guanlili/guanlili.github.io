@@ -1,5 +1,5 @@
-// Variables — editorial "paper + ink + cinnabar" system
-// Noto Serif SC display · Noto Sans SC body · JetBrains Mono meta/code.
+// Variables — editorial "paper + ink + cinnabar" system.
+// Prefer local/system fonts so the site does not wait on remote font CSS.
 
 // ===== Primitive Palette =====
 @brand-primary: #b8442f;       // Cinnabar 朱砂红
@@ -31,16 +31,25 @@
   --ink:       #1a1813;
   --ink-2:     #3c372c;
   --ink-3:     #6b6358;
-  --ink-4:     #9a9182;
+  --ink-4:     #6b6358;
   --rule:      #d2cab8;
   --rule-soft: #e1dbc8;
   --accent:    #b8442f;
   --accent-ink:#7a2a1c;
   --hl:        rgba(184, 68, 47, 0.10);
 
-  --serif: "Noto Serif SC", "Source Han Serif SC", Georgia, "Songti SC", serif;
-  --sans:  "Noto Sans SC", "Source Han Sans SC", -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
-  --mono:  "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --serif: "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC", "Times New Roman", ui-serif, serif;
+  --sans:  -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Source Han Sans SC", "Helvetica Neue", Arial, sans-serif;
+  --mono:  ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "JetBrains Mono", "Liberation Mono", monospace;
+
+  // ---- Layout: fluid magazine width ----
+  // Scales with the viewport so the page fills more of large displays
+  // (e.g. ~1300px on a 13.6" laptop, capped ~1500px on a 27" monitor) while
+  // staying comfortable on smaller screens. Tune the cap/cap-rate here only.
+  --shell-max: clamp(960px, 86vw, 1500px);
+  // Article reading column cap — kept independent so prose stays legible
+  // even as the shell widens (Chinese body ~36 chars/line at this measure).
+  --read-col: 700px;
 
   // ---- Semantic tokens (rest of the site) aliased onto the raw palette ----
   // Brand
@@ -97,7 +106,7 @@
   --ink:       #ece6d6;
   --ink-2:     #c9c1ad;
   --ink-3:     #8e8775;
-  --ink-4:     #5d574a;
+  --ink-4:     #8e8775;
   --rule:      #2e2a21;
   --rule-soft: #25221b;
   --accent:    #e07a64;

@@ -2,11 +2,11 @@
 layout: post
 date: 2025-10-01
 title: "🚀 实战部署：单卡4090跑通DeepSeek-OCR本地WebUI"
-subtitle: "单卡RTX 4090跑通DeepSeek-OCR本地WebUI，6大血坑实录+一键启动"
+subtitle: "单卡4090跑通DeepSeek-OCR：本地WebUI实战部署"
 author: "lili"
-header-img: "img/about-bg.jpg"
 header-mask: 0.4
 tags: [AI, OCR]
+description: "单卡 RTX 4090 部署 DeepSeek-OCR 本地 WebUI 的完整实录：6 个关键报错及逐一解决，附一键启动脚本。"
 ---
 ## 🚀 实战部署：单卡4090跑通DeepSeek-OCR本地WebUI
 

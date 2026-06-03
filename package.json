@@ -5,19 +5,37 @@
   "description": "李梨的博客 | lili Blog — Astro",
   "homepage": "https://guanlili.github.io",
   "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && pagefind --site dist",
+    "check:content": "node scripts/check-content.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "check:links:remote": "node scripts/check-links.mjs --remote",
+    "check": "astro check",
+    "check:dist": "node scripts/check-dist.mjs",
+    "images:report": "node scripts/report-images.mjs",
+    "images:report:write": "node scripts/report-images.mjs --write",
+    "verify": "npm run check:content && npm run check && npm run build && npm run check:dist",
+    "profile:build": "node scripts/profile-build.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
+  "overrides": {
+    "yaml-language-server": "1.23.0"
+  },
   "dependencies": {
-    "astro": "^5.6.1",
     "@astrojs/rss": "^4.0.11",
-    "@astrojs/sitemap": "^3.3.0"
+    "@astrojs/sitemap": "^3.3.0",
+    "astro": "^6.4.2",
+    "probe-image-size": "^7.3.0"
   },
   "devDependencies": {
-    "less": "^4.2.2"
+    "@astrojs/check": "^0.9.9",
+    "less": "^4.2.2",
+    "pagefind": "^1.5.2"
   }
 }

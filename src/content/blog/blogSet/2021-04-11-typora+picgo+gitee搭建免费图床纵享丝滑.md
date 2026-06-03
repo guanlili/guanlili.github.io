@@ -2,10 +2,11 @@
 layout: post
 date: 2021-04-11
 title: "typora+picgo+gitee搭建免费图床纵享丝滑"
-subtitle: "typora+picgo+gitee搭建免费图床纵享丝滑"
+subtitle: "稳定图床配置方案：告别免费图床的不稳定时代"
 author: "lili"
 header-mask: 0.4
 tags: [博客搭建]
+description: "Typora + PicGo + Gitee 搭建免费图床教程，解决 GitHub 图床在国内加载慢的问题。"
 ---
 
 # typora+picgo+gitee搭建免费图床纵享丝滑

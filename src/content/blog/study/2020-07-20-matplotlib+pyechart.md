@@ -2,11 +2,11 @@
 layout: post
 date: 2020-07-20
 title: "数据分析之可视化展示"
-subtitle: "matplotlib学习笔记"
+subtitle: "matplotlib + pyechart：Python数据可视化的双剑合璧"
 author: "lili"
-header-img: "img/blog-cover-database.jpg"
 header-mask: 0.4
-tags: [Python]
+tags: [Python, 数据分析]
+description: "Matplotlib + Pyecharts 数据可视化笔记：折线图、柱状图、饼图到交互式图表的绘制方法。"
 ---
 
 

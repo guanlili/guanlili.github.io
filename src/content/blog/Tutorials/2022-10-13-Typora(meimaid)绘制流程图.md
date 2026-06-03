@@ -4,8 +4,9 @@ date: 2022-10-13
 title: "Typora(meimaid)绘制流程图"
 author: "lili"
 header-mask: 0.4
-tags: [工具, 学习笔记, 接口文档]
-subtitle: "绘制流程图...."
+tags: [接口文档, 效率工具]
+subtitle: "稳定图床配置方案：告别免费图床的不稳定时代"
+description: "在 Typora 中用 Mermaid 语法绘制流程图、时序图、甘特图，告别第三方画图工具的依赖。"
 ---
 
 # Typora(meimaid)绘制流程图

@@ -4,9 +4,9 @@ date: 2025-10-20
 title: "🚀 实战进阶：将 ComfyUI 封装为 AI 视频生成网站 (FastAPI + WebUI)"
 subtitle: "10行代码把万兴2.1变公司内网专属视频MidJourney，同事再也不半夜@我了"
 author: "lili"
-header-img: "img/about-bg.jpg"
 header-mask: 0.4
-tags: [AI, ComfyUI, FastAPI]  
+tags: [AI, ComfyUI, FastAPI]
+description: "用 FastAPI 将 ComfyUI 工作流封装为 RESTful API，并搭配轻量 WebUI 实现企业内网专属的文生视频服务，可供上游 Java 系统调用。"
 ---
 # 🚀 实战进阶：将 ComfyUI 封装为 AI 视频生成网站 (FastAPI + WebUI)
 

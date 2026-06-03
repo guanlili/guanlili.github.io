@@ -43,16 +43,34 @@ export function ganzhi(year: number): string {
   return `${GAN[g]}${ZHI[z]}年`;
 }
 
-// Plain-text preview from Markdown source for listing pages.
-export function excerpt(body: string, n = 110): string {
-  const text = (body || "")
+// Plain text from Markdown source for listing pages, RSS, and search.
+export function plainText(body: string): string {
+  return (body || "")
     .replace(/^---[\s\S]*?---/, "") // stray frontmatter (shouldn't exist)
     .replace(/```[\s\S]*?```/g, " ") // code fences
+    .replace(/<[^>]+>/g, " ") // inline HTML
     .replace(/!\[[^\]]*\]\([^)]*\)/g, " ") // images
     .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1") // links → text
     .replace(/^[#>\-*\s]+/gm, " ") // md line markers
     .replace(/[`*_~]/g, "")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+// Plain-text preview from Markdown source for listing pages.
+export function excerpt(body: string, n = 110): string {
+  const text = plainText(body);
   return text.length > n ? text.slice(0, n) + "…" : text;
+}
+
+export function firstImage(body: string): string | undefined {
+  const imagePattern =
+    /!\[[^\]]*\]\(([^)\s]+)(?:\s+["'][^"']*["'])?\)|<img\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi;
+  for (const match of body.matchAll(imagePattern)) {
+    const src = match[1] || match[2];
+    if (!src) continue;
+    if (/^\/(?:Users|var|private|tmp)\//.test(src) || /^file:/i.test(src)) continue;
+    return src;
+  }
+  return undefined;
 }

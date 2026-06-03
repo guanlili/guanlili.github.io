@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout title="离线" description="当前网络不可用，请稍后重试。">
+  <div class="article-shell">
+    <header class="page-head">
+      <div>
+        <div class="kicker">
+          <span class="dot"></span>
+          <span>Offline · 离线</span>
+          <span class="rule"></span>
+        </div>
+        <h1>网络暂时断开了</h1>
+        <p class="sub">当前页面还没有缓存到本地。等网络恢复后，可以回首页或打开归档继续阅读。</p>
+      </div>
+      <div class="right">
+        <div class="big">OFF</div>
+        <div>Network Offline</div>
+      </div>
+    </header>
+    <nav class="pager-nav">
+      <a href="/">&larr; 回首页 Home</a>
+      <span class="spacer"></span>
+      <a href="/archive/">去归档 Archive &rarr;</a>
+    </nav>
+  </div>
+</BaseLayout>

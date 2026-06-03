@@ -2,10 +2,11 @@
 layout: post
 date: 2022-07-01
 title: "MacM1芯片安装java开发环境（idea+jdk）"
-subtitle: "软件安装"
+subtitle: "Mac M1芯片Java开发环境：IDEA+JDK的安装与配置"
 author: "lili"
 header-mask: 0.4
 tags: [软件安装, Java, Mac]
+description: "Mac M1 芯片安装 Java 开发环境的完整记录：JDK、IntelliJ IDEA 的 ARM 原生适配与 Rosetta 兼容方案。"
 ---
 
 # MacM1芯片安装java开发环境（idea+jdk）

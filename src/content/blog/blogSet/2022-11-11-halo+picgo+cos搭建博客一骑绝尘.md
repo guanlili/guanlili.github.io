@@ -2,10 +2,11 @@
 layout: post
 date: 2022-11-11
 title: "typora+picgo+gitee搭建免费图床纵享丝滑"
-subtitle: "typora+picgo+gitee搭建免费图床纵享丝滑"
+subtitle: "稳定图床配置方案：告别免费图床的不稳定时代"
 author: "lili"
 header-mask: 0.4
 tags: [博客搭建, 运维]
+description: "Halo 博客 + PicGo + 腾讯云 COS 搭建一站式写作平台的完整方案。"
 ---
 
 # halo+picgo+cos搭建博客一骑绝尘

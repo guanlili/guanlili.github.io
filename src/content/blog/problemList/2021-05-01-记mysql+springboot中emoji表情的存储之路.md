@@ -2,11 +2,11 @@
 layout: post
 date: 2021-05-01
 title: "记mysql+springboot中emoji表情的存储之路"
-subtitle: "遇到的一个bug"
+subtitle: "MySQL+Spring Boot存储Emoji：字符集配置与实战避坑"
 author: "lili"
-header-img: "img/about-bg.jpg"
 header-mask: 0.4
 tags: [踩坑记录, 数据库, Java]
+description: "MySQL 存储 Emoji 表情报错的排查与解决：utf8 vs utf8mb4 字符集的坑，附 Spring Boot 配置。"
 ---
 
 ## 记mysql+springboot中emoji表情的存储之路

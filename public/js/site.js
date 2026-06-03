@@ -1,20 +1,23 @@
-// lili Blog — small progressive-enhancement script.
-// Theme toggle · back-to-top · search overlay · responsive tables/videos · lazy images.
+// lili Blog — core script (all pages).
+// Theme toggle · back-to-top · responsive tables/videos · lazy images.
+// Article features (TOC/lightbox/code/mermaid/progress) and search load on demand.
 
 // ===== Unified scroll handler (single rAF loop) =====
-var scrollCallbacks = [];
-var scrollTicking = false;
-window.addEventListener('scroll', function () {
-  if (!scrollTicking) {
-    window.requestAnimationFrame(function () {
-      var scrollTop = window.pageYOffset;
-      for (var i = 0; i < scrollCallbacks.length; i++) scrollCallbacks[i](scrollTop);
-      scrollTicking = false;
-    });
-    scrollTicking = true;
-  }
-});
-function onScroll(fn) { scrollCallbacks.push(fn); }
+if (!window._scrollCallbacks) {
+  window._scrollCallbacks = [];
+  window._scrollTicking = false;
+  window.addEventListener('scroll', function () {
+    if (!window._scrollTicking) {
+      window.requestAnimationFrame(function () {
+        var scrollTop = window.pageYOffset;
+        for (var i = 0; i < window._scrollCallbacks.length; i++) window._scrollCallbacks[i](scrollTop);
+        window._scrollTicking = false;
+      });
+      window._scrollTicking = true;
+    }
+  });
+}
+function onScroll(fn) { window._scrollCallbacks.push(fn); }
 
 // ===== Back to top =====
 function initBackToTop() {
@@ -55,59 +58,31 @@ function initThemeToggle() {
   });
 }
 
-// ===== Search overlay (SimpleJekyllSearch over /search.json) =====
-function initSearch() {
-  var searchInput = document.getElementById('search-input');
-  var resultsContainer = document.getElementById('search-results');
-  if (!searchInput || !resultsContainer) return;
+// ===== Mobile nav (hamburger dropdown) =====
+function initNavToggle() {
+  var btn = document.getElementById('nav-toggle-btn');
+  var bar = document.querySelector('.topbar');
+  var icon = document.getElementById('nav-toggle-icon');
+  if (!btn || !bar) return;
 
-  function htmlDecode(input) {
-    var e = document.createElement('textarea');
-    e.innerHTML = input;
-    return e.childNodes.length === 0 ? '' : e.childNodes[0].nodeValue;
+  function setOpen(open) {
+    bar.classList.toggle('nav-open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (icon) icon.innerHTML = '<use href="#icon-' + (open ? 'x' : 'menu') + '"></use>';
   }
-
-  if (typeof SimpleJekyllSearch !== 'undefined') {
-    SimpleJekyllSearch({
-      searchInput: searchInput,
-      resultsContainer: resultsContainer,
-      json: '/search.json?v=' + Date.now(),
-      searchResultTemplate:
-        '<a class="search-result" href="{url}"><span class="sr-t">{title}</span><span class="sr-s">{subtitle}</span></a>',
-      noResultsText: '没有找到相关文章',
-      limit: 50,
-      fuzzy: false,
-      templateMiddleware: function (prop, value) {
-        if ((prop === 'subtitle' || prop === 'title') && value && value.indexOf('code') > -1) {
-          return htmlDecode(value);
-        }
-        return value;
-      }
-    });
-  }
-
-  var searchPage = document.querySelector('.search-page');
-  var searchOpen = document.querySelector('.search-icon');
-  var searchClose = document.querySelector('.search-icon-close');
-  if (!searchPage || !searchOpen) return;
-
-  function close() {
-    searchPage.classList.remove('search-active');
-    document.body.classList.remove('no-scroll');
-  }
-  searchOpen.addEventListener('click', function (e) {
-    e.preventDefault();
-    var active = searchPage.classList.toggle('search-active');
-    document.body.classList.toggle('no-scroll', active);
-    if (active) searchInput.focus();
+  btn.addEventListener('click', function () {
+    setOpen(!bar.classList.contains('nav-open'));
   });
-  if (searchClose) searchClose.addEventListener('click', function (e) { e.preventDefault(); close(); });
+  // Dismiss on link tap or Escape.
+  bar.querySelectorAll('#primary-nav a').forEach(function (a) {
+    a.addEventListener('click', function () { setOpen(false); });
+  });
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && searchPage.classList.contains('search-active')) close();
+    if (e.key === 'Escape' && bar.classList.contains('nav-open')) setOpen(false);
   });
 }
 
-// ===== Content enhancements =====
+// ===== Content enhancements (lightweight) =====
 function initResponsiveTables() {
   document.querySelectorAll('.article-content table, .long-form table').forEach(function (table) {
     if (table.parentNode.classList.contains('table-responsive')) return;
@@ -135,36 +110,67 @@ function initLazyImages() {
   });
 }
 
-// Render ```mermaid blocks as diagrams. Mermaid is excluded from Shiki
-// (astro.config), so it arrives as <pre><code class="language-mermaid">.
-// Loaded from CDN only when a diagram exists; degrades to the code block on failure.
-function initMermaid() {
-  var codes = document.querySelectorAll('pre > code.language-mermaid');
-  if (!codes.length) return;
-  var dark = document.documentElement.getAttribute('data-theme') === 'dark';
-  import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs')
-    .then(function (mod) {
-      var mermaid = mod.default;
-      mermaid.initialize({ startOnLoad: false, theme: dark ? 'dark' : 'neutral', securityLevel: 'loose' });
-      var nodes = [];
-      codes.forEach(function (code) {
-        var div = document.createElement('div');
-        div.className = 'mermaid';
-        div.textContent = code.textContent;
-        code.parentElement.replaceWith(div);
-        nodes.push(div);
-      });
-      mermaid.run({ nodes: nodes }).catch(function () {});
-    })
-    .catch(function () { /* CDN unavailable: leave the code block visible */ });
+// ===== Search overlay — loads on first interaction =====
+var searchLoaded = false;
+var searchQueue = null;
+
+function loadSearch() {
+  if (searchLoaded) return Promise.resolve();
+  if (searchQueue) return searchQueue;
+  searchQueue = import('/js/site-search.js').then(function (mod) {
+    mod.initSearch();
+    searchLoaded = true;
+  }).catch(function () {});
+  return searchQueue;
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+// Preload search module on ⌘K hover/focus (lightweight hint)
+document.querySelector('.search-icon')?.addEventListener('mouseenter', function () {
+  if (!searchLoaded) loadSearch();
+}, { once: true });
+
+// Keyboard shortcuts: wired immediately (lightweight)
+document.addEventListener('keydown', function (e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    loadSearch();
+  }
+  if (e.key === '/') {
+    var tag = document.activeElement ? document.activeElement.tagName : '';
+    var editable = document.activeElement && document.activeElement.isContentEditable;
+    if (tag !== 'INPUT' && tag !== 'TEXTAREA' && !editable) {
+      e.preventDefault();
+      loadSearch();
+    }
+  }
+});
+
+// Click handler delegates to search module once loaded
+document.querySelector('.search-icon')?.addEventListener('click', function (e) {
+  e.preventDefault();
+  loadSearch();
+});
+
+// ===== Init core (View Transitions compatible) =====
+var _pageInited = false;
+function initPage() {
+  if (_pageInited) return;
+  _pageInited = true;
   initBackToTop();
   initThemeToggle();
-  initSearch();
+  initNavToggle();
   initResponsiveTables();
   initResponsiveVideos();
   initLazyImages();
-  initMermaid();
+}
+
+document.addEventListener('astro:after-swap', function () {
+  _pageInited = false;
+  window._scrollCallbacks = [];
+  window._scrollTicking = false;
+  searchLoaded = false;
+  searchQueue = null;
 });
+
+document.addEventListener('astro:page-load', initPage);
+document.addEventListener('DOMContentLoaded', initPage);

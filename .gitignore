@@ -16,5 +16,9 @@ node_modules/
 .DS_Store
 Thumbs.db
 
+# Build-time image dimension cache
+.image-dimensions.json
+BROKEN-IMAGES.generated.md
+
 # Claude Code
 .claude/

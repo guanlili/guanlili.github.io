@@ -3,38 +3,76 @@ import { render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { SITE } from "../consts";
 import { readingStats } from "../lib/permalink";
-import { getPosts } from "../lib/posts";
+import { excerpt, firstImage, getPosts, type LoadedPost } from "../lib/posts";
+import { siteImage } from "../lib/media";
+import "../styles/less/post-article.less";
 
 export async function getStaticPaths() {
   const posts = await getPosts(); // newest-first, date-prefixed only
-  return posts.map((p, i) => ({
-    params: { slug: p.route.param },
-    // older = next index, newer = previous index; n = sequence (newest = 01)
-    props: { post: p.entry, older: posts[i + 1], newer: posts[i - 1], n: i + 1 },
-  }));
+  const postsByTag = new Map<string, LoadedPost[]>();
+  for (const post of posts) {
+    for (const tag of post.entry.data.tags || []) {
+      if (!postsByTag.has(tag)) postsByTag.set(tag, []);
+      postsByTag.get(tag)!.push(post);
+    }
+  }
+
+  return posts.map((p, i) => {
+    // Related articles: score only posts sharing at least one tag.
+    const candidates = new Map<LoadedPost, number>();
+    for (const tag of p.entry.data.tags || []) {
+      for (const q of postsByTag.get(tag) || []) {
+        if (q.route.path === p.route.path) continue;
+        candidates.set(q, (candidates.get(q) ?? 0) + 1);
+      }
+    }
+
+    const related = [...candidates.entries()]
+      .map(([post, overlap]) => ({ post, overlap }))
+      .sort((a, b) => b.overlap - a.overlap || b.post.entry.data.date.getTime() - a.post.entry.data.date.getTime())
+      .slice(0, 3)
+      .map((r) => ({
+        title: r.post.entry.data.title,
+        path: r.post.route.path,
+        tags: r.post.entry.data.tags || [],
+        date: r.post.entry.data.date,
+      }));
+
+    return {
+      params: { slug: p.route.param },
+      // older = next index, newer = previous index; n = sequence (newest = 01)
+      props: { post: p.entry, older: posts[i + 1], newer: posts[i - 1], n: i + 1, related },
+    };
+  });
 }
 
-const { post, older, newer, n } = Astro.props;
+const { post, older, newer, n, related } = Astro.props;
 const { Content, headings } = await render(post);
 const { data } = post;
 
 const d = data.date;
+const updated = data.updated ?? d;
 const pad = (v: number) => String(v).padStart(2, "0");
 const ymd = `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())}`;
 const noN = pad(n); // article number, e.g. 01 (newest)
-const vol = pad(d.getFullYear() - SITE.since); // years since SITE.since → Vol. 09 for 2026
 const { chars, minutes } = readingStats(post.body ?? "");
 
-const toc = headings.filter((h) => h.depth === 2);
+const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 const olderPath = older ? older.route.path : null;
 const newerPath = newer ? newer.route.path : null;
+const description = data.description || data.subtitle || excerpt(post.body ?? "", 155);
+const coverImage =
+  siteImage(data.cover) ??
+  siteImage(data["header-img"]) ??
+  siteImage(firstImage(post.body ?? ""));
 ---
 <BaseLayout
   title={data.title}
-  description={data.subtitle || SITE.description}
+  description={description || SITE.description}
+  image={coverImage ?? SITE.avatar}
   type="article"
   bodyClass="layout-post"
-  article={{ date: d, author: data.author || SITE.author, tags: data.tags }}
+  article={{ date: d, updated, author: data.author || SITE.author, tags: data.tags }}
 >
   <div class="article-shell">
     <section class="article-head">
@@ -43,8 +81,8 @@ const newerPath = newer ? newer.route.path : null;
         <span>No. {noN}{data.tags.length ? ` · ${data.tags.join(" / ")}` : ""}</span>
         <span class="rule"></span>
       </div>
-      <h1>{data.title}</h1>
-      {data.subtitle && <p class="deck">{data.subtitle}</p>}
+      <h1 data-pagefind-meta="title" data-pagefind-weight="10">{data.title}</h1>
+      {data.subtitle && <p class="deck" data-pagefind-weight="3">{data.subtitle}</p>}
       <div class="byline">
         <span class="author">
           <img src={SITE.avatar} alt="" />
@@ -57,20 +95,24 @@ const newerPath = newer ? newer.route.path : null;
       </div>
     </section>
 
+    {coverImage && (
+      <figure class="article-cover">
+        <img src={coverImage} alt="" loading="eager" decoding="async" fetchpriority="high" />
+      </figure>
+    )}
+
     <div class="article-meta-strip">
       <div><span class="label">发表</span><span class="value">{ymd}</span></div>
       <div><span class="label">字数</span><span class="value">约 {chars} 字</span></div>
       <div><span class="label">阅读</span><span class="value">{minutes} min</span></div>
-      <div><span class="label">标签</span><span class="value" style="font-size:14px">{data.tags.length ? data.tags.join(" · ") : "—"}</span></div>
+      <div><span class="label">标签</span><span class="value" style="font-size:14px" data-pagefind-weight="4">{data.tags.length ? data.tags.join(" · ") : "—"}</span></div>
     </div>
 
     <div class="article-body">
       <aside class="gutter" aria-hidden="true">
         <span class="num">{noN}</span>
-        <span>No. {noN}</span>
-        <span>Vol. {vol}</span>
-        <span>· · ·</span>
-        <span>{ymd}</span>
+        <span class="progress-track"><span class="progress-fill"></span></span>
+        <span class="progress-label">0%</span>
       </aside>
 
       <div class="article-content">
@@ -82,10 +124,30 @@ const newerPath = newer ? newer.route.path : null;
           <div class="lbl">In This Issue</div>
           <ol>
             {toc.map((h) => (
-              <li><a href={`#${h.slug}`}>{h.text}</a></li>
+              <li data-depth={h.depth}><a href={`#${h.slug}`}>{h.text}</a></li>
             ))}
           </ol>
         </nav>
+      )}
+
+      {toc.length > 0 && (
+        <button class="toc-fab" aria-label="打开目录" title="目录">
+          <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="3" y1="4" x2="17" y2="4"/><line x1="3" y1="8" x2="14" y2="8"/><line x1="3" y1="12" x2="17" y2="12"/><line x1="3" y1="16" x2="14" y2="16"/></svg>
+        </button>
+      )}
+
+      {toc.length > 0 && (
+        <div class="toc-sheet" aria-hidden="true">
+          <div class="toc-sheet-head">
+            <span>目录 / Contents</span>
+            <button class="toc-sheet-close" aria-label="关闭目录">&times;</button>
+          </div>
+          <ol>
+            {toc.map((h) => (
+              <li data-depth={h.depth}><a href={`#${h.slug}`}>{h.text}</a></li>
+            ))}
+          </ol>
+        </div>
       )}
     </div>
 
@@ -94,6 +156,27 @@ const newerPath = newer ? newer.route.path : null;
       <span class="glyph">&#10086;</span>
       <span>{ymd} · 北京</span>
     </div>
+
+    {related.length > 0 && (
+      <section class="related-posts">
+        <div class="related-label">相关推荐 / Related</div>
+        <div class="related-list">
+          {related.map((r: { title: string; path: string; tags: string[]; date: Date }) => {
+            const rd = r.date;
+            const rymd = `${rd.getFullYear()}.${String(rd.getMonth() + 1).padStart(2, "0")}.${String(rd.getDate()).padStart(2, "0")}`;
+            return (
+              <a class="related-card" href={r.path}>
+                <span class="rc-title">{r.title}</span>
+                <span class="rc-meta">
+                  {r.tags.slice(0, 3).map((t: string) => <span class="rc-tag">{t}</span>)}
+                  <span class="rc-date">{rymd}</span>
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
 
     <div class="next-prev">
       {newerPath ? (
@@ -114,4 +197,6 @@ const newerPath = newer ? newer.route.path : null;
       )}
     </div>
   </div>
+
+  <script is:inline defer src="/js/site-article.js"></script>
 </BaseLayout>

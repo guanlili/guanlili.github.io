@@ -7,17 +7,20 @@ const { active } = Astro.props as { active?: string };
     <a href="/" class="mark">{SITE.brand}</a>
     <span class="latin">{SITE.latinBrand} / since {SITE.since}</span>
   </div>
-  <nav aria-label="主导航">
+  <nav id="primary-nav" aria-label="主导航">
     {NAV.map((l) => (
       <a href={l.href} class={l.key === active ? "active" : ""}>{l.label}</a>
     ))}
   </nav>
   <div class="meta-right">
-    <button class="iconbtn search-icon" type="button" title="搜索" aria-label="搜索">
+    <button class="iconbtn search-icon" type="button" title="搜索 (⌘K)" aria-label="搜索">
       <svg class="icon"><use href="#icon-search"></use></svg>
     </button>
     <button class="iconbtn" type="button" id="theme-toggle-btn" title="切换暗色模式" aria-label="切换暗色模式">
       <svg class="icon" id="theme-icon-svg"><use href="#icon-moon"></use></svg>
+    </button>
+    <button class="iconbtn nav-toggle" type="button" id="nav-toggle-btn" aria-label="菜单" aria-controls="primary-nav" aria-expanded="false">
+      <svg class="icon" id="nav-toggle-icon"><use href="#icon-menu"></use></svg>
     </button>
   </div>
 </header>
