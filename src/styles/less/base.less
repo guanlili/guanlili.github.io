@@ -123,6 +123,35 @@ code, kbd, pre, samp { .monospace; }
   vertical-align: -0.125em;
 }
 
+// ── Image lightbox (global) ────────────────────────────────────
+// Used by the article body, the About long-form, and the About QR banners.
+// Toggled by initLightbox() in site.js.
+.img-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, .82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity .25s ease;
+  cursor: zoom-out;
+}
+.img-lightbox.open { opacity: 1; }
+.img-lightbox img {
+  max-width: 92vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border: 0;
+  border-radius: 3px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, .4);
+  cursor: default;
+  margin: 0;
+}
+
 // ── Back to top ────────────────────────────────────────────────
 #back-to-top {
   position: fixed;

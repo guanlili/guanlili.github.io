@@ -130,57 +130,8 @@ function initTOC() {
 }
 
 // ===== Image lightbox (zero-dependency) =====
-function initLightbox() {
-  var overlay = null;
-
-  function open(src, alt) {
-    if (overlay) return;
-    overlay = document.createElement('div');
-    overlay.className = 'img-lightbox';
-    overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-label', '图片放大');
-    var img = document.createElement('img');
-    img.src = src;
-    img.alt = alt || '';
-    overlay.appendChild(img);
-    document.body.appendChild(overlay);
-    overlay.offsetHeight;
-    overlay.classList.add('open');
-    document.body.classList.add('no-scroll');
-  }
-
-  function close() {
-    if (!overlay) return;
-    overlay.classList.remove('open');
-    var el = overlay;
-    setTimeout(function () {
-      el.remove();
-    }, 260);
-    overlay = null;
-    document.body.classList.remove('no-scroll');
-  }
-
-  document.addEventListener('click', function (e) {
-    var img = e.target;
-    if (img.tagName !== 'IMG') return;
-    var scope = img.closest('.article-content, .long-form');
-    if (!scope) return;
-    if (img.getAttribute('fetchpriority')) return;
-    if (img.closest('a')) return;
-
-    e.preventDefault();
-    open(img.src, img.alt);
-  });
-
-  document.addEventListener('click', function (e) {
-    if (!overlay) return;
-    if (e.target === overlay) close();
-  });
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && overlay) close();
-  });
-}
+// Image lightbox now lives globally in site.js (initLightbox) so it also
+// covers non-article pages (e.g. the About QR banners).
 
 // ===== Code blocks: copy button + language label =====
 function initCodeBlocks() {
@@ -303,7 +254,6 @@ function initArticlePage() {
   if (_articleInited) return;
   _articleInited = true;
   initTOC();
-  initLightbox();
   initCodeBlocks();
   initProgressBar();
   initHeadingAnchors();

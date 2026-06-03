@@ -82,6 +82,57 @@ function initNavToggle() {
   });
 }
 
+// ===== Image lightbox (global) =====
+// Click a zoomable image to view it full-screen. Covers the article body,
+// the About long-form, and the About QR banners (微信公众号 / 小红书).
+function initLightbox() {
+  var overlay = null;
+
+  function open(src, alt) {
+    if (overlay) return;
+    overlay = document.createElement('div');
+    overlay.className = 'img-lightbox';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-label', '图片放大');
+    var img = document.createElement('img');
+    img.src = src;
+    img.alt = alt || '';
+    overlay.appendChild(img);
+    document.body.appendChild(overlay);
+    overlay.offsetHeight;
+    overlay.classList.add('open');
+    document.body.classList.add('no-scroll');
+  }
+
+  function close() {
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    var el = overlay;
+    setTimeout(function () { el.remove(); }, 260);
+    overlay = null;
+    document.body.classList.remove('no-scroll');
+  }
+
+  document.addEventListener('click', function (e) {
+    var img = e.target;
+    if (!img || img.tagName !== 'IMG') return;
+    if (img.closest('.img-lightbox')) return;            // ignore the overlay itself
+    if (!img.closest('.article-content, .long-form, .channel-hero')) return;
+    if (img.getAttribute('fetchpriority')) return;        // skip the eager cover
+    if (img.closest('a')) return;                         // skip linked images
+    e.preventDefault();
+    open(img.currentSrc || img.src, img.alt);
+  });
+
+  document.addEventListener('click', function (e) {
+    if (overlay && e.target === overlay) close();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay) close();
+  });
+}
+
 // ===== Content enhancements (lightweight) =====
 function initResponsiveTables() {
   document.querySelectorAll('.article-content table, .long-form table').forEach(function (table) {
@@ -159,6 +210,7 @@ function initPage() {
   initBackToTop();
   initThemeToggle();
   initNavToggle();
+  initLightbox();
   initResponsiveTables();
   initResponsiveVideos();
   initLazyImages();
