@@ -1,13 +1,13 @@
 ---
 title: "毒奶观察室 · AI 电竞赛事搭子"
 date: 2026-05-31
-summary: "2026 清华黑客松项目：一个赛博风格的电竞 AI 陪看应用，覆盖赛前期待、赛中共振、赛后图文表达。"
+summary: "2026.5.31 清华黑客松项目：一个赛博风格的电竞 AI 陪看应用，覆盖赛前期待、赛中共振、赛后图文表达。"
 type: "Hackathon"
-role: "Product / Full-stack / AI Engineer"
+role: "Tech Lead / Full-stack / AI Engineer"
 status: "Hackathon Demo"
 tags: ["React", "TanStack Start", "LLM", "ASR", "AIGC", "Hackathon"]
-cover: "/img/portfolio/watch-buddy-logo.png"
-impact: "在 10 小时黑客松窗口内跑通从用户画像、赛中情绪陪伴到赛后文案海报生成的完整观赛闭环，获得评委一致好评。"
+cover: "/img/portfolio/watch-buddy-portfolio-cover.png"
+impact: "在 2026.5.31 的 10 小时黑客松窗口内跑通从用户画像、赛中情绪陪伴到赛后文案海报生成的完整观赛闭环，获得评委一致好评。"
 featured: true
 links:
   github: "https://github.com/guanlili/watch_buddy"
@@ -23,7 +23,7 @@ links:
 
 ## 我负责什么
 
-- 梳理黑客松产品定位和完整用户链路。
+- 参与梳理黑客松产品定位和完整用户链路。
 - 搭建 React + TanStack Start 的多阶段 demo。
 - 设计用户画像、比赛时间线、情绪日志、flag 和赛后回顾的数据流。
 - 接入 LLM 对话、StepFun ASR 和 AIGC 海报生成能力。
