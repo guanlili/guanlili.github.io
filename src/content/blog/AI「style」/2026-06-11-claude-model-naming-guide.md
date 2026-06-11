@@ -9,7 +9,7 @@ tags:
   - AI
   - LLM
 description: 借着 Fable 5 发布，一次讲清 Claude 的 Haiku / Sonnet / Opus / Fable 这些名字到底怎么区分，小白怎么选模型，以及最实用的省 token 实践。
-cover: https://blog-1258476669.cos.ap-beijing.myqcloud.com/macAir/image-20260611213610837.png?imageSlim
+cover: https://blog-1258476669.cos.ap-beijing.myqcloud.com/macAir/2026-06-11-claude-cover-235.png?imageSlim
 ---
 
 打开 Claude 的模型下拉框，你大概率会愣一下。
@@ -72,7 +72,7 @@ Anthropic 自己也知道这玩意太强，放出去有风险。所以他们给 
 
 还有个时间点要划重点：**6 月 22 日之前，Fable 5 在 Pro、Max、Team 等订阅里免费随便用；6 月 23 日起会从这些套餐撤下，改成按额度计费，之后再逐步恢复成标准功能。** 想白嫖的，趁这几天。
 
-![Fable 5 与 Opus 4.8 能力对比图](占位)
+![Fable 5 与 Opus 4.8 能力对比图](https://blog-1258476669.cos.ap-beijing.myqcloud.com/macAir/image-20260612003217556.png?imageSlim)
 
 ## 04、那两个灰色的 (Legacy) 是啥？
 
@@ -142,4 +142,5 @@ Haiku 和 Fable 之间，差了整整 10 倍。同样一句"帮我把这段话�
 
 俳句也好，神话也罢。看懂了名字背后的分量，这几个单词，你这辈子还真就用上了。
 
-![image-20260611213610837](https://blog-1258476669.cos.ap-beijing.myqcloud.com/macAir/image-20260611213610837.png?imageSlim)
+![2026-06-11-claude-cover-235](https://blog-1258476669.cos.ap-beijing.myqcloud.com/macAir/2026-06-11-claude-cover-235.png?imageSlim)
+
