@@ -161,6 +161,115 @@ function initLazyImages() {
   });
 }
 
+// ===== Tools stack filters =====
+function initToolsStack() {
+  var root = document.querySelector('.tools-console');
+  if (!root || root.dataset.toolsStackReady === 'true') return;
+  root.dataset.toolsStackReady = 'true';
+
+  var input = document.getElementById('tools-search-input');
+  var filters = Array.prototype.slice.call(document.querySelectorAll('[data-filter]'));
+  var cards = Array.prototype.slice.call(document.querySelectorAll('[data-tool-card]'));
+  var pinnedCards = Array.prototype.slice.call(document.querySelectorAll('[data-pinned-card]'));
+  var sections = Array.prototype.slice.call(document.querySelectorAll('[data-stage-section]'));
+  var pinnedSection = document.querySelector('[data-pinned-section]');
+  var empty = document.querySelector('[data-tools-empty]');
+  var activeButton = document.querySelector('[data-filter].active');
+  var currentStage = activeButton ? activeButton.getAttribute('data-filter') || 'all' : 'all';
+  var pinnedLimit = 9;
+  var storageKey = 'lili-tools-clicks';
+
+  function isVisibleTool(el) {
+    return !el.hidden;
+  }
+
+  function readClicks() {
+    try {
+      return JSON.parse(localStorage.getItem(storageKey) || '{}');
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function writeClicks(clicks) {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(clicks));
+    } catch (e) {}
+  }
+
+  function clickScore(card, clicks) {
+    return Number(clicks[card.dataset.toolKey || ''] || 0);
+  }
+
+  function updatePinnedRanking() {
+    var clicks = readClicks();
+    var visiblePinned = pinnedCards.filter(isVisibleTool);
+    visiblePinned.sort(function (a, b) {
+      var scoreDiff = clickScore(b, clicks) - clickScore(a, clicks);
+      if (scoreDiff) return scoreDiff;
+      var pinnedDiff = (b.dataset.defaultPinned === 'true' ? 1 : 0) - (a.dataset.defaultPinned === 'true' ? 1 : 0);
+      if (pinnedDiff) return pinnedDiff;
+      return Number(a.dataset.defaultRank || 0) - Number(b.dataset.defaultRank || 0);
+    });
+
+    pinnedCards.forEach(function (card) {
+      card.style.order = '';
+    });
+    visiblePinned.forEach(function (card, index) {
+      card.style.order = String(index);
+      if (index >= pinnedLimit) card.hidden = true;
+    });
+  }
+
+  function applyFilter() {
+    var query = input ? input.value.trim().toLowerCase() : '';
+    var visibleCount = 0;
+
+    cards.forEach(function (card) {
+      var stageMatch = currentStage === 'all' || card.dataset.stage === currentStage;
+      var textMatch = !query || (card.dataset.search || '').indexOf(query) >= 0;
+      var visible = stageMatch && textMatch;
+      card.hidden = !visible;
+      if (visible) visibleCount += 1;
+    });
+
+    updatePinnedRanking();
+
+    sections.forEach(function (section) {
+      var visibleRows = Array.prototype.slice.call(section.querySelectorAll('[data-tool-card]')).filter(isVisibleTool).length;
+      var stageMatch = currentStage === 'all' || section.dataset.stageSection === currentStage;
+      section.hidden = !stageMatch || visibleRows === 0;
+    });
+
+    if (pinnedSection) {
+      var visiblePinned = Array.prototype.slice.call(pinnedSection.querySelectorAll('[data-tool-card]')).filter(isVisibleTool).length;
+      pinnedSection.hidden = visiblePinned === 0;
+    }
+
+    if (empty) empty.hidden = visibleCount > 0;
+  }
+
+  filters.forEach(function (button) {
+    button.addEventListener('click', function () {
+      currentStage = button.dataset.filter || 'all';
+      filters.forEach(function (item) { item.classList.toggle('active', item === button); });
+      applyFilter();
+    });
+  });
+
+  if (input) input.addEventListener('input', applyFilter);
+  cards.forEach(function (card) {
+    card.addEventListener('click', function () {
+      var key = card.dataset.toolKey;
+      if (!key) return;
+      var clicks = readClicks();
+      clicks[key] = Number(clicks[key] || 0) + 1;
+      writeClicks(clicks);
+    });
+  });
+  applyFilter();
+}
+
 // ===== Search overlay — loads on first interaction =====
 var searchLoaded = false;
 var searchQueue = null;
@@ -205,6 +314,7 @@ document.querySelector('.search-icon')?.addEventListener('click', function (e) {
 // ===== Init core (View Transitions compatible) =====
 var _pageInited = false;
 function initPage() {
+  initToolsStack();
   if (_pageInited) return;
   _pageInited = true;
   initBackToTop();
