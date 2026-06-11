@@ -9,6 +9,13 @@ const categories = TOOL_STAGES.map((stage) => ({
   tools: TOOLS.filter((tool) => tool.stage === stage.name),
 }));
 const tagCount = new Set(TOOLS.flatMap((tool) => tool.tags)).size;
+const tagStats = [...TOOLS.flatMap((tool) => tool.tags).reduce((map, tag) => {
+  map.set(tag, (map.get(tag) ?? 0) + 1);
+  return map;
+}, new Map<string, number>()).entries()]
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  .slice(0, 8)
+  .map(([tag, count]) => ({ tag, count }));
 const pad2 = (n: number) => String(n).padStart(2, "0");
 const logoUrl = (url: string) => {
   const domain = new URL(url).hostname.replace(/^www\./, "");
@@ -16,6 +23,7 @@ const logoUrl = (url: string) => {
 };
 const initialOf = (title: string) => title.trim().slice(0, 1).toUpperCase();
 const keyOf = (title: string) => title.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-").replace(/^-|-$/g, "");
+const stageId = (stage: string) => `stage-${keyOf(stage)}`;
 ---
 <BaseLayout
   active="tools"
@@ -51,219 +59,150 @@ const keyOf = (title: string) => title.toLowerCase().replace(/[^a-z0-9\u4e00-\u9
       <div><span class="label">理念</span><span class="value">降本增效，专注创造</span></div>
     </div>
 
+    <section class="tools-workbench" data-pagefind-ignore>
+      <div class="workbench-lead">
+        <span class="label">Workbench</span>
+        <h2>从想法到上线，一屏调度。</h2>
+        <p>把工具按真实工作流摆放：先判断机会，再做设计和研发，最后交付、增长、运营和沉淀。</p>
+      </div>
+      <div class="workbench-metrics">
+        <div><span>{TOOLS.length}</span><small>Total Tools</small></div>
+        <div><span>{TOOL_STAGES.length}</span><small>Workflow Stages</small></div>
+        <div><span>{defaultPinnedTools.length}</span><small>Pinned Entries</small></div>
+        <div><span>{tagCount}</span><small>Tool Tags</small></div>
+      </div>
+    </section>
+
+    <nav class="stage-rail" aria-label="工作流阶段">
+      <button type="button" class="active" data-filter="all">
+        <span>All</span>
+        <strong>全部</strong>
+        <em>{TOOLS.length}</em>
+      </button>
+      {categories.map((stage, index) => (
+        <button type="button" data-filter={stage.name} data-stage-target={`#${stageId(stage.name)}`}>
+          <span>{pad2(index + 1)} · {stage.english}</span>
+          <strong>{stage.name}</strong>
+          <em>{stage.tools.length}</em>
+        </button>
+      ))}
+    </nav>
+
     <section class="tools-console" data-pagefind-ignore>
       <div class="tools-search">
         <label for="tools-search-input">Search Stack</label>
-        <input id="tools-search-input" type="search" placeholder="搜索工具、用途或标签..." autocomplete="off" />
+        <input id="tools-search-input" type="search" placeholder="搜索工具、用途、阶段或标签..." autocomplete="off" />
       </div>
-      <div class="tools-filters" aria-label="工具分类筛选">
-        <button type="button" class="active" data-filter="all">全部</button>
-        {TOOL_STAGES.map((stage) => (
-          <button type="button" data-filter={stage.name}>{stage.name}</button>
+      <div class="tools-console-side">
+        <div class="tools-view-toggle" aria-label="工具视图">
+          <button type="button" class="active" data-view="balanced">标准</button>
+          <button type="button" data-view="compact">紧凑</button>
+        </div>
+        <p class="tools-result" data-tools-summary>{TOOLS.length} tools ready</p>
+      </div>
+      <div class="tools-filters" aria-label="工具标签速筛">
+        <button type="button" data-tag-filter="all" class="active">全部标签</button>
+        {tagStats.map((item) => (
+          <button type="button" data-tag-filter={item.tag}>{item.tag}<span>{item.count}</span></button>
         ))}
       </div>
     </section>
 
-    <section class="tools-pinned" data-pinned-section>
-      <header class="section-head">
-        <h3>常用工具</h3>
-        <span class="latin">Pinned Stack</span>
-        <span class="count"><em>{pinnedLimit}</em> 个入口 · 点击后自动排序</span>
-      </header>
-      <div class="tool-card-grid">
-        {TOOLS.map((tool, index) => (
-          <a
-            class="tool-card"
-            href={tool.url}
-            target="_blank"
-            rel="noreferrer"
-            data-tool-card
-            data-pinned-card
-            data-stage={tool.stage}
-            data-tool-key={keyOf(tool.title)}
-            data-default-pinned={tool.pinned ? "true" : "false"}
-            data-default-rank={index}
-            data-search={`${tool.title} ${tool.description} ${tool.stage} ${tool.role} ${tool.tags.join(" ")}`.toLowerCase()}
-          >
-            <div class="tool-card-top">
-              <span class="tool-logo" aria-hidden="true">
-                <span>{initialOf(tool.title)}</span>
-                <img src={logoUrl(tool.url)} alt="" loading="lazy" onerror="this.style.display='none'" />
-              </span>
-              <span class="tool-card-stage">{tool.stage}</span>
-            </div>
-            <h2>{tool.title}</h2>
-            <p>{tool.description}</p>
-            <div class="tool-card-foot">
-              <span>{tool.role}</span>
-              <span>OPEN</span>
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
-
-    <section class="tools-flow">
-      <header class="section-head">
-        <h3>流程索引</h3>
-        <span class="latin">Workflow Index</span>
-        <span class="count"><em>{TOOL_STAGES.length}</em> Stages</span>
-      </header>
-
-      {categories.map((category, stageIndex) => (
-        <section class="tool-stage" data-stage-section={category.name}>
-          <div class="tool-stage-head">
-            <span class="num">{pad2(stageIndex + 1)}</span>
-            <div>
-              <h2>{category.name}</h2>
-              <p>{category.summary}</p>
-            </div>
-            <span class="english">{category.english}</span>
-          </div>
-          <div class="tool-table">
-            {category.tools.map((tool, toolIndex) => (
-              <a
-                class="tool-row"
-                href={tool.url}
-                target="_blank"
-                rel="noreferrer"
-                data-tool-card
-                data-stage={tool.stage}
-                data-tool-key={keyOf(tool.title)}
-                data-search={`${tool.title} ${tool.description} ${tool.stage} ${tool.role} ${tool.tags.join(" ")}`.toLowerCase()}
-              >
-                <span class="num">{pad2(toolIndex + 1)}</span>
-                <span class="tool-logo tool-logo-sm" aria-hidden="true">
+    <div class="tools-workspace" data-tools-workspace data-view="balanced">
+      <section class="tools-pinned" data-pinned-section>
+        <header class="section-head">
+          <h3>快捷启动</h3>
+          <span class="latin">Launchpad</span>
+          <span class="count"><em>{pinnedLimit}</em> 个入口 · 点击后自动排序</span>
+        </header>
+        <div class="tool-card-grid">
+          {TOOLS.map((tool, index) => (
+            <a
+              class="tool-card"
+              href={tool.url}
+              target="_blank"
+              rel="noreferrer"
+              data-tool-card
+              data-tool-kind="pinned"
+              data-pinned-card
+              data-stage={tool.stage}
+              data-tool-key={keyOf(tool.title)}
+              data-default-pinned={tool.pinned ? "true" : "false"}
+              data-default-rank={index}
+              data-search={`${tool.title} ${tool.description} ${tool.stage} ${tool.role} ${tool.tags.join(" ")}`.toLowerCase()}
+              data-tags={tool.tags.join("|").toLowerCase()}
+            >
+              <div class="tool-card-top">
+                <span class="tool-logo" aria-hidden="true">
                   <span>{initialOf(tool.title)}</span>
                   <img src={logoUrl(tool.url)} alt="" loading="lazy" onerror="this.style.display='none'" />
                 </span>
-                <span class="main">
-                  <strong>{tool.title}</strong>
-                  <small>{tool.description}</small>
-                </span>
-                <span class="role">{tool.role}</span>
-                <span class="tags">{tool.tags.slice(0, 3).join(" / ")}</span>
-              </a>
-            ))}
-          </div>
-        </section>
-      ))}
-      <p class="tools-empty" hidden data-tools-empty>没有匹配到工具。换个关键词，或者先把它加入这套 Stack。</p>
-    </section>
+                <span class="tool-card-stage">{tool.stage}</span>
+              </div>
+              <h2>{tool.title}</h2>
+              <p>{tool.description}</p>
+              <div class="tool-card-tags">
+                {tool.tags.slice(0, 3).map((tag) => <span>{tag}</span>)}
+              </div>
+              <div class="tool-card-foot">
+                <span>{tool.role}</span>
+                <span>OPEN</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section class="tools-flow">
+        <header class="section-head">
+          <h3>流程索引</h3>
+          <span class="latin">Workflow Index</span>
+          <span class="count"><em>{TOOL_STAGES.length}</em> Stages</span>
+        </header>
+
+        {categories.map((category, stageIndex) => (
+          <section class="tool-stage" id={stageId(category.name)} data-stage-section={category.name}>
+            <div class="tool-stage-head">
+              <span class="num">{pad2(stageIndex + 1)}</span>
+              <div>
+                <h2>{category.name}</h2>
+                <p>{category.summary}</p>
+              </div>
+              <span class="stage-count">{category.tools.length} Tools</span>
+              <span class="english">{category.english}</span>
+            </div>
+            <div class="tool-table">
+              {category.tools.map((tool, toolIndex) => (
+                <a
+                  class="tool-row"
+                  href={tool.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  data-tool-card
+                  data-tool-kind="row"
+                  data-stage={tool.stage}
+                  data-tool-key={keyOf(tool.title)}
+                  data-search={`${tool.title} ${tool.description} ${tool.stage} ${tool.role} ${tool.tags.join(" ")}`.toLowerCase()}
+                  data-tags={tool.tags.join("|").toLowerCase()}
+                >
+                  <span class="num">{pad2(toolIndex + 1)}</span>
+                  <span class="tool-logo tool-logo-sm" aria-hidden="true">
+                    <span>{initialOf(tool.title)}</span>
+                    <img src={logoUrl(tool.url)} alt="" loading="lazy" onerror="this.style.display='none'" />
+                  </span>
+                  <span class="main">
+                    <strong>{tool.title}</strong>
+                    <small>{tool.description}</small>
+                  </span>
+                  <span class="role">{tool.role}</span>
+                  <span class="tags">{tool.tags.slice(0, 3).join(" / ")}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        ))}
+        <p class="tools-empty" hidden data-tools-empty>没有匹配到工具。换个关键词，或者先把它加入这套 Stack。</p>
+      </section>
+    </div>
   </div>
-
-  <script is:inline>
-    (function () {
-      function initToolsStack() {
-        var root = document.querySelector(".tools-console");
-        if (!root || root.dataset.toolsStackReady === "true") return;
-        root.dataset.toolsStackReady = "true";
-
-        var input = document.getElementById("tools-search-input");
-        var filters = Array.prototype.slice.call(document.querySelectorAll("[data-filter]"));
-        var cards = Array.prototype.slice.call(document.querySelectorAll("[data-tool-card]"));
-        var pinnedCards = Array.prototype.slice.call(document.querySelectorAll("[data-pinned-card]"));
-        var sections = Array.prototype.slice.call(document.querySelectorAll("[data-stage-section]"));
-        var pinnedSection = document.querySelector("[data-pinned-section]");
-        var empty = document.querySelector("[data-tools-empty]");
-        var activeButton = document.querySelector("[data-filter].active");
-        var currentStage = activeButton ? activeButton.getAttribute("data-filter") || "all" : "all";
-        var pinnedLimit = 9;
-        var storageKey = "lili-tools-clicks";
-
-        function isVisibleTool(el) {
-          return !el.hidden;
-        }
-
-        function readClicks() {
-          try {
-            return JSON.parse(localStorage.getItem(storageKey) || "{}");
-          } catch (e) {
-            return {};
-          }
-        }
-
-        function writeClicks(clicks) {
-          try {
-            localStorage.setItem(storageKey, JSON.stringify(clicks));
-          } catch (e) {}
-        }
-
-        function clickScore(card, clicks) {
-          return Number(clicks[card.dataset.toolKey || ""] || 0);
-        }
-
-        function updatePinnedRanking() {
-          var clicks = readClicks();
-          var visiblePinned = pinnedCards.filter(isVisibleTool);
-          visiblePinned.sort(function (a, b) {
-            var scoreDiff = clickScore(b, clicks) - clickScore(a, clicks);
-            if (scoreDiff) return scoreDiff;
-            var pinnedDiff = (b.dataset.defaultPinned === "true" ? 1 : 0) - (a.dataset.defaultPinned === "true" ? 1 : 0);
-            if (pinnedDiff) return pinnedDiff;
-            return Number(a.dataset.defaultRank || 0) - Number(b.dataset.defaultRank || 0);
-          });
-
-          pinnedCards.forEach(function (card) {
-            card.style.order = "";
-          });
-          visiblePinned.forEach(function (card, index) {
-            card.style.order = String(index);
-            if (index >= pinnedLimit) card.hidden = true;
-          });
-        }
-
-        function applyFilter() {
-          var query = input ? input.value.trim().toLowerCase() : "";
-          var visibleCount = 0;
-
-          cards.forEach(function (card) {
-            var stageMatch = currentStage === "all" || card.dataset.stage === currentStage;
-            var textMatch = !query || (card.dataset.search || "").indexOf(query) >= 0;
-            var visible = stageMatch && textMatch;
-            card.hidden = !visible;
-            if (visible) visibleCount += 1;
-          });
-
-          updatePinnedRanking();
-
-          sections.forEach(function (section) {
-            var visibleRows = Array.prototype.slice.call(section.querySelectorAll("[data-tool-card]")).filter(isVisibleTool).length;
-            var stageMatch = currentStage === "all" || section.dataset.stageSection === currentStage;
-            section.hidden = !stageMatch || visibleRows === 0;
-          });
-
-          if (pinnedSection) {
-            var visiblePinned = Array.prototype.slice.call(pinnedSection.querySelectorAll("[data-tool-card]")).filter(isVisibleTool).length;
-            pinnedSection.hidden = visiblePinned === 0;
-          }
-
-          if (empty) empty.hidden = visibleCount > 0;
-        }
-
-        filters.forEach(function (button) {
-          button.addEventListener("click", function () {
-            currentStage = button.dataset.filter || "all";
-            filters.forEach(function (item) { item.classList.toggle("active", item === button); });
-            applyFilter();
-          });
-        });
-
-        if (input) input.addEventListener("input", applyFilter);
-        cards.forEach(function (card) {
-          card.addEventListener("click", function () {
-            var key = card.dataset.toolKey;
-            if (!key) return;
-            var clicks = readClicks();
-            clicks[key] = Number(clicks[key] || 0) + 1;
-            writeClicks(clicks);
-          });
-        });
-        applyFilter();
-      }
-
-      initToolsStack();
-      document.addEventListener("astro:page-load", initToolsStack);
-    })();
-  </script>
 </BaseLayout>

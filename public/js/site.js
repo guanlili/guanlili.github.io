@@ -169,13 +169,19 @@ function initToolsStack() {
 
   var input = document.getElementById('tools-search-input');
   var filters = Array.prototype.slice.call(document.querySelectorAll('[data-filter]'));
+  var tagFilters = Array.prototype.slice.call(document.querySelectorAll('[data-tag-filter]'));
+  var viewButtons = Array.prototype.slice.call(document.querySelectorAll('[data-view]'));
   var cards = Array.prototype.slice.call(document.querySelectorAll('[data-tool-card]'));
   var pinnedCards = Array.prototype.slice.call(document.querySelectorAll('[data-pinned-card]'));
   var sections = Array.prototype.slice.call(document.querySelectorAll('[data-stage-section]'));
   var pinnedSection = document.querySelector('[data-pinned-section]');
+  var workspace = document.querySelector('[data-tools-workspace]');
+  var summary = document.querySelector('[data-tools-summary]');
   var empty = document.querySelector('[data-tools-empty]');
   var activeButton = document.querySelector('[data-filter].active');
   var currentStage = activeButton ? activeButton.getAttribute('data-filter') || 'all' : 'all';
+  var activeTagButton = document.querySelector('[data-tag-filter].active');
+  var currentTag = activeTagButton ? activeTagButton.getAttribute('data-tag-filter') || 'all' : 'all';
   var pinnedLimit = 9;
   var storageKey = 'lili-tools-clicks';
 
@@ -223,14 +229,17 @@ function initToolsStack() {
 
   function applyFilter() {
     var query = input ? input.value.trim().toLowerCase() : '';
+    var visibleKeys = {};
     var visibleCount = 0;
 
     cards.forEach(function (card) {
       var stageMatch = currentStage === 'all' || card.dataset.stage === currentStage;
       var textMatch = !query || (card.dataset.search || '').indexOf(query) >= 0;
-      var visible = stageMatch && textMatch;
+      var tags = (card.dataset.tags || '').toLowerCase();
+      var tagMatch = currentTag === 'all' || tags.split('|').indexOf(currentTag.toLowerCase()) !== -1;
+      var visible = stageMatch && textMatch && tagMatch;
       card.hidden = !visible;
-      if (visible) visibleCount += 1;
+      if (visible && card.dataset.toolKey) visibleKeys[card.dataset.toolKey] = true;
     });
 
     updatePinnedRanking();
@@ -246,6 +255,12 @@ function initToolsStack() {
       pinnedSection.hidden = visiblePinned === 0;
     }
 
+    visibleCount = Object.keys(visibleKeys).length;
+    if (summary) {
+      var stageLabel = currentStage === 'all' ? '全部阶段' : currentStage;
+      var tagLabel = currentTag === 'all' ? '全部标签' : currentTag;
+      summary.textContent = visibleCount + ' tools · ' + stageLabel + ' · ' + tagLabel;
+    }
     if (empty) empty.hidden = visibleCount > 0;
   }
 
@@ -254,6 +269,28 @@ function initToolsStack() {
       currentStage = button.dataset.filter || 'all';
       filters.forEach(function (item) { item.classList.toggle('active', item === button); });
       applyFilter();
+
+      var target = button.getAttribute('data-stage-target');
+      if (target && currentStage !== 'all') {
+        var el = document.querySelector(target);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  tagFilters.forEach(function (button) {
+    button.addEventListener('click', function () {
+      currentTag = button.dataset.tagFilter || 'all';
+      tagFilters.forEach(function (item) { item.classList.toggle('active', item === button); });
+      applyFilter();
+    });
+  });
+
+  viewButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+      var view = button.dataset.view || 'balanced';
+      viewButtons.forEach(function (item) { item.classList.toggle('active', item === button); });
+      if (workspace) workspace.dataset.view = view;
     });
   });
 
