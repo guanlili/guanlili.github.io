@@ -1,0 +1,101 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SITE } from "../../consts";
+
+const projects = (await getCollection("portfolio")).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+const featured = projects.filter((p) => p.data.featured);
+const types = [...new Set(projects.map((p) => p.data.type))];
+const tagCount = new Set(projects.flatMap((p) => p.data.tags)).size;
+const pad2 = (n: number) => String(n).padStart(2, "0");
+const ymd = (d: Date) => `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.getDate())}`;
+const slugOf = (id: string) => id.replace(/\.(md|markdown)$/i, "");
+---
+<BaseLayout
+  active="portfolio"
+  title="作品集"
+  description="一些黑客松、AI 实验、工程工具和自己认真折腾过的小项目。"
+>
+  <div class="article-shell">
+    <section class="page-head portfolio-head">
+      <div>
+        <div class="kicker">
+          <span class="dot"></span>
+          <span>Portfolio · 作品集</span>
+          <span class="rule"></span>
+          <span>Things I Built</span>
+        </div>
+        <h1>作品集，<br />把想法做成东西。</h1>
+        <p class="sub">一些黑客松、AI 实验、工程工具和自己认真折腾过的小项目。这里记录的不只是结果，也包括问题、取舍和我当时怎么想。</p>
+      </div>
+      <div class="right">
+        <div class="big">{projects.length}</div>
+        <div>Total Works</div>
+        <div style="margin-top:10px">· · ·</div>
+        <div>{types.length} Types</div>
+        <div>{tagCount} Tags</div>
+      </div>
+    </section>
+
+    <div class="portfolio-strip">
+      <div><span class="label">主线</span><span class="value">AI · 工程效率</span></div>
+      <div><span class="label">项目类型</span><span class="value">{types.join(" / ")}</span></div>
+      <div><span class="label">精选项目</span><span class="value">{featured.length} 个</span></div>
+      <div><span class="label">联系</span><span class="value">{SITE.email}</span></div>
+    </div>
+
+    {featured.length > 0 && (
+      <section class="portfolio-featured">
+        <header class="section-head">
+          <h3>精选作品</h3>
+          <span class="latin">Featured Works</span>
+          <span class="count"><em>{featured.length}</em> 个 / 共 {projects.length} 个</span>
+        </header>
+        <div class="featured-grid">
+          {featured.map((project, index) => (
+            <a class="featured-work" href={`/portfolio/${slugOf(project.id)}/`}>
+              {project.data.cover && <img src={project.data.cover} alt="" loading={index === 0 ? "eager" : "lazy"} />}
+              <div class="body">
+                <div class="meta">
+                  <span>No. {pad2(index + 1)}</span>
+                  <span>{project.data.type}</span>
+                  <span>{ymd(project.data.date)}</span>
+                </div>
+                <h2>{project.data.title}</h2>
+                <p>{project.data.summary}</p>
+                <div class="impact">{project.data.impact}</div>
+                <div class="tags">
+                  {project.data.tags.slice(0, 5).map((tag) => <span>{tag}</span>)}
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="portfolio-index">
+      <header class="section-head">
+        <h3>项目索引</h3>
+        <span class="latin">Project Index</span>
+        <span class="count"><em>{projects.length}</em> Works</span>
+      </header>
+      <div class="project-table">
+        {projects.map((project, index) => (
+          <a class="project-row" href={`/portfolio/${slugOf(project.id)}/`}>
+            <span class="num">{pad2(index + 1)}</span>
+            <span class="main">
+              <strong>{project.data.title}</strong>
+              <small>{project.data.summary}</small>
+            </span>
+            <span class="type">{project.data.type}</span>
+            <span class="role">{project.data.role}</span>
+            <span class="date">{ymd(project.data.date)}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

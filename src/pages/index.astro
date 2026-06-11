@@ -11,6 +11,7 @@ const posts = await getPosts();
 const featured = posts[0];
 const recent = posts.slice(1, 11);
 const host = new URL(SITE.url).host;
+const focusPillars = ["AI 工程", "测试开发", "独立产品", "效率工具"];
 
 // real metrics
 const totalChars = posts.reduce(
@@ -34,6 +35,33 @@ const sidebarTags = [...counts.entries()]
   .sort((a, b) => b[1] - a[1])
   .slice(0, 18)
   .map(([tag, n]) => ({ tag, size: sizeFor(n) }));
+const topTags = [...counts.entries()]
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "zh-CN"))
+  .slice(0, 6)
+  .map(([tag, n]) => ({ tag, n }));
+
+const sectionNames = new Map<string, string>([
+  ["AI", "AI"],
+  ["Tutorials", "教程"],
+  ["study", "学习"],
+  ["blogSet", "博客搭建"],
+  ["findJob", "求职"],
+  ["myself", "随笔"],
+  ["problemList", "问题排查"],
+  ["leetcode", "算法"],
+  ["essays", "杂文"],
+]);
+const sections = new Map<string, number>();
+for (const p of posts) {
+  const raw = (p.entry.filePath ?? p.entry.id).split("/").slice(-2, -1)[0] || "blog";
+  const name = sectionNames.get(raw) ?? raw;
+  sections.set(name, (sections.get(name) ?? 0) + 1);
+}
+const topSections = [...sections.entries()]
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "zh-CN"))
+  .slice(0, 5)
+  .map(([name, n]) => ({ name, n }));
+const latestRead = featured ? readingStats(featured.entry.body ?? "") : null;
 
 // motto headline, split across two lines like the design
 const motto = "离开世界之前 一切都是过程";
@@ -58,6 +86,9 @@ const line2 = mp.slice(Math.ceil(mp.length / 2)).join(" ");
         <p class="sub">
           这里是 <em>{SITE.author}（{SITE.handle}）</em> 的个人博客——一个写 AI、聊架构、记录踩坑日常的小角落。写作是把模糊的思考晾在阳光下，逼自己说人话。
         </p>
+        <div class="focus-pills" aria-label="写作方向">
+          {focusPillars.map((item) => <span>{item}</span>)}
+        </div>
       </div>
       <div class="right">
         <div class="issue">{posts.length}</div>
@@ -74,6 +105,37 @@ const line2 = mp.slice(Math.ceil(mp.length / 2)).join(" ");
       <div><span class="label">最新更新</span><span class="value">{latestYmd}</span></div>
       <div><span class="label">订阅 · 公众号</span><span class="value">微信「{SITE.wechatName}」</span></div>
     </div>
+
+    <section class="home-radar" aria-label="博客写作雷达">
+      <div class="radar-card radar-lead">
+        <span class="label">Current Signal</span>
+        <strong>{featured?.entry.data.title}</strong>
+        <small>{latestRead ? `${latestRead.minutes} min · 约 ${latestRead.chars} 字` : "最近更新"}</small>
+      </div>
+      <div class="radar-card">
+        <span class="label">Hot Tags</span>
+        <div class="radar-tags">
+          {topTags.map((item) => (
+            <a href={`/tags/#${encodeURIComponent(item.tag)}`}>
+              <span>{item.tag}</span>
+              <em>{item.n}</em>
+            </a>
+          ))}
+        </div>
+      </div>
+      <div class="radar-card">
+        <span class="label">Knowledge Map</span>
+        <div class="radar-bars">
+          {topSections.map((item) => (
+            <div>
+              <span>{item.name}</span>
+              <i style={`--w:${Math.max(12, (item.n / posts.length) * 100)}%`}></i>
+              <em>{item.n}</em>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
 
     {featured && <Feature post={featured} />}
 

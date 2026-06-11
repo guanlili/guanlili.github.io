@@ -1,0 +1,99 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SITE } from "../../consts";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("portfolio");
+  return projects.map((project) => ({
+    params: { slug: project.id.replace(/\.(md|markdown)$/i, "") },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content, headings } = await render(project);
+const d = project.data.date;
+const pad2 = (n: number) => String(n).padStart(2, "0");
+const ymd = `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.getDate())}`;
+const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+const links = project.data.links ?? {};
+---
+<BaseLayout
+  active="portfolio"
+  title={project.data.title}
+  description={project.data.summary}
+  image={project.data.cover ?? SITE.avatar}
+  type="article"
+  article={{ date: d, author: SITE.author, tags: project.data.tags }}
+>
+  <div class="article-shell">
+    <section class="portfolio-case-head">
+      <div class="kicker">
+        <span class="rule"></span>
+        <span>{project.data.type} · {project.data.status}</span>
+        <span class="rule"></span>
+      </div>
+      <h1>{project.data.title}</h1>
+      <p>{project.data.summary}</p>
+      <div class="case-byline">
+        <span>{ymd}</span>
+        <span class="sep"></span>
+        <span>{project.data.role}</span>
+      </div>
+    </section>
+
+    {project.data.cover && (
+      <figure class="portfolio-cover">
+        <img src={project.data.cover} alt="" loading="eager" decoding="async" fetchpriority="high" />
+      </figure>
+    )}
+
+    <div class="portfolio-meta-strip">
+      <div><span class="label">类型</span><span class="value">{project.data.type}</span></div>
+      <div><span class="label">角色</span><span class="value">{project.data.role}</span></div>
+      <div><span class="label">状态</span><span class="value">{project.data.status}</span></div>
+      <div><span class="label">时间</span><span class="value">{ymd}</span></div>
+    </div>
+
+    <div class="portfolio-case-layout">
+      <article class="long-form portfolio-case-body">
+        {project.data.impact && (
+          <blockquote>{project.data.impact}</blockquote>
+        )}
+        <Content />
+      </article>
+
+      <aside class="portfolio-case-side">
+        <div class="side-block">
+          <h5>Tech Stack</h5>
+          <div class="case-tags">
+            {project.data.tags.map((tag) => <span>{tag}</span>)}
+          </div>
+        </div>
+
+        {(links.github || links.demo || links.article) && (
+          <div class="side-block">
+            <h5>Links</h5>
+            <div class="case-links">
+              {links.github && <a href={links.github} target="_blank" rel="noopener">GitHub ↗</a>}
+              {links.demo && <a href={links.demo} target="_blank" rel="noopener">Demo ↗</a>}
+              {links.article && <a href={links.article}>相关文章 →</a>}
+            </div>
+          </div>
+        )}
+
+        {toc.length > 0 && (
+          <div class="side-block case-toc">
+            <h5>Case Study</h5>
+            <ol>
+              {toc.map((h) => (
+                <li data-depth={h.depth}><a href={`#${h.slug}`}>{h.text}</a></li>
+              ))}
+            </ol>
+          </div>
+        )}
+      </aside>
+    </div>
+  </div>
+</BaseLayout>

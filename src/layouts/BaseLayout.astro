@@ -7,6 +7,8 @@ import { absoluteUrl, siteImage } from "../lib/media";
 import { getPosts } from "../lib/posts";
 import pkg from "../../package.json";
 import { ClientRouter } from "astro:transitions";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import "../styles/site.less";
 
 interface Props {
@@ -34,6 +36,9 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const normalizedImage = siteImage(image) ?? SITE.avatar;
 const ogImage = absoluteUrl(normalizedImage, SITE.url);
 const swVersion = process.env.GITHUB_SHA || pkg.version;
+const siteScriptVersion =
+  process.env.GITHUB_SHA ||
+  createHash("sha256").update(readFileSync("public/js/site.js")).digest("hex").slice(0, 10);
 
 // Recommended articles for search empty state (build-time)
 const allPosts = await getPosts();
@@ -211,7 +216,7 @@ const recommendedPosts = searchPosts.slice(0, 8);
     <svg class="icon"><use href="#icon-arrow-up"></use></svg>
   </div>
 
-  <script is:inline defer src="/js/site.js"></script>
+  <script is:inline defer src={`/js/site.js?v=${encodeURIComponent(siteScriptVersion)}`}></script>
 
   <script is:inline define:vars={{ swVersion }}>
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js?v=' + encodeURIComponent(swVersion)); }

@@ -82,6 +82,57 @@ function initNavToggle() {
   });
 }
 
+// ===== Image lightbox (global) =====
+// Click a zoomable image to view it full-screen. Covers the article body,
+// the About long-form, and the About QR banners (微信公众号 / 小红书).
+function initLightbox() {
+  var overlay = null;
+
+  function open(src, alt) {
+    if (overlay) return;
+    overlay = document.createElement('div');
+    overlay.className = 'img-lightbox';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-label', '图片放大');
+    var img = document.createElement('img');
+    img.src = src;
+    img.alt = alt || '';
+    overlay.appendChild(img);
+    document.body.appendChild(overlay);
+    overlay.offsetHeight;
+    overlay.classList.add('open');
+    document.body.classList.add('no-scroll');
+  }
+
+  function close() {
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    var el = overlay;
+    setTimeout(function () { el.remove(); }, 260);
+    overlay = null;
+    document.body.classList.remove('no-scroll');
+  }
+
+  document.addEventListener('click', function (e) {
+    var img = e.target;
+    if (!img || img.tagName !== 'IMG') return;
+    if (img.closest('.img-lightbox')) return;            // ignore the overlay itself
+    if (!img.closest('.article-content, .long-form, .channel-hero')) return;
+    if (img.getAttribute('fetchpriority')) return;        // skip the eager cover
+    if (img.closest('a')) return;                         // skip linked images
+    e.preventDefault();
+    open(img.currentSrc || img.src, img.alt);
+  });
+
+  document.addEventListener('click', function (e) {
+    if (overlay && e.target === overlay) close();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay) close();
+  });
+}
+
 // ===== Content enhancements (lightweight) =====
 function initResponsiveTables() {
   document.querySelectorAll('.article-content table, .long-form table').forEach(function (table) {
@@ -108,6 +159,152 @@ function initLazyImages() {
   document.querySelectorAll('.article-content img:not([loading]), .long-form img:not([loading])').forEach(function (img) {
     img.setAttribute('loading', 'lazy');
   });
+}
+
+// ===== Tools stack filters =====
+function initToolsStack() {
+  var root = document.querySelector('.tools-console');
+  if (!root || root.dataset.toolsStackReady === 'true') return;
+  root.dataset.toolsStackReady = 'true';
+
+  var input = document.getElementById('tools-search-input');
+  var filters = Array.prototype.slice.call(document.querySelectorAll('[data-filter]'));
+  var tagFilters = Array.prototype.slice.call(document.querySelectorAll('[data-tag-filter]'));
+  var viewButtons = Array.prototype.slice.call(document.querySelectorAll('[data-view]'));
+  var cards = Array.prototype.slice.call(document.querySelectorAll('[data-tool-card]'));
+  var pinnedCards = Array.prototype.slice.call(document.querySelectorAll('[data-pinned-card]'));
+  var sections = Array.prototype.slice.call(document.querySelectorAll('[data-stage-section]'));
+  var pinnedSection = document.querySelector('[data-pinned-section]');
+  var workspace = document.querySelector('[data-tools-workspace]');
+  var summary = document.querySelector('[data-tools-summary]');
+  var empty = document.querySelector('[data-tools-empty]');
+  var activeButton = document.querySelector('[data-filter].active');
+  var currentStage = activeButton ? activeButton.getAttribute('data-filter') || 'all' : 'all';
+  var activeTagButton = document.querySelector('[data-tag-filter].active');
+  var currentTag = activeTagButton ? activeTagButton.getAttribute('data-tag-filter') || 'all' : 'all';
+  var pinnedLimit = 9;
+  var storageKey = 'lili-tools-clicks';
+
+  function isVisibleTool(el) {
+    return !el.hidden;
+  }
+
+  function readClicks() {
+    try {
+      return JSON.parse(localStorage.getItem(storageKey) || '{}');
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function writeClicks(clicks) {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(clicks));
+    } catch (e) {}
+  }
+
+  function clickScore(card, clicks) {
+    return Number(clicks[card.dataset.toolKey || ''] || 0);
+  }
+
+  function updatePinnedRanking() {
+    var clicks = readClicks();
+    var visiblePinned = pinnedCards.filter(isVisibleTool);
+    visiblePinned.sort(function (a, b) {
+      var scoreDiff = clickScore(b, clicks) - clickScore(a, clicks);
+      if (scoreDiff) return scoreDiff;
+      var pinnedDiff = (b.dataset.defaultPinned === 'true' ? 1 : 0) - (a.dataset.defaultPinned === 'true' ? 1 : 0);
+      if (pinnedDiff) return pinnedDiff;
+      return Number(a.dataset.defaultRank || 0) - Number(b.dataset.defaultRank || 0);
+    });
+
+    pinnedCards.forEach(function (card) {
+      card.style.order = '';
+    });
+    visiblePinned.forEach(function (card, index) {
+      card.style.order = String(index);
+      if (index >= pinnedLimit) card.hidden = true;
+    });
+  }
+
+  function applyFilter() {
+    var query = input ? input.value.trim().toLowerCase() : '';
+    var visibleKeys = {};
+    var visibleCount = 0;
+
+    cards.forEach(function (card) {
+      var stageMatch = currentStage === 'all' || card.dataset.stage === currentStage;
+      var textMatch = !query || (card.dataset.search || '').indexOf(query) >= 0;
+      var tags = (card.dataset.tags || '').toLowerCase();
+      var tagMatch = currentTag === 'all' || tags.split('|').indexOf(currentTag.toLowerCase()) !== -1;
+      var visible = stageMatch && textMatch && tagMatch;
+      card.hidden = !visible;
+      if (visible && card.dataset.toolKey) visibleKeys[card.dataset.toolKey] = true;
+    });
+
+    updatePinnedRanking();
+
+    sections.forEach(function (section) {
+      var visibleRows = Array.prototype.slice.call(section.querySelectorAll('[data-tool-card]')).filter(isVisibleTool).length;
+      var stageMatch = currentStage === 'all' || section.dataset.stageSection === currentStage;
+      section.hidden = !stageMatch || visibleRows === 0;
+    });
+
+    if (pinnedSection) {
+      var visiblePinned = Array.prototype.slice.call(pinnedSection.querySelectorAll('[data-tool-card]')).filter(isVisibleTool).length;
+      pinnedSection.hidden = visiblePinned === 0;
+    }
+
+    visibleCount = Object.keys(visibleKeys).length;
+    if (summary) {
+      var stageLabel = currentStage === 'all' ? '全部阶段' : currentStage;
+      var tagLabel = currentTag === 'all' ? '全部标签' : currentTag;
+      summary.textContent = visibleCount + ' tools · ' + stageLabel + ' · ' + tagLabel;
+    }
+    if (empty) empty.hidden = visibleCount > 0;
+  }
+
+  filters.forEach(function (button) {
+    button.addEventListener('click', function () {
+      currentStage = button.dataset.filter || 'all';
+      filters.forEach(function (item) { item.classList.toggle('active', item === button); });
+      applyFilter();
+
+      var target = button.getAttribute('data-stage-target');
+      if (target && currentStage !== 'all') {
+        var el = document.querySelector(target);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  tagFilters.forEach(function (button) {
+    button.addEventListener('click', function () {
+      currentTag = button.dataset.tagFilter || 'all';
+      tagFilters.forEach(function (item) { item.classList.toggle('active', item === button); });
+      applyFilter();
+    });
+  });
+
+  viewButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+      var view = button.dataset.view || 'balanced';
+      viewButtons.forEach(function (item) { item.classList.toggle('active', item === button); });
+      if (workspace) workspace.dataset.view = view;
+    });
+  });
+
+  if (input) input.addEventListener('input', applyFilter);
+  cards.forEach(function (card) {
+    card.addEventListener('click', function () {
+      var key = card.dataset.toolKey;
+      if (!key) return;
+      var clicks = readClicks();
+      clicks[key] = Number(clicks[key] || 0) + 1;
+      writeClicks(clicks);
+    });
+  });
+  applyFilter();
 }
 
 // ===== Search overlay — loads on first interaction =====
@@ -154,11 +351,13 @@ document.querySelector('.search-icon')?.addEventListener('click', function (e) {
 // ===== Init core (View Transitions compatible) =====
 var _pageInited = false;
 function initPage() {
+  initToolsStack();
   if (_pageInited) return;
   _pageInited = true;
   initBackToTop();
   initThemeToggle();
   initNavToggle();
+  initLightbox();
   initResponsiveTables();
   initResponsiveVideos();
   initLazyImages();

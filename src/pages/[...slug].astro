@@ -5,7 +5,14 @@ import { SITE } from "../consts";
 import { readingStats } from "../lib/permalink";
 import { excerpt, firstImage, getPosts, type LoadedPost } from "../lib/posts";
 import { siteImage } from "../lib/media";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import "../styles/less/post-article.less";
+
+const articleEnhanceHash = createHash("sha256")
+  .update(readFileSync("public/js/site-article.js"))
+  .digest("hex")
+  .slice(0, 10);
 
 export async function getStaticPaths() {
   const posts = await getPosts(); // newest-first, date-prefixed only
@@ -58,6 +65,7 @@ const noN = pad(n); // article number, e.g. 01 (newest)
 const { chars, minutes } = readingStats(post.body ?? "");
 
 const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+const sectionCount = headings.filter((h) => h.depth === 2).length;
 const olderPath = older ? older.route.path : null;
 const newerPath = newer ? newer.route.path : null;
 const description = data.description || data.subtitle || excerpt(post.body ?? "", 155);
@@ -65,6 +73,7 @@ const coverImage =
   siteImage(data.cover) ??
   siteImage(data["header-img"]) ??
   siteImage(firstImage(post.body ?? ""));
+const articleScriptVersion = process.env.GITHUB_SHA || articleEnhanceHash;
 ---
 <BaseLayout
   title={data.title}
@@ -98,6 +107,7 @@ const coverImage =
     {coverImage && (
       <figure class="article-cover">
         <img src={coverImage} alt="" loading="eager" decoding="async" fetchpriority="high" />
+        <figcaption>{data.title}</figcaption>
       </figure>
     )}
 
@@ -105,8 +115,25 @@ const coverImage =
       <div><span class="label">发表</span><span class="value">{ymd}</span></div>
       <div><span class="label">字数</span><span class="value">约 {chars} 字</span></div>
       <div><span class="label">阅读</span><span class="value">{minutes} min</span></div>
-      <div><span class="label">标签</span><span class="value" style="font-size:14px" data-pagefind-weight="4">{data.tags.length ? data.tags.join(" · ") : "—"}</span></div>
+      <div>
+        <span class="label">标签</span>
+        <span class="value article-tag-line" data-pagefind-weight="4">
+          {data.tags.length ? data.tags.map((tag) => <a href={`/tags/#${encodeURIComponent(tag)}`}>{tag}</a>) : "—"}
+        </span>
+      </div>
     </div>
+
+    <aside class="reading-brief" data-pagefind-ignore>
+      <div>
+        <span class="label">Brief</span>
+        <p>{description}</p>
+      </div>
+      <div class="brief-stats">
+        <span><strong>{sectionCount || toc.length}</strong> Sections</span>
+        <span><strong>{minutes}</strong> Min</span>
+        <span><strong>{chars}</strong> Chars</span>
+      </div>
+    </aside>
 
     <div class="article-body">
       <aside class="gutter" aria-hidden="true">
@@ -121,7 +148,7 @@ const coverImage =
 
       {toc.length > 0 && (
         <nav class="toc" aria-label="文章目录">
-          <div class="lbl">In This Issue</div>
+          <div class="lbl">In This Issue · {sectionCount || toc.length}</div>
           <ol>
             {toc.map((h) => (
               <li data-depth={h.depth}><a href={`#${h.slug}`}>{h.text}</a></li>
@@ -159,7 +186,7 @@ const coverImage =
 
     {related.length > 0 && (
       <section class="related-posts">
-        <div class="related-label">相关推荐 / Related</div>
+        <div class="related-label">继续阅读 / Related</div>
         <div class="related-list">
           {related.map((r: { title: string; path: string; tags: string[]; date: Date }) => {
             const rd = r.date;
@@ -198,5 +225,5 @@ const coverImage =
     </div>
   </div>
 
-  <script is:inline defer src="/js/site-article.js"></script>
+  <script is:inline defer src={`/js/site-article.js?v=${encodeURIComponent(articleScriptVersion)}`}></script>
 </BaseLayout>

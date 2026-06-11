@@ -42,7 +42,7 @@ html { scroll-behavior: smooth; }
 
 body {
   .sans-serif;
-  font-size: 16px;
+  font-size: var(--text-base);
   color: var(--color-text);
   background-color: var(--color-bg);
   background-image: linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
@@ -59,9 +59,9 @@ body.no-scroll {
 }
 
 p {
-  margin: 24px 0;
+  margin: var(--space-6) 0;
   @media screen and (max-width: 768px) {
-    & { margin: 20px 0; }
+    & { margin: var(--space-5) 0; }
   }
 }
 
@@ -69,9 +69,9 @@ h1, h2, h3, h4, h5, h6 {
   .serif;
   line-height: @lh-tight;
   font-weight: 600;
-  letter-spacing: -0.005em;
+  letter-spacing: 0;
 }
-h4 { font-size: 21px; }
+h4 { font-size: var(--text-subhead); }
 
 a {
   color: var(--color-text);
@@ -123,6 +123,35 @@ code, kbd, pre, samp { .monospace; }
   vertical-align: -0.125em;
 }
 
+// ── Image lightbox (global) ────────────────────────────────────
+// Used by the article body, the About long-form, and the About QR banners.
+// Toggled by initLightbox() in site.js.
+.img-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, .82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity .25s ease;
+  cursor: zoom-out;
+}
+.img-lightbox.open { opacity: 1; }
+.img-lightbox img {
+  max-width: 92vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border: 0;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, .4);
+  cursor: default;
+  margin: 0;
+}
+
 // ── Back to top ────────────────────────────────────────────────
 #back-to-top {
   position: fixed;
@@ -141,7 +170,7 @@ code, kbd, pre, samp { .monospace; }
   visibility: hidden;
   transform: translateY(10px);
   transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-  box-shadow: 0 2px 8px var(--color-shadow);
+  box-shadow: var(--surface-shadow-soft);
 
   .icon { width: 18px; height: 18px; }
   &:hover,
@@ -171,7 +200,7 @@ button:focus-visible,
 [tabindex]:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: var(--radius-xs);
 }
 
 // ── View Transitions (astro:transitions) ────────────────────────

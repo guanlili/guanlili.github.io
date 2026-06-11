@@ -42,6 +42,53 @@
   --sans:  -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Source Han Sans SC", "Helvetica Neue", Arial, sans-serif;
   --mono:  ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "JetBrains Mono", "Liberation Mono", monospace;
 
+  // ---- Design system: rhythm, type scale, surfaces, motion ----
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 48px;
+  --space-10: 64px;
+  --space-11: 72px;
+  --space-12: 88px;
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-pill: 999px;
+
+  --text-xs: 10px;
+  --text-sm: 10.5px;
+  --text-meta: 11px;
+  --text-body-sm: 13.5px;
+  --text-body: 14.5px;
+  --text-base: 16px;
+  --text-prose: 16.5px;
+  --text-lede: 18px;
+  --text-subhead: 20px;
+  --text-title-sm: 22px;
+  --text-title-md: 28px;
+
+  --tracking-meta: .16em;
+  --tracking-loose: .22em;
+
+  --line-body: 1.7;
+  --line-prose: 1.88;
+  --line-title: 1.18;
+
+  --surface-border: 1px solid var(--rule);
+  --surface-border-soft: 1px solid var(--rule-soft);
+  --surface-shadow: 0 10px 30px var(--color-shadow-md);
+  --surface-shadow-soft: 0 8px 26px var(--color-shadow);
+  --hover-lift: translateY(-2px);
+  --motion-fast: .14s ease;
+  --motion: .18s ease;
+
   // ---- Layout: fluid magazine width ----
   // Scales with the viewport so the page fills more of large displays
   // (e.g. ~1300px on a 13.6" laptop, capped ~1500px on a 27" monitor) while
@@ -84,6 +131,7 @@
 
   // Utility
   --color-inverse: var(--paper);
+  --color-shadow-sm: rgba(0, 0, 0, 0.045);
   --color-shadow: rgba(0, 0, 0, 0.06);
   --color-shadow-md: rgba(0, 0, 0, 0.10);
   --color-shadow-lg: rgba(26, 24, 19, 0.16);
@@ -116,6 +164,7 @@
   --color-surface-soft: rgba(27, 24, 19, 0.78);
   --color-nav-fixed-bg: rgba(21, 19, 14, 0.94);
   --color-shadow: rgba(0, 0, 0, 0.2);
+  --color-shadow-sm: rgba(0, 0, 0, 0.16);
   --color-shadow-md: rgba(0, 0, 0, 0.35);
   --color-shadow-lg: rgba(0, 0, 0, 0.45);
   --color-overlay: rgba(0, 0, 0, 0.75);

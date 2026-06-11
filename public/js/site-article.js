@@ -107,14 +107,17 @@ function initTOC() {
     function openSheet() {
       sheet.classList.add('toc-sheet-open');
       sheet.setAttribute('aria-hidden', 'false');
+      fab.setAttribute('aria-expanded', 'true');
       backdrop.classList.add('open');
     }
     function closeSheet() {
       sheet.classList.remove('toc-sheet-open');
       sheet.setAttribute('aria-hidden', 'true');
+      fab.setAttribute('aria-expanded', 'false');
       backdrop.classList.remove('open');
     }
 
+    fab.setAttribute('aria-expanded', 'false');
     fab.addEventListener('click', openSheet);
     backdrop.addEventListener('click', closeSheet);
     sheet.querySelector('.toc-sheet-close').addEventListener('click', closeSheet);
@@ -130,57 +133,8 @@ function initTOC() {
 }
 
 // ===== Image lightbox (zero-dependency) =====
-function initLightbox() {
-  var overlay = null;
-
-  function open(src, alt) {
-    if (overlay) return;
-    overlay = document.createElement('div');
-    overlay.className = 'img-lightbox';
-    overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-label', '图片放大');
-    var img = document.createElement('img');
-    img.src = src;
-    img.alt = alt || '';
-    overlay.appendChild(img);
-    document.body.appendChild(overlay);
-    overlay.offsetHeight;
-    overlay.classList.add('open');
-    document.body.classList.add('no-scroll');
-  }
-
-  function close() {
-    if (!overlay) return;
-    overlay.classList.remove('open');
-    var el = overlay;
-    setTimeout(function () {
-      el.remove();
-    }, 260);
-    overlay = null;
-    document.body.classList.remove('no-scroll');
-  }
-
-  document.addEventListener('click', function (e) {
-    var img = e.target;
-    if (img.tagName !== 'IMG') return;
-    var scope = img.closest('.article-content, .long-form');
-    if (!scope) return;
-    if (img.getAttribute('fetchpriority')) return;
-    if (img.closest('a')) return;
-
-    e.preventDefault();
-    open(img.src, img.alt);
-  });
-
-  document.addEventListener('click', function (e) {
-    if (!overlay) return;
-    if (e.target === overlay) close();
-  });
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && overlay) close();
-  });
-}
+// Image lightbox now lives globally in site.js (initLightbox) so it also
+// covers non-article pages (e.g. the About QR banners).
 
 // ===== Code blocks: copy button + language label =====
 function initCodeBlocks() {
@@ -200,15 +154,15 @@ function initCodeBlocks() {
     btn.className = 'code-copy';
     btn.setAttribute('aria-label', '复制代码');
     btn.setAttribute('title', '复制');
-    btn.textContent = 'Copy';
+    btn.textContent = '复制';
     pre.appendChild(btn);
 
     btn.addEventListener('click', function () {
       navigator.clipboard.writeText(code.textContent).then(function () {
-        btn.textContent = 'Copied!';
+        btn.textContent = '已复制';
         btn.classList.add('code-copy-done');
         setTimeout(function () {
-          btn.textContent = 'Copy';
+          btn.textContent = '复制';
           btn.classList.remove('code-copy-done');
         }, 1500);
       });
@@ -236,6 +190,45 @@ function initProgressBar() {
   update();
   onScroll(update);
   window.addEventListener('resize', update);
+}
+
+// ===== Image captions — use Markdown alt text as a quiet caption =====
+function initImageCaptions() {
+  var content = document.querySelector('.article-content');
+  if (!content) return;
+  content.querySelectorAll('img').forEach(function (img) {
+    if (img.dataset.captionReady === 'true') return;
+    img.dataset.captionReady = 'true';
+
+    var alt = (img.getAttribute('alt') || '').trim();
+    if (!alt || img.closest('a')) return;
+    var next = img.nextElementSibling;
+    if (next && next.classList && next.classList.contains('image-caption')) return;
+
+    var caption = document.createElement('small');
+    caption.className = 'image-caption';
+    caption.textContent = alt;
+    img.insertAdjacentElement('afterend', caption);
+  });
+}
+
+// ===== Hide duplicated Markdown title at the start of migrated posts =====
+function initDuplicateTitle() {
+  var content = document.querySelector('.article-content');
+  var title = document.querySelector('.article-head h1');
+  if (!content || !title) return;
+
+  var firstHeading = content.querySelector('h1:first-child, h2:first-child');
+  if (!firstHeading || firstHeading.dataset.duplicateTitleChecked === 'true') return;
+  firstHeading.dataset.duplicateTitleChecked = 'true';
+
+  function normalize(text) {
+    return (text || '').replace(/[#\s，,。.!！?？:："'“”‘’「」]/g, '').toLowerCase();
+  }
+
+  if (normalize(firstHeading.textContent) === normalize(title.textContent)) {
+    firstHeading.classList.add('is-duplicate-title');
+  }
 }
 
 // ===== Mermaid diagrams (loaded from CDN only when needed) =====
@@ -303,11 +296,12 @@ function initArticlePage() {
   if (_articleInited) return;
   _articleInited = true;
   initTOC();
-  initLightbox();
   initCodeBlocks();
   initProgressBar();
+  initDuplicateTitle();
   initHeadingAnchors();
   initContentLinks();
+  initImageCaptions();
   initMermaid();
 }
 
