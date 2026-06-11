@@ -3,6 +3,7 @@ import type { LoadedPost } from "../lib/posts";
 import { excerpt } from "../lib/posts";
 import { readingStats } from "../lib/permalink";
 import { SITE } from "../consts";
+import { siteImage } from "../lib/media";
 
 const { post } = Astro.props as { post: LoadedPost };
 const { data } = post.entry;
@@ -11,6 +12,7 @@ const pad2 = (n: number) => String(n).padStart(2, "0");
 const ymd = `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.getDate())}`;
 const { minutes, chars } = readingStats(post.entry.body ?? "");
 const pull = data.subtitle || excerpt(post.entry.body ?? "", 60);
+const cover = siteImage(data.cover) ?? siteImage(data["header-img"]);
 ---
 <article class="feature">
   <div>
@@ -35,9 +37,10 @@ const pull = data.subtitle || excerpt(post.entry.body ?? "", 60);
     </div>
   </div>
   <aside class="visual">
+    {cover && <img class="feature-cover" src={cover} alt="" loading="eager" decoding="async" />}
     <div class="quote">
       <div class="body">{pull}</div>
-      <div class="attr">— 文中金句</div>
+      <div class="attr">— 本期摘要</div>
     </div>
     <div class="tag-row">
       <span class="lbl">Tagged</span>
