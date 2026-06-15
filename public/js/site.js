@@ -33,6 +33,21 @@ function initBackToTop() {
 }
 
 // ===== Light / dark theme toggle =====
+// Re-apply the saved theme. View Transitions swap in the new page's <html>
+// element, which has no data-theme, so the attribute must be restored on swap.
+function applyStoredTheme() {
+  var saved = localStorage.getItem('theme');
+  var dark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  var html = document.documentElement;
+  if (dark) {
+    html.setAttribute('data-theme', 'dark');
+  } else {
+    html.removeAttribute('data-theme');
+  }
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', dark ? '#15130e' : '#f1ede3');
+}
+
 function initThemeToggle() {
   var btn = document.getElementById('theme-toggle-btn');
   var iconSvg = document.getElementById('theme-icon-svg');
@@ -364,6 +379,7 @@ function initPage() {
 }
 
 document.addEventListener('astro:after-swap', function () {
+  applyStoredTheme();
   _pageInited = false;
   window._scrollCallbacks = [];
   window._scrollTicking = false;

@@ -19,6 +19,7 @@
     "check:dist": "node scripts/check-dist.mjs",
     "images:report": "node scripts/report-images.mjs",
     "images:report:write": "node scripts/report-images.mjs --write",
+    "images:optimize": "node scripts/optimize-portfolio-images.mjs",
     "verify": "npm run check:content && npm run check && npm run build && npm run check:dist",
     "profile:build": "node scripts/profile-build.mjs",
     "preview": "astro preview",
@@ -30,7 +31,7 @@
   "dependencies": {
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.3.0",
-    "astro": "^6.4.2",
+    "astro": "^6.4.7",
     "probe-image-size": "^7.3.0"
   },
   "devDependencies": {
