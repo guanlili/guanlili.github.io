@@ -6,7 +6,7 @@ type: "Hackathon"
 role: "Tech Lead / Full-stack / AI Engineer"
 status: "Hackathon Demo"
 tags: ["React", "TanStack Start", "LLM", "ASR", "AIGC", "Hackathon"]
-cover: "/img/portfolio/watch-buddy-portfolio-cover.png"
+cover: "/img/portfolio/watch-buddy-portfolio-cover.webp"
 impact: "在 2026.5.31 的 10 小时黑客松窗口内跑通从用户画像、赛中情绪陪伴到赛后文案海报生成的完整观赛闭环，获得评委一致好评。"
 featured: true
 links:
