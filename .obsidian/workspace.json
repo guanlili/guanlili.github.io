@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "src/content/blog/AI「style」/2026-06-11-claude-model-naming-guide.md",
+                "file": "src/content/blog/AI「style」/2026-06-18-你以为在配火锅其实在构建人生.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2026-06-11-claude-model-naming-guide"
+              "title": "2026-06-18-你以为在配火锅其实在构建人生"
             }
           }
         ]
@@ -183,10 +183,33 @@
       "bases:新建数据库": false
     }
   },
-  "active": "3b823f1f06329b7d",
+  "active": "4fe34995b96f1d0e",
   "lastOpenFiles": [
-    "占位.md",
+    "dist/pagefind/fragment/zh-cn_fe37821.pf_fragment",
+    "dist/pagefind/fragment/zh-cn_f91ae93.pf_fragment",
+    "dist/pagefind/fragment/zh-cn_f6b4f88.pf_fragment",
+    "dist/pagefind/fragment/zh-cn_f369b44.pf_fragment",
+    "dist/pagefind/fragment/zh-cn_f34f75a.pf_fragment",
+    "dist/pagefind/fragment/zh-cn_efdb4e8.pf_fragment",
+    "dist/pagefind/fragment/zh-cn_edc9995.pf_fragment",
+    "dist/pagefind/fragment/zh-cn_ed77305.pf_fragment",
+    "dist/pagefind/fragment/zh-cn_ebe82dd.pf_fragment",
+    "dist/pagefind/fragment/zh-cn_e9a5cf3.pf_fragment",
+    "dist/pagefind/fragment/zh-cn_e98cf77.pf_fragment",
+    "src/content/blog/AI「style」/2026-06-18-你以为在配火锅其实在构建人生~.md",
+    "src/content/blog/AI/2026-06-16-用了三天支付宝AI版-我突然理解了微信为什么不着急.md",
+    "src/content/blog/AI「style」/2026-06-18-你以为在配火锅其实在构建人生.md",
+    "src/content/blog/study/2020-04-02-python常用库.md",
+    "image-risk-report.md",
     "src/content/blog/AI「style」/2026-06-11-claude-model-naming-guide.md",
+    "src/content/blog/AI「style」/2024-04-10-如何度量代码生成大模型的准确性？.md",
+    "src/content/blog/AI「style」/2022-02-17-程序员深度体验ChatGPT一周竟然...md",
+    "src/content/blog/AI/2026-06-16-用了三天支付宝AI版-我突然理解了微信为什么不着急_2~.md",
+    "wechat-21x9-cover.png",
+    "src/content/blog/AI/2026-06-16-用了三天支付宝AI版-我突然理解了微信为什么不着急~.md",
+    "src/content/blog/AI/2026-06-16-用了三天支付宝AI版，我突然理解了微信为什么不着急.md",
+    "src/content/blog/AI/2026-06-16-支付宝AI版用了三天.md",
+    "占位.md",
     "2026-06-11-claude-cover-235.png",
     "src/content/blog/myself「style」/2022-11-11-「校招」吊打面试官系列课程.md",
     "src/content/blog/myself「style」/2022-12-30-为我的2022画上一个句点。.md",
@@ -199,28 +222,6 @@
     "src/content/blog/AITutorials/2025-04-10-玩转Dify：三步设置，让你的AI从“智障”变“专家.md",
     "src/content/blog/AITutorials/2025-10-01-🚀 实战部署：单卡4090跑通DeepSeek-OCR本地WebUI.md",
     "src/content/blog/AITutorials/2025-10-20-🚀 实战进阶：将 ComfyUI 封装为 AI 视频生成网站 (FastAPI + WebUI).md",
-    "src/content/blog/Tutorials/2024-03-01-AI辅助编程工具调研.md",
-    "src/content/blog/AITutorials/2025-09-01-队长别开枪！Java硬接AI模型当场暴毙，我用这套方案救回了项目.md",
-    "src/content/blog/AITutorials/2025-08-01-我刚拿到了8卡GPU服务器的钥匙，现在我慌得一批…….md",
-    "src/content/blog/AITutorials/2024-03-20-二次开发tabby插件.md",
-    "src/content/blog/AITutorials/2024-03-01-AI辅助编程工具调研.md",
-    "src/content/blog/Tutorials/2024-03-20-二次开发tabby插件.md",
-    "src/content/blog/Tutorials/2025-04-10-玩转Dify：三步设置，让你的AI从“智障”变“专家.md",
-    "src/content/blog/Tutorials/2025-8-20-高效 PDF 解析利器：MinerU 实战避坑与高精度调优指南.md",
-    "src/content/about.md",
-    "src/content/blog/AITutorials",
-    "src/content/blog/myself「style」/2025-12-01-ChatGPT 三周年：硅基黎明下的BUG自救指南.md",
-    "src/content/blog/myself「style」/2025-12-31-穿越周期：2025年终总结.md",
-    "src/content/blog/myself「style」/2023-12-12-有关业务api的一点思考.md",
-    "src/content/blog/myself「style」/2022-08-18-如何优雅的活得更久.md",
-    "dist/pagefind/pagefind-worker.js",
-    "dist/pagefind/pagefind-entry.json",
-    "dist/pagefind/wasm.unknown.pagefind",
-    "dist/pagefind/pagefind-component-ui.js",
-    "dist/pagefind/pagefind-component-ui.css",
-    "dist/pagefind/pagefind-modular-ui.js",
-    "dist/pagefind/pagefind-modular-ui.css",
-    "dist/pagefind/pagefind-ui.js",
-    "dist/pagefind/pagefind-ui.css"
+    "src/content/blog/Tutorials/2024-03-01-AI辅助编程工具调研.md"
   ]
 }
