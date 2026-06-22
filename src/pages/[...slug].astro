@@ -2,17 +2,10 @@
 import { render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { SITE } from "../consts";
-import { readingStats } from "../lib/permalink";
-import { excerpt, firstImage, getPosts, type LoadedPost } from "../lib/posts";
+import { excerpt, firstImage, getPosts, readingStats, type LoadedPost } from "../lib/posts";
 import { siteImage } from "../lib/media";
-import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { ARTICLE_SCRIPT_VERSION } from "../lib/asset-version";
 import "../styles/less/post-article.less";
-
-const articleEnhanceHash = createHash("sha256")
-  .update(readFileSync("public/js/site-article.js"))
-  .digest("hex")
-  .slice(0, 10);
 
 export async function getStaticPaths() {
   const posts = await getPosts(); // newest-first, date-prefixed only
@@ -73,7 +66,7 @@ const coverImage =
   siteImage(data.cover) ??
   siteImage(data["header-img"]) ??
   siteImage(firstImage(post.body ?? ""));
-const articleScriptVersion = process.env.GITHUB_SHA || articleEnhanceHash;
+const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
 ---
 <BaseLayout
   title={data.title}

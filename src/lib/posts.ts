@@ -63,6 +63,14 @@ export function plainText(body: string): string {
     .trim();
 }
 
+// Rough reading metrics for CJK-heavy text. Counts non-whitespace characters
+// of the *prose* — code fences, markdown syntax, and HTML are stripped first
+// (via plainText) so code-heavy posts don't report inflated counts.
+export function readingStats(body: string): { chars: number; minutes: number } {
+  const chars = plainText(body).replace(/\s+/g, "").length;
+  return { chars, minutes: Math.max(1, Math.round(chars / 350)) };
+}
+
 // Plain-text preview from Markdown source for listing pages.
 export function excerpt(body: string, n = 110): string {
   const text = plainText(body);

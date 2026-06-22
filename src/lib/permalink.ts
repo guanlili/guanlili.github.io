@@ -38,9 +38,3 @@ export function postRoute(filePathOrName: string): PostRoute {
   const param = `${year}/${month}/${day}/${slug}`;
   return { year, month, day, slug, param, path: `/${param}/` };
 }
-
-// Rough reading metrics for CJK-heavy text: count non-whitespace characters.
-export function readingStats(body: string): { chars: number; minutes: number } {
-  const chars = body.replace(/\s+/g, "").length;
-  return { chars, minutes: Math.max(1, Math.round(chars / 350)) };
-}
