@@ -25,6 +25,13 @@ export function initSearch() {
   var catalogLoading = null;
   var quickSearches = ['Dify', 'RAG', 'PDF解析', '本地部署', '代码生成', 'ComfyUI'];
 
+  function syncSearchQuery(query) {
+    var url = new URL(window.location.href);
+    if (query) url.searchParams.set('q', query);
+    else url.searchParams.delete('q');
+    window.history.replaceState(null, '', url.pathname + url.search + url.hash);
+  }
+
   function escapeHtml(value) {
     return String(value || '').replace(/[&<>"']/g, function (ch) {
       return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
@@ -265,6 +272,7 @@ export function initSearch() {
   function runSearch() {
     var query = searchInput.value.trim();
     var current = ++seq;
+    syncSearchQuery(query);
     if (!query && !activeTags.length) {
       renderRecommended();
       return;
@@ -398,6 +406,9 @@ export function initSearch() {
     }
   });
 
-  // Open now (search was triggered by user action before module loaded)
+  // Open now (search was triggered by user action before module loaded).
+  // Preserve a query from a shared /?q= link before opening the overlay.
+  var initialQuery = new URLSearchParams(window.location.search).get('q');
+  if (initialQuery && initialQuery.trim()) searchInput.value = initialQuery.trim();
   openSearch();
 }

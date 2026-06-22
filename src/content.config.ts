@@ -13,6 +13,9 @@ const blog = defineCollection({
     description: z.string().optional(),
     subtitle: z.string().optional(),
     author: z.string().optional(),
+    // Keep unfinished posts in the repository without exposing them in routes,
+    // feeds, search, or related-content lists.
+    draft: z.boolean().default(false),
     tags: z
       .union([z.array(z.string()), z.string().transform((s) => [s])])
       .default([]),

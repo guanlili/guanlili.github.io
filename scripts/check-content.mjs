@@ -93,7 +93,7 @@ function checkFrontmatter(file, text) {
   if (dateValue) {
     const date = new Date(dateValue);
     if (Number.isNaN(date.getTime())) errors.push(`${file}: invalid date frontmatter`);
-    else if (date > today) errors.push(`${file}: date is in the future (${dateValue})`);
+    else if (date > today) warnings.push(`${file}: scheduled for future publication (${dateValue})`);
   }
 }
 

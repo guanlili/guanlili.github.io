@@ -336,6 +336,13 @@ function loadSearch() {
   return searchQueue;
 }
 
+// Search engines and shared links use /?q=keyword (the same URL advertised
+// by the SearchAction JSON-LD). Open the overlay and hydrate that query.
+function initSearchFromUrl() {
+  var query = new URLSearchParams(window.location.search).get('q');
+  if (query && query.trim()) loadSearch();
+}
+
 // Preload search module on ⌘K hover/focus (lightweight hint)
 document.querySelector('.search-icon')?.addEventListener('mouseenter', function () {
   if (!searchLoaded) loadSearch();
@@ -367,6 +374,7 @@ document.querySelector('.search-icon')?.addEventListener('click', function (e) {
 var _pageInited = false;
 function initPage() {
   initToolsStack();
+  initSearchFromUrl();
   if (_pageInited) return;
   _pageInited = true;
   initBackToTop();

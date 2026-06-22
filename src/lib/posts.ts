@@ -10,6 +10,10 @@ export interface LoadedPost {
 // files without a valid date-prefixed name were never live, so we skip them.
 const VALID = /^\d{4}-\d{1,2}-\d{1,2}-/;
 
+function isPublished(entry: CollectionEntry<"blog">, now = new Date()): boolean {
+  return !entry.data.draft && entry.data.date.getTime() <= now.getTime();
+}
+
 function rawName(entry: CollectionEntry<"blog">): string {
   return (entry.filePath ?? entry.id)
     .split("/")
@@ -20,7 +24,7 @@ function rawName(entry: CollectionEntry<"blog">): string {
 export async function getPosts(): Promise<LoadedPost[]> {
   const all = await getCollection("blog");
   const posts = all
-    .filter((e) => VALID.test(rawName(e)))
+    .filter((e) => VALID.test(rawName(e)) && isPublished(e))
     .map((entry) => ({ entry, route: postRoute(entry.filePath ?? entry.id) }));
   posts.sort(
     (a, b) => b.entry.data.date.getTime() - a.entry.data.date.getTime(),
@@ -31,7 +35,9 @@ export async function getPosts(): Promise<LoadedPost[]> {
 // Files Jekyll (and therefore this site) does not publish — reported, not built.
 export async function getSkippedPosts(): Promise<string[]> {
   const all = await getCollection("blog");
-  return all.filter((e) => !VALID.test(rawName(e))).map((e) => e.filePath ?? e.id);
+  return all
+    .filter((e) => !VALID.test(rawName(e)) || !isPublished(e))
+    .map((e) => e.filePath ?? e.id);
 }
 
 // Sexagenary (干支) year name, e.g. 2026 → 丙午.

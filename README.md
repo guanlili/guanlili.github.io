@@ -112,6 +112,7 @@ description: "用于 SEO、RSS 和文章摘要的描述，可选"
 author: "lili"
 tags: [AI, 架构]
 cover: "/img/example.jpg"
+draft: false # 写作中可设为 true；草稿和未来日期文章不会发布
 ---
 ```
 
@@ -126,6 +127,7 @@ URL 会按文件名自动生成，例如：
 - 文件名需要保持 `YYYY-MM-DD-标题.md` 或 `YYYY-M-D-标题.md` 格式。
 - `title` 和 `date` 是必填字段。
 - `tags` 可以写成数组，也可以写成单个字符串。
+- `draft: true` 的文章不会出现在页面、RSS 或站内搜索；未来日期文章会在日期到达后自动发布。
 - 如果 frontmatter 里文本包含英文双引号，外层建议使用单引号。
 - 本地图片应放在 `public/img/` 下，并用 `/img/...` 引用。
 
