@@ -1,0 +1,30 @@
+// Page-scoped styles for the tags page. Extracted from editorial-pages.less so it
+// only loads on its own route. Uses global CSS custom properties (var(--…)).
+
+// ── Tags ───────────────────────────────────────────────────────
+.tags-overview { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; padding: 72px 0; border-bottom: 1px solid var(--rule); }
+@media (max-width: 860px) { .tags-overview { grid-template-columns: 1fr; gap: 28px; } }
+.tags-overview .cloud-big { display: flex; flex-wrap: wrap; gap: 4px 18px; align-items: baseline; font-family: var(--serif); }
+.tags-overview .cloud-big a { color: var(--ink-2); line-height: 1.25; position: relative; transition: color .14s; }
+.tags-overview .cloud-big a::before { content: "#"; color: var(--ink-4); font-family: var(--mono); font-size: .7em; margin-right: 2px; vertical-align: 0.15em; }
+.tags-overview .cloud-big a:hover { color: var(--accent); }
+.tags-overview .cloud-big a[data-w="xl"] { font-size: 44px; font-weight: 600; color: var(--ink); }
+.tags-overview .cloud-big a[data-w="lg"] { font-size: 32px; font-weight: 500; }
+.tags-overview .cloud-big a[data-w="md"] { font-size: 22px; }
+.tags-overview .cloud-big a[data-w="sm"] { font-size: 16px; color: var(--ink-3); }
+.tags-overview .legend p { font-size: 14.5px; color: var(--ink-3); line-height: 1.75; margin: 0 0 16px; }
+.tags-overview .legend ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+.tags-overview .legend li { display: flex; align-items: center; gap: 10px; border-bottom: 1px dotted var(--rule); padding: 6px 0; }
+.tags-overview .legend .swatch { width: 26px; height: 4px; background: var(--accent); opacity: .9; flex-shrink: 0; }
+.tag-section { padding: 40px 0 16px; border-bottom: 1px solid var(--rule); }
+.tag-section:target { background: var(--hl); padding-left: 16px; padding-right: 16px; margin-left: -16px; margin-right: -16px; }
+.tag-section h3 { font-family: var(--serif); font-size: 32px; font-weight: 600; margin: 0 0 6px; color: var(--ink); display: flex; align-items: baseline; gap: 14px; }
+.tag-section h3 .pound { color: var(--accent); font-family: var(--mono); font-size: 24px; font-weight: 500; }
+.tag-section h3 .count { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); letter-spacing: .12em; text-transform: uppercase; margin-left: auto; }
+.tag-section .lede { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--ink-3); line-height: 1.55; margin: 0 0 22px; }
+.tag-section .items { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); border-top: 1px solid var(--rule-soft); }
+.tag-section .items a { display: flex; flex-direction: column; gap: 6px; padding: 16px 18px 16px 0; border-bottom: 1px solid var(--rule-soft); border-right: 1px solid var(--rule-soft); }
+.tag-section .items a:hover { background: var(--hl); }
+.tag-section .items a .ttl { font-family: var(--serif); font-size: 15px; font-weight: 500; color: var(--ink); line-height: 1.35; }
+.tag-section .items a:hover .ttl { color: var(--accent); }
+.tag-section .items a .date { font-family: var(--mono); font-size: 10.5px; color: var(--ink-4); letter-spacing: .04em; }

@@ -53,21 +53,23 @@ function initThemeToggle() {
   var iconSvg = document.getElementById('theme-icon-svg');
   if (!btn || !iconSvg) return;
 
-  if (document.documentElement.getAttribute('data-theme') === 'dark') {
-    iconSvg.innerHTML = '<use href="#icon-sun"></use>';
+  function reflect(dark) {
+    iconSvg.innerHTML = '<use href="#icon-' + (dark ? 'sun' : 'moon') + '"></use>';
+    btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+    btn.setAttribute('aria-label', dark ? '切换到浅色模式' : '切换到暗色模式');
   }
+  reflect(document.documentElement.getAttribute('data-theme') === 'dark');
   btn.addEventListener('click', function () {
     var html = document.documentElement;
     var dark = html.getAttribute('data-theme') !== 'dark';
     if (dark) {
       html.setAttribute('data-theme', 'dark');
       localStorage.setItem('theme', 'dark');
-      iconSvg.innerHTML = '<use href="#icon-sun"></use>';
     } else {
       html.removeAttribute('data-theme');
       localStorage.setItem('theme', 'light');
-      iconSvg.innerHTML = '<use href="#icon-moon"></use>';
     }
+    reflect(dark);
     var meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', dark ? '#15130e' : '#f1ede3');
   });
@@ -327,7 +329,12 @@ var searchLoaded = false;
 var searchQueue = null;
 
 function loadSearch() {
-  if (searchLoaded) return Promise.resolve();
+  // Already loaded → just reopen (the module exposes its open fn). Without this,
+  // the overlay could only ever be opened once per page load.
+  if (searchLoaded) {
+    if (window.__liliOpenSearch) window.__liliOpenSearch();
+    return Promise.resolve();
+  }
   if (searchQueue) return searchQueue;
   searchQueue = import('/js/site-search.js').then(function (mod) {
     mod.initSearch();

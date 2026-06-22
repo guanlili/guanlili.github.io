@@ -380,7 +380,25 @@ export function initSearch() {
   });
 
   // ── Overlay open / close ──────────────────────────────────────
+  // Element to restore focus to when the overlay closes (the trigger).
+  var lastFocused = null;
+
+  // Make everything except the overlay inert while it is open. `inert` removes
+  // those subtrees from the tab order and the accessibility tree, which both
+  // traps focus inside the dialog and hides the background from screen readers.
+  function setBackgroundInert(on) {
+    Array.prototype.forEach.call(document.body.children, function (el) {
+      if (el === searchPage) return;
+      if (on) el.setAttribute('inert', '');
+      else el.removeAttribute('inert');
+    });
+  }
+
   function openSearch() {
+    if (searchPage.classList.contains('search-active')) { searchInput.focus(); return; }
+    lastFocused = document.activeElement;
+    searchPage.removeAttribute('inert');
+    setBackgroundInert(true);
     searchPage.classList.add('search-active');
     document.body.classList.add('no-scroll');
     searchInput.focus();
@@ -393,9 +411,18 @@ export function initSearch() {
   function close() {
     searchPage.classList.remove('search-active');
     document.body.classList.remove('no-scroll');
+    searchPage.setAttribute('inert', '');
+    setBackgroundInert(false);
     activeTags = [];
     if (availableFilters) renderTagChips(availableFilters);
+    // Return focus to whatever opened the overlay (keyboard users).
+    if (lastFocused && typeof lastFocused.focus === 'function') {
+      try { lastFocused.focus(); } catch (e) { /* element gone */ }
+    }
   }
+
+  // Expose so site.js can reopen after the module has loaded once.
+  window.__liliOpenSearch = openSearch;
 
   if (searchClose) searchClose.addEventListener('click', function (e) { e.preventDefault(); close(); });
 

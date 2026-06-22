@@ -78,7 +78,8 @@ src/
     image-cache.mjs   # 构建期图片尺寸缓存
   styles/
     site.less         # 全局样式入口
-    editorial-pages.less
+    editorial-pages.less # 全站共享 chrome + 首页/列表样式
+    pages/            # 按路由懒加载的页面样式（tools/about/portfolio/archive/tags）
     less/             # 变量、基础样式、文章页、搜索等
   consts.ts           # 站点信息、导航、友链、平台配置
 

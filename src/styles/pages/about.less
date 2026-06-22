@@ -1,0 +1,171 @@
+// Page-scoped styles for the about page. Extracted from editorial-pages.less so it
+// only loads on its own route. Uses global CSS custom properties (var(--…)).
+
+// ── About ──────────────────────────────────────────────────────
+.about-grid { display: grid; grid-template-columns: 1fr 300px; gap: 52px; padding: 48px 0 64px; align-items: start; }
+@media (max-width: 980px) { .about-grid { grid-template-columns: 1fr; gap: 32px; } }
+.long-form { font-family: var(--sans); font-size: 16px; line-height: 1.88; color: var(--ink-2); max-width: 680px; overflow-wrap: break-word; }
+.long-form p { text-wrap: pretty; }
+
+.long-form .drop, .long-form > p:first-of-type::first-letter { font-family: var(--serif); float: left; font-size: 84px; line-height: .85; font-weight: 500; color: var(--accent); padding: 8px 12px 0 0; margin-top: 6px; }
+.long-form h2 { font-family: var(--serif); font-size: 26px; font-weight: 600; margin: 36px 0 10px; color: var(--ink); letter-spacing: -.005em; display: flex; align-items: baseline; gap: 16px; }
+.long-form h2::before { content: "§"; color: var(--accent); font-weight: 400; font-size: 22px; }
+.long-form h2 + .sub-h { font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-4); margin: -4px 0 18px; }
+.long-form h3 { font-family: var(--serif); font-size: 20px; font-weight: 600; margin: 28px 0 10px; color: var(--ink); }
+.long-form p { margin: 0 0 18px; }
+.long-form p strong { color: var(--ink); font-weight: 600; }
+.long-form a { color: var(--accent); border-bottom: 1px solid fade(#b8442f, 35%); }
+.long-form a:hover { color: var(--accent-ink); }
+.long-form ul, .long-form ol { padding-left: 24px; margin: 0 0 18px; }
+.long-form img { max-width: 100%; height: auto; border: 1px solid var(--rule); margin: 24px 0; }
+.long-form code { font-family: var(--mono); font-size: 14px; background: var(--hl); color: var(--accent-ink); padding: 1px 6px; border-radius: 2px; }
+.long-form blockquote { margin: 32px 0; padding: 14px 0 14px 22px; border-left: 3px solid var(--accent); font-family: var(--serif); font-style: italic; font-size: 18px; color: var(--ink); line-height: 1.6; }
+
+.timeline-mini { display: flex; flex-direction: column; border-top: 1px solid var(--rule); margin-top: 12px; }
+.timeline-mini .row { display: grid; grid-template-columns: 90px 1fr; padding: 14px 0; border-bottom: 1px solid var(--rule-soft); gap: 16px; align-items: baseline; }
+.timeline-mini .row .y { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: .04em; }
+.timeline-mini .row .b { font-family: var(--serif); font-size: 16px; color: var(--ink); line-height: 1.45; }
+.timeline-mini .row .b small { display: block; font-family: var(--sans); font-size: 13px; color: var(--ink-3); margin-top: 3px; }
+
+.about-side { display: flex; flex-direction: column; gap: 24px; position: sticky; top: 80px; align-self: start; }
+@media (max-width: 980px) { .about-side { position: static; } }
+.about-side .portrait { position: relative; background: var(--paper); border: 1px solid var(--rule); padding: 14px; }
+.about-side .portrait .img-box { aspect-ratio: 1/1; background: var(--bg-soft) center / cover; position: relative; overflow: hidden; }
+.about-side .portrait .img-box img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(.2) contrast(1.02); }
+.about-side .portrait .caption { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-top: 12px; display: flex; justify-content: space-between; }
+.about-side .portrait .caption .accent { color: var(--accent); }
+.about-side .quotebox { background: var(--ink); color: var(--bg); padding: 26px 24px; font-family: var(--serif); font-size: 17px; line-height: 1.5; position: relative; }
+[data-theme="dark"] .about-side .quotebox { background: var(--accent); color: #fff; }
+.about-side .quotebox::before { content: "「"; position: absolute; top: -2px; left: 12px; font-size: 56px; font-family: var(--serif); opacity: .35; line-height: 1; }
+.about-side .quotebox .attr { display: block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase; margin-top: 16px; opacity: .7; }
+.about-side .stat-strip { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--rule); }
+.about-side .stat-strip > div { padding: 18px 16px; border-right: 1px solid var(--rule-soft); border-bottom: 1px solid var(--rule-soft); }
+.about-side .stat-strip > div:nth-child(2n) { border-right: 0; }
+.about-side .stat-strip > div:nth-last-child(-n+2) { border-bottom: 0; }
+.about-side .stat-strip .lbl { font-family: var(--mono); font-size: 9.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-4); }
+.about-side .stat-strip .val { font-family: var(--serif); font-size: 24px; color: var(--ink); margin-top: 4px; font-variant-numeric: lining-nums; }
+
+// ── Follow / Subscribe (about #follow) ─────────────────────────
+.follow-block { padding: 36px 0 24px; border-top: 1px solid var(--rule); }
+.follow-block .head { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-bottom: 28px; }
+@media (max-width: 760px) { .follow-block .head { grid-template-columns: 1fr; gap: 16px; } }
+.follow-block .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.follow-block .kicker .rule { width: 32px; height: 1px; background: var(--accent); opacity: .5; }
+.follow-block h2 { font-family: var(--serif); font-size: clamp(26px, 3vw, 38px); font-weight: 600; margin: 0; color: var(--ink); line-height: 1.2; }
+.follow-block h2 small { display: block; font-family: var(--mono); font-size: 12px; font-weight: 400; color: var(--ink-3); letter-spacing: .14em; text-transform: uppercase; margin-top: 8px; }
+.follow-block .note { font-family: var(--sans); font-size: 13.5px; color: var(--ink-3); line-height: 1.7; text-align: right; }
+@media (max-width: 760px) { .follow-block .note { text-align: left; } }
+
+// Primary channels — two side-by-side hero cards (design's .primary-channels),
+// holding the real QR banner images. ★ badges + color-coding per design.
+.primary-channels { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 28px; }
+@media (max-width: 860px) { .primary-channels { grid-template-columns: 1fr; } }
+// overflow:visible overrides the global `article{overflow:hidden}` so the
+// top:-10px ★ badge isn't clipped.
+.channel-hero { position: relative; overflow: visible; background: var(--paper); border: 1px solid var(--ink); padding: 16px; transition: box-shadow .18s, transform .18s; }
+.channel-hero::before { z-index: 2; }
+.channel-hero:hover { box-shadow: 0 8px 28px var(--color-shadow-md); transform: translateY(-2px); }
+.channel-hero::before { position: absolute; top: -10px; left: 20px; font-family: var(--mono); font-size: 10px; letter-spacing: .22em; background: var(--accent); color: var(--paper); padding: 4px 10px; }
+.channel-hero.is-wechat::before { content: "★ 01 · WECHAT"; }
+.channel-hero.is-red::before { content: "★ 02 · RED"; }
+.channel-hero.is-red { border-color: #ff2741; }
+.channel-hero.is-red::before { background: #ff2741; }
+.channel-hero .label { text-align: right; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: var(--ink-4); padding: 12px 4px; }
+.channel-hero .label .accent { color: var(--accent); }
+.channel-hero.is-red .label .accent { color: #ff2741; }
+.channel-hero img { display: block; width: 100%; height: auto; border: 1px solid var(--rule-soft); cursor: zoom-in; }
+
+// Secondary platforms — compact list (ported from design)
+.secondary-channels { border: 1px solid var(--rule); background: var(--paper); margin-top: 24px; margin-bottom: 24px; }
+.secondary-channels .head-row { padding: 14px 22px; border-bottom: 1px solid var(--rule); font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-3); display: flex; justify-content: space-between; align-items: center; background: var(--bg-soft); }
+.secondary-channels .head-row .count em { color: var(--accent); font-style: normal; font-weight: 500; }
+.secondary-channels ul { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; }
+@media (max-width: 760px) { .secondary-channels ul { grid-template-columns: 1fr; } }
+.secondary-channels li a { display: grid; grid-template-columns: 36px 1fr auto; gap: 14px; padding: 14px 22px; align-items: center; border-bottom: 1px solid var(--rule-soft); border-right: 1px solid var(--rule-soft); transition: background .14s; }
+.secondary-channels li:nth-child(2n) a { border-right: 0; }
+@media (max-width: 760px) { .secondary-channels li a { border-right: 0; } }
+.secondary-channels li a:hover { background: var(--hl); }
+.secondary-channels li a:hover .nm { color: var(--accent); }
+.secondary-channels .badge { width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid var(--ink); font-family: var(--serif); font-size: 13px; font-weight: 600; color: var(--ink); background: var(--bg-soft); letter-spacing: -.02em; }
+.secondary-channels a:hover .badge { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+.secondary-channels .nm { font-family: var(--serif); font-size: 15px; font-weight: 600; color: var(--ink); line-height: 1.3; transition: color .14s; }
+.secondary-channels .nm small { display: block; font-family: var(--mono); font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-4); margin-top: 2px; font-weight: 400; }
+.secondary-channels .handle { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); letter-spacing: .04em; text-align: right; }
+.secondary-channels .handle .arr { display: block; font-size: 12px; color: var(--ink-4); margin-top: 2px; }
+.secondary-channels a:hover .handle .arr { color: var(--accent); }
+
+// Direct contact + RSS footnote row (ported from design)
+// ── Contact letter (.contact-letter) — editorial 信封 / letterhead card
+.contact-letter {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 36px;
+  align-items: center;
+  padding: 30px 34px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  box-shadow: inset 0 0 0 1px var(--bg-soft);
+}
+@media (max-width: 760px) {
+  .contact-letter { grid-template-columns: 1fr; gap: 22px; padding: 22px; }
+}
+.contact-letter .body { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.contact-letter .body .kicker {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--accent);
+}
+.contact-letter .body h3 {
+  font-family: var(--serif); font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 600; color: var(--ink); margin: 0; line-height: 1.3;
+}
+.contact-letter .cta {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 14px 18px; margin-top: 4px;
+  border: 1px solid var(--ink); background: var(--bg-soft);
+  text-decoration: none;
+  transition: background .14s, color .14s, border-color .14s;
+}
+.contact-letter .cta:hover { background: var(--accent); border-color: var(--accent); }
+.contact-letter .cta .addr {
+  font-family: var(--mono); font-size: 15px; color: var(--ink);
+  word-break: break-all; letter-spacing: -.005em;
+  transition: color .14s;
+}
+.contact-letter .cta .arrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--accent); white-space: nowrap;
+  transition: color .14s;
+}
+.contact-letter .cta:hover .addr,
+.contact-letter .cta:hover .arrow { color: var(--paper); }
+.contact-letter .body .note {
+  font-family: var(--sans); font-size: 13px; color: var(--ink-3);
+  line-height: 1.65; margin: 4px 0 0;
+}
+
+.contact-letter .stamp {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+@media (max-width: 760px) {
+  .contact-letter .stamp { flex-direction: row; justify-content: flex-start; gap: 16px; }
+}
+.contact-letter .seal {
+  width: 64px; height: 64px;
+  display: grid; place-items: center;
+  font-family: var(--serif); font-size: 30px; font-weight: 600;
+  color: var(--paper); background: var(--accent);
+  border: 2px solid var(--accent-ink);
+  letter-spacing: -.02em;
+  transform: rotate(-4deg);
+  box-shadow: 2px 2px 0 var(--accent-ink);
+}
+.contact-letter .postmark {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-family: var(--mono); font-size: 9.5px;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--ink-4);
+  text-align: center;
+}
+@media (max-width: 760px) {
+  .contact-letter .postmark { align-items: flex-start; text-align: left; }
+}

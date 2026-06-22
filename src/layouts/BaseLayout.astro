@@ -7,8 +7,7 @@ import { absoluteUrl, siteImage } from "../lib/media";
 import { getPosts } from "../lib/posts";
 import pkg from "../../package.json";
 import { ClientRouter } from "astro:transitions";
-import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { SITE_SCRIPT_VERSION } from "../lib/asset-version";
 import "../styles/site.less";
 
 interface Props {
@@ -36,9 +35,6 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const normalizedImage = siteImage(image) ?? SITE.avatar;
 const ogImage = absoluteUrl(normalizedImage, SITE.url);
 const swVersion = process.env.GITHUB_SHA || pkg.version;
-const siteScriptVersion =
-  process.env.GITHUB_SHA ||
-  createHash("sha256").update(readFileSync("public/js/site.js")).digest("hex").slice(0, 10);
 
 // Recommended articles for search empty state (build-time)
 const allPosts = await getPosts();
@@ -187,8 +183,9 @@ const recommendedPosts = searchPosts.slice(0, 8);
   <!-- Search recommended articles data (build-time) -->
   <script is:inline id="search-recommended" type="application/json" set:html={JSON.stringify(recommendedPosts)} data-pagefind-ignore></script>
 
-  <!-- Search overlay -->
-  <div class="search-page" data-pagefind-ignore>
+  <!-- Search overlay. `inert` until opened so its fields stay out of the tab
+       order / a11y tree while hidden (it is only visually hidden via CSS). -->
+  <div class="search-page" role="dialog" aria-modal="true" aria-label="站内搜索" inert data-pagefind-ignore>
     <div class="search-icon-close-container">
       <span class="search-icon-close"><svg class="icon"><use href="#icon-chevron-down"></use></svg></span>
     </div>
@@ -216,7 +213,7 @@ const recommendedPosts = searchPosts.slice(0, 8);
     <svg class="icon"><use href="#icon-arrow-up"></use></svg>
   </div>
 
-  <script is:inline defer src={`/js/site.js?v=${encodeURIComponent(siteScriptVersion)}`}></script>
+  <script is:inline defer src={`/js/site.js?v=${encodeURIComponent(SITE_SCRIPT_VERSION)}`}></script>
 
   <script is:inline define:vars={{ swVersion }}>
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js?v=' + encodeURIComponent(swVersion)); }
