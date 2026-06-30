@@ -195,7 +195,6 @@ function initToolsStack() {
 
   var input = document.getElementById('tools-search-input');
   var filters = Array.prototype.slice.call(document.querySelectorAll('[data-filter]'));
-  var tagFilters = Array.prototype.slice.call(document.querySelectorAll('[data-tag-filter]'));
   var viewButtons = Array.prototype.slice.call(document.querySelectorAll('[data-view]'));
   var cards = Array.prototype.slice.call(document.querySelectorAll('[data-tool-card]'));
   var pinnedCards = Array.prototype.slice.call(document.querySelectorAll('[data-pinned-card]'));
@@ -206,8 +205,6 @@ function initToolsStack() {
   var empty = document.querySelector('[data-tools-empty]');
   var activeButton = document.querySelector('[data-filter].active');
   var currentStage = activeButton ? activeButton.getAttribute('data-filter') || 'all' : 'all';
-  var activeTagButton = document.querySelector('[data-tag-filter].active');
-  var currentTag = activeTagButton ? activeTagButton.getAttribute('data-tag-filter') || 'all' : 'all';
   var pinnedLimit = 9;
   var storageKey = 'lili-tools-clicks';
 
@@ -261,9 +258,7 @@ function initToolsStack() {
     cards.forEach(function (card) {
       var stageMatch = currentStage === 'all' || card.dataset.stage === currentStage;
       var textMatch = !query || (card.dataset.search || '').indexOf(query) >= 0;
-      var tags = (card.dataset.tags || '').toLowerCase();
-      var tagMatch = currentTag === 'all' || tags.split('|').indexOf(currentTag.toLowerCase()) !== -1;
-      var visible = stageMatch && textMatch && tagMatch;
+      var visible = stageMatch && textMatch;
       card.hidden = !visible;
       if (visible && card.dataset.toolKey) visibleKeys[card.dataset.toolKey] = true;
     });
@@ -284,8 +279,7 @@ function initToolsStack() {
     visibleCount = Object.keys(visibleKeys).length;
     if (summary) {
       var stageLabel = currentStage === 'all' ? '全部阶段' : currentStage;
-      var tagLabel = currentTag === 'all' ? '全部标签' : currentTag;
-      summary.textContent = visibleCount + ' tools · ' + stageLabel + ' · ' + tagLabel;
+      summary.textContent = visibleCount + ' tools · ' + stageLabel;
     }
     if (empty) empty.hidden = visibleCount > 0;
   }
@@ -301,14 +295,6 @@ function initToolsStack() {
         var el = document.querySelector(target);
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    });
-  });
-
-  tagFilters.forEach(function (button) {
-    button.addEventListener('click', function () {
-      currentTag = button.dataset.tagFilter || 'all';
-      tagFilters.forEach(function (item) { item.classList.toggle('active', item === button); });
-      applyFilter();
     });
   });
 
