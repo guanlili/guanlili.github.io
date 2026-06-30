@@ -59,6 +59,15 @@ function initThemeToggle() {
     btn.setAttribute('aria-label', dark ? '切换到浅色模式' : '切换到暗色模式');
   }
   reflect(document.documentElement.getAttribute('data-theme') === 'dark');
+
+  // When no manual preference is saved, follow OS-level changes in real time.
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+    if (!localStorage.getItem('theme')) {
+      applyStoredTheme();
+      reflect(e.matches);
+    }
+  });
+
   btn.addEventListener('click', function () {
     var html = document.documentElement;
     var dark = html.getAttribute('data-theme') !== 'dark';
