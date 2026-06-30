@@ -98,10 +98,15 @@
 }
 
 .stage-rail {
+  position: sticky;
+  top: 0;
+  z-index: 21;
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
   border-bottom: var(--surface-border);
-  background: color-mix(in srgb, var(--bg) 72%, var(--paper));
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 .stage-rail button {
   appearance: none;
@@ -155,7 +160,7 @@
 
 .tools-console {
   position: sticky;
-  top: 0;
+  top: 97px;
   z-index: 20;
   display: grid;
   grid-template-columns: minmax(260px, 360px) auto;
@@ -203,8 +208,7 @@
   padding: 3px;
   background: var(--paper);
 }
-.tools-view-toggle button,
-.tools-filters button {
+.tools-view-toggle button {
   appearance: none;
   border: 0;
   background: transparent;
@@ -221,9 +225,7 @@
   padding: 7px 12px;
 }
 .tools-view-toggle button:hover,
-.tools-view-toggle button.active,
-.tools-filters button:hover,
-.tools-filters button.active {
+.tools-view-toggle button.active {
   background: var(--accent);
   color: var(--paper);
 }
@@ -233,22 +235,6 @@
   font-size: var(--text-sm);
   letter-spacing: .08em;
   color: var(--ink-3);
-}
-.tools-filters {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: var(--space-2);
-}
-.tools-filters button {
-  border: var(--surface-border-soft);
-  background: color-mix(in srgb, var(--paper) 72%, transparent);
-}
-.tools-filters button span {
-  margin-left: var(--space-2);
-  color: inherit;
-  opacity: .64;
 }
 @media (max-width: 860px) {
   .tools-console { grid-template-columns: 1fr; gap: 16px; }
@@ -278,23 +264,10 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
-  .tools-view-toggle button,
-  .tools-filters button {
+  .tools-view-toggle button {
     min-height: 40px;
   }
   .tools-result { font-size: 11px; }
-  .tools-filters {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    scroll-snap-type: x proximity;
-    -webkit-overflow-scrolling: touch;
-  }
-  .tools-filters button {
-    flex: 0 0 auto;
-    scroll-snap-align: start;
-    white-space: nowrap;
-  }
 }
 
 .tools-pinned { padding-bottom: var(--space-5); }

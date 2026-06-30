@@ -10,13 +10,6 @@ const categories = TOOL_STAGES.map((stage) => ({
   tools: TOOLS.filter((tool) => tool.stage === stage.name),
 }));
 const tagCount = new Set(TOOLS.flatMap((tool) => tool.tags)).size;
-const tagStats = [...TOOLS.flatMap((tool) => tool.tags).reduce((map, tag) => {
-  map.set(tag, (map.get(tag) ?? 0) + 1);
-  return map;
-}, new Map<string, number>()).entries()]
-  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-  .slice(0, 8)
-  .map(([tag, count]) => ({ tag, count }));
 const pad2 = (n: number) => String(n).padStart(2, "0");
 const logoUrl = (url: string) => {
   const domain = new URL(url).hostname.replace(/^www\./, "");
@@ -100,12 +93,6 @@ const stageId = (stage: string) => `stage-${keyOf(stage)}`;
           <button type="button" data-view="compact">紧凑</button>
         </div>
         <p class="tools-result" data-tools-summary>{TOOLS.length} tools ready</p>
-      </div>
-      <div class="tools-filters" aria-label="工具标签速筛">
-        <button type="button" data-tag-filter="all" class="active">全部标签</button>
-        {tagStats.map((item) => (
-          <button type="button" data-tag-filter={item.tag}>{item.tag}<span>{item.count}</span></button>
-        ))}
       </div>
     </section>
 
