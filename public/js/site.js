@@ -53,21 +53,42 @@ function initThemeToggle() {
   var iconSvg = document.getElementById('theme-icon-svg');
   if (!btn || !iconSvg) return;
 
-  if (document.documentElement.getAttribute('data-theme') === 'dark') {
-    iconSvg.innerHTML = '<use href="#icon-sun"></use>';
+  function reflect(dark) {
+    iconSvg.innerHTML = '<use href="#icon-' + (dark ? 'sun' : 'moon') + '"></use>';
+    btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+    btn.setAttribute('aria-label', dark ? '切换到浅色模式' : '切换到暗色模式');
   }
+  reflect(document.documentElement.getAttribute('data-theme') === 'dark');
+
+  // When no manual preference is saved, follow OS-level changes in real time.
+  if (!window._themeListenerAdded) {
+    window._themeListenerAdded = true;
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+      if (!localStorage.getItem('theme')) {
+        applyStoredTheme();
+        var currentBtn = document.getElementById('theme-toggle-btn');
+        var currentIconSvg = document.getElementById('theme-icon-svg');
+        if (currentBtn && currentIconSvg) {
+          var dark = e.matches;
+          currentIconSvg.innerHTML = '<use href="#icon-' + (dark ? 'sun' : 'moon') + '"></use>';
+          currentBtn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+          currentBtn.setAttribute('aria-label', dark ? '切换到浅色模式' : '切换到暗色模式');
+        }
+      }
+    });
+  }
+
   btn.addEventListener('click', function () {
     var html = document.documentElement;
     var dark = html.getAttribute('data-theme') !== 'dark';
     if (dark) {
       html.setAttribute('data-theme', 'dark');
       localStorage.setItem('theme', 'dark');
-      iconSvg.innerHTML = '<use href="#icon-sun"></use>';
     } else {
       html.removeAttribute('data-theme');
       localStorage.setItem('theme', 'light');
-      iconSvg.innerHTML = '<use href="#icon-moon"></use>';
     }
+    reflect(dark);
     var meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', dark ? '#15130e' : '#f1ede3');
   });
@@ -184,7 +205,6 @@ function initToolsStack() {
 
   var input = document.getElementById('tools-search-input');
   var filters = Array.prototype.slice.call(document.querySelectorAll('[data-filter]'));
-  var tagFilters = Array.prototype.slice.call(document.querySelectorAll('[data-tag-filter]'));
   var viewButtons = Array.prototype.slice.call(document.querySelectorAll('[data-view]'));
   var cards = Array.prototype.slice.call(document.querySelectorAll('[data-tool-card]'));
   var pinnedCards = Array.prototype.slice.call(document.querySelectorAll('[data-pinned-card]'));
@@ -195,8 +215,6 @@ function initToolsStack() {
   var empty = document.querySelector('[data-tools-empty]');
   var activeButton = document.querySelector('[data-filter].active');
   var currentStage = activeButton ? activeButton.getAttribute('data-filter') || 'all' : 'all';
-  var activeTagButton = document.querySelector('[data-tag-filter].active');
-  var currentTag = activeTagButton ? activeTagButton.getAttribute('data-tag-filter') || 'all' : 'all';
   var pinnedLimit = 9;
   var storageKey = 'lili-tools-clicks';
 
@@ -250,9 +268,7 @@ function initToolsStack() {
     cards.forEach(function (card) {
       var stageMatch = currentStage === 'all' || card.dataset.stage === currentStage;
       var textMatch = !query || (card.dataset.search || '').indexOf(query) >= 0;
-      var tags = (card.dataset.tags || '').toLowerCase();
-      var tagMatch = currentTag === 'all' || tags.split('|').indexOf(currentTag.toLowerCase()) !== -1;
-      var visible = stageMatch && textMatch && tagMatch;
+      var visible = stageMatch && textMatch;
       card.hidden = !visible;
       if (visible && card.dataset.toolKey) visibleKeys[card.dataset.toolKey] = true;
     });
@@ -273,8 +289,7 @@ function initToolsStack() {
     visibleCount = Object.keys(visibleKeys).length;
     if (summary) {
       var stageLabel = currentStage === 'all' ? '全部阶段' : currentStage;
-      var tagLabel = currentTag === 'all' ? '全部标签' : currentTag;
-      summary.textContent = visibleCount + ' tools · ' + stageLabel + ' · ' + tagLabel;
+      summary.textContent = visibleCount + ' tools · ' + stageLabel;
     }
     if (empty) empty.hidden = visibleCount > 0;
   }
@@ -290,14 +305,6 @@ function initToolsStack() {
         var el = document.querySelector(target);
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    });
-  });
-
-  tagFilters.forEach(function (button) {
-    button.addEventListener('click', function () {
-      currentTag = button.dataset.tagFilter || 'all';
-      tagFilters.forEach(function (item) { item.classList.toggle('active', item === button); });
-      applyFilter();
     });
   });
 
@@ -327,13 +334,25 @@ var searchLoaded = false;
 var searchQueue = null;
 
 function loadSearch() {
-  if (searchLoaded) return Promise.resolve();
+  // Already loaded → just reopen (the module exposes its open fn). Without this,
+  // the overlay could only ever be opened once per page load.
+  if (searchLoaded) {
+    if (window.__liliOpenSearch) window.__liliOpenSearch();
+    return Promise.resolve();
+  }
   if (searchQueue) return searchQueue;
   searchQueue = import('/js/site-search.js').then(function (mod) {
     mod.initSearch();
     searchLoaded = true;
   }).catch(function () {});
   return searchQueue;
+}
+
+// Search engines and shared links use /?q=keyword (the same URL advertised
+// by the SearchAction JSON-LD). Open the overlay and hydrate that query.
+function initSearchFromUrl() {
+  var query = new URLSearchParams(window.location.search).get('q');
+  if (query && query.trim()) loadSearch();
 }
 
 // Preload search module on ⌘K hover/focus (lightweight hint)
@@ -367,6 +386,7 @@ document.querySelector('.search-icon')?.addEventListener('click', function (e) {
 var _pageInited = false;
 function initPage() {
   initToolsStack();
+  initSearchFromUrl();
   if (_pageInited) return;
   _pageInited = true;
   initBackToTop();

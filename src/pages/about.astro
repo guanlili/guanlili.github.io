@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import "../styles/pages/about.less";
 import { SITE, SECONDARY_PLATFORMS } from "../consts";
 import { getPosts } from "../lib/posts";
 import { Content as About } from "../content/about.md";
@@ -38,7 +39,7 @@ const host = new URL(SITE.url).host;
         <h2>履历 / Path</h2>
         <div class="sub-h">Professional Trajectory</div>
         <div class="timeline-mini">
-          <div class="row"><span class="y">NOW</span><span class="b">超级个体 · AI 研发 / 架构 <small>带一支小队做内部 AI 平台，主攻文生视频、私域知识库与代码生成三条主线。</small></span></div>
+          <div class="row row--current"><span class="y">NOW</span><span class="b">超级个体 · AI 研发 / 架构 <small>带一支小队做内部 AI 平台，主攻文生视频、私域知识库与代码生成三条主线。</small></span></div>
           <div class="row"><span class="y">2025</span><span class="b">PMO → All in AI <small>从管人到管 AI。把过去两年的管理沉淀塞回键盘，做出几个让自己满意的 AI 产品。</small></span></div>
           <div class="row"><span class="y">2024</span><span class="b">全栈 → PMO <small>从「螺丝钉」抬头看「流水线」。换个视角，第一次看清公司是怎么运转的，账是怎么算的。</small></span></div>
           <div class="row"><span class="y">2022</span><span class="b">校招 · 测试开发 → 全栈 <small>从测试岗回到代码一线。先后落地 API 平台、Mock 质量体系、AI 编码助手——串起来就是一句「研发提效」。</small></span></div>

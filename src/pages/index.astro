@@ -3,8 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PostList from "../components/PostList.astro";
 import Feature from "../components/Feature.astro";
 import Sidebar from "../components/Sidebar.astro";
-import { getPosts } from "../lib/posts";
-import { readingStats } from "../lib/permalink";
+import { getPosts, readingStats } from "../lib/posts";
 import { SITE } from "../consts";
 
 const posts = await getPosts();
