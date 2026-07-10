@@ -61,12 +61,22 @@ function initThemeToggle() {
   reflect(document.documentElement.getAttribute('data-theme') === 'dark');
 
   // When no manual preference is saved, follow OS-level changes in real time.
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
-    if (!localStorage.getItem('theme')) {
-      applyStoredTheme();
-      reflect(e.matches);
-    }
-  });
+  if (!window._themeListenerAdded) {
+    window._themeListenerAdded = true;
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+      if (!localStorage.getItem('theme')) {
+        applyStoredTheme();
+        var currentBtn = document.getElementById('theme-toggle-btn');
+        var currentIconSvg = document.getElementById('theme-icon-svg');
+        if (currentBtn && currentIconSvg) {
+          var dark = e.matches;
+          currentIconSvg.innerHTML = '<use href="#icon-' + (dark ? 'sun' : 'moon') + '"></use>';
+          currentBtn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+          currentBtn.setAttribute('aria-label', dark ? '切换到浅色模式' : '切换到暗色模式');
+        }
+      }
+    });
+  }
 
   btn.addEventListener('click', function () {
     var html = document.documentElement;

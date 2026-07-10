@@ -34,7 +34,7 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
       <div class="right">
         <div class="big">{SKILLS.length}</div>
         <div>Total Skills</div>
-        <div style="margin-top:10px">{SKILL_CATEGORIES.length} Categories</div>
+        <div class="cat-count">{SKILL_CATEGORIES.length} Categories</div>
         <div>{pinnedSkills.length} Pinned</div>
       </div>
     </section>
@@ -93,7 +93,7 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
           <span class="count"><em>{pinnedSkills.length}</em> 个常用入口 · 点击命令徽章复制</span>
         </header>
         <div class="skill-card-grid">
-          {SKILLS.map((skill) => (
+          {pinnedSkills.map((skill) => (
             <div
               class="skill-card"
               data-skill-card
@@ -281,32 +281,35 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
   }
 
   // Copy command
-  document.addEventListener('click', function (e) {
-    var btn = (e.target as HTMLElement).closest('[data-cmd]') as HTMLElement | null;
-    if (!btn) return;
-    var cmd = btn.dataset.cmd || '';
-    var _btn = btn;
-    navigator.clipboard.writeText(cmd).then(function () {
-      _btn.classList.add('copied');
-      var orig = _btn.innerHTML;
-      _btn.innerHTML = '<svg viewBox="0 0 16 16" style="width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><polyline points="2 8 6 12 14 4"/></svg> 已复制';
-      setTimeout(function () {
-        _btn.classList.remove('copied');
-        _btn.innerHTML = orig;
-      }, 1800);
-    }).catch(function () {
-      var ta = document.createElement('textarea');
-      ta.value = cmd;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.select();
-      try { document.execCommand('copy'); } catch (_) {}
-      document.body.removeChild(ta);
-      _btn.classList.add('copied');
-      setTimeout(function () { _btn.classList.remove('copied'); }, 1800);
+  if (!(window as any).__skillsClickBound) {
+    (window as any).__skillsClickBound = true;
+    document.addEventListener('click', function (e) {
+      var btn = (e.target as HTMLElement).closest('[data-cmd]') as HTMLElement | null;
+      if (!btn) return;
+      var cmd = btn.dataset.cmd || '';
+      var _btn = btn;
+      navigator.clipboard.writeText(cmd).then(function () {
+        _btn.classList.add('copied');
+        var orig = _btn.innerHTML;
+        _btn.innerHTML = '<svg viewBox="0 0 16 16" style="width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><polyline points="2 8 6 12 14 4"/></svg> 已复制';
+        setTimeout(function () {
+          _btn.classList.remove('copied');
+          _btn.innerHTML = orig;
+        }, 1800);
+      }).catch(function () {
+        var ta = document.createElement('textarea');
+        ta.value = cmd;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (_) {}
+        document.body.removeChild(ta);
+        _btn.classList.add('copied');
+        setTimeout(function () { _btn.classList.remove('copied'); }, 1800);
+      });
     });
-  });
+  }
 
   update();
 })();

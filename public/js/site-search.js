@@ -414,6 +414,8 @@ export function initSearch() {
     searchPage.setAttribute('inert', '');
     setBackgroundInert(false);
     activeTags = [];
+    searchInput.value = '';
+    syncSearchQuery('');
     if (availableFilters) renderTagChips(availableFilters);
     // Return focus to whatever opened the overlay (keyboard users).
     if (lastFocused && typeof lastFocused.focus === 'function') {
