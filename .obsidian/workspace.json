@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "src/content/blog/AI「style」/2026-06-18-你以为在配火锅其实在构建人生.md",
+                "file": "src/content/blog/AI「style」/2026-06-23-mirrohire-opc-retrospective.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2026-06-18-你以为在配火锅其实在构建人生"
+              "title": "2026-06-23-mirrohire-opc-retrospective"
             }
           }
         ]
@@ -185,25 +185,30 @@
   },
   "active": "4fe34995b96f1d0e",
   "lastOpenFiles": [
-    "dist/pagefind/fragment/zh-cn_fe37821.pf_fragment",
-    "dist/pagefind/fragment/zh-cn_f91ae93.pf_fragment",
-    "dist/pagefind/fragment/zh-cn_f6b4f88.pf_fragment",
-    "dist/pagefind/fragment/zh-cn_f369b44.pf_fragment",
-    "dist/pagefind/fragment/zh-cn_f34f75a.pf_fragment",
-    "dist/pagefind/fragment/zh-cn_efdb4e8.pf_fragment",
-    "dist/pagefind/fragment/zh-cn_edc9995.pf_fragment",
-    "dist/pagefind/fragment/zh-cn_ed77305.pf_fragment",
-    "dist/pagefind/fragment/zh-cn_ebe82dd.pf_fragment",
-    "dist/pagefind/fragment/zh-cn_e9a5cf3.pf_fragment",
-    "dist/pagefind/fragment/zh-cn_e98cf77.pf_fragment",
-    "src/content/blog/AI「style」/2026-06-18-你以为在配火锅其实在构建人生~.md",
+    "src/content/blog/AI「style」/2026-07-10-Codex吃掉了ChatGPT.md",
+    "src/content/blog/AI「style」/2026-07-10-Codex吃掉了ChatGPT....md",
+    "dist/pagefind/fragment/zh-cn_c091266.pf_fragment",
+    "dist/pagefind/fragment/zh-cn_3d49baf.pf_fragment",
+    "dist/pagefind/fragment/zh-cn_45c01da.pf_fragment",
+    "dist/pagefind/filter/zh-cn_465d1a1.pf_filter",
+    "dist/pagefind/fragment/zh-cn_81fb94d.pf_fragment",
+    "dist/pagefind/index/zh-cn_bb47dac.pf_index",
+    "dist/pagefind/index/zh-cn_3a76613.pf_index",
+    "dist/pagefind/fragment/zh-cn_50eaba5.pf_fragment",
+    "dist/pagefind/index/zh-cn_6b457aa.pf_index",
+    "dist/pagefind/index/zh-cn_6318197.pf_index",
     "src/content/blog/AI/2026-06-16-用了三天支付宝AI版-我突然理解了微信为什么不着急.md",
-    "src/content/blog/AI「style」/2026-06-18-你以为在配火锅其实在构建人生.md",
-    "src/content/blog/study/2020-04-02-python常用库.md",
     "image-risk-report.md",
+    "BROKEN-IMAGES.md",
+    "src/content/portfolio/ai-hot-pot.md",
+    "src/content/blog/AI「style」/2026-06-23-mirrohire-opc-retrospective.md",
+    "src/content/portfolio/ai-code-evaluation.md",
+    "src/content/blog/AI「style」/2022-02-17-程序员深度体验ChatGPT一周竟然...md",
+    "src/content/blog/AI「style」/2026-06-18-你以为在配火锅其实在构建人生.md",
+    "src/content/blog/AI「style」/2026-06-18-你以为在配火锅其实在构建人生~.md",
+    "src/content/blog/study/2020-04-02-python常用库.md",
     "src/content/blog/AI「style」/2026-06-11-claude-model-naming-guide.md",
     "src/content/blog/AI「style」/2024-04-10-如何度量代码生成大模型的准确性？.md",
-    "src/content/blog/AI「style」/2022-02-17-程序员深度体验ChatGPT一周竟然...md",
     "src/content/blog/AI/2026-06-16-用了三天支付宝AI版-我突然理解了微信为什么不着急_2~.md",
     "wechat-21x9-cover.png",
     "src/content/blog/AI/2026-06-16-用了三天支付宝AI版-我突然理解了微信为什么不着急~.md",
@@ -217,11 +222,6 @@
     "src/content/blog/AITutorials/2025-10-30-🚀 进阶实战：自定义ComfyUI跑通Qwen2.5-VL实现Img2JSON.md",
     "src/content/blog/AITutorials/2025-10-10-🚀 实战入门：在服务器单卡部署 ComfyUI + Wan2.1 文生视频最佳实践.md",
     "src/content/blog/AITutorials/2025-8-20-高效 PDF 解析利器：MinerU 实战避坑与高精度调优指南.md",
-    "src/content/blog/AI「style」/2026-01-17-刚从Google AI出海峰会回来，我总结了以下几点......md",
-    "src/content/blog/AI「style」/2026 Google AI出海峰会深度复盘：从 Cloud 2.0 到智能体商业，AI 出海的下个赛点.md",
-    "src/content/blog/AITutorials/2025-04-10-玩转Dify：三步设置，让你的AI从“智障”变“专家.md",
-    "src/content/blog/AITutorials/2025-10-01-🚀 实战部署：单卡4090跑通DeepSeek-OCR本地WebUI.md",
-    "src/content/blog/AITutorials/2025-10-20-🚀 实战进阶：将 ComfyUI 封装为 AI 视频生成网站 (FastAPI + WebUI).md",
-    "src/content/blog/Tutorials/2024-03-01-AI辅助编程工具调研.md"
+    "src/content/blog/AI「style」/2026-01-17-刚从Google AI出海峰会回来，我总结了以下几点......md"
   ]
 }

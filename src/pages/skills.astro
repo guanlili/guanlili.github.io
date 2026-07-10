@@ -1,0 +1,313 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import "../styles/pages/skills.less";
+import { SKILL_CATEGORIES, SKILLS } from "../data/skills";
+
+const pinnedSkills = SKILLS.filter((s) => s.pinned);
+const categories = SKILL_CATEGORIES.map((cat) => ({
+  ...cat,
+  skills: SKILLS.filter((s) => s.category === cat.name),
+}));
+const totalTags = new Set(SKILLS.flatMap((s) => s.tags)).size;
+const pad2 = (n: number) => String(n).padStart(2, "0");
+const keyOf = (s: string) => s.toLowerCase().replace(/[^a-z0-9一-龥]+/g, "-").replace(/^-|-$/g, "");
+const catId = (cat: string) => `cat-${keyOf(cat)}`;
+---
+<BaseLayout
+  active="skills"
+  title="Skills 导航"
+  description="我常用的 Claude Code Skills 收藏：写作、代码审查、文档处理、系统配置，点击命令徽章一键复制调用。"
+  bodyClass="skills-page"
+>
+  <div class="article-shell">
+    <section class="page-head skills-head">
+      <div>
+        <div class="kicker">
+          <span class="dot"></span>
+          <span>Claude Code · Skills 导航</span>
+          <span class="rule"></span>
+          <span>Slash Commands</span>
+        </div>
+        <h1>常用 Skills，<br />一处收藏，随取随用。</h1>
+        <p class="sub">这里收藏的是我在 Claude Code 里最常调用的 Skill，从写作、代码审查到文档处理和系统配置。点击任意 <code>/command</code> 徽章即可复制命令。</p>
+      </div>
+      <div class="right">
+        <div class="big">{SKILLS.length}</div>
+        <div>Total Skills</div>
+        <div style="margin-top:10px">{SKILL_CATEGORIES.length} Categories</div>
+        <div>{pinnedSkills.length} Pinned</div>
+      </div>
+    </section>
+
+    <div class="skills-strip">
+      <div><span class="label">用途</span><span class="value">写作 · 代码 · 文档 · 系统</span></div>
+      <div><span class="label">调用方式</span><span class="value">Claude Code 内输入 /skill-name</span></div>
+      <div><span class="label">技能标签</span><span class="value">{totalTags} Tags</span></div>
+      <div><span class="label">理念</span><span class="value">省去重复描述，专注创造</span></div>
+    </div>
+
+    <section class="skills-workbench" data-pagefind-ignore>
+      <div class="skills-workbench-lead">
+        <span class="label">Skills Launchpad</span>
+        <h2>Skill 让 Claude 更懂你的工作流。</h2>
+        <p>每个 Skill 是一段预设好的指令集：触发一个词，Claude 就知道该怎么做。这里收藏的都是我真实在用的，按类目整理，支持搜索过滤。</p>
+      </div>
+      <div class="skills-metrics">
+        <div><span>{SKILLS.length}</span><small>Total Skills</small></div>
+        <div><span>{SKILL_CATEGORIES.length}</span><small>Categories</small></div>
+        <div><span>{pinnedSkills.length}</span><small>Pinned</small></div>
+        <div><span>{totalTags}</span><small>Tags</small></div>
+      </div>
+    </section>
+
+    <nav class="skill-cat-rail" aria-label="技能分类">
+      <button type="button" class="active" data-cat-filter="all">
+        <span>00 · ALL</span>
+        <strong>全部</strong>
+        <em>{SKILLS.length}</em>
+      </button>
+      {categories.map((cat, index) => (
+        <button type="button" data-cat-filter={cat.name} data-cat-target={`#${catId(cat.name)}`}>
+          <span>{pad2(index + 1)} · {cat.english}</span>
+          <strong>{cat.name}</strong>
+          <em>{cat.skills.length}</em>
+        </button>
+      ))}
+    </nav>
+
+    <section class="skills-console" data-skills-console data-pagefind-ignore>
+      <div class="skills-search">
+        <label for="skills-search-input">Search Skills</label>
+        <input id="skills-search-input" type="search" placeholder="搜索技能名称、描述或触发语句..." autocomplete="off" />
+      </div>
+      <div class="skills-console-side">
+        <p class="skills-result" data-skills-summary>{SKILLS.length} skills ready</p>
+      </div>
+    </section>
+
+    <div class="skills-workspace" data-skills-workspace>
+      <section class="skills-pinned" data-pinned-section>
+        <header class="section-head">
+          <h3>快速启动</h3>
+          <span class="latin">Launchpad</span>
+          <span class="count"><em>{pinnedSkills.length}</em> 个常用入口 · 点击命令徽章复制</span>
+        </header>
+        <div class="skill-card-grid">
+          {SKILLS.map((skill) => (
+            <div
+              class="skill-card"
+              data-skill-card
+              data-pinned={skill.pinned ? "true" : "false"}
+              data-cat={skill.category}
+              data-search={`${skill.name} ${skill.command} ${skill.title} ${skill.description} ${skill.category} ${skill.triggers.join(" ")} ${skill.tags.join(" ")}`.toLowerCase()}
+            >
+              <div class="skill-card-top">
+                <button
+                  class="skill-cmd"
+                  type="button"
+                  data-cmd={skill.command}
+                  title={`复制 ${skill.command}`}
+                  aria-label={`复制命令 ${skill.command}`}
+                >
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="4" width="9" height="11" rx="1.5"/><path d="M4 4V2.5A1.5 1.5 0 0 1 5.5 1h7A1.5 1.5 0 0 1 14 2.5v9A1.5 1.5 0 0 1 12.5 13H11"/></svg>
+                  {skill.command}
+                </button>
+                <span class="skill-cat-badge">{skill.category}</span>
+              </div>
+              <h2>{skill.title}</h2>
+              <p>{skill.description}</p>
+              {skill.triggers.length > 0 && (
+                <div class="skill-triggers">
+                  {skill.triggers.slice(0, 3).map((t) => (
+                    <span class="skill-trigger">{t}</span>
+                  ))}
+                </div>
+              )}
+              <div class="skill-card-foot">
+                <div class="skill-card-tags">
+                  {skill.tags.slice(0, 3).map((tag) => <span>{tag}</span>)}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="skills-flow">
+        <header class="section-head">
+          <h3>分类索引</h3>
+          <span class="latin">Category Index</span>
+          <span class="count"><em>{SKILL_CATEGORIES.length}</em> Categories</span>
+        </header>
+
+        {categories.map((cat, catIndex) => (
+          <section
+            class="skill-cat-section"
+            id={catId(cat.name)}
+            data-cat-section={cat.name}
+          >
+            <div class="skill-cat-head">
+              <span class="num">{pad2(catIndex + 1)}</span>
+              <div>
+                <h2>{cat.name}</h2>
+                <p>{cat.summary}</p>
+              </div>
+              <span class="cat-count">{cat.skills.length} Skills</span>
+              <span class="english">{cat.english}</span>
+            </div>
+            <div class="skill-table">
+              {cat.skills.map((skill, skillIndex) => (
+                <div
+                  class="skill-row"
+                  data-skill-card
+                  data-skill-kind="row"
+                  data-cat={skill.category}
+                  data-search={`${skill.name} ${skill.command} ${skill.title} ${skill.description} ${skill.category} ${skill.triggers.join(" ")} ${skill.tags.join(" ")}`.toLowerCase()}
+                >
+                  <span class="num">{pad2(skillIndex + 1)}</span>
+                  <button
+                    class="skill-cmd"
+                    type="button"
+                    data-cmd={skill.command}
+                    title={`复制 ${skill.command}`}
+                    aria-label={`复制命令 ${skill.command}`}
+                  >
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="4" width="9" height="11" rx="1.5"/><path d="M4 4V2.5A1.5 1.5 0 0 1 5.5 1h7A1.5 1.5 0 0 1 14 2.5v9A1.5 1.5 0 0 1 12.5 13H11"/></svg>
+                    {skill.command}
+                  </button>
+                  <span class="main">
+                    <strong>{skill.title}</strong>
+                    <small>{skill.description}</small>
+                  </span>
+                  <span class="row-cat">{skill.category}</span>
+                  <span class="row-triggers">{skill.triggers.slice(0, 2).join(" / ")}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+        ))}
+        <p class="skills-empty" hidden data-skills-empty>没有匹配到 Skill。换个关键词试试。</p>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+(function () {
+  var console_ = document.querySelector('[data-skills-console]') as HTMLElement | null;
+  if (!console_ || (console_ as any).__ready) return;
+  (console_ as any).__ready = true;
+
+  var input = document.getElementById('skills-search-input') as HTMLInputElement | null;
+  var catBtns = Array.from(document.querySelectorAll('[data-cat-filter]')) as HTMLElement[];
+  var allCards = Array.from(document.querySelectorAll('[data-skill-card]')) as HTMLElement[];
+  var pinnedSection = document.querySelector('[data-pinned-section]') as HTMLElement | null;
+  var catSections = Array.from(document.querySelectorAll('[data-cat-section]')) as HTMLElement[];
+  var summary = document.querySelector('[data-skills-summary]') as HTMLElement | null;
+  var emptyMsg = document.querySelector('[data-skills-empty]') as HTMLElement | null;
+  var currentCat = 'all';
+  var currentQuery = '';
+
+  function isVisible(card: HTMLElement) {
+    var search = card.dataset.search || '';
+    var cat = card.dataset.cat || '';
+    var matchesCat = currentCat === 'all' || cat === currentCat;
+    var matchesQuery = !currentQuery || search.includes(currentQuery);
+    return matchesCat && matchesQuery;
+  }
+
+  function update() {
+    var visibleCount = 0;
+    var pinnedVisible = 0;
+
+    allCards.forEach(function (card) {
+      var visible = isVisible(card);
+      card.hidden = !visible;
+      if (visible) {
+        visibleCount++;
+        if (card.dataset.pinned === 'true') pinnedVisible++;
+      }
+    });
+
+    // Show/hide pinned section
+    if (pinnedSection) {
+      var hasPinnedVisible = Array.from(pinnedSection.querySelectorAll('[data-skill-card]'))
+        .some(function (c) { return !(c as HTMLElement).hidden && (c as HTMLElement).dataset.pinned === 'true'; });
+      pinnedSection.hidden = !hasPinnedVisible || currentCat !== 'all' || !!currentQuery;
+    }
+
+    // Show/hide category sections
+    catSections.forEach(function (sec) {
+      var hasSectionVisible = Array.from(sec.querySelectorAll('[data-skill-card]'))
+        .some(function (c) { return !(c as HTMLElement).hidden; });
+      sec.hidden = !hasSectionVisible;
+    });
+
+    if (emptyMsg) emptyMsg.hidden = visibleCount > 0;
+
+    if (summary) {
+      var catLabel = currentCat === 'all' ? '全部' : currentCat;
+      var queryLabel = currentQuery ? ' · "' + currentQuery + '"' : '';
+      summary.textContent = visibleCount + ' skills · ' + catLabel + queryLabel;
+    }
+  }
+
+  // Category filter
+  catBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      catBtns.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentCat = btn.dataset.catFilter || 'all';
+      // Scroll to section if a specific cat is chosen
+      var target = btn.dataset.catTarget;
+      if (target && currentCat !== 'all') {
+        var el = document.querySelector(target) as Element | null;
+        if (el) { var _el = el; setTimeout(function () { _el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50); }
+      }
+      update();
+    });
+  });
+
+  // Search
+  var debounce: ReturnType<typeof setTimeout>;
+  if (input) {
+    input.addEventListener('input', function () {
+      clearTimeout(debounce);
+      debounce = setTimeout(function () {
+        currentQuery = (input as HTMLInputElement).value.trim().toLowerCase();
+        update();
+      }, 160);
+    });
+  }
+
+  // Copy command
+  document.addEventListener('click', function (e) {
+    var btn = (e.target as HTMLElement).closest('[data-cmd]') as HTMLElement | null;
+    if (!btn) return;
+    var cmd = btn.dataset.cmd || '';
+    var _btn = btn;
+    navigator.clipboard.writeText(cmd).then(function () {
+      _btn.classList.add('copied');
+      var orig = _btn.innerHTML;
+      _btn.innerHTML = '<svg viewBox="0 0 16 16" style="width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><polyline points="2 8 6 12 14 4"/></svg> 已复制';
+      setTimeout(function () {
+        _btn.classList.remove('copied');
+        _btn.innerHTML = orig;
+      }, 1800);
+    }).catch(function () {
+      var ta = document.createElement('textarea');
+      ta.value = cmd;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (_) {}
+      document.body.removeChild(ta);
+      _btn.classList.add('copied');
+      setTimeout(function () { _btn.classList.remove('copied'); }, 1800);
+    });
+  });
+
+  update();
+})();
+</script>

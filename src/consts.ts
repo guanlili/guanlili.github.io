@@ -39,6 +39,7 @@ export const NAV: { label: string; href: string; key: string }[] = [
   { label: "首页 Home", href: "/", key: "home" },
   { label: "作品 Portfolio", href: "/portfolio/", key: "portfolio" },
   { label: "工具 Tools", href: "/tools/", key: "tools" },
+  { label: "技能 Skills", href: "/skills/", key: "skills" },
   { label: "归档 Archive", href: "/archive/", key: "archive" },
   { label: "标签 Tags", href: "/tags/", key: "tags" },
   { label: "关于 About", href: "/about/", key: "about" },
