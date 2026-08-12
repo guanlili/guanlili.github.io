@@ -1,0 +1,552 @@
+---
+import china from "../../data/china-provinces.json";
+
+interface Place {
+  slug: string;
+  title: string;
+  province: string;
+  city: string;
+  coordinates: [number, number];
+  visited: string[];
+  summary: string;
+  cover?: string;
+  status: "home" | "lived" | "visited";
+  since?: string;
+  until?: string;
+  journeys: Array<{ id: string; name: string; order: number; date: string }>;
+  contentLabel: string;
+  sample: boolean;
+}
+
+const { places } = Astro.props as { places: Place[] };
+const visitedProvinces = new Set(places.map((place) => place.province));
+
+const minLon = 73;
+const maxLat = 54;
+const scale = 14.7;
+const project = ([lon, lat]: number[]) => [
+  22 + (lon - minLon) * scale,
+  18 + (maxLat - lat) * scale,
+];
+
+type Point = number[];
+type Ring = Point[];
+
+function perpendicularDistance(point: Point, start: Point, end: Point) {
+  const dx = end[0] - start[0];
+  const dy = end[1] - start[1];
+  if (dx === 0 && dy === 0) return Math.hypot(point[0] - start[0], point[1] - start[1]);
+  const t = Math.max(0, Math.min(1, ((point[0] - start[0]) * dx + (point[1] - start[1]) * dy) / (dx * dx + dy * dy)));
+  return Math.hypot(point[0] - (start[0] + t * dx), point[1] - (start[1] + t * dy));
+}
+
+function simplify(ring: Ring, tolerance = 0.025): Ring {
+  if (ring.length <= 4) return ring;
+  let maxDistance = 0;
+  let splitAt = 0;
+  for (let i = 1; i < ring.length - 1; i += 1) {
+    const distance = perpendicularDistance(ring[i], ring[0], ring[ring.length - 1]);
+    if (distance > maxDistance) {
+      maxDistance = distance;
+      splitAt = i;
+    }
+  }
+  if (maxDistance <= tolerance) return [ring[0], ring[ring.length - 1]];
+  return [
+    ...simplify(ring.slice(0, splitAt + 1), tolerance).slice(0, -1),
+    ...simplify(ring.slice(splitAt), tolerance),
+  ];
+}
+
+function ringPath(ring: Ring) {
+  const points = simplify(ring).map(project);
+  return points.map(([x, y], index) => `${index ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`).join("") + "Z";
+}
+
+function geometryPath(geometry: { type: string; coordinates: unknown }) {
+  const polygons = geometry.type === "Polygon"
+    ? [geometry.coordinates as Ring[]]
+    : geometry.coordinates as Ring[][];
+  return polygons.flatMap((polygon) => polygon.map(ringPath)).join("");
+}
+
+function geometryBounds(geometry: { type: string; coordinates: unknown }) {
+  const collectPoints = (value: unknown, coordinates: Point[]) => {
+    if (!Array.isArray(value)) return;
+    if (typeof value[0] === "number" && typeof value[1] === "number") {
+      coordinates.push(value as Point);
+      return;
+    }
+    value.forEach((item) => collectPoints(item, coordinates));
+  };
+  const shapes = geometry.type === "Polygon"
+    ? [geometry.coordinates]
+    : geometry.coordinates as unknown[];
+  const bounds = shapes.map((shape) => {
+    const coordinates: Point[] = [];
+    collectPoints(shape, coordinates);
+    const projected = coordinates.map(project);
+    const xs = projected.map(([x]) => x);
+    const ys = projected.map(([, y]) => y);
+    return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
+  });
+  return bounds.sort((a, b) => (b[2] - b[0]) * (b[3] - b[1]) - (a[2] - a[0]) * (a[3] - a[1]))[0];
+}
+
+const provinces = china.features
+  .map((feature) => ({
+    name: feature.properties.name || (feature.properties.adchar === "JD" ? "南海诸岛" : ""),
+    path: geometryPath(feature.geometry),
+    bounds: geometryBounds(feature.geometry),
+    visited: visitedProvinces.has(feature.properties.name),
+  }))
+  .filter((province) => province.name);
+
+const homeBase = places.find((place) => place.status === "home");
+const latestTravel = places.find((place) => place.status === "visited");
+const defaultNoteCount = Math.min(6, places.length);
+const provinceStats = new Map([...visitedProvinces].map((province) => {
+  const provincePlaces = places.filter((place) => place.province === province);
+  const visits = provincePlaces.flatMap((place) => place.visited.map((date) => ({ date, city: place.city })))
+    .sort((a, b) => a.date.localeCompare(b.date));
+  return [province, {
+    first: visits[0]?.date.slice(0, 7).replace("-", ".") ?? "—",
+    latest: visits.at(-1)?.date.slice(0, 7).replace("-", ".") ?? "—",
+    latestCity: visits.at(-1)?.city ?? "",
+  }];
+}));
+
+interface LabelBox { left: number; right: number; top: number; bottom: number }
+interface LabelLayout {
+  x: number;
+  y: number;
+  anchor: "start" | "middle" | "end";
+  leaderStartX: number;
+  leaderStartY: number;
+  leaderEndX: number;
+  leaderEndY: number;
+}
+
+const projectedPlaces = places.map((place) => ({ place, point: project(place.coordinates) }));
+const labelCandidates: Array<{ dx: number; dy: number; anchor: LabelLayout["anchor"] }> = [
+  { dx: 12, dy: -11, anchor: "start" }, { dx: -12, dy: -11, anchor: "end" },
+  { dx: 12, dy: 20, anchor: "start" }, { dx: -12, dy: 20, anchor: "end" },
+  { dx: 0, dy: -17, anchor: "middle" }, { dx: 0, dy: 25, anchor: "middle" },
+  { dx: 18, dy: 4, anchor: "start" }, { dx: -18, dy: 4, anchor: "end" },
+  { dx: 26, dy: -20, anchor: "start" }, { dx: -26, dy: -20, anchor: "end" },
+  { dx: 26, dy: 29, anchor: "start" }, { dx: -26, dy: 29, anchor: "end" },
+  { dx: 40, dy: 4, anchor: "start" }, { dx: -40, dy: 4, anchor: "end" },
+  { dx: 0, dy: -31, anchor: "middle" }, { dx: 0, dy: 38, anchor: "middle" },
+];
+
+function intersectArea(a: LabelBox, b: LabelBox) {
+  return Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left))
+    * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+}
+
+function makeLabelBox(city: string, x: number, y: number, anchor: LabelLayout["anchor"]): LabelBox {
+  const width = Math.max(24, Array.from(city).length * 13.2 + 4);
+  const left = anchor === "start" ? x : anchor === "end" ? x - width : x - width / 2;
+  return { left, right: left + width, top: y - 11.5, bottom: y + 3.5 };
+}
+
+const labelLayouts = new Map<string, LabelLayout>();
+const placedLabels: LabelBox[] = [];
+const labelOrder = [...projectedPlaces].sort((a, b) => {
+  const statusPriority = (place: Place) => place.status === "home" ? 0 : place.status === "lived" ? 1 : 2;
+  const priority = statusPriority(a.place) - statusPriority(b.place);
+  if (priority !== 0) return priority;
+  const neighborCount = ({ place, point }: (typeof projectedPlaces)[number]) => projectedPlaces
+    .filter((candidate) => candidate.place.slug !== place.slug && Math.hypot(point[0] - candidate.point[0], point[1] - candidate.point[1]) < 60)
+    .length;
+  return neighborCount(b) - neighborCount(a);
+});
+
+labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
+  let best: { candidate: (typeof labelCandidates)[number]; box: LabelBox; score: number } | undefined;
+  labelCandidates.forEach((candidate, candidateIndex) => {
+    const x = pointX + candidate.dx;
+    const y = pointY + candidate.dy;
+    const box = makeLabelBox(place.city, x, y, candidate.anchor);
+    const overlapScore = placedLabels.reduce((score, placed) => score + intersectArea(
+      { left: box.left - 7, right: box.right + 7, top: box.top - 4, bottom: box.bottom + 4 },
+      placed,
+    ), 0) * 80;
+    const markerScore = projectedPlaces.reduce((score, marker) => {
+      if (marker.place.slug === place.slug) return score;
+      const [markerX, markerY] = marker.point;
+      const inside = markerX > box.left - 7 && markerX < box.right + 7 && markerY > box.top - 7 && markerY < box.bottom + 7;
+      return score + (inside ? 260 : 0);
+    }, 0);
+    const outside = Math.max(0, 28 - box.left) + Math.max(0, box.right - 932)
+      + Math.max(0, 28 - box.top) + Math.max(0, box.bottom - 548);
+    const score = overlapScore + markerScore + outside * 500 + candidateIndex * 2;
+    if (!best || score < best.score) best = { candidate, box, score };
+  });
+  if (!best) return;
+  placedLabels.push(best.box);
+  const leaderEndX = Math.max(best.box.left, Math.min(pointX, best.box.right));
+  const leaderEndY = Math.max(best.box.top, Math.min(pointY, best.box.bottom));
+  const deltaX = leaderEndX - pointX;
+  const deltaY = leaderEndY - pointY;
+  const distance = Math.max(1, Math.hypot(deltaX, deltaY));
+  labelLayouts.set(place.slug, {
+    x: pointX + best.candidate.dx,
+    y: pointY + best.candidate.dy,
+    anchor: best.candidate.anchor,
+    leaderStartX: pointX + deltaX / distance * 7,
+    leaderStartY: pointY + deltaY / distance * 7,
+    leaderEndX,
+    leaderEndY,
+  });
+});
+---
+
+<section class="map-stage" data-footprint-map>
+  <div class="map-canvas">
+    <div class="map-topline">
+      <div class="map-title">
+        <span>Footprint Atlas · China</span>
+        <strong data-map-title>我的城市足迹</strong>
+        <small data-map-focus-meta hidden></small>
+      </div>
+      <div class="map-toolbar">
+        <span><i class="legend-dot home"></i>常驻</span>
+        <span><i class="legend-dot lived"></i>曾居</span>
+        <span><i class="legend-place legend-city"></i>到访城市</span>
+        <span class="map-filter-hint" data-map-filter-hint>点击省份进入省内视图</span>
+        <span class="map-selection" data-map-selection hidden>
+          <b data-map-selection-name></b>
+          <em data-map-selection-count></em>
+        </span>
+        <button type="button" data-map-reset>返回全国</button>
+      </div>
+    </div>
+
+    <svg class="china-map" viewBox="0 0 960 575" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="china-map-title china-map-desc">
+      <title id="china-map-title">我的中国旅行足迹地图</title>
+      <desc id="china-map-desc">北京以常驻地标记，去过的省级地区以朱砂红标记；点击省份进入省内视图，点击城市圆点查看旅行记录。</desc>
+      <g class="country-outline-layer" aria-hidden="true">
+        {provinces.map((province) => <path d={province.path} class="country-outline"></path>)}
+      </g>
+      <g class="province-layer">
+        {provinces.map((province, index) => (
+          <path
+            d={province.path}
+            class:list={["province", { visited: province.visited }]}
+            data-province={province.name}
+            data-map-bounds={province.bounds.join(",")}
+            data-map-first={provinceStats.get(province.name)?.first}
+            data-map-latest={provinceStats.get(province.name)?.latest}
+            data-map-latest-city={provinceStats.get(province.name)?.latestCity}
+            data-map-index={index}
+            tabindex={province.visited ? 0 : undefined}
+            role={province.visited ? "button" : undefined}
+            aria-label={province.visited ? `查看${province.name}的城市足迹` : undefined}
+          >
+            <title>{province.name}</title>
+          </path>
+        ))}
+      </g>
+      <g class="city-layer">
+        {places.map((place) => {
+          const [x, y] = project(place.coordinates);
+          const dense = places.some((candidate) => {
+            if (candidate.slug === place.slug) return false;
+            const [otherX, otherY] = project(candidate.coordinates);
+            return Math.hypot(x - otherX, y - otherY) < 38;
+          });
+          const label = labelLayouts.get(place.slug) ?? {
+            x: x + 12, y: y - 11, anchor: "start" as const,
+            leaderStartX: x + 5, leaderStartY: y - 5, leaderEndX: x + 10, leaderEndY: y - 8,
+          };
+          const markerLabel = place.status === "home" ? "家" : place.status === "lived" ? "故" : "";
+          return (
+            <a
+              href={`/footprints/${place.slug}/`}
+              class:list={[
+                "city-point",
+                `status-${place.status}`,
+                { dense: dense && place.status === "visited", "mobile-priority": place.status !== "visited" || place.slug === latestTravel?.slug },
+              ]}
+              data-province={place.province}
+              data-city={place.city}
+              data-visited={place.visited.join(",")}
+              data-href={`/footprints/${place.slug}/`}
+              data-summary={place.summary}
+              data-meta={place.status === "home" ? `常驻地 · Since ${place.since?.slice(0, 4) ?? "—"}` : place.status === "lived" ? "曾居地" : `城市 · ${place.province} · ${place.visited.at(-1)?.slice(0, 4)}${place.journeys.length ? ` · ${place.journeys.map((journey) => journey.name).join(" / ")}` : ""}`}
+              aria-label={place.status === "home" ? `查看常驻地${place.city}` : `查看${place.city}足迹`}
+            >
+              <circle class="city-hit" cx={x} cy={y} r="22"></circle>
+              {place.status !== "visited" && <circle class="city-pulse" cx={x} cy={y} r={place.status === "home" ? 21 : 16}></circle>}
+              {place.status !== "visited" ? (
+                <>
+                  <circle class="city-ring city-ring-outer" cx={x} cy={y} r={place.status === "home" ? 11 : 9}></circle>
+                  <circle class="city-ring city-ring-inner" cx={x} cy={y} r={place.status === "home" ? 7.5 : 6.5}></circle>
+                  <circle class="city-core" cx={x} cy={y} r={place.status === "home" ? 6 : 5.2}></circle>
+                  <text class="city-index" x={x} y={y + 3.3}>{markerLabel}</text>
+                </>
+              ) : (
+                <>
+                  <circle class="city-ring city-ring-outer" cx={x} cy={y} r="7"></circle>
+                  <circle class="city-core" cx={x} cy={y} r="3.7"></circle>
+                </>
+              )}
+              <line class="city-leader" x1={label.leaderStartX} y1={label.leaderStartY} x2={label.leaderEndX} y2={label.leaderEndY}></line>
+              <text class="city-label" x={label.x} y={label.y} text-anchor={label.anchor}>{place.city}</text>
+            </a>
+          );
+        })}
+      </g>
+    </svg>
+
+    <dialog class="map-place-dialog" data-map-place-dialog>
+      <button type="button" class="map-dialog-close" data-map-dialog-close aria-label="关闭地点卡片">×</button>
+      <span class="map-dialog-meta" data-map-dialog-meta></span>
+      <strong data-map-dialog-city></strong>
+      <p data-map-dialog-summary></p>
+      <a href="/footprints/" data-map-dialog-link>查看地点记录 →</a>
+    </dialog>
+
+    <div class="map-caption">
+      <p data-map-caption data-default-caption={homeBase ? `${homeBase.city}是生活的圆心，远方是不断延伸的半径。` : "每一个坐标，都是一段正在继续的生活。"}>{homeBase ? `${homeBase.city}是生活的圆心，远方是不断延伸的半径。` : "每一个坐标，都是一段正在继续的生活。"}</p>
+    </div>
+  </div>
+
+  <p class="map-legal">地图用于个人旅行记录展示；正式公开使用时请核对标准地图来源与审图要求。</p>
+
+  <aside class="place-panel" aria-live="polite">
+    <div class="panel-head">
+      <span class="panel-title">Latest Notes · 最近地点</span>
+      <div class="panel-nav">
+        <strong data-visible-count>最近 {defaultNoteCount} 条</strong>
+        <span class="panel-scroll-hint">横向浏览</span>
+        <button type="button" data-place-prev aria-label="向前浏览最近地点">←</button>
+        <button type="button" data-place-next aria-label="向后浏览最近地点">→</button>
+      </div>
+    </div>
+    <div class="place-list-wrap" data-place-list-wrap>
+      <div class="place-list" data-place-list>
+        {places.map((place, index) => (
+          <a
+            class:list={["place-card", `status-${place.status}`, { active: index === 0 }]}
+            href={`/footprints/${place.slug}/`}
+            data-province={place.province}
+            data-city={place.city}
+            hidden={index >= defaultNoteCount}
+          >
+            {place.cover
+              ? <img src={place.cover} alt="" loading={index === 0 ? "eager" : "lazy"} />
+              : <span class="place-card-stamp" aria-hidden="true">{place.status === "home" ? "家" : place.status === "lived" ? "故" : place.city.slice(0, 1)}</span>}
+            <span class="place-card-copy">
+              <span class="place-meta">
+                {place.status === "home"
+                  ? `常驻地 · Since ${place.since?.slice(0, 4) ?? "—"}`
+                  : place.status === "lived"
+                    ? `曾居地 · ${place.until?.slice(0, 4) ?? "2019"}年以前`
+                    : `城市 · ${place.province} · ${place.visited.at(-1)?.slice(0, 4)}`}
+              </span>
+              <strong>{place.city}</strong>
+              <small>{place.summary}</small>
+              <span class="place-link">{place.contentLabel} · 查看记录 →</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </aside>
+</section>
+
+<script>
+  function initFootprintMap() {
+    document.querySelectorAll<HTMLElement>("[data-footprint-map]").forEach((root) => {
+      if (root.dataset.ready === "true") return;
+      root.dataset.ready = "true";
+      const provincePaths = [...root.querySelectorAll<SVGPathElement>(".province.visited")];
+      const mapCanvas = root.querySelector<HTMLElement>(".map-canvas");
+      const mapSvg = root.querySelector<SVGSVGElement>(".china-map");
+      const mapTitle = root.querySelector<HTMLElement>("[data-map-title]");
+      const mapFocusMeta = root.querySelector<HTMLElement>("[data-map-focus-meta]");
+      const mapCaption = root.querySelector<HTMLElement>("[data-map-caption]");
+      const cityPoints = [...root.querySelectorAll<SVGAElement>(".city-point")];
+      const cards = [...root.querySelectorAll<HTMLElement>(".place-card")];
+      const count = root.querySelector<HTMLElement>("[data-visible-count]");
+      const selection = root.querySelector<HTMLElement>("[data-map-selection]");
+      const selectionName = root.querySelector<HTMLElement>("[data-map-selection-name]");
+      const selectionCount = root.querySelector<HTMLElement>("[data-map-selection-count]");
+      const filterHint = root.querySelector<HTMLElement>("[data-map-filter-hint]");
+      const placeList = root.querySelector<HTMLElement>("[data-place-list]");
+      const placeListWrap = root.querySelector<HTMLElement>("[data-place-list-wrap]");
+      const previousButton = root.querySelector<HTMLButtonElement>("[data-place-prev]");
+      const nextButton = root.querySelector<HTMLButtonElement>("[data-place-next]");
+      const defaultCount = Math.min(6, cards.length);
+      const placeDialog = root.querySelector<HTMLDialogElement>("[data-map-place-dialog]");
+      const dialogCity = placeDialog?.querySelector<HTMLElement>("[data-map-dialog-city]");
+      const dialogMeta = placeDialog?.querySelector<HTMLElement>("[data-map-dialog-meta]");
+      const dialogSummary = placeDialog?.querySelector<HTMLElement>("[data-map-dialog-summary]");
+      const dialogLink = placeDialog?.querySelector<HTMLAnchorElement>("[data-map-dialog-link]");
+      const defaultViewBox = [0, 0, 960, 575];
+      let viewBoxAnimation = 0;
+
+      const clearActiveCity = () => {
+        cityPoints.forEach((point) => point.classList.remove("active-city"));
+        cards.forEach((card) => card.classList.remove("active-city", "map-highlighted"));
+      };
+
+      const updateProvinceUrl = (province: string, mode: "push" | "replace" | false) => {
+        if (!mode) return;
+        const url = new URL(window.location.href);
+        if (province) url.searchParams.set("province", province);
+        else url.searchParams.delete("province");
+        window.history[mode === "push" ? "pushState" : "replaceState"]({}, "", url);
+      };
+
+      const focusViewBox = (path: SVGPathElement) => {
+        const bounds = (path.dataset.mapBounds ?? "").split(",").map(Number);
+        if (bounds.length !== 4 || bounds.some((value) => !Number.isFinite(value))) return defaultViewBox;
+        const [minX, minY, maxX, maxY] = bounds;
+        const mobile = window.matchMedia("(max-width: 640px)").matches;
+        const aspect = defaultViewBox[2] / defaultViewBox[3];
+        const minWidth = mobile ? 300 : 360;
+        const padding = mobile ? 34 : 52;
+        let width = Math.max(minWidth, maxX - minX + padding * 2);
+        let height = Math.max(minWidth / aspect, maxY - minY + padding * 2);
+        if (width / height > aspect) height = width / aspect;
+        else width = height * aspect;
+        width = Math.min(defaultViewBox[2], width);
+        height = Math.min(defaultViewBox[3], height);
+        const centerX = (minX + maxX) / 2;
+        const centerY = (minY + maxY) / 2;
+        const x = Math.max(0, Math.min(defaultViewBox[2] - width, centerX - width / 2));
+        const y = Math.max(0, Math.min(defaultViewBox[3] - height, centerY - height / 2));
+        return [x, y, width, height];
+      };
+
+      const animateViewBox = (target: number[]) => {
+        if (!mapSvg) return;
+        window.cancelAnimationFrame(viewBoxAnimation);
+        const current = (mapSvg.getAttribute("viewBox") ?? defaultViewBox.join(" ")).split(/\s+/).map(Number);
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          mapSvg.setAttribute("viewBox", target.join(" "));
+          return;
+        }
+        const startedAt = performance.now();
+        const tick = (now: number) => {
+          const progress = Math.min(1, (now - startedAt) / 420);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const next = current.map((value, index) => value + (target[index] - value) * eased);
+          mapSvg.setAttribute("viewBox", next.join(" "));
+          if (progress < 1) viewBoxAnimation = window.requestAnimationFrame(tick);
+        };
+        viewBoxAnimation = window.requestAnimationFrame(tick);
+      };
+
+      const selectProvince = (province = "", historyMode: "push" | "replace" | false = false) => {
+        const selectedPath = provincePaths.find((path) => path.dataset.province === province);
+        const activeProvince = selectedPath?.dataset.province ?? "";
+        clearActiveCity();
+        provincePaths.forEach((path) => path.classList.toggle("selected", path === selectedPath));
+        mapCanvas?.classList.toggle("is-focused", Boolean(selectedPath));
+        if (mapTitle) mapTitle.textContent = selectedPath ? `${activeProvince} · 城市足迹` : "我的城市足迹";
+        animateViewBox(selectedPath ? focusViewBox(selectedPath) : defaultViewBox);
+        cityPoints.forEach((point) => {
+          const selected = Boolean(activeProvince) && point.dataset.province === activeProvince;
+          point.classList.toggle("province-active", selected);
+          point.classList.toggle("muted", Boolean(activeProvince) && !selected);
+        });
+        let visible = 0;
+        cards.forEach((card, index) => {
+          const show = activeProvince ? card.dataset.province === activeProvince : index < defaultCount;
+          card.hidden = !show;
+          if (show) visible += 1;
+        });
+        const first = selectedPath?.dataset.mapFirst ?? "—";
+        const latest = selectedPath?.dataset.mapLatest ?? "—";
+        const latestCity = selectedPath?.dataset.mapLatestCity ?? "";
+        if (count) count.textContent = activeProvince ? `${visible} 个城市` : `最近 ${visible} 条`;
+        if (selection) selection.hidden = !activeProvince;
+        if (selectionName) selectionName.textContent = activeProvince;
+        if (selectionCount) selectionCount.textContent = `${visible} 个城市`;
+        if (filterHint) filterHint.hidden = Boolean(activeProvince);
+        if (mapFocusMeta) {
+          mapFocusMeta.hidden = !activeProvince;
+          mapFocusMeta.textContent = activeProvince ? `${visible} 城市 · 首次 ${first} · 最近 ${latestCity} ${latest}` : "";
+        }
+        if (mapCaption) mapCaption.textContent = activeProvince
+          ? `${activeProvince}的城市坐标已展开，选择一个地点继续查看。`
+          : mapCaption.dataset.defaultCaption ?? "";
+        if (placeList) placeList.scrollTo({ left: 0, behavior: "smooth" });
+        window.setTimeout(syncPlaceListControls, 220);
+        updateProvinceUrl(activeProvince, historyMode);
+        document.dispatchEvent(new CustomEvent("footprint:province", { detail: { province: activeProvince } }));
+      };
+
+      const syncPlaceListControls = () => {
+        if (!placeList || !placeListWrap) return;
+        const maxScroll = Math.max(0, placeList.scrollWidth - placeList.clientWidth);
+        const atStart = placeList.scrollLeft <= 2;
+        const atEnd = placeList.scrollLeft >= maxScroll - 2;
+        placeListWrap.classList.toggle("at-start", atStart);
+        placeListWrap.classList.toggle("at-end", atEnd);
+        if (previousButton) previousButton.disabled = atStart;
+        if (nextButton) nextButton.disabled = atEnd;
+      };
+
+      provincePaths.forEach((path) => {
+        path.addEventListener("click", () => selectProvince(path.classList.contains("selected") ? "" : path.dataset.province, "push"));
+        path.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            selectProvince(path.classList.contains("selected") ? "" : path.dataset.province, "push");
+          }
+        });
+      });
+      root.querySelector("[data-map-reset]")?.addEventListener("click", () => selectProvince("", "push"));
+      previousButton?.addEventListener("click", () => placeList?.scrollBy({ left: -placeList.clientWidth * .82, behavior: "smooth" }));
+      nextButton?.addEventListener("click", () => placeList?.scrollBy({ left: placeList.clientWidth * .82, behavior: "smooth" }));
+      placeList?.addEventListener("scroll", syncPlaceListControls, { passive: true });
+      window.addEventListener("resize", syncPlaceListControls, { passive: true });
+      cityPoints.forEach((point) => {
+        const index = cityPoints.indexOf(point);
+        const card = cards[index];
+        const highlightCard = () => card?.classList.add("map-highlighted");
+        const unhighlightCard = () => card?.classList.remove("map-highlighted");
+        point.addEventListener("mouseenter", highlightCard);
+        point.addEventListener("mouseleave", unhighlightCard);
+        point.addEventListener("focus", highlightCard);
+        point.addEventListener("blur", unhighlightCard);
+        point.addEventListener("click", (event) => {
+          if (window.matchMedia("(max-width: 760px)").matches && placeDialog) {
+            event.preventDefault();
+            if (dialogCity) dialogCity.textContent = point.dataset.city ?? "";
+            if (dialogMeta) dialogMeta.textContent = point.dataset.meta ?? "";
+            if (dialogSummary) dialogSummary.textContent = point.dataset.summary ?? "";
+            if (dialogLink) dialogLink.href = point.dataset.href ?? point.getAttribute("href") ?? "/footprints/";
+            placeDialog.showModal();
+            return;
+          }
+          if (!mapCanvas?.classList.contains("is-focused") || !card) return;
+          event.preventDefault();
+          clearActiveCity();
+          point.classList.add("active-city");
+          card.classList.add("active-city");
+          card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+        });
+      });
+      placeDialog?.querySelector("[data-map-dialog-close]")?.addEventListener("click", () => placeDialog.close());
+      placeDialog?.addEventListener("click", (event) => { if (event.target === placeDialog) placeDialog.close(); });
+      cards.forEach((card, index) => {
+        card.addEventListener("mouseenter", () => cityPoints[index]?.classList.add("highlighted"));
+        card.addEventListener("mouseleave", () => cityPoints[index]?.classList.remove("highlighted"));
+        card.addEventListener("focus", () => cityPoints[index]?.classList.add("highlighted"));
+        card.addEventListener("blur", () => cityPoints[index]?.classList.remove("highlighted"));
+      });
+      const initialProvince = new URL(window.location.href).searchParams.get("province") ?? "";
+      if (initialProvince && provincePaths.some((path) => path.dataset.province === initialProvince)) selectProvince(initialProvince, false);
+      window.addEventListener("popstate", () => selectProvince(new URL(window.location.href).searchParams.get("province") ?? "", false));
+      syncPlaceListControls();
+    });
+  }
+  document.addEventListener("astro:page-load", initFootprintMap);
+  initFootprintMap();
+</script>

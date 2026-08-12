@@ -49,4 +49,57 @@ const portfolio = defineCollection({
   }),
 });
 
-export const collections = { blog, portfolio };
+const footprints = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/footprints" }),
+  schema: z.object({
+    title: z.string(),
+    province: z.string(),
+    city: z.string(),
+    coordinates: z.tuple([z.number(), z.number()]),
+    status: z.enum(["home", "lived", "visited"]).default("visited"),
+    since: z.coerce.date().optional(),
+    until: z.coerce.date().optional(),
+    precision: z.enum(["day", "month", "year"]).default("month"),
+    visited: z.array(z.coerce.date()).min(1),
+    events: z
+      .array(
+        z.object({
+          date: z.coerce.date(),
+          precision: z.enum(["day", "month", "year"]).default("month"),
+          title: z.string(),
+          note: z.string().optional(),
+          href: z.string().optional(),
+        }),
+      )
+      .default([]),
+    journeys: z
+      .array(
+        z.object({
+          id: z.string(),
+          name: z.string(),
+          order: z.number().int().positive(),
+          date: z.coerce.date(),
+        }),
+      )
+      .default([]),
+    summary: z.string(),
+    cover: z.string().optional(),
+    photos: z
+      .array(
+        z.object({
+          src: z.string(),
+          alt: z.string(),
+          caption: z.string().optional(),
+          credit: z.string().optional(),
+          creditUrl: z.string().optional(),
+        }),
+      )
+      .default([]),
+    tags: z.array(z.string()).default([]),
+    featured: z.boolean().default(false),
+    sample: z.boolean().default(false),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { blog, portfolio, footprints };

@@ -38,6 +38,7 @@ export const SIDEBAR_LINKS: { badge: string; title: string; href: string }[] = [
 export const NAV: { label: string; href: string; key: string }[] = [
   { label: "首页 Home", href: "/", key: "home" },
   { label: "作品 Portfolio", href: "/portfolio/", key: "portfolio" },
+  { label: "足迹 Map", href: "/footprints/", key: "footprints" },
   { label: "工具 Tools", href: "/tools/", key: "tools" },
   { label: "技能 Skills", href: "/skills/", key: "skills" },
   { label: "归档 Archive", href: "/archive/", key: "archive" },
