@@ -1,0 +1,260 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import FootprintMap from "../../components/footprints/FootprintMap.astro";
+import { footprintDateLabel, footprintSlug, getFootprints, latestVisit, yearRange } from "../../lib/footprints";
+import "../../styles/pages/footprints.less";
+
+const footprints = await getFootprints();
+const provinces = new Set(footprints.map((entry) => entry.data.province));
+const homeBase = footprints.find((entry) => entry.data.status === "home");
+const travelFootprints = footprints.filter((entry) => entry.data.status === "visited");
+const travelVisits = travelFootprints.reduce((sum, entry) => sum + entry.data.visited.length, 0);
+const years = footprints.flatMap((entry) => entry.data.visited.map((date) => date.getFullYear()));
+const firstYear = years.length ? Math.min(...years) : new Date().getFullYear();
+const latestTrip = travelFootprints[0];
+const contentLabel = (entry: (typeof footprints)[number]) => entry.data.photos.length > 0
+  ? "有照片"
+  : entry.data.events.length > 1
+    ? "有游记"
+    : "仅足迹";
+const contentKey = (entry: (typeof footprints)[number]) => entry.data.photos.length > 0
+  ? "photos"
+  : entry.data.events.length > 1
+    ? "journal"
+    : "footprint";
+const archivedTrips = travelFootprints.reduce((groups, entry) => {
+  const year = latestVisit(entry).getFullYear();
+  const group = groups.get(year) ?? [];
+  group.push(entry);
+  groups.set(year, group);
+  return groups;
+}, new Map<number, typeof travelFootprints>());
+const archiveYears = [...archivedTrips.keys()].sort((a, b) => b - a);
+const residenceFootprints = footprints.filter((entry) => entry.data.status !== "visited");
+const archiveNumber = new Map(footprints.map((entry, index) => [footprintSlug(entry), index + 1]));
+const places = footprints.map((entry) => ({
+  slug: footprintSlug(entry),
+  title: entry.data.title,
+  province: entry.data.province,
+  city: entry.data.city,
+  coordinates: entry.data.coordinates,
+  visited: entry.data.visited.map((date) => date.toISOString().slice(0, 10)),
+  summary: entry.data.summary,
+  cover: entry.data.cover,
+  status: entry.data.status,
+  since: entry.data.since?.toISOString().slice(0, 10),
+  until: entry.data.until?.toISOString().slice(0, 10),
+  journeys: entry.data.journeys.map((journey) => ({
+    ...journey,
+    date: journey.date.toISOString().slice(0, 10),
+  })),
+  contentLabel: contentLabel(entry),
+  sample: entry.data.sample,
+}));
+---
+
+<BaseLayout active="footprints" title="我的足迹" description="在地图上，重新经过那些抵达过的地方。">
+  <div class="article-shell footprints-page">
+    <section class="page-head footprints-head">
+      <div>
+        <div class="kicker">
+          <span class="dot"></span>
+          <span>Footprints · 我的足迹</span>
+          <span class="rule"></span>
+          <span>Places I Have Been</span>
+        </div>
+        <h1>地图展开，<br />故事才刚刚开始。</h1>
+        <p class="sub">在地图上，重新经过那些抵达过的地方。这里收下沿途的文字、照片，以及一些后来才明白的事情。</p>
+      </div>
+    </section>
+
+    {footprints.some((entry) => entry.data.sample) && (
+      <aside class="sample-notice">
+        <span>Prototype · 示例数据</span>
+        <p>目前用四座城市演示版式与交互，地点、日期和文字请按你的真实经历替换；示例照片来自 Unsplash。</p>
+      </aside>
+    )}
+
+    <div class="footprints-strip">
+      <div><span class="label">常驻</span><span class="value">{homeBase ? `${homeBase.data.city} · Since ${homeBase.data.since?.getFullYear() ?? firstYear}` : "—"}</span></div>
+      <div><span class="label">省级地区</span><span class="value">{provinces.size} 个省级地区</span></div>
+      <div><span class="label">旅行记录</span><span class="value">{travelVisits} 次抵达 · {travelFootprints.length} 个地点</span></div>
+      <div><span class="label">最近旅行</span><span class="value">{latestTrip ? `${latestTrip.data.city} · ${footprintDateLabel(latestVisit(latestTrip), latestTrip.data.precision)}` : "—"}</span></div>
+    </div>
+
+    <FootprintMap places={places} />
+
+    <section class="footprint-index" data-footprint-archive>
+      <header class="section-head">
+        <h3>抵达记录</h3>
+        <span class="latin">Journey Archive</span>
+        <span class="count"><em data-archive-count>{footprints.length}</em> Places</span>
+      </header>
+      <div class="archive-toolbar" aria-label="筛选足迹记录">
+        <div class="archive-filter-group">
+          <span>年份</span>
+          <button type="button" class="active" data-archive-year="" aria-pressed="true">全部</button>
+          {archiveYears.map((year) => <button type="button" data-archive-year={year} aria-pressed="false">{year}</button>)}
+        </div>
+        <div class="archive-filter-group archive-content-filter">
+          <span>内容</span>
+          <button type="button" class="active" data-archive-content="" aria-pressed="true">全部</button>
+          <button type="button" data-archive-content="photos" aria-pressed="false">有照片</button>
+          <button type="button" data-archive-content="journal" aria-pressed="false">有游记</button>
+          <button type="button" data-archive-content="footprint" aria-pressed="false">仅足迹</button>
+        </div>
+        <div class="archive-filter-state"><span data-archive-province>全部地区</span><button type="button" data-archive-reset>清除筛选</button></div>
+      </div>
+
+      <div class="journey-years">
+        {archiveYears.map((year, groupIndex) => {
+          const entries = archivedTrips.get(year) ?? [];
+          return (
+            <details class="journey-year" data-archive-group data-year={year} open={groupIndex < 2}>
+              <summary><strong>{year}</strong><span>{entries.length} 个地点</span><i aria-hidden="true">＋</i></summary>
+              <div class="journey-rows">
+                {entries.map((entry) => (
+                  <a
+                    class:list={["journey-row", `status-${entry.data.status}`]}
+                    href={`/footprints/${footprintSlug(entry)}/`}
+                    data-archive-entry
+                    data-province={entry.data.province}
+                    data-years={entry.data.visited.map((date) => date.getFullYear()).join(",")}
+                    data-content={contentKey(entry)}
+                  >
+                    <span class="journey-num">No. {String(archiveNumber.get(footprintSlug(entry))).padStart(2, "0")}</span>
+                    <span class="journey-row-copy">
+                      <span class="journey-meta">城市 · {entry.data.province} · {yearRange(entry)} · {entry.data.visited.length} 次 <em>{contentLabel(entry)}</em></span>
+                      <strong>{entry.data.city}</strong>
+                      <small>{entry.data.summary}</small>
+                      {entry.data.journeys.length > 0 && <span class="journey-name">↳ {entry.data.journeys.map((journey) => journey.name).join(" · ")}</span>}
+                    </span>
+                    <span class="journey-arrow" aria-hidden="true">→</span>
+                  </a>
+                ))}
+              </div>
+            </details>
+          );
+        })}
+
+        {residenceFootprints.length > 0 && (
+          <details class="journey-year residence-year" data-archive-group open>
+            <summary><strong>生活坐标</strong><span>{residenceFootprints.length} 个地点</span><i aria-hidden="true">＋</i></summary>
+            <div class="journey-rows">
+              {residenceFootprints.map((entry) => (
+                <a
+                  class:list={["journey-row", `status-${entry.data.status}`]}
+                  href={`/footprints/${footprintSlug(entry)}/`}
+                  data-archive-entry
+                  data-province={entry.data.province}
+                  data-years=""
+                  data-content={contentKey(entry)}
+                >
+                  <span class="journey-num">{entry.data.status === "home" ? "家" : "故"}</span>
+                  <span class="journey-row-copy">
+                    <span class="journey-meta">{entry.data.status === "home" ? `常驻地 · Since ${entry.data.since?.getFullYear() ?? firstYear}` : "曾居地 · 2019 年以前"} <em>{contentLabel(entry)}</em></span>
+                    <strong>{entry.data.city}</strong>
+                    <small>{entry.data.summary}</small>
+                  </span>
+                  <span class="journey-arrow" aria-hidden="true">→</span>
+                </a>
+              ))}
+            </div>
+          </details>
+        )}
+      </div>
+      <div class="archive-empty" data-archive-empty hidden aria-live="polite">
+        <strong>没有匹配的记录</strong>
+        <p>这类内容还在整理中，换个筛选条件看看。</p>
+        <button type="button" data-archive-empty-reset>查看全部足迹</button>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  function initFootprintArchive() {
+    document.querySelectorAll<HTMLElement>("[data-footprint-archive]").forEach((root) => {
+      if (root.dataset.ready === "true") return;
+      root.dataset.ready = "true";
+      const rows = [...root.querySelectorAll<HTMLElement>("[data-archive-entry]")];
+      const groups = [...root.querySelectorAll<HTMLDetailsElement>("[data-archive-group]")];
+      const yearButtons = [...root.querySelectorAll<HTMLButtonElement>("[data-archive-year]")];
+      const contentButtons = [...root.querySelectorAll<HTMLButtonElement>("[data-archive-content]")];
+      const count = root.querySelector<HTMLElement>("[data-archive-count]");
+      const provinceLabel = root.querySelector<HTMLElement>("[data-archive-province]");
+      const empty = root.querySelector<HTMLElement>("[data-archive-empty]");
+      const initialProvince = new URL(window.location.href).searchParams.get("province") ?? "";
+      const lifecycle = new AbortController();
+      document.addEventListener("astro:before-swap", () => lifecycle.abort(), { once: true });
+      let activeYear = "";
+      let activeContent = "";
+      let activeProvince = rows.some((row) => row.dataset.province === initialProvince) ? initialProvince : "";
+
+      const syncButtons = (buttons: HTMLButtonElement[], active: string, key: "archiveYear" | "archiveContent") => {
+        buttons.forEach((button) => {
+          const selected = button.dataset[key] === active;
+          button.classList.toggle("active", selected);
+          button.setAttribute("aria-pressed", String(selected));
+        });
+      };
+
+      const restoreMobileOpenState = () => {
+        if (!window.matchMedia("(max-width: 640px)").matches) return;
+        groups.forEach((group, index) => { group.open = index === 0; });
+      };
+
+      const applyFilters = () => {
+        const hasActiveFilter = Boolean(activeYear || activeContent || activeProvince);
+        let visible = 0;
+        rows.forEach((row) => {
+          const years = (row.dataset.years ?? "").split(",").filter(Boolean);
+          const show = (!activeYear || years.includes(activeYear))
+            && (!activeContent || row.dataset.content === activeContent)
+            && (!activeProvince || row.dataset.province === activeProvince);
+          row.hidden = !show;
+          if (show) visible += 1;
+        });
+        groups.forEach((group) => {
+          const hasVisible = [...group.querySelectorAll<HTMLElement>("[data-archive-entry]")].some((row) => !row.hidden);
+          group.hidden = !hasVisible;
+          if (hasActiveFilter && hasVisible) group.open = true;
+        });
+        if (!hasActiveFilter) restoreMobileOpenState();
+        if (count) count.textContent = String(visible);
+        if (provinceLabel) provinceLabel.textContent = activeProvince || "全部地区";
+        if (empty) empty.hidden = visible !== 0;
+      };
+
+      restoreMobileOpenState();
+
+      yearButtons.forEach((button) => button.addEventListener("click", () => {
+        activeYear = button.dataset.archiveYear ?? "";
+        syncButtons(yearButtons, activeYear, "archiveYear");
+        applyFilters();
+      }));
+      contentButtons.forEach((button) => button.addEventListener("click", () => {
+        activeContent = button.dataset.archiveContent ?? "";
+        syncButtons(contentButtons, activeContent, "archiveContent");
+        applyFilters();
+      }));
+      document.addEventListener("footprint:province", (event) => {
+        activeProvince = (event as CustomEvent<{ province: string }>).detail.province ?? "";
+        applyFilters();
+      }, { signal: lifecycle.signal });
+      const resetFilters = () => {
+        activeYear = "";
+        activeContent = "";
+        syncButtons(yearButtons, activeYear, "archiveYear");
+        syncButtons(contentButtons, activeContent, "archiveContent");
+        document.querySelector<HTMLButtonElement>("[data-map-reset]")?.click();
+        applyFilters();
+      };
+      root.querySelector("[data-archive-reset]")?.addEventListener("click", resetFilters);
+      root.querySelector("[data-archive-empty-reset]")?.addEventListener("click", resetFilters);
+      applyFilters();
+    });
+  }
+  document.addEventListener("astro:page-load", initFootprintArchive);
+  initFootprintArchive();
+</script>

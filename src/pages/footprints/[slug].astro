@@ -1,0 +1,231 @@
+---
+import { render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SITE } from "../../consts";
+import { footprintDateLabel, footprintPath, footprintSlug, getFootprints, latestVisit, yearRange } from "../../lib/footprints";
+import "../../styles/pages/footprints.less";
+
+export async function getStaticPaths() {
+  const footprints = await getFootprints();
+  return footprints.map((entry, index) => {
+    const activeJourney = [...entry.data.journeys].sort((a, b) => b.date.getTime() - a.date.getTime())[0];
+    const journeyStops = activeJourney
+      ? footprints
+          .flatMap((candidate) => candidate.data.journeys
+            .filter((journey) => journey.id === activeJourney.id)
+            .map((journey) => ({ entry: candidate, order: journey.order })))
+          .sort((a, b) => a.order - b.order)
+      : [];
+    const currentStop = journeyStops.findIndex((stop) => footprintSlug(stop.entry) === footprintSlug(entry));
+    return {
+      params: { slug: footprintSlug(entry) },
+      props: {
+        entry,
+        newer: footprints[index - 1],
+        older: footprints[index + 1],
+        activeJourney,
+        tripPrevious: currentStop > 0 ? journeyStops[currentStop - 1].entry : undefined,
+        tripNext: currentStop >= 0 && currentStop < journeyStops.length - 1 ? journeyStops[currentStop + 1].entry : undefined,
+        journeyStops: journeyStops.map((stop) => ({
+          city: stop.entry.data.city,
+          path: footprintPath(stop.entry),
+          order: stop.order,
+          current: footprintSlug(stop.entry) === footprintSlug(entry),
+        })),
+      },
+    };
+  });
+}
+
+const { entry, newer, older, activeJourney, tripPrevious, tripNext, journeyStops } = Astro.props;
+const { Content, headings } = await render(entry);
+const { data } = entry;
+const latest = latestVisit(entry);
+const isHome = data.status === "home";
+const isLived = data.status === "lived";
+const homeSince = data.since ?? data.visited[0];
+const pad2 = (value: number) => String(value).padStart(2, "0");
+const ymd = (date: Date) => `${date.getFullYear()}.${pad2(date.getMonth() + 1)}.${pad2(date.getDate())}`;
+const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3);
+const previousStop = activeJourney ? tripPrevious : newer;
+const nextStop = activeJourney ? tripNext : older;
+const placeLocation = [data.province, data.city].filter((value, index, values) => value && values.indexOf(value) === index).join(" · ");
+---
+
+<BaseLayout
+  active="footprints"
+  title={data.title}
+  description={data.summary}
+  image={data.cover ?? SITE.avatar}
+  type="article"
+  article={{ date: latest, author: SITE.author, tags: data.tags }}
+>
+  <div class:list={["article-shell", "footprint-detail", { "status-home": isHome }]}>
+    <nav class="footprint-breadcrumb" aria-label="面包屑">
+      <a href="/footprints/">我的足迹</a><span>/</span><span>{data.province}</span><span>/</span><strong>{data.city}</strong>
+    </nav>
+
+    <section class="footprint-case-head">
+      <div class="kicker"><span class="rule"></span><span>{isHome ? `Home Base · 常驻地 · ${data.province}` : isLived ? `Once Home · 曾居地 · ${data.province}` : `${data.province} · ${yearRange(entry)}`}</span><span class="rule"></span></div>
+      <h1>{data.title}</h1>
+      <p>{data.summary}</p>
+      <div class="case-byline">
+        {isHome
+          ? <><span>生活的圆心</span><span class="sep"></span><span>Since {homeSince.getFullYear()} · 至今</span></>
+          : isLived
+            ? <><span>成长的原点</span><span class="sep"></span><span>{data.until ? `${data.until.getFullYear()}年以前` : yearRange(entry)}</span></>
+          : <><span>{data.visited.length} 次抵达</span><span class="sep"></span><span>最近 {ymd(latest)}</span></>}
+        {data.sample && <><span class="sep"></span><span class="accent">示例内容</span></>}
+        {activeJourney && <><span class="sep"></span><span class="accent">{activeJourney.name}</span></>}
+      </div>
+    </section>
+
+    {data.cover && (
+      <figure class="footprint-cover">
+        <img src={data.cover} alt={`${data.city}旅行照片`} loading="eager" decoding="async" fetchpriority="high" />
+        <figcaption>{data.city} · {isHome ? `Home Base Since ${homeSince.getFullYear()}` : yearRange(entry)}</figcaption>
+      </figure>
+    )}
+
+    <div class="footprint-meta-strip">
+      <div><span class="label">地点</span><span class="value">{placeLocation}</span></div>
+      <div><span class="label">坐标</span><span class="value">{data.coordinates[1].toFixed(2)}°N · {data.coordinates[0].toFixed(2)}°E</span></div>
+      <div><span class="label">类型</span><span class="value">{isHome ? "常驻地 · Home Base" : isLived ? "曾居地 · Once Home" : `城市 · ${data.visited.length} 次`}</span></div>
+      <div><span class="label">时间</span><span class="value">{isHome ? `${homeSince.getFullYear()}—至今` : isLived && data.until ? `${data.until.getFullYear()}年以前` : yearRange(entry)}</span></div>
+    </div>
+
+    <div class="footprint-story-layout">
+      <article class="footprint-prose">
+        <Content />
+
+        {data.events.length > 0 && (
+          <section class="footprint-event-section" aria-labelledby="footprint-event-title">
+            <div class="photo-journal-head">
+              <h2 id="footprint-event-title">时间轴</h2>
+              <span>{data.events.length} Moments</span>
+            </div>
+            <ol class="footprint-events">
+              {[...data.events].sort((a, b) => b.date.getTime() - a.date.getTime()).map((event) => (
+                <li>
+                  <time>{footprintDateLabel(event.date, event.precision)}</time>
+                  <div>
+                    <strong>{event.href ? <a href={event.href} target="_blank" rel="noopener">{event.title} ↗</a> : event.title}</strong>
+                    {event.note && <p>{event.note}</p>}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {data.photos.length > 0 && (
+          <section class="photo-journal" aria-labelledby="photo-journal-title">
+            <div class="photo-journal-head">
+              <h2 id="photo-journal-title">照片记录</h2>
+              <span>{data.photos.length} Frames</span>
+            </div>
+            <div class="photo-grid">
+              {data.photos.map((photo, index) => (
+                <figure>
+                  <button type="button" class="photo-open" data-photo-index={index} aria-label={`放大照片：${photo.alt}`}>
+                    <img src={photo.src} alt={photo.alt} loading="lazy" />
+                  </button>
+                  <figcaption>
+                    <span>{photo.caption ?? photo.alt}</span>
+                    {photo.credit && (
+                      photo.creditUrl
+                        ? <a href={photo.creditUrl} target="_blank" rel="noopener">Photo · {photo.credit} ↗</a>
+                        : <small>Photo · {photo.credit}</small>
+                    )}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
+      </article>
+
+      <aside class="footprint-side">
+        <div class="side-block">
+          <span class="side-label">{isHome ? "Living · 常驻时间" : "Visited · 到访日期"}</span>
+          {isHome
+            ? <ol><li class="home-period">{ymd(homeSince)} — 至今</li></ol>
+            : isLived
+              ? <ol><li class="home-period">{data.until ? `${data.until.getFullYear()}年以前` : yearRange(entry)}</li></ol>
+              : <ol>{[...data.visited].sort((a, b) => b.getTime() - a.getTime()).map((date) => <li>{footprintDateLabel(date, data.precision)}</li>)}</ol>}
+        </div>
+        {activeJourney && journeyStops.length > 1 && (
+          <div class="side-block footprint-journey-stops">
+            <span class="side-label">Journey · 本次行程</span>
+            <strong>{activeJourney.name}</strong>
+            <ol>
+              {journeyStops.map((stop) => (
+                <li class:list={{ current: stop.current }}><a href={stop.path}><span>{String(stop.order).padStart(2, "0")}</span>{stop.city}</a></li>
+              ))}
+            </ol>
+          </div>
+        )}
+        <div class="side-block">
+          <span class="side-label">Tags · 关键词</span>
+          <div class="footprint-tags">{data.tags.map((tag) => <span>#{tag}</span>)}</div>
+        </div>
+        {toc.length > 0 && (
+          <div class="side-block footprint-toc">
+            <span class="side-label">Contents · 此行小记</span>
+            <ol>{toc.map((heading) => <li data-depth={heading.depth}><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ol>
+          </div>
+        )}
+      </aside>
+    </div>
+
+    <div class="footprint-next-prev">
+      {previousStop ? <a href={footprintPath(previousStop)}><span>← {activeJourney ? "同程上一站" : "较近一站"}</span><strong>{previousStop.data.city}</strong></a> : <span></span>}
+      <a class="back-map" href="/footprints/">回到地图</a>
+      {nextStop ? <a class="next" href={footprintPath(nextStop)}><span>{activeJourney ? "同程下一站" : "更早一站"} →</span><strong>{nextStop.data.city}</strong></a> : <span></span>}
+    </div>
+  </div>
+
+  {data.photos.length > 0 && (
+    <>
+      <script is:inline type="application/json" data-photo-data set:html={JSON.stringify(data.photos)}></script>
+      <dialog class="photo-lightbox" data-photo-lightbox>
+        <button type="button" class="lightbox-close" aria-label="关闭照片">×</button>
+        <button type="button" class="lightbox-prev" aria-label="上一张照片">←</button>
+        <figure><img src="" alt="" /><figcaption></figcaption></figure>
+        <button type="button" class="lightbox-next" aria-label="下一张照片">→</button>
+      </dialog>
+    </>
+  )}
+
+  <script>
+    function initFootprintGallery() {
+      const dialog = document.querySelector<HTMLDialogElement>('[data-photo-lightbox]');
+      const photoData = document.querySelector<HTMLScriptElement>('[data-photo-data]');
+      if (!dialog || dialog.dataset.ready === 'true') return;
+      const photos = JSON.parse(photoData?.textContent || '[]') as Array<{ src: string; alt: string; caption?: string }>;
+      if (!photos.length) return;
+      dialog.dataset.ready = 'true';
+      const image = dialog.querySelector<HTMLImageElement>('img')!;
+      const caption = dialog.querySelector<HTMLElement>('figcaption')!;
+      let current = 0;
+      const show = (index: number) => {
+        current = (index + photos.length) % photos.length;
+        image.src = photos[current].src;
+        image.alt = photos[current].alt;
+        caption.textContent = photos[current].caption || photos[current].alt;
+      };
+      document.querySelectorAll<HTMLButtonElement>('[data-photo-index]').forEach((button) => {
+        button.addEventListener('click', () => {
+          show(Number(button.dataset.photoIndex || 0));
+          dialog.showModal();
+        });
+      });
+      dialog.querySelector('.lightbox-close')?.addEventListener('click', () => dialog.close());
+      dialog.querySelector('.lightbox-prev')?.addEventListener('click', () => show(current - 1));
+      dialog.querySelector('.lightbox-next')?.addEventListener('click', () => show(current + 1));
+      dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+    }
+    document.addEventListener('astro:page-load', initFootprintGallery);
+    initFootprintGallery();
+  </script>
+</BaseLayout>
