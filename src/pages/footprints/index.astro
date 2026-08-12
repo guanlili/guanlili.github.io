@@ -184,9 +184,12 @@ const places = footprints.map((entry) => ({
       const count = root.querySelector<HTMLElement>("[data-archive-count]");
       const provinceLabel = root.querySelector<HTMLElement>("[data-archive-province]");
       const empty = root.querySelector<HTMLElement>("[data-archive-empty]");
+      const initialProvince = new URL(window.location.href).searchParams.get("province") ?? "";
+      const lifecycle = new AbortController();
+      document.addEventListener("astro:before-swap", () => lifecycle.abort(), { once: true });
       let activeYear = "";
       let activeContent = "";
-      let activeProvince = "";
+      let activeProvince = rows.some((row) => row.dataset.province === initialProvince) ? initialProvince : "";
 
       const syncButtons = (buttons: HTMLButtonElement[], active: string, key: "archiveYear" | "archiveContent") => {
         buttons.forEach((button) => {
@@ -238,7 +241,7 @@ const places = footprints.map((entry) => ({
       document.addEventListener("footprint:province", (event) => {
         activeProvince = (event as CustomEvent<{ province: string }>).detail.province ?? "";
         applyFilters();
-      });
+      }, { signal: lifecycle.signal });
       const resetFilters = () => {
         activeYear = "";
         activeContent = "";
@@ -249,6 +252,7 @@ const places = footprints.map((entry) => ({
       };
       root.querySelector("[data-archive-reset]")?.addEventListener("click", resetFilters);
       root.querySelector("[data-archive-empty-reset]")?.addEventListener("click", resetFilters);
+      applyFilters();
     });
   }
   document.addEventListener("astro:page-load", initFootprintArchive);
