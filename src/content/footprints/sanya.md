@@ -1,6 +1,7 @@
 ---
 title: "三亚｜两段海南记忆与陵水途中"
 province: "海南省"
+prefecture: "三亚市"
 city: "三亚"
 coordinates: [109.5121, 18.2528]
 status: "visited"

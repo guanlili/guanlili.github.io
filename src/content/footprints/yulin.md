@@ -1,6 +1,7 @@
 ---
 title: "榆林｜2023 年 5 月"
 province: "陕西省"
+prefecture: "榆林市"
 city: "榆林"
 coordinates: [109.7346, 38.2854]
 status: "visited"

@@ -1,6 +1,7 @@
 ---
 title: "大连｜2019 年北方沿海行"
 province: "辽宁省"
+prefecture: "大连市"
 city: "大连"
 coordinates: [121.6147, 38.9140]
 status: "visited"

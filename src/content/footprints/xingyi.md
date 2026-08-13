@@ -1,6 +1,7 @@
 ---
 title: "兴义｜2025 年春天"
 province: "贵州省"
+prefecture: "黔西南布依族苗族自治州"
 city: "兴义"
 coordinates: [104.8955, 25.0919]
 status: "visited"

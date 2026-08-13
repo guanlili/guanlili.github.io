@@ -1,6 +1,7 @@
 ---
 title: "烟台｜2019 年蓬莱一站"
 province: "山东省"
+prefecture: "烟台市"
 city: "烟台"
 coordinates: [121.4479, 37.4638]
 status: "visited"

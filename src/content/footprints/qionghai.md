@@ -1,6 +1,7 @@
 ---
 title: "琼海｜海南环岛东线"
 province: "海南省"
+prefecture: "琼海市"
 city: "琼海"
 coordinates: [110.4745, 19.2591]
 status: "visited"

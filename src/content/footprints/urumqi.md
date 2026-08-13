@@ -1,6 +1,7 @@
 ---
 title: "乌鲁木齐｜新疆之行第一站"
 province: "新疆维吾尔自治区"
+prefecture: "乌鲁木齐市"
 city: "乌鲁木齐"
 coordinates: [87.6168, 43.8256]
 status: "visited"

@@ -1,6 +1,7 @@
 ---
 title: "汕头｜潮汕行"
 province: "广东省"
+prefecture: "汕头市"
 city: "汕头"
 coordinates: [116.6822, 23.3535]
 status: "visited"

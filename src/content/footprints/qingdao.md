@@ -1,6 +1,7 @@
 ---
 title: "青岛｜2019 年北方沿海行"
 province: "山东省"
+prefecture: "青岛市"
 city: "青岛"
 coordinates: [120.3826, 36.0671]
 status: "visited"

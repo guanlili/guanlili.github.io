@@ -1,6 +1,7 @@
 ---
 title: "博乐｜赛里木湖"
 province: "新疆维吾尔自治区"
+prefecture: "博尔塔拉蒙古自治州"
 city: "博乐"
 coordinates: [82.0667, 44.9066]
 status: "visited"

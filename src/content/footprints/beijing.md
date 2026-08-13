@@ -1,6 +1,7 @@
 ---
 title: "北京｜从求学到定居"
 province: "北京市"
+prefecture: "北京市"
 city: "北京"
 coordinates: [116.4074, 39.9042]
 status: "home"

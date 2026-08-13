@@ -1,6 +1,7 @@
 ---
 title: "海口｜第一次海南行"
 province: "海南省"
+prefecture: "海口市"
 city: "海口"
 coordinates: [110.1983, 20.0440]
 status: "visited"

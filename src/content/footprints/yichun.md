@@ -1,6 +1,7 @@
 ---
 title: "伊春｜小兴安岭盛夏"
 province: "黑龙江省"
+prefecture: "伊春市"
 city: "伊春"
 coordinates: [128.8786, 47.7231]
 status: "visited"

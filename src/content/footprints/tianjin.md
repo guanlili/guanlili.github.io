@@ -1,6 +1,7 @@
 ---
 title: "天津｜城市漫游与音乐节"
 province: "天津市"
+prefecture: "天津市"
 city: "天津"
 coordinates: [117.2009, 39.0842]
 status: "visited"

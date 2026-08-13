@@ -1,6 +1,7 @@
 ---
 title: "永州｜2023 年盛夏"
 province: "湖南省"
+prefecture: "永州市"
 city: "永州"
 coordinates: [111.6134, 26.4204]
 status: "visited"

@@ -1,6 +1,7 @@
 ---
 title: "九江｜赣北初夏"
 province: "江西省"
+prefecture: "九江市"
 city: "九江"
 coordinates: [115.9536, 29.6615]
 status: "visited"

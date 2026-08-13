@@ -1,6 +1,7 @@
 ---
 title: "桂林｜阳朔山水之间"
 province: "广西壮族自治区"
+prefecture: "桂林市"
 city: "桂林"
 coordinates: [110.2902, 25.2736]
 status: "visited"

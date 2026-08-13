@@ -87,6 +87,8 @@
 .legend-dot.lived { border-radius: 50%; border-color: var(--accent); background: color-mix(in srgb, var(--accent) 20%, var(--paper)); border-style: dashed; transform: none; }
 .legend-place { display: block; width: 7px; height: 7px; border: 1px solid var(--paper); background: var(--accent); }
 .legend-city { border-radius: 50%; box-shadow: 0 0 0 1px var(--accent); }
+.prefecture-legend[hidden] { display: none; }
+.prefecture-legend i { display: block; width: 10px; height: 7px; border: 1px solid color-mix(in srgb, var(--ink) 46%, var(--paper)); background: color-mix(in srgb, var(--paper) 84%, transparent); }
 .china-map { position: relative; z-index: 2; width: 100%; height: auto; max-height: 625px; display: block; margin: 7px auto 0; overflow: visible; shape-rendering: geometricPrecision; }
 .province {
   fill: color-mix(in srgb, var(--paper) 69%, #94aaa4);
@@ -105,7 +107,32 @@
 .province-layer:has(.province.selected) .province.visited:not(.selected) { opacity: .32; }
 .map-canvas.is-focused .province-layer .province:not(.selected) { opacity: .12; }
 .map-canvas.is-focused .province.selected { stroke: color-mix(in srgb, var(--accent) 66%, var(--ink)); stroke-width: 1.4; }
-.city-point { color: var(--accent-ink); transition: opacity .18s ease; }
+.prefecture-layer { opacity: 0; pointer-events: none; transition: opacity .22s ease; }
+.prefecture-layer.is-visible { opacity: 1; pointer-events: auto; }
+.prefecture-region path { fill: color-mix(in srgb, var(--paper) 86%, transparent); stroke: color-mix(in srgb, var(--ink) 38%, var(--paper)); stroke-width: .72; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; transition: fill .16s ease, opacity .16s ease; }
+.prefecture-region.visited path { fill: color-mix(in srgb, var(--accent) 24%, var(--paper)); cursor: pointer; }
+.prefecture-region.visited:hover path,
+.prefecture-region.visited:focus-within path,
+.prefecture-region.active-region path { fill: color-mix(in srgb, var(--accent) 42%, var(--paper)); stroke: var(--accent-ink); stroke-width: 1.1; outline: none; }
+.prefecture-label { fill: var(--ink-3); stroke: color-mix(in srgb, var(--paper) 94%, transparent); stroke-width: 1.8; paint-order: stroke fill; font-family: var(--serif); font-size: var(--prefecture-label-size, 4.2px); font-weight: 600; text-anchor: middle; pointer-events: none; }
+.prefecture-region:not(.visited) .prefecture-label { opacity: .72; font-weight: 500; }
+.prefecture-region.visited .prefecture-label { fill: var(--accent-ink); font-weight: 700; }
+.map-canvas.is-loading-prefectures .prefecture-layer { opacity: .35; }
+.map-canvas:not(.is-focused) .city-point { pointer-events: none; }
+.map-canvas.is-focused .city-point.province-active .city-hit { r: var(--city-focus-hit-radius, 5px); }
+.map-canvas.is-focused .city-point.province-active.status-visited .city-ring-outer { r: var(--city-focus-ring-radius, 3px); }
+.map-canvas.is-focused .city-point.province-active.status-visited .city-core { r: var(--city-focus-core-radius, 1.8px); }
+.map-canvas.is-focused .city-point.province-active.status-home .city-ring-outer,
+.map-canvas.is-focused .city-point.province-active.status-lived .city-ring-outer { r: var(--city-focus-home-ring-radius, 4px); }
+.map-canvas.is-focused .city-point.province-active.status-home .city-ring-inner,
+.map-canvas.is-focused .city-point.province-active.status-lived .city-ring-inner { r: var(--city-focus-home-inner-radius, 3px); }
+.map-canvas.is-focused .city-point.province-active.status-home .city-core,
+.map-canvas.is-focused .city-point.province-active.status-lived .city-core { r: var(--city-focus-home-core-radius, 2.5px); }
+.map-canvas.is-focused .city-point.province-active .city-pulse { r: var(--city-focus-pulse-radius, 8px); }
+.map-canvas.is-focused .city-point.province-active .city-index { font-size: var(--city-focus-index-size, 3px); }
+.map-canvas.is-focused .city-point.province-active .city-label { font-size: var(--city-focus-label-size, 4.8px); stroke-width: 2.2; }
+.map-canvas.has-prefectures .city-leader { stroke-width: .55; }
+.city-point { color: var(--accent-ink); outline: none; -webkit-tap-highlight-color: transparent; transition: opacity .18s ease; }
 .city-hit { fill: transparent; stroke: none; pointer-events: all; }
 .city-point.muted { opacity: .16; pointer-events: none; }
 .map-canvas.is-focused .city-point.muted { opacity: 0; }
@@ -130,6 +157,7 @@
 .city-point:focus .city-ring,
 .city-point.highlighted .city-ring,
 .city-point.active-city .city-ring { fill: var(--paper); stroke-width: 2; }
+.city-point:focus-visible .city-ring-outer { stroke: var(--accent-ink); stroke-width: 2.2; }
 .city-label { fill: var(--ink-2); stroke: var(--paper); stroke-width: 3.7; paint-order: stroke fill; font-family: var(--serif); font-size: 13px; font-weight: 600; letter-spacing: .035em; pointer-events: none; }
 .city-point.status-home .city-label,
 .city-point.status-lived .city-label { fill: var(--ink); font-size: 13px; font-weight: 700; }
@@ -141,20 +169,13 @@
 .city-point.status-visited:hover .city-leader,
 .city-point.status-visited:focus .city-leader,
 .city-point.status-visited.highlighted .city-leader { opacity: 1; }
+.map-canvas.has-prefectures .city-point.prefecture-label-redundant .city-label,
+.map-canvas.has-prefectures .city-point.prefecture-label-redundant .city-leader { opacity: 0; }
 .map-caption { position: absolute; z-index: 3; left: 32px; right: 32px; bottom: 16px; }
 .map-caption p { margin: 0; font-family: var(--serif); font-size: 12.5px; letter-spacing: .05em; color: var(--ink-2); }
 .map-legal { margin: 9px 4px 0; color: var(--ink-4); font-family: var(--mono); font-size: 9.5px; line-height: 1.55; letter-spacing: .03em; }
 .map-legal a { color: inherit; border-bottom: 1px solid var(--rule); }
 .map-legal a:hover { color: var(--accent); border-color: var(--accent); }
-.map-place-dialog { position: fixed; inset: auto 12px 12px; width: auto; max-width: 520px; margin: 0 auto; padding: 22px 20px 18px; border: 1px solid var(--rule); background: var(--paper); color: var(--ink); box-shadow: 0 20px 60px color-mix(in srgb, #000 30%, transparent); }
-.map-place-dialog::backdrop { background: color-mix(in srgb, var(--ink) 32%, transparent); backdrop-filter: blur(2px); }
-.map-place-dialog[open] { display: flex; flex-direction: column; align-items: flex-start; }
-.map-dialog-close { position: absolute; top: 7px; right: 8px; width: 40px; height: 40px; border: 0; background: transparent; color: var(--ink-3); font-size: 24px; cursor: pointer; }
-.map-dialog-meta { padding-right: 36px; font-family: var(--mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
-.map-place-dialog strong { margin-top: 7px; font-family: var(--serif); font-size: 30px; line-height: 1.1; }
-.map-place-dialog p { margin: 10px 0 15px; font-size: 13px; line-height: 1.65; color: var(--ink-3); }
-.map-place-dialog a { min-height: 44px; display: inline-flex; align-items: center; padding: 0 16px; border: 1px solid var(--accent); color: var(--accent); font-family: var(--mono); font-size: 10px; letter-spacing: .08em; }
-
 .place-panel { min-width: 0; margin-top: 24px; border: 1px solid var(--rule); background: var(--bg-soft); display: flex; flex-direction: column; }
 .panel-head { min-height: 52px; display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 0 14px 0 20px; border-bottom: 1px solid var(--rule); font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3); }
 .panel-title { white-space: nowrap; }
@@ -190,7 +211,6 @@
   .place-list { grid-auto-columns: minmax(270px, 42vw); }
 }
 @media (max-width: 760px) {
-  .city-point:not(.dense) .city-hit { r: 28px; }
   .city-point.status-visited:not(.mobile-priority):not(.province-active):not(.highlighted):not(:hover):not(:focus) .city-label,
   .city-point.status-visited:not(.mobile-priority):not(.province-active):not(.highlighted):not(:hover):not(:focus) .city-leader { opacity: 0; }
   .city-point.mobile-priority .city-label,

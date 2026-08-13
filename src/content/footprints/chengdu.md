@@ -1,6 +1,7 @@
 ---
 title: "成都｜2024 年秋天"
 province: "四川省"
+prefecture: "成都市"
 city: "成都"
 coordinates: [104.0665, 30.5723]
 status: "visited"

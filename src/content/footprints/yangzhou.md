@@ -1,6 +1,7 @@
 ---
 title: "扬州｜2021 年夏天"
 province: "江苏省"
+prefecture: "扬州市"
 city: "扬州"
 coordinates: [119.4127, 32.3932]
 status: "visited"
