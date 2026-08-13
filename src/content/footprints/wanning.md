@@ -1,6 +1,7 @@
 ---
 title: "万宁｜海南环岛东线"
 province: "海南省"
+prefecture: "万宁市"
 city: "万宁"
 coordinates: [110.3816, 18.7951]
 status: "visited"

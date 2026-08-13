@@ -1,6 +1,7 @@
 ---
 title: "郑州｜2025 年中原之行"
 province: "河南省"
+prefecture: "郑州市"
 city: "郑州"
 coordinates: [113.6254, 34.7466]
 status: "visited"

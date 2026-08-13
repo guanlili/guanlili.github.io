@@ -1,6 +1,7 @@
 ---
 title: "秦皇岛｜2023 年初夏"
 province: "河北省"
+prefecture: "秦皇岛市"
 city: "秦皇岛"
 coordinates: [119.6005, 39.9354]
 status: "visited"

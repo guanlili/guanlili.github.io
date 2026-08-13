@@ -1,6 +1,7 @@
 ---
 title: "广州｜2024 年岭南行"
 province: "广东省"
+prefecture: "广州市"
 city: "广州"
 coordinates: [113.2644, 23.1291]
 status: "visited"

@@ -1,6 +1,7 @@
 ---
 title: "济南｜2025 年深秋"
 province: "山东省"
+prefecture: "济南市"
 city: "济南"
 coordinates: [117.1201, 36.6512]
 status: "visited"

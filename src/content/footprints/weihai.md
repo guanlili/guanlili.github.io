@@ -1,6 +1,7 @@
 ---
 title: "威海｜2019 年北方沿海行"
 province: "山东省"
+prefecture: "威海市"
 city: "威海"
 coordinates: [122.1204, 37.5131]
 status: "visited"

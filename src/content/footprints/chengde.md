@@ -1,6 +1,7 @@
 ---
 title: "承德｜2026 年夏天"
 province: "河北省"
+prefecture: "承德市"
 city: "承德"
 coordinates: [117.9628, 40.9541]
 status: "visited"

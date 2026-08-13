@@ -5,6 +5,7 @@ interface Place {
   slug: string;
   title: string;
   province: string;
+  prefecture: string;
   city: string;
   coordinates: [number, number];
   visited: string[];
@@ -20,6 +21,11 @@ interface Place {
 
 const { places } = Astro.props as { places: Place[] };
 const visitedProvinces = new Set(places.map((place) => place.province));
+const prefectureSources: Record<string, string> = {
+  山东省: "/data/footprints/prefectures/370000.json",
+  海南省: "/data/footprints/prefectures/460000.json",
+  新疆维吾尔自治区: "/data/footprints/prefectures/650000.json",
+};
 
 const minLon = 73;
 const maxLat = 54;
@@ -99,6 +105,7 @@ const provinces = china.features
     path: geometryPath(feature.geometry),
     bounds: geometryBounds(feature.geometry),
     visited: visitedProvinces.has(feature.properties.name),
+    prefectureSource: prefectureSources[feature.properties.name],
   }))
   .filter((province) => province.name);
 
@@ -214,6 +221,7 @@ labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
         <span><i class="legend-dot home"></i>常驻</span>
         <span><i class="legend-dot lived"></i>曾居</span>
         <span><i class="legend-place legend-city"></i>到访城市</span>
+        <span class="prefecture-legend" data-prefecture-legend hidden><i></i>行政区边界</span>
         <span class="map-filter-hint" data-map-filter-hint>点击省份进入省内视图</span>
         <span class="map-selection" data-map-selection hidden>
           <b data-map-selection-name></b>
@@ -236,6 +244,7 @@ labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
             data-map-first={provinceStats.get(province.name)?.first}
             data-map-latest={provinceStats.get(province.name)?.latest}
             data-map-latest-city={provinceStats.get(province.name)?.latestCity}
+            data-prefecture-source={province.prefectureSource}
             data-map-index={index}
             tabindex={province.visited ? 0 : undefined}
             role={province.visited ? "button" : undefined}
@@ -245,6 +254,7 @@ labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
           </path>
         ))}
       </g>
+      <g class="prefecture-layer" data-prefecture-layer aria-hidden="true"></g>
       <g class="city-layer">
         {places.map((place) => {
           const [x, y] = project(place.coordinates);
@@ -267,12 +277,11 @@ labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
                 { dense: dense && place.status === "visited", "mobile-priority": place.status !== "visited" || place.slug === latestTravel?.slug },
               ]}
               data-province={place.province}
+              data-prefecture={place.prefecture}
               data-city={place.city}
               data-visited={place.visited.join(",")}
-              data-href={`/footprints/${place.slug}/`}
-              data-summary={place.summary}
-              data-meta={place.status === "home" ? `常驻地 · Since ${place.since?.slice(0, 4) ?? "—"}` : place.status === "lived" ? "曾居地" : `城市 · ${place.province} · ${place.visited.at(-1)?.slice(0, 4)}${place.journeys.length ? ` · ${place.journeys.map((journey) => journey.name).join(" / ")}` : ""}`}
               aria-label={place.status === "home" ? `查看常驻地${place.city}` : `查看${place.city}足迹`}
+              tabindex="-1"
             >
               <circle class="city-hit" cx={x} cy={y} r="22"></circle>
               {place.status !== "visited" && <circle class="city-pulse" cx={x} cy={y} r={place.status === "home" ? 21 : 16}></circle>}
@@ -296,14 +305,6 @@ labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
         })}
       </g>
     </svg>
-
-    <dialog class="map-place-dialog" data-map-place-dialog>
-      <button type="button" class="map-dialog-close" data-map-dialog-close aria-label="关闭地点卡片">×</button>
-      <span class="map-dialog-meta" data-map-dialog-meta></span>
-      <strong data-map-dialog-city></strong>
-      <p data-map-dialog-summary></p>
-      <a href="/footprints/" data-map-dialog-link>查看地点记录 →</a>
-    </dialog>
 
     <div class="map-caption">
       <p data-map-caption data-default-caption={homeBase ? `${homeBase.city}是生活的圆心，远方是不断延伸的半径。` : "每一个坐标，都是一段正在继续的生活。"}>{homeBase ? `${homeBase.city}是生活的圆心，远方是不断延伸的半径。` : "每一个坐标，都是一段正在继续的生活。"}</p>
@@ -331,6 +332,7 @@ labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
             class:list={["place-card", `status-${place.status}`, { active: index === 0 }]}
             href={`/footprints/${place.slug}/`}
             data-province={place.province}
+            data-prefecture={place.prefecture}
             data-city={place.city}
             hidden={index >= defaultNoteCount}
           >
@@ -367,6 +369,8 @@ labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
       const mapTitle = root.querySelector<HTMLElement>("[data-map-title]");
       const mapFocusMeta = root.querySelector<HTMLElement>("[data-map-focus-meta]");
       const mapCaption = root.querySelector<HTMLElement>("[data-map-caption]");
+      const prefectureLayer = root.querySelector<SVGGElement>("[data-prefecture-layer]");
+      const prefectureLegend = root.querySelector<HTMLElement>("[data-prefecture-legend]");
       const cityPoints = [...root.querySelectorAll<SVGAElement>(".city-point")];
       const cards = [...root.querySelectorAll<HTMLElement>(".place-card")];
       const count = root.querySelector<HTMLElement>("[data-visible-count]");
@@ -379,13 +383,10 @@ labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
       const previousButton = root.querySelector<HTMLButtonElement>("[data-place-prev]");
       const nextButton = root.querySelector<HTMLButtonElement>("[data-place-next]");
       const defaultCount = Math.min(6, cards.length);
-      const placeDialog = root.querySelector<HTMLDialogElement>("[data-map-place-dialog]");
-      const dialogCity = placeDialog?.querySelector<HTMLElement>("[data-map-dialog-city]");
-      const dialogMeta = placeDialog?.querySelector<HTMLElement>("[data-map-dialog-meta]");
-      const dialogSummary = placeDialog?.querySelector<HTMLElement>("[data-map-dialog-summary]");
-      const dialogLink = placeDialog?.querySelector<HTMLAnchorElement>("[data-map-dialog-link]");
       const defaultViewBox = [0, 0, 960, 575];
       let viewBoxAnimation = 0;
+      let prefectureRequest = 0;
+      const prefectureCache = new Map<string, Promise<PrefectureMapData>>();
       const lifecycle = new AbortController();
       document.addEventListener("astro:before-swap", () => {
         lifecycle.abort();
@@ -395,6 +396,7 @@ labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
       const clearActiveCity = () => {
         cityPoints.forEach((point) => point.classList.remove("active-city"));
         cards.forEach((card) => card.classList.remove("active-city", "map-highlighted"));
+        prefectureLayer?.querySelectorAll(".prefecture-region").forEach((region) => region.classList.remove("active-region"));
       };
 
       const updateProvinceUrl = (province: string, mode: "push" | "replace" | false) => {
@@ -411,8 +413,15 @@ labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
         const [minX, minY, maxX, maxY] = bounds;
         const mobile = window.matchMedia("(max-width: 640px)").matches;
         const aspect = defaultViewBox[2] / defaultViewBox[3];
-        const minWidth = mobile ? 300 : 360;
-        const padding = mobile ? 34 : 52;
+        const detailed = Boolean(path.dataset.prefectureSource);
+        const compactIslands = path.dataset.province === "海南省";
+        const provinceWidth = maxX - minX;
+        const minWidth = detailed
+          ? Math.min(260, Math.max(compactIslands ? (mobile ? 108 : 88) : (mobile ? 145 : 125), provinceWidth * 1.65))
+          : (mobile ? 300 : 360);
+        const padding = detailed
+          ? (compactIslands ? (mobile ? 14 : 10) : (mobile ? 24 : 32))
+          : (mobile ? 34 : 52);
         let width = Math.max(minWidth, maxX - minX + padding * 2);
         let height = Math.max(minWidth / aspect, maxY - minY + padding * 2);
         if (width / height > aspect) height = width / aspect;
@@ -445,6 +454,122 @@ labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
         viewBoxAnimation = window.requestAnimationFrame(tick);
       };
 
+      interface PrefectureMapFeature {
+        name: string;
+        shortName: string;
+        adcode: string;
+        label: [number, number];
+        path: string;
+      }
+
+      interface PrefectureMapData {
+        province: string;
+        source: string;
+        sourceSha256: string;
+        features: PrefectureMapFeature[];
+      }
+
+      const svgElement = <K extends keyof SVGElementTagNameMap>(name: K) => document.createElementNS("http://www.w3.org/2000/svg", name);
+      const defaultProvinceCaption = (province: string) => `${province}的行政区与城市坐标已展开，选择一个地点继续查看。`;
+
+      const loadPrefectures = async (selectedPath?: SVGPathElement) => {
+        const request = ++prefectureRequest;
+        prefectureLayer?.replaceChildren();
+        prefectureLayer?.classList.remove("is-visible");
+        prefectureLayer?.setAttribute("aria-hidden", "true");
+        cityPoints.forEach((point) => point.classList.remove("prefecture-label-redundant"));
+        const source = selectedPath?.dataset.prefectureSource;
+        mapCanvas?.classList.toggle("has-prefectures", Boolean(source));
+        if (prefectureLegend) prefectureLegend.hidden = !source;
+        if (!source || !selectedPath || !prefectureLayer) return;
+
+        mapCanvas?.classList.add("is-loading-prefectures");
+        try {
+          if (!prefectureCache.has(source)) {
+            prefectureCache.set(source, fetch(source).then((response) => {
+              if (!response.ok) throw new Error(`Failed to load prefectures: ${response.status}`);
+              return response.json() as Promise<PrefectureMapData>;
+            }));
+          }
+          const data = await prefectureCache.get(source)!;
+          if (request !== prefectureRequest || !selectedPath.classList.contains("selected")) return;
+          const provincePoints = cityPoints.filter((point) => point.dataset.province === data.province);
+
+          data.features.forEach((feature) => {
+            const matchingPoints = provincePoints.filter((point) => point.dataset.prefecture === feature.name);
+            const matchingCards = cards.filter((card) => card.dataset.prefecture === feature.name);
+            matchingPoints.forEach((point) => {
+              point.classList.toggle("prefecture-label-redundant", point.dataset.city === feature.shortName);
+            });
+            const visits = matchingPoints.flatMap((point) => (point.dataset.visited ?? "").split(",").filter(Boolean)).sort();
+            const latest = visits.at(-1)?.slice(0, 7).replace("-", ".") ?? "";
+            const cities = matchingPoints.map((point) => point.dataset.city).filter(Boolean).join("、");
+            const group = svgElement("g");
+            group.classList.add("prefecture-region");
+            if (matchingPoints.length) group.classList.add("visited");
+            group.dataset.prefecture = feature.name;
+
+            const regionPath = svgElement("path");
+            regionPath.setAttribute("d", feature.path);
+            const title = svgElement("title");
+            title.textContent = matchingPoints.length
+              ? `${feature.name} · ${cities} · 最近 ${latest}`
+              : `${feature.name} · 尚未记录`;
+            regionPath.append(title);
+
+            const label = svgElement("text");
+            label.classList.add("prefecture-label");
+            label.setAttribute("x", String(feature.label[0]));
+            label.setAttribute("y", String(feature.label[1]));
+            label.textContent = feature.shortName;
+
+            const showRegionCaption = () => {
+              if (!mapCaption) return;
+              mapCaption.textContent = matchingPoints.length
+                ? `${feature.name} · ${cities} · ${visits.length} 次抵达 · 最近 ${latest}`
+                : `${feature.name} · 尚未留下城市足迹`;
+            };
+            const restoreCaption = () => {
+              if (mapCaption && selectedPath.classList.contains("selected")) mapCaption.textContent = defaultProvinceCaption(data.province);
+            };
+            group.addEventListener("mouseenter", showRegionCaption);
+            group.addEventListener("mouseleave", restoreCaption);
+            if (matchingPoints.length) {
+              regionPath.setAttribute("tabindex", "0");
+              regionPath.setAttribute("role", "button");
+              regionPath.setAttribute("aria-label", `查看${feature.name}的足迹：${cities}`);
+              const selectRegion = () => {
+                clearActiveCity();
+                group.classList.add("active-region");
+                matchingPoints.forEach((point) => point.classList.add("active-city"));
+                matchingCards.forEach((card) => card.classList.add("active-city"));
+                matchingCards[0]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+                showRegionCaption();
+              };
+              regionPath.addEventListener("click", selectRegion);
+              regionPath.addEventListener("focus", showRegionCaption);
+              regionPath.addEventListener("blur", restoreCaption);
+              regionPath.addEventListener("keydown", (event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  selectRegion();
+                }
+              });
+            }
+            group.append(regionPath, label);
+            prefectureLayer.append(group);
+          });
+          prefectureLayer.classList.add("is-visible");
+          prefectureLayer.setAttribute("aria-hidden", "false");
+          if (mapFocusMeta) mapFocusMeta.textContent += ` · ${data.features.length} 个行政区`;
+        } catch (error) {
+          console.warn("Unable to load prefecture boundaries", error);
+          if (mapCaption) mapCaption.textContent = `${selectedPath.dataset.province}的省内边界暂时无法加载。`;
+        } finally {
+          if (request === prefectureRequest) mapCanvas?.classList.remove("is-loading-prefectures");
+        }
+      };
+
       const selectProvince = (province = "", historyMode: "push" | "replace" | false = false) => {
         const selectedPath = provincePaths.find((path) => path.dataset.province === province);
         const activeProvince = selectedPath?.dataset.province ?? "";
@@ -452,11 +577,33 @@ labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
         provincePaths.forEach((path) => path.classList.toggle("selected", path === selectedPath));
         mapCanvas?.classList.toggle("is-focused", Boolean(selectedPath));
         if (mapTitle) mapTitle.textContent = selectedPath ? `${activeProvince} · 城市足迹` : "我的城市足迹";
-        animateViewBox(selectedPath ? focusViewBox(selectedPath) : defaultViewBox);
+        const targetViewBox = selectedPath ? focusViewBox(selectedPath) : defaultViewBox;
+        if (selectedPath && mapSvg) {
+          const detailWidth = targetViewBox[2];
+          mapSvg.style.setProperty("--city-focus-label-size", `${detailWidth / 75}px`);
+          mapSvg.style.setProperty("--city-focus-hit-radius", `${detailWidth / 80}px`);
+          mapSvg.style.setProperty("--city-focus-ring-radius", `${detailWidth / 150}px`);
+          mapSvg.style.setProperty("--city-focus-core-radius", `${detailWidth / 250}px`);
+          mapSvg.style.setProperty("--city-focus-home-ring-radius", `${detailWidth / 120}px`);
+          mapSvg.style.setProperty("--city-focus-home-inner-radius", `${detailWidth / 170}px`);
+          mapSvg.style.setProperty("--city-focus-home-core-radius", `${detailWidth / 190}px`);
+          mapSvg.style.setProperty("--city-focus-pulse-radius", `${detailWidth / 60}px`);
+          mapSvg.style.setProperty("--city-focus-index-size", `${detailWidth / 180}px`);
+          if (selectedPath.dataset.prefectureSource) {
+            mapSvg.style.setProperty("--prefecture-label-size", `${detailWidth / 88}px`);
+          } else {
+            mapSvg.style.removeProperty("--prefecture-label-size");
+          }
+        } else {
+          ["--prefecture-label-size", "--city-focus-label-size", "--city-focus-hit-radius", "--city-focus-ring-radius", "--city-focus-core-radius", "--city-focus-home-ring-radius", "--city-focus-home-inner-radius", "--city-focus-home-core-radius", "--city-focus-pulse-radius", "--city-focus-index-size"]
+            .forEach((property) => mapSvg?.style.removeProperty(property));
+        }
+        animateViewBox(targetViewBox);
         cityPoints.forEach((point) => {
           const selected = Boolean(activeProvince) && point.dataset.province === activeProvince;
           point.classList.toggle("province-active", selected);
           point.classList.toggle("muted", Boolean(activeProvince) && !selected);
+          point.setAttribute("tabindex", selected ? "0" : "-1");
         });
         let visible = 0;
         cards.forEach((card, index) => {
@@ -477,8 +624,9 @@ labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
           mapFocusMeta.textContent = activeProvince ? `${visible} 城市 · 首次 ${first} · 最近 ${latestCity} ${latest}` : "";
         }
         if (mapCaption) mapCaption.textContent = activeProvince
-          ? `${activeProvince}的城市坐标已展开，选择一个地点继续查看。`
+          ? defaultProvinceCaption(activeProvince)
           : mapCaption.dataset.defaultCaption ?? "";
+        void loadPrefectures(selectedPath);
         if (placeList) placeList.scrollTo({ left: 0, behavior: "smooth" });
         window.setTimeout(syncPlaceListControls, 220);
         updateProvinceUrl(activeProvince, historyMode);
@@ -520,15 +668,6 @@ labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
         point.addEventListener("focus", highlightCard);
         point.addEventListener("blur", unhighlightCard);
         point.addEventListener("click", (event) => {
-          if (window.matchMedia("(max-width: 760px)").matches && placeDialog) {
-            event.preventDefault();
-            if (dialogCity) dialogCity.textContent = point.dataset.city ?? "";
-            if (dialogMeta) dialogMeta.textContent = point.dataset.meta ?? "";
-            if (dialogSummary) dialogSummary.textContent = point.dataset.summary ?? "";
-            if (dialogLink) dialogLink.href = point.dataset.href ?? point.getAttribute("href") ?? "/footprints/";
-            placeDialog.showModal();
-            return;
-          }
           if (!mapCanvas?.classList.contains("is-focused") || !card) return;
           event.preventDefault();
           clearActiveCity();
@@ -537,8 +676,6 @@ labelOrder.forEach(({ place, point: [pointX, pointY] }) => {
           card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
         });
       });
-      placeDialog?.querySelector("[data-map-dialog-close]")?.addEventListener("click", () => placeDialog.close());
-      placeDialog?.addEventListener("click", (event) => { if (event.target === placeDialog) placeDialog.close(); });
       cards.forEach((card, index) => {
         card.addEventListener("mouseenter", () => cityPoints[index]?.classList.add("highlighted"));
         card.addEventListener("mouseleave", () => cityPoints[index]?.classList.remove("highlighted"));

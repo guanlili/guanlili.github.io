@@ -1,6 +1,7 @@
 ---
 title: "文昌｜海南环岛东线"
 province: "海南省"
+prefecture: "文昌市"
 city: "文昌"
 coordinates: [110.7977, 19.5434]
 status: "visited"

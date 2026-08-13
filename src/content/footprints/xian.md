@@ -1,6 +1,7 @@
 ---
 title: "西安｜2023 年秋天"
 province: "陕西省"
+prefecture: "西安市"
 city: "西安"
 coordinates: [108.9398, 34.3416]
 status: "visited"

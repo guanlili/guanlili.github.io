@@ -36,6 +36,7 @@ const places = footprints.map((entry) => ({
   slug: footprintSlug(entry),
   title: entry.data.title,
   province: entry.data.province,
+  prefecture: entry.data.prefecture,
   city: entry.data.city,
   coordinates: entry.data.coordinates,
   visited: entry.data.visited.map((date) => date.toISOString().slice(0, 10)),

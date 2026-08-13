@@ -1,6 +1,7 @@
 ---
 title: "呼伦贝尔｜草原旅程中段"
 province: "内蒙古自治区"
+prefecture: "呼伦贝尔市"
 city: "呼伦贝尔"
 coordinates: [119.7658, 49.2116]
 status: "visited"

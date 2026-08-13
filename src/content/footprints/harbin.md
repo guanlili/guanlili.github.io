@@ -1,6 +1,7 @@
 ---
 title: "哈尔滨｜2026 年冬天"
 province: "黑龙江省"
+prefecture: "哈尔滨市"
 city: "哈尔滨"
 coordinates: [126.6425, 45.7560]
 status: "visited"

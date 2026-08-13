@@ -1,6 +1,7 @@
 ---
 title: "牙克石｜呼伦贝尔线起点"
 province: "内蒙古自治区"
+prefecture: "呼伦贝尔市"
 city: "牙克石"
 coordinates: [120.7117, 49.2856]
 status: "visited"

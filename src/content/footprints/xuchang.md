@@ -1,6 +1,7 @@
 ---
 title: "许昌｜2025 年中原之行"
 province: "河南省"
+prefecture: "许昌市"
 city: "许昌"
 coordinates: [113.8526, 34.0357]
 status: "visited"

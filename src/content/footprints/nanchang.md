@@ -1,6 +1,7 @@
 ---
 title: "南昌｜2024 年春天"
 province: "江西省"
+prefecture: "南昌市"
 city: "南昌"
 coordinates: [115.8582, 28.6829]
 status: "visited"

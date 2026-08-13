@@ -1,6 +1,7 @@
 ---
 title: "南京｜两次抵达"
 province: "江苏省"
+prefecture: "南京市"
 city: "南京"
 coordinates: [118.7969, 32.0603]
 status: "visited"

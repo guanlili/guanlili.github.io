@@ -1,6 +1,7 @@
 ---
 title: "上海｜初夏城市漫游"
 province: "上海市"
+prefecture: "上海市"
 city: "上海"
 coordinates: [121.4737, 31.2304]
 status: "visited"

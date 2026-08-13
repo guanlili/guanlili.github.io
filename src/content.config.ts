@@ -54,6 +54,7 @@ const footprints = defineCollection({
   schema: z.object({
     title: z.string(),
     province: z.string(),
+    prefecture: z.string(),
     city: z.string(),
     coordinates: z.tuple([z.number(), z.number()]),
     status: z.enum(["home", "lived", "visited"]).default("visited"),

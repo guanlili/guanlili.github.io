@@ -1,6 +1,7 @@
 ---
 title: "北海｜涠洲岛的春天"
 province: "广西壮族自治区"
+prefecture: "北海市"
 city: "北海"
 coordinates: [109.1193, 21.4733]
 status: "visited"

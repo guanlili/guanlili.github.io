@@ -1,6 +1,7 @@
 ---
 title: "景德镇｜瓷都之行"
 province: "江西省"
+prefecture: "景德镇市"
 city: "景德镇"
 coordinates: [117.1849, 29.2744]
 status: "visited"

@@ -1,6 +1,7 @@
 ---
 title: "延吉｜长白山与延边深秋"
 province: "吉林省"
+prefecture: "延边朝鲜族自治州"
 city: "延吉"
 coordinates: [129.5089, 42.8913]
 status: "visited"

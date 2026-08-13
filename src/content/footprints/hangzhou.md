@@ -1,6 +1,7 @@
 ---
 title: "杭州｜2021 年秋天"
 province: "浙江省"
+prefecture: "杭州市"
 city: "杭州"
 coordinates: [120.1551, 30.2741]
 status: "visited"

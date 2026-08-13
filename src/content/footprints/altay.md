@@ -1,6 +1,7 @@
 ---
 title: "阿勒泰｜喀纳斯与北疆山湖"
 province: "新疆维吾尔自治区"
+prefecture: "阿勒泰地区"
 city: "阿勒泰"
 coordinates: [88.1413, 47.8449]
 status: "visited"

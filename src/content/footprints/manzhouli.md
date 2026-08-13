@@ -1,6 +1,7 @@
 ---
 title: "满洲里｜呼伦贝尔线终点"
 province: "内蒙古自治区"
+prefecture: "呼伦贝尔市"
 city: "满洲里"
 coordinates: [117.3787, 49.5978]
 status: "visited"

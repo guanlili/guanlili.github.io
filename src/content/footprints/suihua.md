@@ -1,6 +1,7 @@
 ---
 title: "绥化｜成长的原点"
 province: "黑龙江省"
+prefecture: "绥化市"
 city: "绥化"
 coordinates: [126.9689, 46.6538]
 status: "lived"

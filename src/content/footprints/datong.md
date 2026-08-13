@@ -1,6 +1,7 @@
 ---
 title: "大同｜山西之行"
 province: "山西省"
+prefecture: "大同市"
 city: "大同"
 coordinates: [113.3001, 40.0768]
 status: "visited"
