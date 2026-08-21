@@ -14,3 +14,4 @@ function scriptVersion(path: string): string {
 
 export const SITE_SCRIPT_VERSION = scriptVersion("public/js/site.js");
 export const ARTICLE_SCRIPT_VERSION = scriptVersion("public/js/site-article.js");
+export const SW_VERSION = scriptVersion("public/sw.js");

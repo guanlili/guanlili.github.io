@@ -5,9 +5,8 @@ import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import { absoluteUrl, siteImage } from "../lib/media";
 import { getPosts } from "../lib/posts";
-import pkg from "../../package.json";
 import { ClientRouter } from "astro:transitions";
-import { SITE_SCRIPT_VERSION } from "../lib/asset-version";
+import { SITE_SCRIPT_VERSION, SW_VERSION } from "../lib/asset-version";
 import "../styles/site.less";
 
 interface Props {
@@ -34,7 +33,7 @@ const pageTitle = title ? `${title} - ${SITE.seoTitle}` : SITE.seoTitle;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const normalizedImage = siteImage(image) ?? SITE.avatar;
 const ogImage = absoluteUrl(normalizedImage, SITE.url);
-const swVersion = process.env.GITHUB_SHA || pkg.version;
+const swVersion = SW_VERSION;
 
 // Recommended articles for search empty state (build-time)
 const allPosts = await getPosts();
@@ -79,7 +78,7 @@ const recommendedPosts = searchPosts.slice(0, 8);
   <meta property="og:site_name" content={SITE.seoTitle} />
 
   <!-- Twitter -->
-  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={pageTitle} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImage} />
