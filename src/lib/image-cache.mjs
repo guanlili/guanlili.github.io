@@ -57,6 +57,7 @@ async function collectImageUrls(dir) {
   const urls = new Set();
   const mdImageRe = /!\[[^\]]*\]\((https?:\/\/[^\s)]+)(?:\s+["'][^"']*["'])?\)/g;
   const htmlImageRe = /<img\b[^>]*\bsrc=["'](https?:\/\/[^"']+)["'][^>]*>/gi;
+  const coverRe = /^(?:cover|header-img):\s*["']?(https?:\/\/[^"'\s]+)["']?\s*$/mgi;
   for (const f of files) {
     const text = readFileSync(f, "utf8");
     let m;
@@ -64,6 +65,9 @@ async function collectImageUrls(dir) {
       urls.add(m[1]);
     }
     while ((m = htmlImageRe.exec(text)) !== null) {
+      urls.add(m[1]);
+    }
+    while ((m = coverRe.exec(text)) !== null) {
       urls.add(m[1]);
     }
   }
