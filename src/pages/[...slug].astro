@@ -88,6 +88,7 @@ const coverDim =
 const coverImageSrcset = coverDim
   ? buildCoverSrcset(coverImage!, coverDim.w)
   : undefined;
+const coverSizes = coverDim ? "(min-width: 880px) 880px, 100vw" : undefined;
 const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
 ---
 <BaseLayout
@@ -130,7 +131,7 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
           width={coverDim?.w}
           height={coverDim?.h}
           srcset={coverImageSrcset}
-          sizes={coverDim ? "100vw" : undefined}
+          sizes={coverSizes}
         />
         <figcaption>{data.title}</figcaption>
       </figure>
