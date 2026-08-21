@@ -4,8 +4,23 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { SITE } from "../consts";
 import { excerpt, firstImage, getPosts, readingStats, type LoadedPost } from "../lib/posts";
 import { siteImage } from "../lib/media";
+import { getCached, loadCache } from "../lib/image-cache.mjs";
 import { ARTICLE_SCRIPT_VERSION } from "../lib/asset-version";
 import "../styles/less/post-article.less";
+
+const COS_HOST = "blog-1258476669.cos.ap-beijing.myqcloud.com";
+const COVER_WIDTHS = [480, 800, 1200];
+
+function buildCoverSrcset(src: string, width: number): string | undefined {
+  if (!src.includes(COS_HOST) || width <= 800) return undefined;
+  const widths = COVER_WIDTHS.filter((w) => w < width);
+  if (widths.length < 2) return undefined;
+  const sep = src.includes("?") ? "&" : "?";
+  return [
+    ...widths.map((w) => `${src}${sep}imageMogr2/thumbnail/${w}x ${w}w`),
+    `${src} ${width}w`,
+  ].join(", ");
+}
 
 export async function getStaticPaths() {
   const posts = await getPosts(); // newest-first, date-prefixed only
@@ -50,6 +65,8 @@ const { post, older, newer, n, related } = Astro.props;
 const { Content, headings } = await render(post);
 const { data } = post;
 
+loadCache();
+
 const d = data.date;
 const updated = data.updated ?? d;
 const pad = (v: number) => String(v).padStart(2, "0");
@@ -66,6 +83,12 @@ const coverImage =
   siteImage(data.cover) ??
   siteImage(data["header-img"]) ??
   siteImage(firstImage(post.body ?? ""));
+const coverDim =
+  coverImage && /^https?:\/\//.test(coverImage) ? getCached(coverImage) : null;
+const coverImageSrcset = coverDim
+  ? buildCoverSrcset(coverImage!, coverDim.w)
+  : undefined;
+const coverSizes = coverDim ? "(min-width: 880px) 880px, 100vw" : undefined;
 const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
 ---
 <BaseLayout
@@ -99,7 +122,17 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
 
     {coverImage && (
       <figure class="article-cover">
-        <img src={coverImage} alt="" loading="eager" decoding="async" fetchpriority="high" />
+        <img
+          src={coverImage}
+          alt=""
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+          width={coverDim?.w}
+          height={coverDim?.h}
+          srcset={coverImageSrcset}
+          sizes={coverSizes}
+        />
         <figcaption>{data.title}</figcaption>
       </figure>
     )}
