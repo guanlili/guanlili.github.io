@@ -21,8 +21,26 @@ function rawName(entry: CollectionEntry<"blog">): string {
     .replace(/\.(md|markdown)$/i, "");
 }
 
-export async function getPosts(): Promise<LoadedPost[]> {
-  const all = await getCollection("blog");
+// Astro does not share getCollection results between pages during a static
+// build, so every page re-reads the full blog corpus. Cache the collection and
+// the post list at module scope (one evaluation per process) to keep the build
+// fast. Scoped to production: `astro dev` must see live content edits.
+let collectionPromise: Promise<CollectionEntry<"blog">[]> | undefined;
+function getBlogCollection(): Promise<CollectionEntry<"blog">[]> {
+  if (!import.meta.env.PROD) return getCollection("blog");
+  collectionPromise ??= getCollection("blog");
+  return collectionPromise;
+}
+
+let postsPromise: Promise<LoadedPost[]> | undefined;
+export function getPosts(): Promise<LoadedPost[]> {
+  if (!import.meta.env.PROD) return loadPosts();
+  postsPromise ??= loadPosts();
+  return postsPromise;
+}
+
+async function loadPosts(): Promise<LoadedPost[]> {
+  const all = await getBlogCollection();
   const posts = all
     .filter((e) => VALID.test(rawName(e)) && isPublished(e))
     .map((entry) => ({ entry, route: postRoute(entry.filePath ?? entry.id) }));
@@ -34,7 +52,7 @@ export async function getPosts(): Promise<LoadedPost[]> {
 
 // Files Jekyll (and therefore this site) does not publish — reported, not built.
 export async function getSkippedPosts(): Promise<string[]> {
-  const all = await getCollection("blog");
+  const all = await getBlogCollection();
   return all
     .filter((e) => !VALID.test(rawName(e)) || !isPublished(e))
     .map((e) => e.filePath ?? e.id);
