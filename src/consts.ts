@@ -24,7 +24,6 @@ export const SITE = {
     "When you look up at the stars, don't forget to look down at the dust.",
   beian: "京ICP备2022033467号-2",
   themeColor: "#000000",
-  perPage: 10,
 };
 
 // Sidebar /About 卡片下方 4 个快捷链接(社交三连 + 联系订阅锚点)
@@ -77,14 +76,6 @@ export const NOW: { ico: string; text: string }[] = [
   { ico: "折腾", text: "本地大模型 + 知识库" },
   { ico: "城市", text: "北京" },
 ];
-
-export const GISCUS = {
-  enabled: false, // editorial post page omits comments; flip to re-enable
-  repo: "guanlili/guanlili.github.io",
-  repoId: "MDEwOlJlcG9zaXRvcnkzMzUxNjQ2OTk=",
-  category: "Announcements",
-  categoryId: "DIC_kwDOE_o1G84CQByl",
-};
 
 // Analytics (empty = disabled), mirroring the old config.
 export const GA_TRACK_ID = "";
