@@ -153,7 +153,7 @@ Token：就是刚刚复制的那一串字符（打开你仓库门的钥匙）
 ### 问题四：github仓库无法显示图片
 这个问题也困扰了我好久，开始也没在意，不过实在影响使用，也花费时间解决啦。配置hosts文件，详细的配置看这个链接。
 
-[Github无法加载或不显示图片问题（window+mac）](https://blog.csdn.net/outman_1921/article/details/106595472)
+Github无法加载或不显示图片问题（window+mac）
 
 [Github无法加载或不显示图片问题（window+mac）](https://www.jianshu.com/p/fba47c4c837d)
 

@@ -11,6 +11,30 @@ const warnings = [];
 const remoteUrls = new Map();
 let localRefs = 0;
 
+// 与 src/lib/permalink.ts 的路由规则一致：/YYYY/MM/DD/slug/
+function slugify(value) {
+  return value
+    .replace(/[^\p{M}\p{L}\p{Nd}]+/gu, "-")
+    .replace(/^-+|-+$/g, "")
+    .toLowerCase();
+}
+
+async function contentRoutes() {
+  const routes = new Set();
+  const blogFiles = await findMarkdownFiles("src/content/blog");
+  for (const file of blogFiles) {
+    const match = file.split(/[/\\]/).pop().match(/^(\d{4})-(\d{1,2})-(\d{1,2})-(.+)\.(md|markdown)$/i);
+    if (match) routes.add(`/${match[1]}/${match[2].padStart(2, "0")}/${match[3].padStart(2, "0")}/${slugify(match[4])}/`);
+  }
+  const footprintFiles = await findMarkdownFiles("src/content/footprints");
+  for (const file of footprintFiles) {
+    routes.add(`/footprints/${file.split(/[/\\]/).pop().replace(/\.(md|markdown)$/i, "")}/`);
+  }
+  return routes;
+}
+
+const routes = await contentRoutes();
+
 function isRemote(url) {
   return /^https?:\/\//i.test(url);
 }
@@ -84,6 +108,8 @@ for (const { file, text } of readMarkdownFiles(files)) {
     const localPath = localPathFor(ref.url);
     if (!localPath) continue;
     localRefs += 1;
+    const normalized = ref.url.split(/[?#]/)[0];
+    if (routes.has(normalized.endsWith("/") ? normalized : `${normalized}/`)) continue;
     if (!existsSync(localPath)) {
       errors.push(`${relative(".", file).replaceAll("\\", "/")}: missing local ${ref.kind}: ${ref.url}`);
     }
