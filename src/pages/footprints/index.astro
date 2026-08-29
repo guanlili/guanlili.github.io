@@ -120,6 +120,7 @@ const places = footprints.map((entry) => ({
                     href={`/footprints/${footprintSlug(entry)}/`}
                     data-archive-entry
                     data-province={entry.data.province}
+                    data-journeys={entry.data.journeys.map((journey) => journey.id).join(",")}
                     data-years={entry.data.visited.map((date) => date.getFullYear()).join(",")}
                     data-content={contentKey(entry)}
                   >
@@ -148,6 +149,7 @@ const places = footprints.map((entry) => ({
                   href={`/footprints/${footprintSlug(entry)}/`}
                   data-archive-entry
                   data-province={entry.data.province}
+                  data-journeys={entry.data.journeys.map((journey) => journey.id).join(",")}
                   data-years=""
                   data-content={contentKey(entry)}
                 >
@@ -191,6 +193,7 @@ const places = footprints.map((entry) => ({
       let activeYear = "";
       let activeContent = "";
       let activeProvince = rows.some((row) => row.dataset.province === initialProvince) ? initialProvince : "";
+      let activeJourney = "";
 
       const syncButtons = (buttons: HTMLButtonElement[], active: string, key: "archiveYear" | "archiveContent") => {
         buttons.forEach((button) => {
@@ -212,7 +215,8 @@ const places = footprints.map((entry) => ({
           const years = (row.dataset.years ?? "").split(",").filter(Boolean);
           const show = (!activeYear || years.includes(activeYear))
             && (!activeContent || row.dataset.content === activeContent)
-            && (!activeProvince || row.dataset.province === activeProvince);
+            && (!activeProvince || row.dataset.province === activeProvince)
+            && (!activeJourney || (row.dataset.journeys ?? "").split(",").includes(activeJourney));
           row.hidden = !show;
           if (show) visible += 1;
         });
@@ -241,6 +245,10 @@ const places = footprints.map((entry) => ({
       }));
       document.addEventListener("footprint:province", (event) => {
         activeProvince = (event as CustomEvent<{ province: string }>).detail.province ?? "";
+        applyFilters();
+      }, { signal: lifecycle.signal });
+      document.addEventListener("footprint:journey", (event) => {
+        activeJourney = (event as CustomEvent<{ journey: string }>).detail.journey ?? "";
         applyFilters();
       }, { signal: lifecycle.signal });
       const resetFilters = () => {

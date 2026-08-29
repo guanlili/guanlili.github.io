@@ -81,7 +81,8 @@
 .map-selection b { font-weight: 600; }
 .map-selection em { padding-left: 7px; border-left: 1px solid color-mix(in srgb, var(--accent) 28%, transparent); color: var(--ink-3); font-style: normal; }
 .map-toolbar button { visibility: hidden; opacity: 0; appearance: none; border: 0; padding: 4px 0; color: var(--accent); background: transparent; font-family: inherit; font-size: inherit; cursor: pointer; transition: opacity .16s ease; }
-.map-canvas:has(.province.selected) .map-toolbar button { visibility: visible; opacity: 1; }
+.map-canvas:has(.province.selected) .map-toolbar button,
+.map-canvas.is-journey .map-toolbar button { visibility: visible; opacity: 1; }
 .legend-dot { display: block; width: 7px; height: 7px; border: 1px solid var(--rule); background: var(--paper); }
 .legend-dot.home { border-radius: 50%; border-color: var(--accent); background: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent); }
 .legend-dot.lived { border-radius: 50%; border-color: var(--accent); background: color-mix(in srgb, var(--accent) 20%, var(--paper)); border-style: dashed; transform: none; }
@@ -118,26 +119,52 @@
 .prefecture-region:not(.visited) .prefecture-label { opacity: .72; font-weight: 500; }
 .prefecture-region.visited .prefecture-label { fill: var(--accent-ink); font-weight: 700; }
 .map-canvas.is-loading-prefectures .prefecture-layer { opacity: .35; }
+/* 行程线：chip 栏 + 连线图层 */
+.map-journey-bar { position: relative; z-index: 3; display: flex; align-items: center; gap: 14px; padding: 13px 0 3px; }
+.journey-bar-label { flex: none; font-family: var(--mono); font-size: 8.5px; letter-spacing: .16em; color: var(--ink-4); white-space: nowrap; }
+.journey-chips { display: flex; flex-wrap: wrap; gap: 7px; min-width: 0; }
+.journey-chip { display: inline-flex; align-items: baseline; gap: 6px; min-height: 26px; appearance: none; padding: 0 10px; border: 1px solid var(--rule); background: transparent; color: var(--ink-3); font-family: var(--mono); font-size: 9px; letter-spacing: .06em; cursor: pointer; transition: border-color .16s ease, color .16s ease, background .16s ease; }
+.journey-chip b { font-weight: 500; }
+.journey-chip small { font-size: 8px; color: var(--ink-4); }
+.journey-chip:hover { border-color: var(--accent); color: var(--accent); }
+.journey-chip.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); color: var(--accent); }
+.journey-chip.active small { color: var(--accent); }
+.journey-legend[hidden] { display: none; }
+.journey-legend i { display: block; width: 14px; height: 0; border-top: 1.5px dashed var(--accent-ink); }
+.journey-layer { pointer-events: none; }
+.journey-route { display: none; }
+.journey-route.selected { display: block; }
+.journey-path { fill: none; stroke: var(--accent-ink); stroke-width: 1.35; stroke-dasharray: var(--journey-dash, 6 4); stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; opacity: .8; }
+.journey-badge { fill: var(--accent-ink); stroke: color-mix(in srgb, var(--paper) 92%, transparent); stroke-width: 1.4; r: var(--journey-badge-radius, 8.5px); }
+.journey-order { fill: var(--paper); font-family: var(--mono); font-size: var(--journey-order-size, 5px); font-weight: 600; text-anchor: middle; dominant-baseline: central; }
+@keyframes journey-path-in { from { opacity: 0; } to { opacity: .8; } }
+@keyframes journey-stop-in { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: scale(1); } }
+.journey-route.selected .journey-path { animation: journey-path-in .45s ease both; }
+.journey-route.selected .journey-stop { transform-box: fill-box; transform-origin: center; animation: journey-stop-in .3s ease both; animation-delay: calc(var(--stop-index, 0) * 90ms); }
+@media (prefers-reduced-motion: reduce) {
+  .journey-route.selected .journey-path,
+  .journey-route.selected .journey-stop { animation: none; }
+}
 .map-canvas:not(.is-focused) .city-point { pointer-events: none; }
-.map-canvas.is-focused .city-point.province-active .city-hit { r: var(--city-focus-hit-radius, 5px); }
-.map-canvas.is-focused .city-point.province-active.status-visited .city-ring-outer { r: var(--city-focus-ring-radius, 3px); }
-.map-canvas.is-focused .city-point.province-active.status-visited .city-core { r: var(--city-focus-core-radius, 1.8px); }
-.map-canvas.is-focused .city-point.province-active.status-home .city-ring-outer,
-.map-canvas.is-focused .city-point.province-active.status-lived .city-ring-outer { r: var(--city-focus-home-ring-radius, 4px); }
-.map-canvas.is-focused .city-point.province-active.status-home .city-ring-inner,
-.map-canvas.is-focused .city-point.province-active.status-lived .city-ring-inner { r: var(--city-focus-home-inner-radius, 3px); }
-.map-canvas.is-focused .city-point.province-active.status-home .city-core,
-.map-canvas.is-focused .city-point.province-active.status-lived .city-core { r: var(--city-focus-home-core-radius, 2.5px); }
-.map-canvas.is-focused .city-point.province-active .city-pulse { r: var(--city-focus-pulse-radius, 8px); }
-.map-canvas.is-focused .city-point.province-active .city-index { font-size: var(--city-focus-index-size, 3px); }
-.map-canvas.is-focused .city-point.province-active .city-label { font-size: var(--city-focus-label-size, 4.8px); stroke-width: 2.2; }
+.map-canvas.is-focused .city-point:is(.province-active, .journey-active) .city-hit { r: var(--city-focus-hit-radius, 5px); }
+.map-canvas.is-focused .city-point:is(.province-active, .journey-active).status-visited .city-ring-outer { r: var(--city-focus-ring-radius, 3px); }
+.map-canvas.is-focused .city-point:is(.province-active, .journey-active).status-visited .city-core { r: var(--city-focus-core-radius, 1.8px); }
+.map-canvas.is-focused .city-point:is(.province-active, .journey-active).status-home .city-ring-outer,
+.map-canvas.is-focused .city-point:is(.province-active, .journey-active).status-lived .city-ring-outer { r: var(--city-focus-home-ring-radius, 4px); }
+.map-canvas.is-focused .city-point:is(.province-active, .journey-active).status-home .city-ring-inner,
+.map-canvas.is-focused .city-point:is(.province-active, .journey-active).status-lived .city-ring-inner { r: var(--city-focus-home-inner-radius, 3px); }
+.map-canvas.is-focused .city-point:is(.province-active, .journey-active).status-home .city-core,
+.map-canvas.is-focused .city-point:is(.province-active, .journey-active).status-lived .city-core { r: var(--city-focus-home-core-radius, 2.5px); }
+.map-canvas.is-focused .city-point:is(.province-active, .journey-active) .city-pulse { r: var(--city-focus-pulse-radius, 8px); }
+.map-canvas.is-focused .city-point:is(.province-active, .journey-active) .city-index { font-size: var(--city-focus-index-size, 3px); }
+.map-canvas.is-focused .city-point:is(.province-active, .journey-active) .city-label { font-size: var(--city-focus-label-size, 4.8px); stroke-width: 2.2; }
 .map-canvas.has-prefectures .city-leader { stroke-width: .55; }
 .city-point { color: var(--accent-ink); outline: none; -webkit-tap-highlight-color: transparent; transition: opacity .18s ease; }
 .city-hit { fill: transparent; stroke: none; pointer-events: all; }
 .city-point.muted { opacity: .16; pointer-events: none; }
 .map-canvas.is-focused .city-point.muted { opacity: 0; }
-.map-canvas.is-focused .city-point.province-active .city-label,
-.map-canvas.is-focused .city-point.province-active .city-leader { opacity: 1; }
+.map-canvas.is-focused .city-point:is(.province-active, .journey-active) .city-label,
+.map-canvas.is-focused .city-point:is(.province-active, .journey-active) .city-leader { opacity: 1; }
 .city-ring { fill: color-mix(in srgb, var(--paper) 92%, transparent); stroke: var(--accent); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .city-point.status-home .city-ring-outer { fill: color-mix(in srgb, var(--paper) 94%, transparent); stroke-width: 1.8; }
 .city-point.status-lived .city-ring-outer { fill: color-mix(in srgb, var(--accent) 12%, var(--paper)); stroke-width: 1.5; stroke-dasharray: 2 1; }
@@ -209,14 +236,21 @@
   .map-toolbar { margin-top: 12px; justify-content: flex-start; }
   .map-toolbar button { margin-left: 0; }
   .place-list { grid-auto-columns: minmax(270px, 42vw); }
+  .map-journey-bar { flex-wrap: wrap; gap: 9px; }
+}
+@media (max-width: 640px) {
+  .map-journey-bar { padding: 11px 0 2px; }
+  .journey-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .journey-chips::-webkit-scrollbar { display: none; }
+  .journey-chip { flex: none; }
 }
 @media (max-width: 760px) {
-  .city-point.status-visited:not(.mobile-priority):not(.province-active):not(.highlighted):not(:hover):not(:focus) .city-label,
-  .city-point.status-visited:not(.mobile-priority):not(.province-active):not(.highlighted):not(:hover):not(:focus) .city-leader { opacity: 0; }
+  .city-point.status-visited:not(.mobile-priority):not(.province-active):not(.journey-active):not(.highlighted):not(:hover):not(:focus) .city-label,
+  .city-point.status-visited:not(.mobile-priority):not(.province-active):not(.journey-active):not(.highlighted):not(:hover):not(:focus) .city-leader { opacity: 0; }
   .city-point.mobile-priority .city-label,
   .city-point.mobile-priority .city-leader,
-  .city-point.province-active .city-label,
-  .city-point.province-active .city-leader { opacity: 1; }
+  .city-point:is(.province-active, .journey-active) .city-label,
+  .city-point:is(.province-active, .journey-active) .city-leader { opacity: 1; }
 }
 @media (max-width: 640px) {
   .map-stage { margin-top: 20px; }
