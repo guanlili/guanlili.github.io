@@ -2,9 +2,27 @@ import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+// 覆盖所有有足迹城市的省级地区；北京/天津/上海例外：
+// 直辖市的 prefecture 字段就是城市本身，区县边界无法与之匹配。
 const sources = [
+  { adcode: "130000", province: "河北省" },
+  { adcode: "140000", province: "山西省" },
+  { adcode: "150000", province: "内蒙古自治区" },
+  { adcode: "210000", province: "辽宁省" },
+  { adcode: "220000", province: "吉林省" },
+  { adcode: "230000", province: "黑龙江省" },
+  { adcode: "320000", province: "江苏省" },
+  { adcode: "330000", province: "浙江省" },
+  { adcode: "360000", province: "江西省" },
   { adcode: "370000", province: "山东省" },
+  { adcode: "410000", province: "河南省" },
+  { adcode: "430000", province: "湖南省" },
+  { adcode: "440000", province: "广东省" },
+  { adcode: "450000", province: "广西壮族自治区" },
   { adcode: "460000", province: "海南省" },
+  { adcode: "510000", province: "四川省" },
+  { adcode: "520000", province: "贵州省" },
+  { adcode: "610000", province: "陕西省" },
   { adcode: "650000", province: "新疆维吾尔自治区" },
 ];
 
