@@ -107,12 +107,14 @@ function initTOC() {
     function openSheet() {
       sheet.classList.add('toc-sheet-open');
       sheet.setAttribute('aria-hidden', 'false');
+      sheet.removeAttribute('inert');
       fab.setAttribute('aria-expanded', 'true');
       backdrop.classList.add('open');
     }
     function closeSheet() {
       sheet.classList.remove('toc-sheet-open');
       sheet.setAttribute('aria-hidden', 'true');
+      sheet.setAttribute('inert', '');
       fab.setAttribute('aria-expanded', 'false');
       backdrop.classList.remove('open');
     }
