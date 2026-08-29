@@ -17,8 +17,7 @@ export default defineConfig({
   integrations: [sitemap(), imageCacheIntegration()],
   markdown: {
     processor: satteri({
-      mdastPlugins: [satteriShiftHeadings()],
-      hastPlugins: [satteriImageAttrs()],
+      mdastPlugins: [satteriShiftHeadings(), satteriImageAttrs()],
     }),
     // Leave mermaid blocks un-highlighted so they can be rendered as diagrams
     // client-side (see initMermaid in site.js).

@@ -337,7 +337,7 @@ const journeys = [...journeyAggregates.values()]
               data-city={place.city}
               data-visited={place.visited.join(",")}
               data-journeys={place.journeys.map((journey) => journey.id).join(",")}
-              aria-label={place.status === "home" ? `查看常驻地${place.city}` : `查看${place.city}足迹`}
+              aria-label={place.status === "home" ? `查看常驻地${place.city}（家）` : place.status === "lived" ? `查看${place.city}足迹（故）` : `查看${place.city}足迹`}
               tabindex="-1"
             >
               <circle class="city-hit" cx={x} cy={y} r="22"></circle>
