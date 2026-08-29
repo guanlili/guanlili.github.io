@@ -15,7 +15,7 @@ description: "Typora + PicGo + Gitee 搭建免费图床教程，解决 GitHub �
 
 由于之前自己在github搭了自己的博客，伴随之而来的一系列问题。如github不显示图片，github图床加载太慢等一系列问题。
 
-[Typora+PicGo+github搭建免费稳定图床写博客如行云流水（mac+window）](https://blog.csdn.net/outman_1921/article/details/106598469)
+Typora+PicGo+github搭建免费稳定图床写博客如行云流水（mac+window）
 
 [使用jsDelivr的CDN加速github图床](https://blog.csdn.net/outman_1921/article/details/115569466)
 

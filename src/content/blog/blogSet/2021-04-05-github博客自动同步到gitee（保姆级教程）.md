@@ -210,7 +210,7 @@ dst: gitee/<这里改成自己的Gitee名字>
 - [ ] 需求：期望有一个干净独立自己的博客网站（还不用花钱）
 - [ ] 实现：[Typora+PicGo+github搭建免费稳定图床写博客如行云流水（mac+window）](https://blog.csdn.net/outman_1921/article/details/106598382?spm=1001.2014.3001.5501)
 - [ ] 需求：github的图床加载访问太慢，图片多的文章本根看不到。
-- [ ] 解决办法：[Github无法加载或不显示图片问题（window+mac）](https://blog.csdn.net/outman_1921/article/details/106595472?spm=1001.2014.3001.5502)+优化方法：*https://cdn.jsdelivr.net/gh/用户名/图床仓库名*
+- [ ] 解决办法：Github无法加载或不显示图片问题（window+mac）+优化方法：*https://cdn.jsdelivr.net/gh/用户名/图床仓库名*
 - [ ] 需求：期望国内网也可以流畅丝滑的访问blog
 - [ ] 解决办法：也就是本篇文章所写。
 

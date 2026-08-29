@@ -10,7 +10,7 @@ description: "Matplotlib + Pyecharts 数据可视化笔记：折线图、柱状�
 ---
 
 
-> [numpy](http://outman.ink/2020/08/20/numpy%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/)(数据计算)+[pandas](http://outman.ink/2020/06/02/pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/)(数据提取)+[matplotlib](http://outman.ink/2020/07/20/matplotlib+pyechart/)(可视化图表)
+> [numpy](/2020/08/20/numpy学习笔记/)(数据计算)+[pandas](/2020/06/02/pandas学习笔记/)(数据提取)+[matplotlib](/2020/07/20/matplotlib-pyechart/)(可视化图表)
 > 自学数据分析期间的学习笔记。
 
 ### matplotlib
