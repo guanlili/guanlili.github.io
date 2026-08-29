@@ -109,7 +109,11 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
                 <li>
                   <time>{footprintDateLabel(event.date, event.precision)}</time>
                   <div>
-                    <strong>{event.href ? <a href={event.href} target="_blank" rel="noopener">{event.title} ↗</a> : event.title}</strong>
+                    <strong>{event.href
+                      ? event.href.startsWith("/")
+                        ? <a href={event.href}>{event.title} ↗</a>
+                        : <a href={event.href} target="_blank" rel="noopener">{event.title} ↗</a>
+                      : event.title}</strong>
                     {event.note && <p>{event.note}</p>}
                   </div>
                 </li>
@@ -180,7 +184,7 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
 
     <div class="footprint-next-prev">
       {previousStop ? <a href={footprintPath(previousStop)}><span>← {activeJourney ? "同程上一站" : "较近一站"}</span><strong>{previousStop.data.city}</strong></a> : <span></span>}
-      <a class="back-map" href="/footprints/">回到地图</a>
+      <a class="back-map" href={activeJourney ? `/footprints/?journey=${activeJourney.id}` : "/footprints/"}>回到地图</a>
       {nextStop ? <a class="next" href={footprintPath(nextStop)}><span>{activeJourney ? "同程下一站" : "更早一站"} →</span><strong>{nextStop.data.city}</strong></a> : <span></span>}
     </div>
   </div>
