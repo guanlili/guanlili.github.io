@@ -11,6 +11,9 @@ export default defineConfig({
   site: "https://guanlili.github.io",
   // User page served at the domain root.
   base: "/",
+  // Astro 7 默认按 JSX 规则压缩空白，会吃掉行内元素间的空格；
+  // 中文排版里中英混排依赖这些空格，显式沿用 v6 行为。
+  compressHTML: true,
   // Match the old Jekyll `permalink: pretty` URLs: /a/b/c/ → /a/b/c/index.html
   trailingSlash: "always",
   build: { format: "directory" },
