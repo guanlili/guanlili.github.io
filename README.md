@@ -150,9 +150,7 @@ URL 会按文件名自动生成，例如：
 
 构建时会通过 `src/lib/astro-image-cache.mjs` 探测图片尺寸，并把结果写入 `.image-dimensions.json`。这个文件用于稳定文章图片布局。
 
-`npm run images:report` 可以查看本地缺失图片、远程图片尺寸缓存、最近探测失败和未探测图片；需要生成临时 Markdown 报告时运行 `npm run images:report:write`。
-
-历史文章中仍有一些迁移前就缺失的图片，记录在 `BROKEN-IMAGES.md`。补图时把对应文件放到 `public/img/`，或把正文里的图片地址改成可访问外链。
+`npm run images:report` 可以查看本地缺失图片、远程图片尺寸缓存、最近探测失败和未探测图片；需要生成临时 Markdown 报告时运行 `npm run images:report:write`。历史欠账图基本都已改挂远程图床，剩余失效外链以该报告为准。
 
 ## 部署
 
