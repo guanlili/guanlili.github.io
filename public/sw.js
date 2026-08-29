@@ -19,6 +19,7 @@ var CACHE_FIRST = [
   '/js/',
   '/pwa/',
   '/img/',
+  '/data/',
   '/_astro/',
 ];
 
