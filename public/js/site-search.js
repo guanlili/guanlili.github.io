@@ -115,11 +115,16 @@ export function initSearch() {
 
   function normalizeUrl(url) {
     var value = String(url || '');
+    var search = '';
     try {
-      value = new URL(value, window.location.origin).pathname;
+      var parsed = new URL(value, window.location.origin);
+      value = parsed.pathname;
+      search = parsed.search;
     } catch (e) {}
     if (!value.startsWith('/')) value = '/' + value;
-    return value.endsWith('/') ? value : value + '/';
+    // 保留 query：/footprints/?journey=x 一类带状态的目录条目不能被折叠成同一路径
+    if (!search && !value.endsWith('/')) value = value + '/';
+    return value + search;
   }
 
   function loadCatalog() {
@@ -247,7 +252,7 @@ export function initSearch() {
 
   function renderEmpty() {
     loadRecommended();
-    var html = '<div class="search-note">没有找到相关文章</div>';
+    var html = '<div class="search-note">没有找到相关内容</div>';
     if (recommendedData && recommendedData.length) {
       html += renderRecommendedCards(recommendedData.slice(0, 4), '试试这些文章？');
     }
@@ -288,7 +293,8 @@ export function initSearch() {
     }).then(function (search) {
       if (current !== seq) return;
       var results = (search.results || []).slice(0, 50);
-      if (!results.length) {
+      // pagefind 只索引文章页；足迹/行程等目录条目在正文索引为空时仍要兜底展示
+      if (!results.length && !query) {
         renderEmpty();
         return;
       }
@@ -331,6 +337,11 @@ export function initSearch() {
               merged.push(fallback);
             }
           });
+        }
+
+        if (!merged.length) {
+          renderEmpty();
+          return;
         }
 
         merged.sort(function (a, b) {
