@@ -16,7 +16,6 @@ events:
 summary: "2019 年以前主要生活在这里。它不是一次旅行，而是后来所有出发的原点。"
 photos: []
 tags: [曾居地, 故乡, 黑龙江]
-featured: true
 ---
 
 ## 出发以前

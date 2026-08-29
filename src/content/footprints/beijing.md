@@ -28,7 +28,6 @@ summary: "2019 年来京读书，此后在这里实习、工作并定居；北�
 cover: "/img/footprints/beijing-hutong.webp"
 photos: []
 tags: [常驻地, 求学, 工作, 城市生活]
-featured: true
 ---
 
 ## 从求学到定居
