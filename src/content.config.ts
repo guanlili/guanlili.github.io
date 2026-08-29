@@ -97,7 +97,6 @@ const footprints = defineCollection({
       )
       .default([]),
     tags: z.array(z.string()).default([]),
-    featured: z.boolean().default(false),
     sample: z.boolean().default(false),
     draft: z.boolean().default(false),
   }),
