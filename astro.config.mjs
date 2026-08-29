@@ -1,9 +1,9 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
-import { unified } from "@astrojs/markdown-remark";
-import remarkImageAttrs from "./src/lib/remark-image-attrs.mjs";
-import remarkShiftHeadings from "./src/lib/remark-shift-headings.mjs";
+import { satteri } from "@astrojs/markdown-satteri";
+import satteriShiftHeadings from "./src/lib/satteri-shift-headings.mjs";
+import satteriImageAttrs from "./src/lib/satteri-image-attrs.mjs";
 import imageCacheIntegration from "./src/lib/astro-image-cache.mjs";
 
 // https://astro.build
@@ -16,8 +16,9 @@ export default defineConfig({
   build: { format: "directory" },
   integrations: [sitemap(), imageCacheIntegration()],
   markdown: {
-    processor: unified({
-      remarkPlugins: [remarkShiftHeadings, remarkImageAttrs],
+    processor: satteri({
+      mdastPlugins: [satteriShiftHeadings()],
+      hastPlugins: [satteriImageAttrs()],
     }),
     // Leave mermaid blocks un-highlighted so they can be rendered as diagrams
     // client-side (see initMermaid in site.js).
