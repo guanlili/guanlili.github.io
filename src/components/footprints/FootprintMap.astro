@@ -21,9 +21,27 @@ interface Place {
 
 const { places } = Astro.props as { places: Place[] };
 const visitedProvinces = new Set(places.map((place) => place.province));
+// 与 scripts/build-footprint-prefectures.mjs 的 sources 保持同步；
+// 直辖市（北京/天津/上海）无 prefecture 数据，点击时仅做省份缩放。
 const prefectureSources: Record<string, string> = {
+  河北省: "/data/footprints/prefectures/130000.json",
+  山西省: "/data/footprints/prefectures/140000.json",
+  内蒙古自治区: "/data/footprints/prefectures/150000.json",
+  辽宁省: "/data/footprints/prefectures/210000.json",
+  吉林省: "/data/footprints/prefectures/220000.json",
+  黑龙江省: "/data/footprints/prefectures/230000.json",
+  江苏省: "/data/footprints/prefectures/320000.json",
+  浙江省: "/data/footprints/prefectures/330000.json",
+  江西省: "/data/footprints/prefectures/360000.json",
   山东省: "/data/footprints/prefectures/370000.json",
+  河南省: "/data/footprints/prefectures/410000.json",
+  湖南省: "/data/footprints/prefectures/430000.json",
+  广东省: "/data/footprints/prefectures/440000.json",
+  广西壮族自治区: "/data/footprints/prefectures/450000.json",
   海南省: "/data/footprints/prefectures/460000.json",
+  四川省: "/data/footprints/prefectures/510000.json",
+  贵州省: "/data/footprints/prefectures/520000.json",
+  陕西省: "/data/footprints/prefectures/610000.json",
   新疆维吾尔自治区: "/data/footprints/prefectures/650000.json",
 };
 
