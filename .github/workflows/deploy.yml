@@ -1,9 +1,7 @@
 name: Deploy to GitHub Pages
 
-# Builds the Astro site and deploys it to GitHub Pages.
-# NOTE: this only takes effect once the repo's Pages source is switched to
-# "GitHub Actions" (Settings → Pages → Build and deployment → Source).
-# Until then the classic Jekyll build keeps serving the live site.
+# Builds the Astro site and deploys it to GitHub Pages. Pull requests only run
+# the build check.
 
 on:
   push:
@@ -17,10 +15,12 @@ permissions:
   pages: write
   id-token: write
 
-# Allow one concurrent deployment, don't cancel in-progress production deploys.
+# Production deploys share one queue and are never cancelled mid-flight. Each PR
+# gets its own group so checks don't wait behind deploys, and a new push to the
+# PR cancels its stale run.
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || 'pages' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
