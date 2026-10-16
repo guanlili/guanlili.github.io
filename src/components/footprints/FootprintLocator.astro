@@ -1,0 +1,72 @@
+---
+import { getProvinceShapes, project, type Bounds } from "../../lib/footprint-geo";
+
+interface Stop {
+  city: string;
+  path: string;
+  order: number;
+  current: boolean;
+  province: string;
+  coordinates: [number, number];
+}
+
+interface Props {
+  city: string;
+  province: string;
+  coordinates: [number, number];
+  journeyName?: string;
+  stops?: Stop[];
+}
+
+const { city, province, coordinates, journeyName, stops = [] } = Astro.props;
+const route = stops.length > 1 ? stops : [];
+const provinceNames = new Set([province, ...route.map((stop) => stop.province)]);
+const shapes = getProvinceShapes().filter((shape) => provinceNames.has(shape.name));
+const here = project(coordinates);
+const routePoints = route.map((stop) => ({ ...stop, point: project(stop.coordinates) }));
+
+const union = shapes.reduce<Bounds>(
+  (acc, shape) => [
+    Math.min(acc[0], shape.bounds[0]),
+    Math.min(acc[1], shape.bounds[1]),
+    Math.max(acc[2], shape.bounds[2]),
+    Math.max(acc[3], shape.bounds[3]),
+  ],
+  [here[0], here[1], here[0], here[1]],
+);
+const ASPECT = 4 / 3;
+const MIN_WIDTH = 48;
+const padding = Math.max(6, (union[2] - union[0]) * 0.08);
+let width = Math.max(MIN_WIDTH, union[2] - union[0] + padding * 2);
+let height = Math.max(MIN_WIDTH / ASPECT, union[3] - union[1] + padding * 2);
+if (width / height > ASPECT) height = width / ASPECT;
+else width = height * ASPECT;
+const viewBox = [
+  (union[0] + union[2]) / 2 - width / 2,
+  (union[1] + union[3]) / 2 - height / 2,
+  width,
+  height,
+].map((value) => value.toFixed(1)).join(" ");
+
+// Marker sizes as fractions of the viewBox so they render the same on any zoom.
+const unit = width / 100;
+const routeD = routePoints.map(({ point: [x, y] }, index) => `${index ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`).join("");
+const label = journeyName ? `${journeyName}路线图，当前位置：${city}` : `${city}在${province}的位置`;
+---
+
+<figure class="footprint-locator">
+  <svg viewBox={viewBox} role="img" aria-label={label}>
+    <g class="locator-provinces">
+      {shapes.map((shape) => <path d={shape.path} class:list={{ current: shape.name === province }} />)}
+    </g>
+    {routeD && <path class="locator-route" d={routeD} />}
+    {routePoints.filter((stop) => !stop.current).map((stop) => (
+      <a href={stop.path} aria-label={`第 ${stop.order} 站：${stop.city}`}>
+        <circle class="locator-stop" cx={stop.point[0]} cy={stop.point[1]} r={unit * 2.4} />
+      </a>
+    ))}
+    <circle class="locator-here-ring" cx={here[0]} cy={here[1]} r={unit * 4} />
+    <circle class="locator-here" cx={here[0]} cy={here[1]} r={unit * 2.8} />
+  </svg>
+  <figcaption>{journeyName && route.length > 1 ? `${journeyName} · 第 ${route.find((stop) => stop.current)?.order ?? "—"} / ${route.length} 站` : province}</figcaption>
+</figure>

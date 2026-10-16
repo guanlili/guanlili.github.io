@@ -1,6 +1,7 @@
 ---
 import { render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import FootprintLocator from "../../components/footprints/FootprintLocator.astro";
 import { SITE } from "../../consts";
 import { footprintDateLabel, footprintPath, footprintSlug, getFootprints, latestVisit, yearRange } from "../../lib/footprints";
 import "../../styles/pages/footprints.less";
@@ -34,6 +35,8 @@ export async function getStaticPaths() {
           path: footprintPath(stop.entry),
           order: stop.order,
           current: footprintSlug(stop.entry) === footprintSlug(entry),
+          province: stop.entry.data.province,
+          coordinates: stop.entry.data.coordinates,
         })),
       },
     };
@@ -153,6 +156,16 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
       </article>
 
       <aside class="footprint-side">
+        <div class="side-block">
+          <span class="side-label">Location · 位置</span>
+          <FootprintLocator
+            city={data.city}
+            province={data.province}
+            coordinates={data.coordinates}
+            journeyName={activeJourney?.name}
+            stops={journeyStops}
+          />
+        </div>
         <div class="side-block">
           <span class="side-label">{isHome ? "Living · 常驻时间" : "Visited · 到访日期"}</span>
           {isHome

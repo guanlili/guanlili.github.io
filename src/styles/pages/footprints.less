@@ -372,6 +372,16 @@
 .side-block ol { margin: 0; padding: 0; list-style: none; }
 .side-block li { margin: 7px 0; font-family: var(--mono); font-size: 10.5px; line-height: 1.5; color: var(--ink-3); }
 .side-block li.home-period { color: var(--accent); font-weight: 600; letter-spacing: .08em; }
+.footprint-locator { margin: 0; }
+.footprint-locator svg { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; border: 1px solid var(--rule-soft); background: var(--paper); }
+.footprint-locator figcaption { margin-top: 8px; font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em; color: var(--ink-3); }
+.locator-provinces path { fill: color-mix(in srgb, var(--paper) 69%, #94aaa4); stroke: color-mix(in srgb, var(--paper) 62%, var(--ink)); stroke-width: 1; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.locator-provinces path.current { fill: color-mix(in srgb, var(--accent) 34%, var(--paper)); }
+.locator-route { fill: none; stroke: var(--accent-ink); stroke-width: 1.3; stroke-dasharray: 4 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; opacity: .8; }
+.locator-stop { fill: var(--paper); stroke: var(--accent-ink); stroke-width: 1.3; vector-effect: non-scaling-stroke; transition: fill .16s ease; }
+.footprint-locator a:hover .locator-stop, .footprint-locator a:focus-visible .locator-stop { fill: var(--accent); }
+.locator-here { fill: var(--accent); stroke: var(--paper); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.locator-here-ring { fill: color-mix(in srgb, var(--accent) 16%, transparent); stroke: var(--accent); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .footprint-tags { display: flex; flex-wrap: wrap; gap: 8px 12px; font-family: var(--mono); font-size: 10px; color: var(--ink-3); }
 .footprint-journey-stops > strong { display: block; margin-bottom: 12px; font-family: var(--serif); font-size: 17px; color: var(--ink); }
 .footprint-journey-stops li a { display: flex; align-items: center; gap: 9px; color: var(--ink-3); }
