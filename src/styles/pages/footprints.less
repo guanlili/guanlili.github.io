@@ -435,7 +435,7 @@
 .photo-grid figcaption a, .photo-grid figcaption small { flex-shrink: 0; font-family: var(--mono); font-size: 8.5px; color: var(--ink-4); border: 0; }
 @media (max-width: 560px) { .photo-grid { grid-template-columns: 1fr; } .photo-grid figure:first-child:nth-last-child(1) { grid-column: auto; } }
 
-.photo-lightbox { width: min(1100px, calc(100vw - 36px)); max-width: none; height: min(86vh, 800px); padding: 0; border: 1px solid color-mix(in srgb, var(--paper) 30%, transparent); background: #111; color: #fff; overflow: hidden; }
+.photo-lightbox { width: min(1100px, calc(100vw - 36px)); max-width: none; height: min(86vh, 800px); padding: 0; overscroll-behavior: contain; touch-action: pan-y pinch-zoom; border: 1px solid color-mix(in srgb, var(--paper) 30%, transparent); background: #111; color: #fff; overflow: hidden; }
 .photo-lightbox::backdrop { background: rgba(0, 0, 0, .84); backdrop-filter: blur(4px); }
 .photo-lightbox[open] { display: grid; grid-template-columns: 54px 1fr 54px; align-items: center; }
 .photo-lightbox figure { min-width: 0; height: 100%; margin: 0; display: grid; grid-template-rows: 1fr auto; align-items: center; }
