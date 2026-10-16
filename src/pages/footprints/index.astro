@@ -31,6 +31,17 @@ const archivedTrips = travelFootprints.reduce((groups, entry) => {
 }, new Map<number, typeof travelFootprints>());
 const archiveYears = [...archivedTrips.keys()].sort((a, b) => b - a);
 const residenceFootprints = footprints.filter((entry) => entry.data.status !== "visited");
+// Counts mirror the client-side filter: a year matches any visit in that year
+// (travel rows only), content matches every row.
+const yearCounts = new Map(archiveYears.map((year) => [
+  year,
+  travelFootprints.filter((entry) => entry.data.visited.some((date) => date.getFullYear() === year)).length,
+]));
+const contentFilters = [
+  { key: "photos", label: "有照片" },
+  { key: "journal", label: "有游记" },
+  { key: "footprint", label: "仅足迹" },
+].map((filter) => ({ ...filter, count: footprints.filter((entry) => contentKey(entry) === filter.key).length }));
 const archiveNumber = new Map(footprints.map((entry, index) => [footprintSlug(entry), index + 1]));
 const places = footprints.map((entry) => ({
   slug: footprintSlug(entry),
@@ -95,14 +106,16 @@ const places = footprints.map((entry) => ({
         <div class="archive-filter-group">
           <span>年份</span>
           <button type="button" class="active" data-archive-year="" aria-pressed="true">全部</button>
-          {archiveYears.map((year) => <button type="button" data-archive-year={year} aria-pressed="false">{year}</button>)}
+          {archiveYears.map((year) => <button type="button" data-archive-year={year} aria-pressed="false">{year}<small>{yearCounts.get(year)}</small></button>)}
         </div>
         <div class="archive-filter-group archive-content-filter">
           <span>内容</span>
           <button type="button" class="active" data-archive-content="" aria-pressed="true">全部</button>
-          <button type="button" data-archive-content="photos" aria-pressed="false">有照片</button>
-          <button type="button" data-archive-content="journal" aria-pressed="false">有游记</button>
-          <button type="button" data-archive-content="footprint" aria-pressed="false">仅足迹</button>
+          {contentFilters.map((filter) => (
+            <button type="button" data-archive-content={filter.key} aria-pressed="false" disabled={filter.count === 0}>
+              {filter.label}<small>{filter.count}</small>
+            </button>
+          ))}
         </div>
         <div class="archive-filter-state"><span data-archive-province>全部地区</span><button type="button" data-archive-reset>清除筛选</button></div>
       </div>
@@ -155,7 +168,7 @@ const places = footprints.map((entry) => ({
                 >
                   <span class="journey-num">{entry.data.status === "home" ? "家" : "故"}</span>
                   <span class="journey-row-copy">
-                    <span class="journey-meta">{entry.data.status === "home" ? `常驻地 · Since ${entry.data.since?.getFullYear() ?? firstYear}` : "曾居地 · 2019 年以前"} <em>{contentLabel(entry)}</em></span>
+                    <span class="journey-meta">{entry.data.status === "home" ? `常驻地 · Since ${entry.data.since?.getFullYear() ?? firstYear}` : entry.data.until ? `曾居地 · ${entry.data.until.getFullYear()} 年以前` : "曾居地"} <em>{contentLabel(entry)}</em></span>
                     <strong>{entry.data.city}</strong>
                     <small>{entry.data.summary}</small>
                   </span>
@@ -187,13 +200,22 @@ const places = footprints.map((entry) => ({
       const count = root.querySelector<HTMLElement>("[data-archive-count]");
       const provinceLabel = root.querySelector<HTMLElement>("[data-archive-province]");
       const empty = root.querySelector<HTMLElement>("[data-archive-empty]");
-      const initialProvince = new URL(window.location.href).searchParams.get("province") ?? "";
+      const initialParams = new URL(window.location.href).searchParams;
+      const initialProvince = initialParams.get("province") ?? "";
+      const initialJourney = initialParams.get("journey") ?? "";
+      const initialJourneyChip = initialJourney
+        ? document.querySelector<HTMLElement>(`[data-journey-id="${CSS.escape(initialJourney)}"]`)
+        : null;
       const lifecycle = new AbortController();
       document.addEventListener("astro:before-swap", () => lifecycle.abort(), { once: true });
-      let activeYear = "";
-      let activeContent = "";
-      let activeProvince = rows.some((row) => row.dataset.province === initialProvince) ? initialProvince : "";
-      let activeJourney = "";
+      const validParam = (buttons: HTMLButtonElement[], key: "archiveYear" | "archiveContent", value: string | null) =>
+        value && buttons.some((button) => button.dataset[key] === value && !button.disabled) ? value : "";
+      let activeYear = validParam(yearButtons, "archiveYear", initialParams.get("year"));
+      let activeContent = validParam(contentButtons, "archiveContent", initialParams.get("content"));
+      // The map selects either a journey or a province, never both; mirror that.
+      let activeJourney = initialJourneyChip ? initialJourney : "";
+      let activeJourneyName = initialJourneyChip?.querySelector("b")?.textContent ?? "";
+      let activeProvince = !activeJourney && rows.some((row) => row.dataset.province === initialProvince) ? initialProvince : "";
 
       const syncButtons = (buttons: HTMLButtonElement[], active: string, key: "archiveYear" | "archiveContent") => {
         buttons.forEach((button) => {
@@ -209,7 +231,7 @@ const places = footprints.map((entry) => ({
       };
 
       const applyFilters = () => {
-        const hasActiveFilter = Boolean(activeYear || activeContent || activeProvince);
+        const hasActiveFilter = Boolean(activeYear || activeContent || activeProvince || activeJourney);
         let visible = 0;
         rows.forEach((row) => {
           const years = (row.dataset.years ?? "").split(",").filter(Boolean);
@@ -227,28 +249,48 @@ const places = footprints.map((entry) => ({
         });
         if (!hasActiveFilter) restoreMobileOpenState();
         if (count) count.textContent = String(visible);
-        if (provinceLabel) provinceLabel.textContent = activeProvince || "全部地区";
+        if (provinceLabel) provinceLabel.textContent = activeProvince || (activeJourney ? `行程 · ${activeJourneyName}` : "全部地区");
         if (empty) empty.hidden = visible !== 0;
       };
 
+      // Same replaceState-only rule as the map (see FootprintMap.astro).
+      const syncUrl = () => {
+        const url = new URL(window.location.href);
+        if (activeYear) url.searchParams.set("year", activeYear);
+        else url.searchParams.delete("year");
+        if (activeContent) url.searchParams.set("content", activeContent);
+        else url.searchParams.delete("content");
+        window.history.replaceState(window.history.state, "", url);
+      };
+
       restoreMobileOpenState();
+      syncButtons(yearButtons, activeYear, "archiveYear");
+      syncButtons(contentButtons, activeContent, "archiveContent");
+      syncUrl();
 
       yearButtons.forEach((button) => button.addEventListener("click", () => {
         activeYear = button.dataset.archiveYear ?? "";
         syncButtons(yearButtons, activeYear, "archiveYear");
+        syncUrl();
         applyFilters();
       }));
       contentButtons.forEach((button) => button.addEventListener("click", () => {
         activeContent = button.dataset.archiveContent ?? "";
         syncButtons(contentButtons, activeContent, "archiveContent");
+        syncUrl();
         applyFilters();
       }));
       document.addEventListener("footprint:province", (event) => {
         activeProvince = (event as CustomEvent<{ province: string }>).detail.province ?? "";
+        activeJourney = "";
+        activeJourneyName = "";
         applyFilters();
       }, { signal: lifecycle.signal });
       document.addEventListener("footprint:journey", (event) => {
-        activeJourney = (event as CustomEvent<{ journey: string }>).detail.journey ?? "";
+        const detail = (event as CustomEvent<{ journey: string; name?: string }>).detail;
+        activeJourney = detail.journey ?? "";
+        activeJourneyName = detail.name ?? "";
+        activeProvince = "";
         applyFilters();
       }, { signal: lifecycle.signal });
       const resetFilters = () => {
@@ -256,6 +298,7 @@ const places = footprints.map((entry) => ({
         activeContent = "";
         syncButtons(yearButtons, activeYear, "archiveYear");
         syncButtons(contentButtons, activeContent, "archiveContent");
+        syncUrl();
         document.querySelector<HTMLButtonElement>("[data-map-reset]")?.click();
         applyFilters();
       };

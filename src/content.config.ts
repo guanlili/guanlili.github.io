@@ -85,6 +85,7 @@ const footprints = defineCollection({
       .default([]),
     summary: z.string(),
     cover: z.string().optional(),
+    coverAlt: z.string().optional(),
     photos: z
       .array(
         z.object({
@@ -97,6 +98,8 @@ const footprints = defineCollection({
       )
       .default([]),
     tags: z.array(z.string()).default([]),
+    // Related site posts by path, e.g. "/2026/08/11/<slug>/" (trailing slash).
+    posts: z.array(z.string()).default([]),
     sample: z.boolean().default(false),
     draft: z.boolean().default(false),
   }),

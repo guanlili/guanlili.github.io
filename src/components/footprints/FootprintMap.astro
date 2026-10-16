@@ -1,5 +1,5 @@
 ---
-import china from "../../data/china-provinces.json";
+import { getProvinceShapes, project } from "../../lib/footprint-geo";
 
 interface Place {
   slug: string;
@@ -45,87 +45,11 @@ const prefectureSources: Record<string, string> = {
   新疆维吾尔自治区: "/data/footprints/prefectures/650000.json",
 };
 
-const minLon = 73;
-const maxLat = 54;
-const scale = 14.7;
-const project = ([lon, lat]: number[]) => [
-  22 + (lon - minLon) * scale,
-  18 + (maxLat - lat) * scale,
-];
-
-type Point = number[];
-type Ring = Point[];
-
-function perpendicularDistance(point: Point, start: Point, end: Point) {
-  const dx = end[0] - start[0];
-  const dy = end[1] - start[1];
-  if (dx === 0 && dy === 0) return Math.hypot(point[0] - start[0], point[1] - start[1]);
-  const t = Math.max(0, Math.min(1, ((point[0] - start[0]) * dx + (point[1] - start[1]) * dy) / (dx * dx + dy * dy)));
-  return Math.hypot(point[0] - (start[0] + t * dx), point[1] - (start[1] + t * dy));
-}
-
-function simplify(ring: Ring, tolerance = 0.025): Ring {
-  if (ring.length <= 4) return ring;
-  let maxDistance = 0;
-  let splitAt = 0;
-  for (let i = 1; i < ring.length - 1; i += 1) {
-    const distance = perpendicularDistance(ring[i], ring[0], ring[ring.length - 1]);
-    if (distance > maxDistance) {
-      maxDistance = distance;
-      splitAt = i;
-    }
-  }
-  if (maxDistance <= tolerance) return [ring[0], ring[ring.length - 1]];
-  return [
-    ...simplify(ring.slice(0, splitAt + 1), tolerance).slice(0, -1),
-    ...simplify(ring.slice(splitAt), tolerance),
-  ];
-}
-
-function ringPath(ring: Ring) {
-  const points = simplify(ring).map(project);
-  return points.map(([x, y], index) => `${index ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`).join("") + "Z";
-}
-
-function geometryPath(geometry: { type: string; coordinates: unknown }) {
-  const polygons = geometry.type === "Polygon"
-    ? [geometry.coordinates as Ring[]]
-    : geometry.coordinates as Ring[][];
-  return polygons.flatMap((polygon) => polygon.map(ringPath)).join("");
-}
-
-function geometryBounds(geometry: { type: string; coordinates: unknown }) {
-  const collectPoints = (value: unknown, coordinates: Point[]) => {
-    if (!Array.isArray(value)) return;
-    if (typeof value[0] === "number" && typeof value[1] === "number") {
-      coordinates.push(value as Point);
-      return;
-    }
-    value.forEach((item) => collectPoints(item, coordinates));
-  };
-  const shapes = geometry.type === "Polygon"
-    ? [geometry.coordinates]
-    : geometry.coordinates as unknown[];
-  const bounds = shapes.map((shape) => {
-    const coordinates: Point[] = [];
-    collectPoints(shape, coordinates);
-    const projected = coordinates.map(project);
-    const xs = projected.map(([x]) => x);
-    const ys = projected.map(([, y]) => y);
-    return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
-  });
-  return bounds.sort((a, b) => (b[2] - b[0]) * (b[3] - b[1]) - (a[2] - a[0]) * (a[3] - a[1]))[0];
-}
-
-const provinces = china.features
-  .map((feature) => ({
-    name: feature.properties.name || (feature.properties.adchar === "JD" ? "南海诸岛" : ""),
-    path: geometryPath(feature.geometry),
-    bounds: geometryBounds(feature.geometry),
-    visited: visitedProvinces.has(feature.properties.name),
-    prefectureSource: prefectureSources[feature.properties.name],
-  }))
-  .filter((province) => province.name);
+const provinces = getProvinceShapes().map((province) => ({
+  ...province,
+  visited: visitedProvinces.has(province.name),
+  prefectureSource: prefectureSources[province.name],
+}));
 
 const homeBase = places.find((place) => place.status === "home");
 const latestTravel = places.find((place) => place.status === "visited");
@@ -424,7 +348,7 @@ const journeys = [...journeyAggregates.values()]
                 {place.status === "home"
                   ? `常驻地 · Since ${place.since?.slice(0, 4) ?? "—"}`
                   : place.status === "lived"
-                    ? `曾居地 · ${place.until?.slice(0, 4) ?? "2019"}年以前`
+                    ? (place.until ? `曾居地 · ${place.until.slice(0, 4)}年以前` : "曾居地")
                     : `城市 · ${place.province} · ${place.visited.at(-1)?.slice(0, 4)}`}
               </span>
               <strong>{place.city}</strong>
@@ -473,6 +397,50 @@ const journeys = [...journeyAggregates.values()]
         "--city-focus-home-core-radius", "--city-focus-pulse-radius", "--city-focus-index-size",
       ];
       const journeyVarNames = ["--journey-dash", "--journey-badge-radius", "--journey-order-size"];
+      // Focused-view marker sizes are fractions of the zoomed viewBox width,
+      // tuned for the map as rendered on a 1280px desktop (~907px wide). On a
+      // narrower map the same fractions shrink to unreadable labels and
+      // fingertip-sized targets, so scale them up toward desktop pixel sizes.
+      const DESKTOP_MAP_WIDTH = 907;
+      const MAX_FOCUS_SCALE = 2.6;
+      const MIN_TOUCH_HIT_RADIUS_PX = 22;
+      let lastFocus: { detailWidth: number; prefectures?: boolean; journey?: boolean } | null = null;
+      const setFocusSizes = (detailWidth: number, options: { prefectures?: boolean; journey?: boolean } = {}) => {
+        if (!mapSvg) return;
+        lastFocus = { detailWidth, ...options };
+        const renderedWidth = mapSvg.getBoundingClientRect().width || DESKTOP_MAP_WIDTH;
+        const k = Math.min(MAX_FOCUS_SCALE, Math.max(1, DESKTOP_MAP_WIDTH / renderedWidth));
+        const unitsPerPx = detailWidth / renderedWidth;
+        const coarse = window.matchMedia("(pointer: coarse)").matches;
+        const hitRadius = Math.max((detailWidth / 80) * k, coarse ? MIN_TOUCH_HIT_RADIUS_PX * unitsPerPx : 0);
+        const set = (name: string, value: number) => mapSvg.style.setProperty(name, `${value.toFixed(2)}px`);
+        set("--city-focus-label-size", (detailWidth / 75) * k);
+        set("--city-focus-hit-radius", hitRadius);
+        set("--city-focus-ring-radius", (detailWidth / 150) * k);
+        set("--city-focus-core-radius", (detailWidth / 250) * k);
+        set("--city-focus-home-ring-radius", (detailWidth / 120) * k);
+        set("--city-focus-home-inner-radius", (detailWidth / 170) * k);
+        set("--city-focus-home-core-radius", (detailWidth / 190) * k);
+        set("--city-focus-pulse-radius", (detailWidth / 60) * k);
+        set("--city-focus-index-size", (detailWidth / 180) * k);
+        // Unvisited prefecture names are secondary and dense (Hainan has 19),
+        // so they grow less; visited ones stand in for redundant city labels.
+        if (options.prefectures) {
+          set("--prefecture-label-size", (detailWidth / 88) * Math.min(k, 1.6));
+          set("--prefecture-visited-label-size", (detailWidth / 88) * k);
+        } else {
+          mapSvg.style.removeProperty("--prefecture-label-size");
+          mapSvg.style.removeProperty("--prefecture-visited-label-size");
+        }
+        if (options.journey) {
+          // Badges sit on closely spaced stops; give them a pixel floor
+          // instead of scaling, so they stay legible without overlapping.
+          const badgeRadius = Math.max(5, detailWidth / 70, 11 * unitsPerPx);
+          mapSvg.style.setProperty("--journey-dash", `${((detailWidth / 70) * k).toFixed(1)} ${((detailWidth / 105) * k).toFixed(1)}`);
+          set("--journey-badge-radius", badgeRadius);
+          set("--journey-order-size", Math.max(Math.max(3, detailWidth / 110), badgeRadius * 0.62));
+        }
+      };
       let viewBoxAnimation = 0;
       let prefectureRequest = 0;
       const prefectureCache = new Map<string, Promise<PrefectureMapData>>();
@@ -499,13 +467,15 @@ const journeys = [...journeyAggregates.values()]
         journeyVarNames.forEach((property) => mapSvg?.style.removeProperty(property));
       };
 
-      const updateProvinceUrl = (province: string, mode: "push" | "replace" | false) => {
-        if (!mode) return;
+      // replaceState only: ClientRouter refetches and swaps the page on any
+      // back/forward that changes the query, so per-click history entries make
+      // the back button reload the map. history.state is Astro's bookkeeping.
+      const replaceUrl = (key: "province" | "journey", value: string) => {
         const url = new URL(window.location.href);
-        if (province) url.searchParams.set("province", province);
-        else url.searchParams.delete("province");
-        url.searchParams.delete("journey");
-        window.history[mode === "push" ? "pushState" : "replaceState"]({}, "", url);
+        if (value) url.searchParams.set(key, value);
+        else url.searchParams.delete(key);
+        url.searchParams.delete(key === "province" ? "journey" : "province");
+        window.history.replaceState(window.history.state, "", url);
       };
 
       const focusViewBox = (path: SVGPathElement) => {
@@ -518,10 +488,10 @@ const journeys = [...journeyAggregates.values()]
         const compactIslands = path.dataset.province === "海南省";
         const provinceWidth = maxX - minX;
         const minWidth = detailed
-          ? Math.min(260, Math.max(compactIslands ? (mobile ? 108 : 88) : (mobile ? 145 : 125), provinceWidth * 1.65))
+          ? Math.min(260, Math.max(compactIslands ? (mobile ? 72 : 88) : (mobile ? 115 : 125), provinceWidth * 1.65))
           : (mobile ? 300 : 360);
         const padding = detailed
-          ? (compactIslands ? (mobile ? 14 : 10) : (mobile ? 24 : 32))
+          ? (compactIslands ? (mobile ? 8 : 10) : (mobile ? 24 : 32))
           : (mobile ? 34 : 52);
         let width = Math.max(minWidth, maxX - minX + padding * 2);
         let height = Math.max(minWidth / aspect, maxY - minY + padding * 2);
@@ -671,7 +641,7 @@ const journeys = [...journeyAggregates.values()]
         }
       };
 
-      const selectProvince = (province = "", historyMode: "push" | "replace" | false = false) => {
+      const selectProvince = (province = "", syncUrl = false) => {
         const selectedPath = provincePaths.find((path) => path.dataset.province === province);
         const activeProvince = selectedPath?.dataset.province ?? "";
         clearJourneyState();
@@ -681,23 +651,9 @@ const journeys = [...journeyAggregates.values()]
         if (mapTitle) mapTitle.textContent = selectedPath ? `${activeProvince} · 城市足迹` : "我的城市足迹";
         const targetViewBox = selectedPath ? focusViewBox(selectedPath) : defaultViewBox;
         if (selectedPath && mapSvg) {
-          const detailWidth = targetViewBox[2];
-          mapSvg.style.setProperty("--city-focus-label-size", `${detailWidth / 75}px`);
-          mapSvg.style.setProperty("--city-focus-hit-radius", `${detailWidth / 80}px`);
-          mapSvg.style.setProperty("--city-focus-ring-radius", `${detailWidth / 150}px`);
-          mapSvg.style.setProperty("--city-focus-core-radius", `${detailWidth / 250}px`);
-          mapSvg.style.setProperty("--city-focus-home-ring-radius", `${detailWidth / 120}px`);
-          mapSvg.style.setProperty("--city-focus-home-inner-radius", `${detailWidth / 170}px`);
-          mapSvg.style.setProperty("--city-focus-home-core-radius", `${detailWidth / 190}px`);
-          mapSvg.style.setProperty("--city-focus-pulse-radius", `${detailWidth / 60}px`);
-          mapSvg.style.setProperty("--city-focus-index-size", `${detailWidth / 180}px`);
-          if (selectedPath.dataset.prefectureSource) {
-            mapSvg.style.setProperty("--prefecture-label-size", `${detailWidth / 88}px`);
-          } else {
-            mapSvg.style.removeProperty("--prefecture-label-size");
-          }
+          setFocusSizes(targetViewBox[2], { prefectures: Boolean(selectedPath.dataset.prefectureSource) });
         } else {
-          ["--prefecture-label-size", ...focusVarNames].forEach((property) => mapSvg?.style.removeProperty(property));
+          ["--prefecture-label-size", "--prefecture-visited-label-size", ...focusVarNames].forEach((property) => mapSvg?.style.removeProperty(property));
         }
         animateViewBox(targetViewBox);
         cityPoints.forEach((point) => {
@@ -731,7 +687,7 @@ const journeys = [...journeyAggregates.values()]
         void loadPrefectures(selectedPath);
         if (placeList) placeList.scrollTo({ left: 0, behavior: "smooth" });
         window.setTimeout(syncPlaceListControls, 220);
-        updateProvinceUrl(activeProvince, historyMode);
+        if (syncUrl) replaceUrl("province", activeProvince);
         document.dispatchEvent(new CustomEvent("footprint:province", { detail: { province: activeProvince } }));
       };
 
@@ -742,7 +698,7 @@ const journeys = [...journeyAggregates.values()]
         const mobile = window.matchMedia("(max-width: 640px)").matches;
         const aspect = defaultViewBox[2] / defaultViewBox[3];
         // 站点密集的短线行程（如呼伦贝尔线）靠最小宽度避免过度放大
-        const minWidth = mobile ? 210 : 250;
+        const minWidth = mobile ? 170 : 250;
         const padding = 46;
         let width = Math.max(minWidth, maxX - minX + padding * 2);
         let height = Math.max(minWidth / aspect, maxY - minY + padding * 2);
@@ -757,16 +713,7 @@ const journeys = [...journeyAggregates.values()]
         return [x, y, width, height];
       };
 
-      const updateJourneyUrl = (journey: string, mode: "push" | "replace" | false) => {
-        if (!mode) return;
-        const url = new URL(window.location.href);
-        if (journey) url.searchParams.set("journey", journey);
-        else url.searchParams.delete("journey");
-        url.searchParams.delete("province");
-        window.history[mode === "push" ? "pushState" : "replaceState"]({}, "", url);
-      };
-
-      const selectJourney = (journeyId = "", historyMode: "push" | "replace" | false = false) => {
+      const selectJourney = (journeyId = "", syncUrl = false) => {
         const route = journeyRoutes.find((candidate) => candidate.dataset.journey === journeyId);
         const active = route?.dataset.journey ?? "";
         clearActiveCity();
@@ -787,19 +734,7 @@ const journeys = [...journeyAggregates.values()]
         if (mapTitle) mapTitle.textContent = active ? `${journeyName} · 行程` : "我的城市足迹";
         const targetViewBox = active && route ? focusJourneyViewBox(route) : defaultViewBox;
         if (active && mapSvg) {
-          const detailWidth = targetViewBox[2];
-          mapSvg.style.setProperty("--journey-dash", `${(detailWidth / 70).toFixed(1)} ${(detailWidth / 105).toFixed(1)}`);
-          mapSvg.style.setProperty("--journey-badge-radius", `${Math.max(5, detailWidth / 70).toFixed(1)}px`);
-          mapSvg.style.setProperty("--journey-order-size", `${Math.max(3, detailWidth / 110).toFixed(1)}px`);
-          mapSvg.style.setProperty("--city-focus-label-size", `${detailWidth / 75}px`);
-          mapSvg.style.setProperty("--city-focus-hit-radius", `${detailWidth / 80}px`);
-          mapSvg.style.setProperty("--city-focus-ring-radius", `${detailWidth / 150}px`);
-          mapSvg.style.setProperty("--city-focus-core-radius", `${detailWidth / 250}px`);
-          mapSvg.style.setProperty("--city-focus-home-ring-radius", `${detailWidth / 120}px`);
-          mapSvg.style.setProperty("--city-focus-home-inner-radius", `${detailWidth / 170}px`);
-          mapSvg.style.setProperty("--city-focus-home-core-radius", `${detailWidth / 190}px`);
-          mapSvg.style.setProperty("--city-focus-pulse-radius", `${detailWidth / 60}px`);
-          mapSvg.style.setProperty("--city-focus-index-size", `${detailWidth / 180}px`);
+          setFocusSizes(targetViewBox[2], { journey: true });
         } else {
           [...focusVarNames, ...journeyVarNames].forEach((property) => mapSvg?.style.removeProperty(property));
         }
@@ -836,8 +771,8 @@ const journeys = [...journeyAggregates.values()]
         void loadPrefectures(undefined);
         if (placeList) placeList.scrollTo({ left: 0, behavior: "smooth" });
         window.setTimeout(syncPlaceListControls, 220);
-        updateJourneyUrl(active, historyMode);
-        document.dispatchEvent(new CustomEvent("footprint:journey", { detail: { journey: active } }));
+        if (syncUrl) replaceUrl("journey", active);
+        document.dispatchEvent(new CustomEvent("footprint:journey", { detail: { journey: active, name: journeyName } }));
       };
 
       const syncPlaceListControls = () => {
@@ -852,22 +787,25 @@ const journeys = [...journeyAggregates.values()]
       };
 
       provincePaths.forEach((path) => {
-        path.addEventListener("click", () => selectProvince(path.classList.contains("selected") ? "" : path.dataset.province, "push"));
+        path.addEventListener("click", () => selectProvince(path.classList.contains("selected") ? "" : path.dataset.province, true));
         path.addEventListener("keydown", (event) => {
           if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
-            selectProvince(path.classList.contains("selected") ? "" : path.dataset.province, "push");
+            selectProvince(path.classList.contains("selected") ? "" : path.dataset.province, true);
           }
         });
       });
       journeyChips.forEach((chip) => {
-        chip.addEventListener("click", () => selectJourney(chip.classList.contains("active") ? "" : (chip.dataset.journeyId ?? ""), "push"));
+        chip.addEventListener("click", () => selectJourney(chip.classList.contains("active") ? "" : (chip.dataset.journeyId ?? ""), true));
       });
-      root.querySelector("[data-map-reset]")?.addEventListener("click", () => selectProvince("", "push"));
+      root.querySelector("[data-map-reset]")?.addEventListener("click", () => selectProvince("", true));
       previousButton?.addEventListener("click", () => placeList?.scrollBy({ left: -placeList.clientWidth * .82, behavior: "smooth" }));
       nextButton?.addEventListener("click", () => placeList?.scrollBy({ left: placeList.clientWidth * .82, behavior: "smooth" }));
       placeList?.addEventListener("scroll", syncPlaceListControls, { passive: true });
       window.addEventListener("resize", syncPlaceListControls, { passive: true, signal: lifecycle.signal });
+      window.addEventListener("resize", () => {
+        if (lastFocus && mapCanvas?.classList.contains("is-focused")) setFocusSizes(lastFocus.detailWidth, lastFocus);
+      }, { passive: true, signal: lifecycle.signal });
       cityPoints.forEach((point) => {
         const index = cityPoints.indexOf(point);
         const card = cards[index];
@@ -877,8 +815,11 @@ const journeys = [...journeyAggregates.values()]
         point.addEventListener("mouseleave", unhighlightCard);
         point.addEventListener("focus", highlightCard);
         point.addEventListener("blur", unhighlightCard);
+        // In a focused view the first click selects the city; a second click
+        // on the already-selected city follows the link.
         point.addEventListener("click", (event) => {
           if (!mapCanvas?.classList.contains("is-focused") || !card) return;
+          if (point.classList.contains("active-city")) return;
           event.preventDefault();
           clearActiveCity();
           point.classList.add("active-city");
@@ -900,12 +841,6 @@ const journeys = [...journeyAggregates.values()]
       } else if (initialProvince && provincePaths.some((path) => path.dataset.province === initialProvince)) {
         selectProvince(initialProvince, false);
       }
-      window.addEventListener("popstate", () => {
-        const params = new URL(window.location.href).searchParams;
-        const journey = params.get("journey") ?? "";
-        if (journey && journeyRoutes.some((route) => route.dataset.journey === journey)) selectJourney(journey, false);
-        else selectProvince(params.get("province") ?? "", false);
-      }, { signal: lifecycle.signal });
       syncPlaceListControls();
     });
   }

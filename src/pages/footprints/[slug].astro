@@ -1,13 +1,20 @@
 ---
 import { render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import FootprintLocator from "../../components/footprints/FootprintLocator.astro";
 import { SITE } from "../../consts";
-import { footprintDateLabel, footprintPath, footprintSlug, getFootprints, latestVisit, yearRange } from "../../lib/footprints";
+import { footprintDateLabel, footprintPath, footprintSlug, getFootprints, isThinFootprint, latestVisit, yearRange } from "../../lib/footprints";
+import { getPosts } from "../../lib/posts";
+import { responsiveImage } from "../../lib/footprint-media";
 import "../../styles/pages/footprints.less";
 
 export async function getStaticPaths() {
   const footprints = await getFootprints();
-  return footprints.map((entry, index) => {
+  const postsByPath = new Map((await getPosts()).map((post) => [post.route.path, post]));
+  // Home base / former residence sit outside the travel timeline.
+  const travels = footprints.filter((entry) => entry.data.status === "visited");
+  return footprints.map((entry) => {
+    const travelIndex = travels.indexOf(entry);
     const activeJourney = [...entry.data.journeys].sort((a, b) => b.date.getTime() - a.date.getTime())[0];
     const journeyStops = activeJourney
       ? footprints
@@ -16,14 +23,20 @@ export async function getStaticPaths() {
             .map((journey) => ({ entry: candidate, order: journey.order })))
           .sort((a, b) => a.order - b.order)
       : [];
+    const relatedPosts = entry.data.posts.map((path) => {
+      const post = postsByPath.get(path);
+      if (!post) throw new Error(`${entry.filePath}: posts 里的 ${path} 不是已发布文章的路径（需带结尾斜杠）`);
+      return { title: post.entry.data.title, path, date: post.entry.data.date };
+    });
     const currentStop = journeyStops.findIndex((stop) => footprintSlug(stop.entry) === footprintSlug(entry));
     return {
       params: { slug: footprintSlug(entry) },
       props: {
         entry,
-        newer: footprints[index - 1],
-        older: footprints[index + 1],
+        newer: travelIndex > 0 ? travels[travelIndex - 1] : undefined,
+        older: travelIndex >= 0 ? travels[travelIndex + 1] : undefined,
         activeJourney,
+        relatedPosts,
         tripPrevious: currentStop > 0 ? journeyStops[currentStop - 1].entry : undefined,
         tripNext: currentStop >= 0 && currentStop < journeyStops.length - 1 ? journeyStops[currentStop + 1].entry : undefined,
         journeyStops: journeyStops.map((stop) => ({
@@ -31,13 +44,15 @@ export async function getStaticPaths() {
           path: footprintPath(stop.entry),
           order: stop.order,
           current: footprintSlug(stop.entry) === footprintSlug(entry),
+          province: stop.entry.data.province,
+          coordinates: stop.entry.data.coordinates,
         })),
       },
     };
   });
 }
 
-const { entry, newer, older, activeJourney, tripPrevious, tripNext, journeyStops } = Astro.props;
+const { entry, newer, older, activeJourney, relatedPosts, tripPrevious, tripNext, journeyStops } = Astro.props;
 const { Content, headings } = await render(entry);
 const { data } = entry;
 const latest = latestVisit(entry);
@@ -49,6 +64,9 @@ const ymd = (date: Date) => `${date.getFullYear()}.${pad2(date.getMonth() + 1)}.
 const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3);
 const previousStop = activeJourney ? tripPrevious : newer;
 const nextStop = activeJourney ? tripNext : older;
+const cover = data.cover ? responsiveImage(data.cover, [800, 1200, 1600]) : undefined;
+const photos = data.photos.map((photo) => ({ ...photo, image: responsiveImage(photo.src, [480, 800, 1200]) }));
+const photoSizes = photos.length === 1 ? "(max-width: 760px) 100vw, 720px" : "(max-width: 560px) 100vw, (max-width: 760px) 50vw, 350px";
 const placeLocation = [data.province, data.prefecture, data.city].filter((value, index, values) => value && values.indexOf(value) === index).join(" · ");
 ---
 
@@ -59,6 +77,7 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
   image={data.cover ?? SITE.avatar}
   type="article"
   article={{ date: latest, author: SITE.author, tags: data.tags }}
+  noindex={isThinFootprint(entry)}
 >
   <div class:list={["article-shell", "footprint-detail", { "status-home": isHome }]}>
     <nav class="footprint-breadcrumb" aria-label="面包屑">
@@ -80,9 +99,19 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
       </div>
     </section>
 
-    {data.cover && (
+    {cover && (
       <figure class="footprint-cover">
-        <img src={data.cover} alt={`${data.city}旅行照片`} loading="eager" decoding="async" fetchpriority="high" />
+        <img
+          src={cover.src}
+          srcset={cover.srcset}
+          sizes={cover.srcset ? "(max-width: 1180px) 100vw, 980px" : undefined}
+          width={cover.width}
+          height={cover.height}
+          alt={data.coverAlt ?? `${data.city}旅行照片`}
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+        />
         <figcaption>{data.city} · {isHome ? `Home Base Since ${homeSince.getFullYear()}` : yearRange(entry)}</figcaption>
       </figure>
     )}
@@ -122,17 +151,43 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
           </section>
         )}
 
+        {relatedPosts.length > 0 && (
+          <section class="footprint-event-section footprint-posts" aria-labelledby="footprint-posts-title">
+            <div class="photo-journal-head">
+              <h2 id="footprint-posts-title">相关文章</h2>
+              <span>{relatedPosts.length} Posts</span>
+            </div>
+            <ol class="footprint-events">
+              {relatedPosts.map((post) => (
+                <li>
+                  <time>{footprintDateLabel(post.date, "day")}</time>
+                  <div><strong><a href={post.path}>{post.title} ↗</a></strong></div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
         {data.photos.length > 0 && (
           <section class="photo-journal" aria-labelledby="photo-journal-title">
             <div class="photo-journal-head">
               <h2 id="photo-journal-title">照片记录</h2>
-              <span>{data.photos.length} Frames</span>
+              <span>{photos.length} Frames</span>
             </div>
             <div class="photo-grid">
-              {data.photos.map((photo, index) => (
+              {photos.map((photo, index) => (
                 <figure>
                   <button type="button" class="photo-open" data-photo-index={index} aria-label={`放大照片：${photo.alt}`}>
-                    <img src={photo.src} alt={photo.alt} loading="lazy" />
+                    <img
+                      src={photo.image.src}
+                      srcset={photo.image.srcset}
+                      sizes={photo.image.srcset ? photoSizes : undefined}
+                      width={photo.image.width}
+                      height={photo.image.height}
+                      alt={photo.alt}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </button>
                   <figcaption>
                     <span>{photo.caption ?? photo.alt}</span>
@@ -150,6 +205,16 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
       </article>
 
       <aside class="footprint-side">
+        <div class="side-block">
+          <span class="side-label">Location · 位置</span>
+          <FootprintLocator
+            city={data.city}
+            province={data.province}
+            coordinates={data.coordinates}
+            journeyName={activeJourney?.name}
+            stops={journeyStops}
+          />
+        </div>
         <div class="side-block">
           <span class="side-label">{isHome ? "Living · 常驻时间" : "Visited · 到访日期"}</span>
           {isHome
@@ -191,11 +256,11 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
 
   {data.photos.length > 0 && (
     <>
-      <script is:inline type="application/json" data-photo-data set:html={JSON.stringify(data.photos)}></script>
+      <script is:inline type="application/json" data-photo-data set:html={JSON.stringify(photos.map((photo) => ({ src: photo.image.full, alt: photo.alt, caption: photo.caption })))}></script>
       <dialog class="photo-lightbox" data-photo-lightbox>
         <button type="button" class="lightbox-close" aria-label="关闭照片">×</button>
         <button type="button" class="lightbox-prev" aria-label="上一张照片">←</button>
-        <figure><img src="" alt="" /><figcaption></figcaption></figure>
+        <figure><img alt="" decoding="async" /><figcaption aria-live="polite"></figcaption></figure>
         <button type="button" class="lightbox-next" aria-label="下一张照片">→</button>
       </dialog>
     </>
@@ -228,6 +293,21 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
       dialog.querySelector('.lightbox-prev')?.addEventListener('click', () => show(current - 1));
       dialog.querySelector('.lightbox-next')?.addEventListener('click', () => show(current + 1));
       dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+      dialog.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') { event.preventDefault(); show(current - 1); }
+        else if (event.key === 'ArrowRight') { event.preventDefault(); show(current + 1); }
+      });
+      let swipeStart: { x: number; y: number } | null = null;
+      dialog.addEventListener('touchstart', (event) => {
+        swipeStart = event.touches.length === 1 ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : null;
+      }, { passive: true });
+      dialog.addEventListener('touchend', (event) => {
+        if (!swipeStart) return;
+        const dx = event.changedTouches[0].clientX - swipeStart.x;
+        const dy = event.changedTouches[0].clientY - swipeStart.y;
+        swipeStart = null;
+        if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) show(current + (dx < 0 ? 1 : -1));
+      });
     }
     document.addEventListener('astro:page-load', initFootprintGallery);
     initFootprintGallery();

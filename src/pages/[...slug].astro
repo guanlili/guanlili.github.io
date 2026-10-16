@@ -4,6 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { SITE } from "../consts";
 import { excerpt, firstImage, getPosts, readingStats, type LoadedPost } from "../lib/posts";
 import { siteImage } from "../lib/media";
+import { footprintPath, footprintPostPaths, getFootprints } from "../lib/footprints";
 import { getCached, loadCache } from "../lib/image-cache.mjs";
 import { ARTICLE_SCRIPT_VERSION } from "../lib/asset-version";
 import "../styles/less/post-article.less";
@@ -24,6 +25,13 @@ function buildCoverSrcset(src: string, width: number): string | undefined {
 
 export async function getStaticPaths() {
   const posts = await getPosts(); // newest-first, date-prefixed only
+  const footprintsByPost = new Map<string, { city: string; province: string; path: string }[]>();
+  for (const entry of await getFootprints()) {
+    for (const path of footprintPostPaths(entry)) {
+      if (!footprintsByPost.has(path)) footprintsByPost.set(path, []);
+      footprintsByPost.get(path)!.push({ city: entry.data.city, province: entry.data.province, path: footprintPath(entry) });
+    }
+  }
   const postsByTag = new Map<string, LoadedPost[]>();
   for (const post of posts) {
     for (const tag of post.entry.data.tags || []) {
@@ -56,12 +64,12 @@ export async function getStaticPaths() {
     return {
       params: { slug: p.route.param },
       // older = next index, newer = previous index; n = sequence (newest = 01)
-      props: { post: p.entry, older: posts[i + 1], newer: posts[i - 1], n: i + 1, related },
+      props: { post: p.entry, older: posts[i + 1], newer: posts[i - 1], n: i + 1, related, footprints: footprintsByPost.get(p.route.path) ?? [] },
     };
   });
 }
 
-const { post, older, newer, n, related } = Astro.props;
+const { post, older, newer, n, related, footprints } = Astro.props;
 const { Content, headings } = await render(post);
 const { data } = post;
 
@@ -209,6 +217,20 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
       <span class="glyph">&#10086;</span>
       <span>{ymd} · 北京</span>
     </div>
+
+    {footprints.length > 0 && (
+      <section class="related-posts related-footprints" data-pagefind-ignore>
+        <div class="related-label">相关足迹 / Footprints</div>
+        <div class="related-list">
+          {footprints.map((f) => (
+            <a class="related-card" href={f.path}>
+              <span class="rc-title">{f.city}</span>
+              <span class="rc-meta"><span class="rc-tag">{f.province}</span></span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
 
     {related.length > 0 && (
       <section class="related-posts">

@@ -34,6 +34,23 @@ export function getCached(url) {
     : null;
 }
 
+const localCache = new Map();
+
+/** Dimensions of a file under public/, e.g. "/img/a.webp"; null if unreadable. */
+export function getLocalDimensions(publicPath) {
+  if (!localCache.has(publicPath)) {
+    let entry = null;
+    try {
+      const r = probe.sync(readFileSync(resolve("public", publicPath.replace(/^\/+/, "").split(/[?#]/)[0])));
+      if (r?.width && r?.height) entry = { w: r.width, h: r.height };
+    } catch {
+      // missing or unsupported file
+    }
+    localCache.set(publicPath, entry);
+  }
+  return localCache.get(publicPath);
+}
+
 // ── Pre-build population ─────────────────────────────────────────
 
 /** Recursively find all .md files under a directory */
@@ -52,12 +69,14 @@ async function findMarkdownFiles(dir) {
 }
 
 /** Extract all remote image URLs from markdown files */
-async function collectImageUrls(dir) {
-  const files = await findMarkdownFiles(dir);
+async function collectImageUrls(dirs) {
+  const files = (await Promise.all(dirs.map(findMarkdownFiles))).flat();
   const urls = new Set();
   const mdImageRe = /!\[[^\]]*\]\((https?:\/\/[^\s)]+)(?:\s+["'][^"']*["'])?\)/g;
   const htmlImageRe = /<img\b[^>]*\bsrc=["'](https?:\/\/[^"']+)["'][^>]*>/gi;
   const coverRe = /^(?:cover|header-img):\s*["']?(https?:\/\/[^"'\s]+)["']?\s*$/mgi;
+  // Footprint `photos` entries, block or flow style: `- src: "…"` / `{ src: "…" }`.
+  const photoRe = /\bsrc:\s*["']?(https?:\/\/[^"'\s,}]+)/g;
   for (const f of files) {
     const text = readFileSync(f, "utf8");
     let m;
@@ -68,6 +87,9 @@ async function collectImageUrls(dir) {
       urls.add(m[1]);
     }
     while ((m = coverRe.exec(text)) !== null) {
+      urls.add(m[1]);
+    }
+    while ((m = photoRe.exec(text)) !== null) {
       urls.add(m[1]);
     }
   }
@@ -125,12 +147,12 @@ async function probeAll(urls) {
  * Pre-build step: scan all markdown, probe remote image dimensions, save cache.
  * Call from an Astro integration hook before the build.
  */
-export async function preheat(contentDir) {
+export async function preheat(contentDirs) {
   loadCache();
   const failed = failedCache();
   const cachedCount = Object.keys(cache).filter((k) => k !== FAILED_KEY).length;
 
-  const urls = await collectImageUrls(contentDir);
+  const urls = await collectImageUrls([contentDirs].flat());
   const uncached = urls.filter((u) => !getCached(u) && !recentlyFailed(u));
   const skippedFailed = urls.length - cachedCount - uncached.length;
 
