@@ -6,21 +6,10 @@ import { excerpt, firstImage, getPosts, readingStats, type LoadedPost } from "..
 import { siteImage } from "../lib/media";
 import { getCached, loadCache } from "../lib/image-cache.mjs";
 import { ARTICLE_SCRIPT_VERSION } from "../lib/asset-version";
+import { cosSrcset } from "../lib/cos-image.mjs";
 import "../styles/less/post-article.less";
 
-const COS_HOST = "blog-1258476669.cos.ap-beijing.myqcloud.com";
 const COVER_WIDTHS = [480, 800, 1200];
-
-function buildCoverSrcset(src: string, width: number): string | undefined {
-  if (!src.includes(COS_HOST) || width <= 800) return undefined;
-  const widths = COVER_WIDTHS.filter((w) => w < width);
-  if (widths.length < 2) return undefined;
-  const sep = src.includes("?") ? "&" : "?";
-  return [
-    ...widths.map((w) => `${src}${sep}imageMogr2/thumbnail/${w}x ${w}w`),
-    `${src} ${width}w`,
-  ].join(", ");
-}
 
 export async function getStaticPaths() {
   const posts = await getPosts(); // newest-first, date-prefixed only
@@ -86,7 +75,7 @@ const coverImage =
 const coverDim =
   coverImage && /^https?:\/\//.test(coverImage) ? getCached(coverImage) : null;
 const coverImageSrcset = coverDim
-  ? buildCoverSrcset(coverImage!, coverDim.w)
+  ? cosSrcset(coverImage!, coverDim.w, COVER_WIDTHS)
   : undefined;
 const coverSizes = coverDim ? "(min-width: 880px) 880px, 100vw" : undefined;
 const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
