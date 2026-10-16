@@ -117,7 +117,7 @@
 .prefecture-region.active-region path { fill: color-mix(in srgb, var(--accent) 42%, var(--paper)); stroke: var(--accent-ink); stroke-width: 1.1; outline: none; }
 .prefecture-label { fill: var(--ink-3); stroke: color-mix(in srgb, var(--paper) 94%, transparent); stroke-width: 1.8; paint-order: stroke fill; font-family: var(--serif); font-size: var(--prefecture-label-size, 4.2px); font-weight: 600; text-anchor: middle; pointer-events: none; }
 .prefecture-region:not(.visited) .prefecture-label { opacity: .72; font-weight: 500; }
-.prefecture-region.visited .prefecture-label { fill: var(--accent-ink); font-weight: 700; }
+.prefecture-region.visited .prefecture-label { fill: var(--accent-ink); font-weight: 700; font-size: var(--prefecture-visited-label-size, var(--prefecture-label-size, 4.2px)); }
 .map-canvas.is-loading-prefectures .prefecture-layer { opacity: .35; }
 /* 行程线：chip 栏 + 连线图层 */
 .map-journey-bar { position: relative; z-index: 3; display: flex; align-items: center; gap: 14px; padding: 13px 0 3px; }
@@ -259,8 +259,8 @@
   .map-title strong { font-size: 19px; }
   .map-toolbar { margin-top: 11px; gap: 12px; justify-content: flex-start; }
   .map-toolbar button { margin-left: 0; }
-  .china-map { min-height: 270px; }
   .city-label { font-size: 13px; }
+  .prefecture-region:not(.visited) .prefecture-label { display: none; }
   .city-point.status-home .city-label,
   .city-point.status-lived .city-label { font-size: 14px; }
   .place-list { grid-auto-columns: 82vw; }
