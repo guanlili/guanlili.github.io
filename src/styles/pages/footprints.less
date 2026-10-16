@@ -285,6 +285,9 @@
 .archive-filter-group > span { margin-right: 3px; font-family: var(--mono); font-size: 9px; letter-spacing: .16em; color: var(--ink-4); }
 .archive-filter-group button, .archive-filter-state button { min-height: 32px; appearance: none; padding: 0 10px; border: 1px solid var(--rule); background: transparent; color: var(--ink-3); font-family: var(--mono); font-size: 9px; letter-spacing: .06em; cursor: pointer; }
 .archive-filter-group button:hover, .archive-filter-group button.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); color: var(--accent); }
+.archive-filter-group button small { margin-left: 5px; font-size: 8px; color: var(--ink-4); }
+.archive-filter-group button.active small { color: inherit; }
+.archive-filter-group button:disabled { border-style: dashed; border-color: var(--rule); background: transparent; color: var(--ink-4); cursor: not-allowed; opacity: .55; }
 .archive-filter-state { display: flex; align-items: center; justify-content: flex-end; gap: 9px; white-space: nowrap; }
 .archive-filter-state span { font-family: var(--mono); font-size: 9px; color: var(--accent); }
 .archive-filter-state button { border: 0; border-bottom: 1px solid var(--rule); padding: 0 2px; }
