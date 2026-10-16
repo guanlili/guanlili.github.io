@@ -1,7 +1,7 @@
 import { defineMdastPlugin } from "satteri";
 import { loadCache, getCached } from "./image-cache.mjs";
+import { COS_HOST, cosResized, cosSrcset } from "./cos-image.mjs";
 
-const COS_HOST = "blog-1258476669.cos.ap-beijing.myqcloud.com";
 const SRCSET_WIDTHS = [480, 800, 1200];
 const SIZES_ATTR = "(max-width: 768px) 100vw, 880px";
 
@@ -34,15 +34,8 @@ export default function satteriImageAttrs() {
         'decoding="async"',
       ];
 
-      if (src.includes(COS_HOST) && dim.w > 800) {
-        const candidates = SRCSET_WIDTHS.filter((w) => w < dim.w);
-        if (candidates.length >= 2) {
-          const sep = src.includes("?") ? "&" : "?";
-          const parts = candidates.map((w) => `${escapeAttr(`${src}${sep}imageMogr2/thumbnail/${w}x`)} ${w}w`);
-          parts.push(`${escapeAttr(src)} ${dim.w}w`);
-          attrs.push(`srcset="${parts.join(", ")}"`, `sizes="${SIZES_ATTR}"`);
-        }
-      }
+      const srcset = cosSrcset(src, dim.w, SRCSET_WIDTHS);
+      if (srcset) attrs.push(`srcset="${escapeAttr(srcset)}"`, `sizes="${SIZES_ATTR}"`);
 
       return { type: "html", value: `<img ${attrs.join(" ")}>` };
     },
@@ -55,10 +48,10 @@ export default function satteriImageAttrs() {
       }
       const srcMatch = tag.match(/src="([^"]+)"/);
       const rawSrc = srcMatch?.[1];
-      if (rawSrc && rawSrc.includes(COS_HOST) && !rawSrc.includes("imageMogr2")) {
-        const sep = rawSrc.includes("?") ? "&" : "?";
-        tag = tag.replace(srcMatch[0], `src="${rawSrc}${sep}imageMogr2/thumbnail/1600x"`);
-      }
+      const resized = rawSrc && rawSrc.includes(COS_HOST) && !rawSrc.includes("imageMogr2")
+        ? cosResized(rawSrc, 1600)
+        : undefined;
+      if (resized) tag = tag.replace(srcMatch[0], `src="${resized}"`);
       if (tag !== node.value.trim()) return { type: "html", value: tag };
     },
   });
