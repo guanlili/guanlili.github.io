@@ -39,20 +39,17 @@ const ogImage = absoluteUrl(normalizedImage, SITE.url);
 const swVersion = SW_VERSION;
 
 // Recommended articles for search empty state (build-time)
-const allPosts = await getPosts();
-const searchPosts = allPosts.map((p) => ({
+const recommendedPosts = (await getPosts()).slice(0, 8).map((p) => ({
   title: p.entry.data.title,
   url: p.route.path,
   tags: p.entry.data.tags.slice(0, 3),
   date: p.entry.data.date.toISOString().slice(0, 10).replace(/-/g, "."),
 }));
-const recommendedPosts = searchPosts.slice(0, 8);
 ---
 <!DOCTYPE html>
 <html lang={SITE.locale}>
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description" content={description} />
   <meta name="keywords" content={SITE.keywords} />
@@ -61,7 +58,6 @@ const recommendedPosts = searchPosts.slice(0, 8);
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="format-detection" content="telephone=no" />
   {noindex && <meta name="robots" content="noindex, follow" />}
-  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <ClientRouter />
 
   <!-- Open Graph -->
@@ -175,7 +171,7 @@ const recommendedPosts = searchPosts.slice(0, 8);
   <link rel="dns-prefetch" href="https://blog-1258476669.cos.ap-beijing.myqcloud.com" />
 </head>
 
-<body ontouchstart="" class={bodyClass}>
+<body class={bodyClass}>
   <div class="reading-progress" aria-hidden="true"><div class="progress-fill"></div></div>
   <div data-pagefind-ignore>
     <Icons />
@@ -212,9 +208,9 @@ const recommendedPosts = searchPosts.slice(0, 8);
     <Footer />
   </div>
 
-  <div id="back-to-top" title="返回顶部" aria-label="返回顶部" role="button" tabindex="0" data-pagefind-ignore>
-    <svg class="icon"><use href="#icon-arrow-up"></use></svg>
-  </div>
+  <button type="button" id="back-to-top" title="返回顶部" aria-label="返回顶部" data-pagefind-ignore>
+    <svg class="icon" aria-hidden="true"><use href="#icon-arrow-up"></use></svg>
+  </button>
 
   <script is:inline defer src={`/js/site.js?v=${encodeURIComponent(SITE_SCRIPT_VERSION)}`}></script>
 
