@@ -473,6 +473,50 @@ const journeys = [...journeyAggregates.values()]
         "--city-focus-home-core-radius", "--city-focus-pulse-radius", "--city-focus-index-size",
       ];
       const journeyVarNames = ["--journey-dash", "--journey-badge-radius", "--journey-order-size"];
+      // Focused-view marker sizes are fractions of the zoomed viewBox width,
+      // tuned for the map as rendered on a 1280px desktop (~907px wide). On a
+      // narrower map the same fractions shrink to unreadable labels and
+      // fingertip-sized targets, so scale them up toward desktop pixel sizes.
+      const DESKTOP_MAP_WIDTH = 907;
+      const MAX_FOCUS_SCALE = 2.6;
+      const MIN_TOUCH_HIT_RADIUS_PX = 22;
+      let lastFocus: { detailWidth: number; prefectures?: boolean; journey?: boolean } | null = null;
+      const setFocusSizes = (detailWidth: number, options: { prefectures?: boolean; journey?: boolean } = {}) => {
+        if (!mapSvg) return;
+        lastFocus = { detailWidth, ...options };
+        const renderedWidth = mapSvg.getBoundingClientRect().width || DESKTOP_MAP_WIDTH;
+        const k = Math.min(MAX_FOCUS_SCALE, Math.max(1, DESKTOP_MAP_WIDTH / renderedWidth));
+        const unitsPerPx = detailWidth / renderedWidth;
+        const coarse = window.matchMedia("(pointer: coarse)").matches;
+        const hitRadius = Math.max((detailWidth / 80) * k, coarse ? MIN_TOUCH_HIT_RADIUS_PX * unitsPerPx : 0);
+        const set = (name: string, value: number) => mapSvg.style.setProperty(name, `${value.toFixed(2)}px`);
+        set("--city-focus-label-size", (detailWidth / 75) * k);
+        set("--city-focus-hit-radius", hitRadius);
+        set("--city-focus-ring-radius", (detailWidth / 150) * k);
+        set("--city-focus-core-radius", (detailWidth / 250) * k);
+        set("--city-focus-home-ring-radius", (detailWidth / 120) * k);
+        set("--city-focus-home-inner-radius", (detailWidth / 170) * k);
+        set("--city-focus-home-core-radius", (detailWidth / 190) * k);
+        set("--city-focus-pulse-radius", (detailWidth / 60) * k);
+        set("--city-focus-index-size", (detailWidth / 180) * k);
+        // Unvisited prefecture names are secondary and dense (Hainan has 19),
+        // so they grow less; visited ones stand in for redundant city labels.
+        if (options.prefectures) {
+          set("--prefecture-label-size", (detailWidth / 88) * Math.min(k, 1.6));
+          set("--prefecture-visited-label-size", (detailWidth / 88) * k);
+        } else {
+          mapSvg.style.removeProperty("--prefecture-label-size");
+          mapSvg.style.removeProperty("--prefecture-visited-label-size");
+        }
+        if (options.journey) {
+          // Badges sit on closely spaced stops; give them a pixel floor
+          // instead of scaling, so they stay legible without overlapping.
+          const badgeRadius = Math.max(5, detailWidth / 70, 11 * unitsPerPx);
+          mapSvg.style.setProperty("--journey-dash", `${((detailWidth / 70) * k).toFixed(1)} ${((detailWidth / 105) * k).toFixed(1)}`);
+          set("--journey-badge-radius", badgeRadius);
+          set("--journey-order-size", Math.max(Math.max(3, detailWidth / 110), badgeRadius * 0.62));
+        }
+      };
       let viewBoxAnimation = 0;
       let prefectureRequest = 0;
       const prefectureCache = new Map<string, Promise<PrefectureMapData>>();
@@ -520,10 +564,10 @@ const journeys = [...journeyAggregates.values()]
         const compactIslands = path.dataset.province === "海南省";
         const provinceWidth = maxX - minX;
         const minWidth = detailed
-          ? Math.min(260, Math.max(compactIslands ? (mobile ? 108 : 88) : (mobile ? 145 : 125), provinceWidth * 1.65))
+          ? Math.min(260, Math.max(compactIslands ? (mobile ? 72 : 88) : (mobile ? 115 : 125), provinceWidth * 1.65))
           : (mobile ? 300 : 360);
         const padding = detailed
-          ? (compactIslands ? (mobile ? 14 : 10) : (mobile ? 24 : 32))
+          ? (compactIslands ? (mobile ? 8 : 10) : (mobile ? 24 : 32))
           : (mobile ? 34 : 52);
         let width = Math.max(minWidth, maxX - minX + padding * 2);
         let height = Math.max(minWidth / aspect, maxY - minY + padding * 2);
@@ -683,23 +727,9 @@ const journeys = [...journeyAggregates.values()]
         if (mapTitle) mapTitle.textContent = selectedPath ? `${activeProvince} · 城市足迹` : "我的城市足迹";
         const targetViewBox = selectedPath ? focusViewBox(selectedPath) : defaultViewBox;
         if (selectedPath && mapSvg) {
-          const detailWidth = targetViewBox[2];
-          mapSvg.style.setProperty("--city-focus-label-size", `${detailWidth / 75}px`);
-          mapSvg.style.setProperty("--city-focus-hit-radius", `${detailWidth / 80}px`);
-          mapSvg.style.setProperty("--city-focus-ring-radius", `${detailWidth / 150}px`);
-          mapSvg.style.setProperty("--city-focus-core-radius", `${detailWidth / 250}px`);
-          mapSvg.style.setProperty("--city-focus-home-ring-radius", `${detailWidth / 120}px`);
-          mapSvg.style.setProperty("--city-focus-home-inner-radius", `${detailWidth / 170}px`);
-          mapSvg.style.setProperty("--city-focus-home-core-radius", `${detailWidth / 190}px`);
-          mapSvg.style.setProperty("--city-focus-pulse-radius", `${detailWidth / 60}px`);
-          mapSvg.style.setProperty("--city-focus-index-size", `${detailWidth / 180}px`);
-          if (selectedPath.dataset.prefectureSource) {
-            mapSvg.style.setProperty("--prefecture-label-size", `${detailWidth / 88}px`);
-          } else {
-            mapSvg.style.removeProperty("--prefecture-label-size");
-          }
+          setFocusSizes(targetViewBox[2], { prefectures: Boolean(selectedPath.dataset.prefectureSource) });
         } else {
-          ["--prefecture-label-size", ...focusVarNames].forEach((property) => mapSvg?.style.removeProperty(property));
+          ["--prefecture-label-size", "--prefecture-visited-label-size", ...focusVarNames].forEach((property) => mapSvg?.style.removeProperty(property));
         }
         animateViewBox(targetViewBox);
         cityPoints.forEach((point) => {
@@ -744,7 +774,7 @@ const journeys = [...journeyAggregates.values()]
         const mobile = window.matchMedia("(max-width: 640px)").matches;
         const aspect = defaultViewBox[2] / defaultViewBox[3];
         // 站点密集的短线行程（如呼伦贝尔线）靠最小宽度避免过度放大
-        const minWidth = mobile ? 210 : 250;
+        const minWidth = mobile ? 170 : 250;
         const padding = 46;
         let width = Math.max(minWidth, maxX - minX + padding * 2);
         let height = Math.max(minWidth / aspect, maxY - minY + padding * 2);
@@ -780,19 +810,7 @@ const journeys = [...journeyAggregates.values()]
         if (mapTitle) mapTitle.textContent = active ? `${journeyName} · 行程` : "我的城市足迹";
         const targetViewBox = active && route ? focusJourneyViewBox(route) : defaultViewBox;
         if (active && mapSvg) {
-          const detailWidth = targetViewBox[2];
-          mapSvg.style.setProperty("--journey-dash", `${(detailWidth / 70).toFixed(1)} ${(detailWidth / 105).toFixed(1)}`);
-          mapSvg.style.setProperty("--journey-badge-radius", `${Math.max(5, detailWidth / 70).toFixed(1)}px`);
-          mapSvg.style.setProperty("--journey-order-size", `${Math.max(3, detailWidth / 110).toFixed(1)}px`);
-          mapSvg.style.setProperty("--city-focus-label-size", `${detailWidth / 75}px`);
-          mapSvg.style.setProperty("--city-focus-hit-radius", `${detailWidth / 80}px`);
-          mapSvg.style.setProperty("--city-focus-ring-radius", `${detailWidth / 150}px`);
-          mapSvg.style.setProperty("--city-focus-core-radius", `${detailWidth / 250}px`);
-          mapSvg.style.setProperty("--city-focus-home-ring-radius", `${detailWidth / 120}px`);
-          mapSvg.style.setProperty("--city-focus-home-inner-radius", `${detailWidth / 170}px`);
-          mapSvg.style.setProperty("--city-focus-home-core-radius", `${detailWidth / 190}px`);
-          mapSvg.style.setProperty("--city-focus-pulse-radius", `${detailWidth / 60}px`);
-          mapSvg.style.setProperty("--city-focus-index-size", `${detailWidth / 180}px`);
+          setFocusSizes(targetViewBox[2], { journey: true });
         } else {
           [...focusVarNames, ...journeyVarNames].forEach((property) => mapSvg?.style.removeProperty(property));
         }
@@ -861,6 +879,9 @@ const journeys = [...journeyAggregates.values()]
       nextButton?.addEventListener("click", () => placeList?.scrollBy({ left: placeList.clientWidth * .82, behavior: "smooth" }));
       placeList?.addEventListener("scroll", syncPlaceListControls, { passive: true });
       window.addEventListener("resize", syncPlaceListControls, { passive: true, signal: lifecycle.signal });
+      window.addEventListener("resize", () => {
+        if (lastFocus && mapCanvas?.classList.contains("is-focused")) setFocusSizes(lastFocus.detailWidth, lastFocus);
+      }, { passive: true, signal: lifecycle.signal });
       cityPoints.forEach((point) => {
         const index = cityPoints.indexOf(point);
         const card = cards[index];
