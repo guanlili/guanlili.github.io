@@ -424,7 +424,7 @@ const journeys = [...journeyAggregates.values()]
                 {place.status === "home"
                   ? `常驻地 · Since ${place.since?.slice(0, 4) ?? "—"}`
                   : place.status === "lived"
-                    ? `曾居地 · ${place.until?.slice(0, 4) ?? "2019"}年以前`
+                    ? (place.until ? `曾居地 · ${place.until.slice(0, 4)}年以前` : "曾居地")
                     : `城市 · ${place.province} · ${place.visited.at(-1)?.slice(0, 4)}`}
               </span>
               <strong>{place.city}</strong>
@@ -499,13 +499,15 @@ const journeys = [...journeyAggregates.values()]
         journeyVarNames.forEach((property) => mapSvg?.style.removeProperty(property));
       };
 
-      const updateProvinceUrl = (province: string, mode: "push" | "replace" | false) => {
-        if (!mode) return;
+      // replaceState only: ClientRouter refetches and swaps the page on any
+      // back/forward that changes the query, so per-click history entries make
+      // the back button reload the map. history.state is Astro's bookkeeping.
+      const replaceUrl = (key: "province" | "journey", value: string) => {
         const url = new URL(window.location.href);
-        if (province) url.searchParams.set("province", province);
-        else url.searchParams.delete("province");
-        url.searchParams.delete("journey");
-        window.history[mode === "push" ? "pushState" : "replaceState"]({}, "", url);
+        if (value) url.searchParams.set(key, value);
+        else url.searchParams.delete(key);
+        url.searchParams.delete(key === "province" ? "journey" : "province");
+        window.history.replaceState(window.history.state, "", url);
       };
 
       const focusViewBox = (path: SVGPathElement) => {
@@ -671,7 +673,7 @@ const journeys = [...journeyAggregates.values()]
         }
       };
 
-      const selectProvince = (province = "", historyMode: "push" | "replace" | false = false) => {
+      const selectProvince = (province = "", syncUrl = false) => {
         const selectedPath = provincePaths.find((path) => path.dataset.province === province);
         const activeProvince = selectedPath?.dataset.province ?? "";
         clearJourneyState();
@@ -731,7 +733,7 @@ const journeys = [...journeyAggregates.values()]
         void loadPrefectures(selectedPath);
         if (placeList) placeList.scrollTo({ left: 0, behavior: "smooth" });
         window.setTimeout(syncPlaceListControls, 220);
-        updateProvinceUrl(activeProvince, historyMode);
+        if (syncUrl) replaceUrl("province", activeProvince);
         document.dispatchEvent(new CustomEvent("footprint:province", { detail: { province: activeProvince } }));
       };
 
@@ -757,16 +759,7 @@ const journeys = [...journeyAggregates.values()]
         return [x, y, width, height];
       };
 
-      const updateJourneyUrl = (journey: string, mode: "push" | "replace" | false) => {
-        if (!mode) return;
-        const url = new URL(window.location.href);
-        if (journey) url.searchParams.set("journey", journey);
-        else url.searchParams.delete("journey");
-        url.searchParams.delete("province");
-        window.history[mode === "push" ? "pushState" : "replaceState"]({}, "", url);
-      };
-
-      const selectJourney = (journeyId = "", historyMode: "push" | "replace" | false = false) => {
+      const selectJourney = (journeyId = "", syncUrl = false) => {
         const route = journeyRoutes.find((candidate) => candidate.dataset.journey === journeyId);
         const active = route?.dataset.journey ?? "";
         clearActiveCity();
@@ -836,8 +829,8 @@ const journeys = [...journeyAggregates.values()]
         void loadPrefectures(undefined);
         if (placeList) placeList.scrollTo({ left: 0, behavior: "smooth" });
         window.setTimeout(syncPlaceListControls, 220);
-        updateJourneyUrl(active, historyMode);
-        document.dispatchEvent(new CustomEvent("footprint:journey", { detail: { journey: active } }));
+        if (syncUrl) replaceUrl("journey", active);
+        document.dispatchEvent(new CustomEvent("footprint:journey", { detail: { journey: active, name: journeyName } }));
       };
 
       const syncPlaceListControls = () => {
@@ -852,18 +845,18 @@ const journeys = [...journeyAggregates.values()]
       };
 
       provincePaths.forEach((path) => {
-        path.addEventListener("click", () => selectProvince(path.classList.contains("selected") ? "" : path.dataset.province, "push"));
+        path.addEventListener("click", () => selectProvince(path.classList.contains("selected") ? "" : path.dataset.province, true));
         path.addEventListener("keydown", (event) => {
           if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
-            selectProvince(path.classList.contains("selected") ? "" : path.dataset.province, "push");
+            selectProvince(path.classList.contains("selected") ? "" : path.dataset.province, true);
           }
         });
       });
       journeyChips.forEach((chip) => {
-        chip.addEventListener("click", () => selectJourney(chip.classList.contains("active") ? "" : (chip.dataset.journeyId ?? ""), "push"));
+        chip.addEventListener("click", () => selectJourney(chip.classList.contains("active") ? "" : (chip.dataset.journeyId ?? ""), true));
       });
-      root.querySelector("[data-map-reset]")?.addEventListener("click", () => selectProvince("", "push"));
+      root.querySelector("[data-map-reset]")?.addEventListener("click", () => selectProvince("", true));
       previousButton?.addEventListener("click", () => placeList?.scrollBy({ left: -placeList.clientWidth * .82, behavior: "smooth" }));
       nextButton?.addEventListener("click", () => placeList?.scrollBy({ left: placeList.clientWidth * .82, behavior: "smooth" }));
       placeList?.addEventListener("scroll", syncPlaceListControls, { passive: true });
@@ -877,8 +870,11 @@ const journeys = [...journeyAggregates.values()]
         point.addEventListener("mouseleave", unhighlightCard);
         point.addEventListener("focus", highlightCard);
         point.addEventListener("blur", unhighlightCard);
+        // In a focused view the first click selects the city; a second click
+        // on the already-selected city follows the link.
         point.addEventListener("click", (event) => {
           if (!mapCanvas?.classList.contains("is-focused") || !card) return;
+          if (point.classList.contains("active-city")) return;
           event.preventDefault();
           clearActiveCity();
           point.classList.add("active-city");
@@ -900,12 +896,6 @@ const journeys = [...journeyAggregates.values()]
       } else if (initialProvince && provincePaths.some((path) => path.dataset.province === initialProvince)) {
         selectProvince(initialProvince, false);
       }
-      window.addEventListener("popstate", () => {
-        const params = new URL(window.location.href).searchParams;
-        const journey = params.get("journey") ?? "";
-        if (journey && journeyRoutes.some((route) => route.dataset.journey === journey)) selectJourney(journey, false);
-        else selectProvince(params.get("province") ?? "", false);
-      }, { signal: lifecycle.signal });
       syncPlaceListControls();
     });
   }
