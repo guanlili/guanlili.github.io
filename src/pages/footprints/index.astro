@@ -155,7 +155,7 @@ const places = footprints.map((entry) => ({
                 >
                   <span class="journey-num">{entry.data.status === "home" ? "家" : "故"}</span>
                   <span class="journey-row-copy">
-                    <span class="journey-meta">{entry.data.status === "home" ? `常驻地 · Since ${entry.data.since?.getFullYear() ?? firstYear}` : "曾居地 · 2019 年以前"} <em>{contentLabel(entry)}</em></span>
+                    <span class="journey-meta">{entry.data.status === "home" ? `常驻地 · Since ${entry.data.since?.getFullYear() ?? firstYear}` : entry.data.until ? `曾居地 · ${entry.data.until.getFullYear()} 年以前` : "曾居地"} <em>{contentLabel(entry)}</em></span>
                     <strong>{entry.data.city}</strong>
                     <small>{entry.data.summary}</small>
                   </span>
@@ -187,13 +187,20 @@ const places = footprints.map((entry) => ({
       const count = root.querySelector<HTMLElement>("[data-archive-count]");
       const provinceLabel = root.querySelector<HTMLElement>("[data-archive-province]");
       const empty = root.querySelector<HTMLElement>("[data-archive-empty]");
-      const initialProvince = new URL(window.location.href).searchParams.get("province") ?? "";
+      const initialParams = new URL(window.location.href).searchParams;
+      const initialProvince = initialParams.get("province") ?? "";
+      const initialJourney = initialParams.get("journey") ?? "";
+      const initialJourneyChip = initialJourney
+        ? document.querySelector<HTMLElement>(`[data-journey-id="${CSS.escape(initialJourney)}"]`)
+        : null;
       const lifecycle = new AbortController();
       document.addEventListener("astro:before-swap", () => lifecycle.abort(), { once: true });
       let activeYear = "";
       let activeContent = "";
-      let activeProvince = rows.some((row) => row.dataset.province === initialProvince) ? initialProvince : "";
-      let activeJourney = "";
+      // The map selects either a journey or a province, never both; mirror that.
+      let activeJourney = initialJourneyChip ? initialJourney : "";
+      let activeJourneyName = initialJourneyChip?.querySelector("b")?.textContent ?? "";
+      let activeProvince = !activeJourney && rows.some((row) => row.dataset.province === initialProvince) ? initialProvince : "";
 
       const syncButtons = (buttons: HTMLButtonElement[], active: string, key: "archiveYear" | "archiveContent") => {
         buttons.forEach((button) => {
@@ -209,7 +216,7 @@ const places = footprints.map((entry) => ({
       };
 
       const applyFilters = () => {
-        const hasActiveFilter = Boolean(activeYear || activeContent || activeProvince);
+        const hasActiveFilter = Boolean(activeYear || activeContent || activeProvince || activeJourney);
         let visible = 0;
         rows.forEach((row) => {
           const years = (row.dataset.years ?? "").split(",").filter(Boolean);
@@ -227,7 +234,7 @@ const places = footprints.map((entry) => ({
         });
         if (!hasActiveFilter) restoreMobileOpenState();
         if (count) count.textContent = String(visible);
-        if (provinceLabel) provinceLabel.textContent = activeProvince || "全部地区";
+        if (provinceLabel) provinceLabel.textContent = activeProvince || (activeJourney ? `行程 · ${activeJourneyName}` : "全部地区");
         if (empty) empty.hidden = visible !== 0;
       };
 
@@ -245,10 +252,15 @@ const places = footprints.map((entry) => ({
       }));
       document.addEventListener("footprint:province", (event) => {
         activeProvince = (event as CustomEvent<{ province: string }>).detail.province ?? "";
+        activeJourney = "";
+        activeJourneyName = "";
         applyFilters();
       }, { signal: lifecycle.signal });
       document.addEventListener("footprint:journey", (event) => {
-        activeJourney = (event as CustomEvent<{ journey: string }>).detail.journey ?? "";
+        const detail = (event as CustomEvent<{ journey: string; name?: string }>).detail;
+        activeJourney = detail.journey ?? "";
+        activeJourneyName = detail.name ?? "";
+        activeProvince = "";
         applyFilters();
       }, { signal: lifecycle.signal });
       const resetFilters = () => {

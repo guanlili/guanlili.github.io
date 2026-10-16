@@ -7,7 +7,10 @@ import "../../styles/pages/footprints.less";
 
 export async function getStaticPaths() {
   const footprints = await getFootprints();
-  return footprints.map((entry, index) => {
+  // Home base / former residence sit outside the travel timeline.
+  const travels = footprints.filter((entry) => entry.data.status === "visited");
+  return footprints.map((entry) => {
+    const travelIndex = travels.indexOf(entry);
     const activeJourney = [...entry.data.journeys].sort((a, b) => b.date.getTime() - a.date.getTime())[0];
     const journeyStops = activeJourney
       ? footprints
@@ -21,8 +24,8 @@ export async function getStaticPaths() {
       params: { slug: footprintSlug(entry) },
       props: {
         entry,
-        newer: footprints[index - 1],
-        older: footprints[index + 1],
+        newer: travelIndex > 0 ? travels[travelIndex - 1] : undefined,
+        older: travelIndex >= 0 ? travels[travelIndex + 1] : undefined,
         activeJourney,
         tripPrevious: currentStop > 0 ? journeyStops[currentStop - 1].entry : undefined,
         tripNext: currentStop >= 0 && currentStop < journeyStops.length - 1 ? journeyStops[currentStop + 1].entry : undefined,
