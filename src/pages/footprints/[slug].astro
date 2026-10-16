@@ -5,6 +5,7 @@ import FootprintLocator from "../../components/footprints/FootprintLocator.astro
 import { SITE } from "../../consts";
 import { footprintDateLabel, footprintPath, footprintSlug, getFootprints, isThinFootprint, latestVisit, yearRange } from "../../lib/footprints";
 import { getPosts } from "../../lib/posts";
+import { responsiveImage } from "../../lib/footprint-media";
 import "../../styles/pages/footprints.less";
 
 export async function getStaticPaths() {
@@ -63,6 +64,9 @@ const ymd = (date: Date) => `${date.getFullYear()}.${pad2(date.getMonth() + 1)}.
 const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3);
 const previousStop = activeJourney ? tripPrevious : newer;
 const nextStop = activeJourney ? tripNext : older;
+const cover = data.cover ? responsiveImage(data.cover, [800, 1200, 1600]) : undefined;
+const photos = data.photos.map((photo) => ({ ...photo, image: responsiveImage(photo.src, [480, 800, 1200]) }));
+const photoSizes = photos.length === 1 ? "(max-width: 760px) 100vw, 720px" : "(max-width: 560px) 100vw, (max-width: 760px) 50vw, 350px";
 const placeLocation = [data.province, data.prefecture, data.city].filter((value, index, values) => value && values.indexOf(value) === index).join(" · ");
 ---
 
@@ -95,9 +99,19 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
       </div>
     </section>
 
-    {data.cover && (
+    {cover && (
       <figure class="footprint-cover">
-        <img src={data.cover} alt={`${data.city}旅行照片`} loading="eager" decoding="async" fetchpriority="high" />
+        <img
+          src={cover.src}
+          srcset={cover.srcset}
+          sizes={cover.srcset ? "(max-width: 1180px) 100vw, 980px" : undefined}
+          width={cover.width}
+          height={cover.height}
+          alt={data.coverAlt ?? `${data.city}旅行照片`}
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+        />
         <figcaption>{data.city} · {isHome ? `Home Base Since ${homeSince.getFullYear()}` : yearRange(entry)}</figcaption>
       </figure>
     )}
@@ -158,13 +172,22 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
           <section class="photo-journal" aria-labelledby="photo-journal-title">
             <div class="photo-journal-head">
               <h2 id="photo-journal-title">照片记录</h2>
-              <span>{data.photos.length} Frames</span>
+              <span>{photos.length} Frames</span>
             </div>
             <div class="photo-grid">
-              {data.photos.map((photo, index) => (
+              {photos.map((photo, index) => (
                 <figure>
                   <button type="button" class="photo-open" data-photo-index={index} aria-label={`放大照片：${photo.alt}`}>
-                    <img src={photo.src} alt={photo.alt} loading="lazy" />
+                    <img
+                      src={photo.image.src}
+                      srcset={photo.image.srcset}
+                      sizes={photo.image.srcset ? photoSizes : undefined}
+                      width={photo.image.width}
+                      height={photo.image.height}
+                      alt={photo.alt}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </button>
                   <figcaption>
                     <span>{photo.caption ?? photo.alt}</span>
@@ -233,11 +256,11 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
 
   {data.photos.length > 0 && (
     <>
-      <script is:inline type="application/json" data-photo-data set:html={JSON.stringify(data.photos)}></script>
+      <script is:inline type="application/json" data-photo-data set:html={JSON.stringify(photos.map((photo) => ({ src: photo.image.full, alt: photo.alt, caption: photo.caption })))}></script>
       <dialog class="photo-lightbox" data-photo-lightbox>
         <button type="button" class="lightbox-close" aria-label="关闭照片">×</button>
         <button type="button" class="lightbox-prev" aria-label="上一张照片">←</button>
-        <figure><img src="" alt="" /><figcaption></figcaption></figure>
+        <figure><img alt="" decoding="async" /><figcaption aria-live="polite"></figcaption></figure>
         <button type="button" class="lightbox-next" aria-label="下一张照片">→</button>
       </dialog>
     </>
@@ -270,6 +293,21 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
       dialog.querySelector('.lightbox-prev')?.addEventListener('click', () => show(current - 1));
       dialog.querySelector('.lightbox-next')?.addEventListener('click', () => show(current + 1));
       dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+      dialog.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') { event.preventDefault(); show(current - 1); }
+        else if (event.key === 'ArrowRight') { event.preventDefault(); show(current + 1); }
+      });
+      let swipeStart: { x: number; y: number } | null = null;
+      dialog.addEventListener('touchstart', (event) => {
+        swipeStart = event.touches.length === 1 ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : null;
+      }, { passive: true });
+      dialog.addEventListener('touchend', (event) => {
+        if (!swipeStart) return;
+        const dx = event.changedTouches[0].clientX - swipeStart.x;
+        const dy = event.changedTouches[0].clientY - swipeStart.y;
+        swipeStart = null;
+        if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) show(current + (dx < 0 ? 1 : -1));
+      });
     }
     document.addEventListener('astro:page-load', initFootprintGallery);
     initFootprintGallery();

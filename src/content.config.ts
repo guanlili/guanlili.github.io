@@ -85,6 +85,7 @@ const footprints = defineCollection({
       .default([]),
     summary: z.string(),
     cover: z.string().optional(),
+    coverAlt: z.string().optional(),
     photos: z
       .array(
         z.object({
