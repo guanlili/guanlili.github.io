@@ -17,6 +17,8 @@ interface Props {
   active?: string;
   bodyClass?: string;
   article?: { date?: Date; updated?: Date; author?: string; tags?: string[] };
+  // Also drops the page from the sitemap (see sitemap filter in astro.config.mjs).
+  noindex?: boolean;
 }
 
 const {
@@ -27,6 +29,7 @@ const {
   active,
   bodyClass = "",
   article,
+  noindex = false,
 } = Astro.props;
 
 const pageTitle = title ? `${title} - ${SITE.seoTitle}` : SITE.seoTitle;
@@ -57,6 +60,7 @@ const recommendedPosts = searchPosts.slice(0, 8);
   <meta name="color-scheme" content="light dark" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="format-detection" content="telephone=no" />
+  {noindex && <meta name="robots" content="noindex, follow" />}
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <ClientRouter />
 

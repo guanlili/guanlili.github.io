@@ -1,10 +1,25 @@
 // @ts-check
+import { readFileSync } from "node:fs";
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import { satteri } from "@astrojs/markdown-satteri";
 import satteriShiftHeadings from "./src/lib/satteri-shift-headings.mjs";
 import satteriImageAttrs from "./src/lib/satteri-image-attrs.mjs";
+import satteriStripPlaceholders from "./src/lib/satteri-strip-placeholders.mjs";
 import imageCacheIntegration from "./src/lib/astro-image-cache.mjs";
+
+// The sitemap is written after pages are rendered, so the robots meta in the
+// built HTML is the single source of truth for which pages stay out of it.
+const distDir = new URL("./dist/", import.meta.url);
+/** @param {string} page */
+function isIndexable(page) {
+  try {
+    const html = readFileSync(new URL(`.${new URL(page).pathname}index.html`, distDir), "utf8");
+    return !/<meta name="robots" content="noindex/.test(html);
+  } catch {
+    return true;
+  }
+}
 
 // https://astro.build
 export default defineConfig({
@@ -14,10 +29,10 @@ export default defineConfig({
   // Match the old Jekyll `permalink: pretty` URLs: /a/b/c/ → /a/b/c/index.html
   trailingSlash: "always",
   build: { format: "directory" },
-  integrations: [sitemap(), imageCacheIntegration()],
+  integrations: [sitemap({ filter: isIndexable }), imageCacheIntegration()],
   markdown: {
     processor: satteri({
-      mdastPlugins: [satteriShiftHeadings(), satteriImageAttrs()],
+      mdastPlugins: [satteriStripPlaceholders(), satteriShiftHeadings(), satteriImageAttrs()],
     }),
     // Leave mermaid blocks un-highlighted so they can be rendered as diagrams
     // client-side (see initMermaid in site.js).
