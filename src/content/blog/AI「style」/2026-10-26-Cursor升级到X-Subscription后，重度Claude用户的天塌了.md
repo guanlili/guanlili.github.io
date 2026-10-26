@@ -16,6 +16,8 @@ description: "Cursor 并进 The X Subscription 之后，Grok 额度翻倍，Clau
 
 升级前，设置里还能看到两坨额度：Grok 一坨，Claude 一坨。升级后再打开，只剩一个共享池。Claude 那一栏，直接没了。
 
+![调整前是 Cursor Models、Other Models 两池加 Grok Bot，调整后只剩一个周刷新的共享池](https://blog-1258476669.cos.ap-beijing.myqcloud.com/macAir/image-20261026123150665.png?imageSlim)
+
 说实话，那一刻有点像打开冰箱，发现昨天还在的半盒酸奶被人喝光了，还贴了张纸条：以后想喝，请另行付费。
 
 我就是那个还想继续喝酸奶的人。下面把升级前后的真实差异摊开，免得同样踩坑的朋友再交一遍学费。
@@ -87,6 +89,8 @@ description: "Cursor 并进 The X Subscription 之后，Grok 额度翻倍，Clau
 
 对重度 Claude 用户来说，这等于从「套餐里就能用」变成「每用一次都要额外掏钱」。以前是月卡，现在是打车：车还是那辆，计价器从上车就开始跳。
 
+![选 Claude 时弹出提示：不在每周包含用量里，要买额度或换 Grok](https://blog-1258476669.cos.ap-beijing.myqcloud.com/macAir/image-20261026104338559.png?imageSlim)
+
 ------
 
 ## 四、另外几件容易忽略的事
@@ -132,6 +136,8 @@ Grok Bot 本身没被砍。旧版付费 Cursor 就能用，新套餐 Premium 及
 - **每周包含用量池**：打开 [grok.com/dashboard](https://grok.com/dashboard) → Usage
 - **预付用量额度**（跑 Claude 用的）：[grok.com/dashboard/billing](https://grok.com/dashboard/billing) → Additional usage credits
 - **账户余额**（只能抵订阅费用）：同样在 billing 页面，会自动应用到下一张发票
+
+![Billing 页：周池、预付额度、账户余额分列，账户余额只能抵下一张订阅发票](https://blog-1258476669.cos.ap-beijing.myqcloud.com/macAir/image-20261026104709444.png?imageSlim)
 
 ------
 
