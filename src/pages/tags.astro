@@ -4,21 +4,63 @@ import "../styles/pages/tags.less";
 import { getPosts, type LoadedPost } from "../lib/posts";
 
 // Topic ledes (descriptions, not stats) — shown when a tag has one.
-const TAG_LEDE: Record<string, string> = {
-  AI: "本站的主旋律。从工程化到落地踩坑，记录所有围绕大模型的探索。",
-  学习笔记: "把模糊的知识晾在阳光下，是我学习的唯一办法。",
-  架构: "关于系统设计、解耦边界、合久必分分久必合的种种思考。",
-  ComfyUI: "工作流可视化的代表作。围绕 ComfyUI 的部署、二开与服务化。",
-  FastAPI: "Python Web 框架里最顺手的一把刀。",
-  Java: "在传统 Java 项目里塞 AI 能力时踩过的所有坑。",
-  OCR: "PDF、扫描件、古籍方志——所有非结构化纸面信息的解析心得。",
-  代码生成: "从 StarCoder 到 Tabby，代码生成模型的工程化实战。",
-  运维: "把模型从笔记本推到服务器、再到生产环境，每一步都需要踩坑。",
-  随笔: "不那么技术的部分。生活、阅读、突如其来的胡思乱想。",
-  年终总结: "一年一度的复盘，写给未来的自己。",
-  测试开发: "我入行的第一个工种，依然怀有敬意的领域。",
-  算法: "LeetCode 和工程算法的整理。",
-  LeetCode: "动态规划、回溯、图论的题解与解题思路梳理。",
+const TAG_LEDE: Record<string, { zh: string; en: string }> = {
+  AI: {
+    zh: "本站的主旋律。从工程化到落地踩坑，记录所有围绕大模型的探索。",
+    en: "The site's main theme. From engineering to production pitfalls — every exploration around large models.",
+  },
+  学习笔记: {
+    zh: "把模糊的知识晾在阳光下，是我学习的唯一办法。",
+    en: "Airing fuzzy knowledge in the sunlight is the only way I learn.",
+  },
+  架构: {
+    zh: "关于系统设计、解耦边界、合久必分分久必合的种种思考。",
+    en: "Thoughts on system design, decoupling boundaries, and the eternal split-then-merge cycle.",
+  },
+  ComfyUI: {
+    zh: "工作流可视化的代表作。围绕 ComfyUI 的部署、二开与服务化。",
+    en: "The flagship of visual workflows. Deploying, extending and serving ComfyUI.",
+  },
+  FastAPI: {
+    zh: "Python Web 框架里最顺手的一把刀。",
+    en: "The most comfortable knife among Python web frameworks.",
+  },
+  Java: {
+    zh: "在传统 Java 项目里塞 AI 能力时踩过的所有坑。",
+    en: "Every pitfall hit while stuffing AI capabilities into legacy Java projects.",
+  },
+  OCR: {
+    zh: "PDF、扫描件、古籍方志——所有非结构化纸面信息的解析心得。",
+    en: "PDFs, scans, old gazetteers — notes on parsing every kind of unstructured paper.",
+  },
+  代码生成: {
+    zh: "从 StarCoder 到 Tabby，代码生成模型的工程化实战。",
+    en: "Hands-on engineering of code-generation models, from StarCoder to Tabby.",
+  },
+  运维: {
+    zh: "把模型从笔记本推到服务器、再到生产环境，每一步都需要踩坑。",
+    en: "Pushing models from laptop to server to production — pitfalls at every step.",
+  },
+  随笔: {
+    zh: "不那么技术的部分。生活、阅读、突如其来的胡思乱想。",
+    en: "The not-so-technical part. Life, reading, and sudden stray thoughts.",
+  },
+  年终总结: {
+    zh: "一年一度的复盘，写给未来的自己。",
+    en: "The annual retrospective, written for my future self.",
+  },
+  测试开发: {
+    zh: "我入行的第一个工种，依然怀有敬意的领域。",
+    en: "My first trade in this industry — a field I still respect.",
+  },
+  算法: {
+    zh: "LeetCode 和工程算法的整理。",
+    en: "Notes on LeetCode and algorithms in engineering.",
+  },
+  LeetCode: {
+    zh: "动态规划、回溯、图论的题解与解题思路梳理。",
+    en: "Solutions and thought processes for DP, backtracking and graph theory.",
+  },
 };
 
 const posts = await getPosts();
@@ -46,19 +88,22 @@ const ymd = (d: Date) => `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.
       <div>
         <div class="kicker">
           <span class="dot"></span>
-          <span>Index · 标签索引</span>
+          <span><span class="t-zh">标签索引</span><span class="t-en">Index</span></span>
           <span class="rule"></span>
-          <span>按主题聚类</span>
+          <span><span class="t-zh">按主题聚类</span><span class="t-en">Clustered by topic</span></span>
         </div>
-        <h1>标签 · Index</h1>
-        <p class="sub">这些年写下的东西并不多，但已经能看出一些反复回到的主题。以下按出现频率排列——字号代表频率。</p>
+        <h1><span class="t-zh">标签</span><span class="t-en">Tags</span></h1>
+        <p class="sub">
+          <span class="t-zh">这些年写下的东西并不多，但已经能看出一些反复回到的主题。以下按出现频率排列——字号代表频率。</span>
+          <span class="t-en">Not that much writing over the years, but recurring themes are already visible. Sorted by frequency below — font size marks frequency.</span>
+        </p>
       </div>
       <div class="right">
         <div class="big">{allTags.length}</div>
-        <div>Unique Tags</div>
+        <div><span class="t-zh">独立标签</span><span class="t-en">Unique Tags</span></div>
         <div style="margin-top:10px">· · ·</div>
-        <div>{posts.length} Posts</div>
-        <div>Avg {avg} tags / post</div>
+        <div><span class="t-zh">{posts.length} 篇文章</span><span class="t-en">{posts.length} Posts</span></div>
+        <div><span class="t-zh">平均 {avg} 个标签 / 篇</span><span class="t-en">Avg {avg} tags / post</span></div>
       </div>
     </section>
 
@@ -69,12 +114,15 @@ const ymd = (d: Date) => `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.
         ))}
       </div>
       <div class="legend">
-        <p>字号越大表示文章数越多。这些是写作期间反复回到的主题——可以视为一份「我在乎什么」的地图。</p>
+        <p>
+          <span class="t-zh">字号越大表示文章数越多。这些是写作期间反复回到的主题——可以视为一份「我在乎什么」的地图。</span>
+          <span class="t-en">Bigger type means more posts. These are the themes I keep returning to — a map of “what I care about”.</span>
+        </p>
         <ul>
-          <li><span class="swatch" style="height:8px"></span>XL · 8 篇及以上</li>
-          <li><span class="swatch" style="height:6px;opacity:.75"></span>L · 4 - 7 篇</li>
-          <li><span class="swatch" style="height:4px;opacity:.55"></span>M · 2 - 3 篇</li>
-          <li><span class="swatch" style="height:2px;opacity:.4"></span>S · 1 篇</li>
+          <li><span class="swatch" style="height:8px"></span><span class="t-zh">XL · 8 篇及以上</span><span class="t-en">XL · 8+ posts</span></li>
+          <li><span class="swatch" style="height:6px;opacity:.75"></span><span class="t-zh">L · 4 - 7 篇</span><span class="t-en">L · 4–7 posts</span></li>
+          <li><span class="swatch" style="height:4px;opacity:.55"></span><span class="t-zh">M · 2 - 3 篇</span><span class="t-en">M · 2–3 posts</span></li>
+          <li><span class="swatch" style="height:2px;opacity:.4"></span><span class="t-zh">S · 1 篇</span><span class="t-en">S · 1 post</span></li>
         </ul>
       </div>
     </section>
@@ -83,9 +131,13 @@ const ymd = (d: Date) => `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.
       <section class="tag-section" id={encodeURIComponent(t)}>
         <h3>
           <span class="pound">#</span>{t}
-          <span class="count">{byTag.get(t)!.length} POSTS</span>
+          <span class="count"><span class="t-zh">{byTag.get(t)!.length} 篇</span><span class="t-en">{byTag.get(t)!.length} POSTS</span></span>
         </h3>
-        {TAG_LEDE[t] && <p class="lede">{TAG_LEDE[t]}</p>}
+        {TAG_LEDE[t] && (
+          <p class="lede">
+            <span class="t-zh">{TAG_LEDE[t].zh}</span><span class="t-en">{TAG_LEDE[t].en}</span>
+          </p>
+        )}
         <div class="items">
           {byTag.get(t)!.map((p) => (
             <a href={p.route.path}>

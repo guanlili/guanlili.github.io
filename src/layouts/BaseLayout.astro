@@ -1,5 +1,6 @@
 ---
 import { SITE, GA_TRACK_ID, BAIDU_TRACK_ID } from "../consts";
+import { CLIENT_STRINGS } from "../i18n/client-strings";
 import Icons from "../components/Icons.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
@@ -63,6 +64,21 @@ const recommendedPosts = searchPosts.slice(0, 8);
   {noindex && <meta name="robots" content="noindex, follow" />}
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <ClientRouter />
+
+  <!-- UI i18n dictionary for the public/js client scripts -->
+  <script is:inline define:vars={{ clientStrings: CLIENT_STRINGS }}>
+    (function () {
+      window.__I18N__ = clientStrings;
+      window.__T = function (key) {
+        var lang = document.documentElement.getAttribute('data-lang') === 'en' ? 'en' : 'zh';
+        var table = window.__I18N__ || {};
+        var dict = table[lang] || {};
+        var base = table.zh || {};
+        return Object.prototype.hasOwnProperty.call(dict, key) ? dict[key]
+          : Object.prototype.hasOwnProperty.call(base, key) ? base[key] : key;
+      };
+    })();
+  </script>
 
   <!-- Open Graph -->
   <meta property="og:title" content={title ? `${title} - ${SITE.seoTitle}` : SITE.seoTitle} />
@@ -155,6 +171,17 @@ const recommendedPosts = searchPosts.slice(0, 8);
     })} />
   )}
 
+  <!-- Apply saved UI language before paint (default zh needs no attribute) -->
+  <script is:inline>
+    (function () {
+      try {
+        if (localStorage.getItem('lang') === 'en') {
+          document.documentElement.setAttribute('data-lang', 'en');
+          document.documentElement.setAttribute('lang', 'en');
+        }
+      } catch (e) {}
+    })();
+  </script>
   <!-- Prevent dark-mode flash -->
   <script is:inline>
     (function () {
@@ -170,6 +197,8 @@ const recommendedPosts = searchPosts.slice(0, 8);
     [data-theme="dark"]{--bg:#15130e;--bg-soft:#1c1a14;--ink-2:#c9c1ad;--accent:#e07a64}
     body{margin:0;background-color:var(--bg);background-image:linear-gradient(180deg,var(--bg) 0%,var(--bg-soft) 100%);color:var(--ink-2);font-family:var(--sans);-webkit-font-smoothing:antialiased}
     .reading-progress{display:none}
+    html:not([data-lang="en"]) .t-en{display:none}
+    html[data-lang="en"] .t-zh{display:none}
   </style>
   <link rel="preconnect" href="https://blog-1258476669.cos.ap-beijing.myqcloud.com" />
   <link rel="dns-prefetch" href="https://blog-1258476669.cos.ap-beijing.myqcloud.com" />
@@ -179,7 +208,7 @@ const recommendedPosts = searchPosts.slice(0, 8);
   <div class="reading-progress" aria-hidden="true"><div class="progress-fill"></div></div>
   <div data-pagefind-ignore>
     <Icons />
-    <a href="#main-content" class="skip-nav">跳到正文</a>
+    <a href="#main-content" class="skip-nav"><span class="t-zh">跳到正文</span><span class="t-en">Skip to content</span></a>
     <Nav active={active} />
   </div>
 
@@ -188,14 +217,14 @@ const recommendedPosts = searchPosts.slice(0, 8);
 
   <!-- Search overlay. `inert` until opened so its fields stay out of the tab
        order / a11y tree while hidden (it is only visually hidden via CSS). -->
-  <div class="search-page" role="dialog" aria-modal="true" aria-label="站内搜索" inert data-pagefind-ignore>
+  <div class="search-page" role="dialog" aria-modal="true" aria-label="站内搜索" data-tt="aria-label" data-tt-aria-label="站内搜索|Site search" inert data-pagefind-ignore>
     <div class="search-icon-close-container">
       <span class="search-icon-close"><svg class="icon"><use href="#icon-chevron-down"></use></svg></span>
     </div>
     <div class="search-main container">
       <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-          <input type="text" id="search-input" placeholder="搜索文章..." aria-label="搜索文章" />
+          <input type="text" id="search-input" placeholder="搜索文章..." aria-label="搜索文章" data-tt="placeholder,aria-label" data-tt-placeholder="搜索文章...|Search articles..." data-tt-aria-label="搜索文章|Search articles" />
           <div id="search-quick" class="search-quick"></div>
           <div id="search-tags" class="search-tags"></div>
           <div id="search-results" class="mini-post-list"></div>
@@ -212,7 +241,7 @@ const recommendedPosts = searchPosts.slice(0, 8);
     <Footer />
   </div>
 
-  <div id="back-to-top" title="返回顶部" aria-label="返回顶部" role="button" tabindex="0" data-pagefind-ignore>
+  <div id="back-to-top" title="返回顶部" aria-label="返回顶部" role="button" tabindex="0" data-tt="title,aria-label" data-tt-title="返回顶部|Back to top" data-tt-aria-label="返回顶部|Back to top" data-pagefind-ignore>
     <svg class="icon"><use href="#icon-arrow-up"></use></svg>
   </div>
 

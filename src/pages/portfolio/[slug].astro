@@ -51,10 +51,10 @@ const links = project.data.links ?? {};
     )}
 
     <div class="portfolio-meta-strip">
-      <div><span class="label">类型</span><span class="value">{project.data.type}</span></div>
-      <div><span class="label">角色</span><span class="value">{project.data.role}</span></div>
-      <div><span class="label">状态</span><span class="value">{project.data.status}</span></div>
-      <div><span class="label">时间</span><span class="value">{ymd}</span></div>
+      <div><span class="label"><span class="t-zh">类型</span><span class="t-en">Type</span></span><span class="value">{project.data.type}</span></div>
+      <div><span class="label"><span class="t-zh">角色</span><span class="t-en">Role</span></span><span class="value">{project.data.role}</span></div>
+      <div><span class="label"><span class="t-zh">状态</span><span class="t-en">Status</span></span><span class="value">{project.data.status}</span></div>
+      <div><span class="label"><span class="t-zh">时间</span><span class="t-en">Date</span></span><span class="value">{ymd}</span></div>
     </div>
 
     <div class="portfolio-case-layout">
@@ -79,7 +79,7 @@ const links = project.data.links ?? {};
             <div class="case-links">
               {links.github && <a href={links.github} target="_blank" rel="noopener">GitHub ↗</a>}
               {links.demo && <a href={links.demo} target="_blank" rel="noopener">Demo ↗</a>}
-              {links.article && <a href={links.article}>相关文章 →</a>}
+              {links.article && <a href={links.article}><span class="t-zh">相关文章 →</span><span class="t-en">Related article →</span></a>}
             </div>
           </div>
         )}

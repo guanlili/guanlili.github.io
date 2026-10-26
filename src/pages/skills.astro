@@ -24,52 +24,55 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
       <div>
         <div class="kicker">
           <span class="dot"></span>
-          <span>Claude Code · Skills 导航</span>
+          <span><span class="t-zh">Skills 导航</span><span class="t-en">Claude Code · Skills</span></span>
           <span class="rule"></span>
           <span>Slash Commands</span>
         </div>
-        <h1>常用 Skills，<br />一处收藏，随取随用。</h1>
-        <p class="sub">这里收藏的是我在 Claude Code 里最常调用的 Skill，从写作、代码审查到文档处理和系统配置。点击任意 <code>/command</code> 徽章即可复制命令。</p>
+        <h1><span class="t-zh">常用 Skills，<br />一处收藏，随取随用。</span><span class="t-en">The Skills I use most,<br />collected in one place.</span></h1>
+        <p class="sub">
+          <span class="t-zh">这里收藏的是我在 Claude Code 里最常调用的 Skill，从写作、代码审查到文档处理和系统配置。点击任意 <code>/command</code> 徽章即可复制命令。</span>
+          <span class="t-en">The Skills I invoke most in Claude Code — from writing and code review to docs and system setup. Click any <code>/command</code> badge to copy it.</span>
+        </p>
       </div>
       <div class="right">
         <div class="big">{SKILLS.length}</div>
-        <div>Total Skills</div>
-        <div class="cat-count">{SKILL_CATEGORIES.length} Categories</div>
-        <div>{pinnedSkills.length} Pinned</div>
+        <div><span class="t-zh">技能总数</span><span class="t-en">Total Skills</span></div>
+        <div class="cat-count"><span class="t-zh">{SKILL_CATEGORIES.length} 个分类</span><span class="t-en">{SKILL_CATEGORIES.length} Categories</span></div>
+        <div><span class="t-zh">{pinnedSkills.length} 个置顶</span><span class="t-en">{pinnedSkills.length} Pinned</span></div>
       </div>
     </section>
 
     <div class="skills-strip">
-      <div><span class="label">用途</span><span class="value">写作 · 代码 · 文档 · 系统</span></div>
-      <div><span class="label">调用方式</span><span class="value">Claude Code 内输入 /skill-name</span></div>
-      <div><span class="label">技能标签</span><span class="value">{totalTags} Tags</span></div>
-      <div><span class="label">理念</span><span class="value">省去重复描述，专注创造</span></div>
+      <div><span class="label"><span class="t-zh">用途</span><span class="t-en">Use</span></span><span class="value"><span class="t-zh">写作 · 代码 · 文档 · 系统</span><span class="t-en">Writing · Code · Docs · System</span></span></div>
+      <div><span class="label"><span class="t-zh">调用方式</span><span class="t-en">Invoke</span></span><span class="value">Claude Code 内输入 /skill-name</span></div>
+      <div><span class="label"><span class="t-zh">技能标签</span><span class="t-en">Skill Tags</span></span><span class="value"><span class="t-zh">{totalTags} 个标签</span><span class="t-en">{totalTags} Tags</span></span></div>
+      <div><span class="label"><span class="t-zh">理念</span><span class="t-en">Philosophy</span></span><span class="value"><span class="t-zh">省去重复描述，专注创造</span><span class="t-en">Skip the repetition, focus on creating</span></span></div>
     </div>
 
     <section class="skills-workbench" data-pagefind-ignore>
       <div class="skills-workbench-lead">
         <span class="label">Skills Launchpad</span>
-        <h2>Skill 让 Claude 更懂你的工作流。</h2>
-        <p>每个 Skill 是一段预设好的指令集：触发一个词，Claude 就知道该怎么做。这里收藏的都是我真实在用的，按类目整理，支持搜索过滤。</p>
+        <h2><span class="t-zh">Skill 让 Claude 更懂你的工作流。</span><span class="t-en">Skills teach Claude your workflow.</span></h2>
+        <p><span class="t-zh">每个 Skill 是一段预设好的指令集：触发一个词，Claude 就知道该怎么做。这里收藏的都是我真实在用的，按类目整理，支持搜索过滤。</span><span class="t-en">Each Skill is a preset instruction set: trigger one word and Claude knows what to do. Everything here is in real use — organized by category, searchable and filterable.</span></p>
       </div>
       <div class="skills-metrics">
-        <div><span>{SKILLS.length}</span><small>Total Skills</small></div>
-        <div><span>{SKILL_CATEGORIES.length}</span><small>Categories</small></div>
-        <div><span>{pinnedSkills.length}</span><small>Pinned</small></div>
-        <div><span>{totalTags}</span><small>Tags</small></div>
+        <div><span>{SKILLS.length}</span><small><span class="t-zh">技能总数</span><span class="t-en">Total Skills</span></small></div>
+        <div><span>{SKILL_CATEGORIES.length}</span><small><span class="t-zh">分类</span><span class="t-en">Categories</span></small></div>
+        <div><span>{pinnedSkills.length}</span><small><span class="t-zh">置顶</span><span class="t-en">Pinned</span></small></div>
+        <div><span>{totalTags}</span><small><span class="t-zh">标签</span><span class="t-en">Tags</span></small></div>
       </div>
     </section>
 
-    <nav class="skill-cat-rail" aria-label="技能分类">
+    <nav class="skill-cat-rail" aria-label="技能分类" data-tt="aria-label" data-tt-aria-label="技能分类|Skill categories">
       <button type="button" class="active" data-cat-filter="all">
         <span>00 · ALL</span>
-        <strong>全部</strong>
+        <strong><span class="t-zh">全部</span><span class="t-en">All</span></strong>
         <em>{SKILLS.length}</em>
       </button>
       {categories.map((cat, index) => (
         <button type="button" data-cat-filter={cat.name} data-cat-target={`#${catId(cat.name)}`}>
-          <span>{pad2(index + 1)} · {cat.english}</span>
-          <strong>{cat.name}</strong>
+          <span><span class="t-zh">{pad2(index + 1)}</span><span class="t-en">{pad2(index + 1)} · {cat.english}</span></span>
+          <strong><span class="t-zh">{cat.name}</span><span class="t-en">{cat.english}</span></strong>
           <em>{cat.skills.length}</em>
         </button>
       ))}
@@ -77,20 +80,20 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
 
     <section class="skills-console" data-skills-console data-pagefind-ignore>
       <div class="skills-search">
-        <label for="skills-search-input">Search Skills</label>
-        <input id="skills-search-input" type="search" placeholder="搜索技能名称、描述或触发语句..." autocomplete="off" />
+        <label for="skills-search-input"><span class="t-zh">搜索技能</span><span class="t-en">Search Skills</span></label>
+        <input id="skills-search-input" type="search" placeholder="搜索技能名称、描述或触发语句..." autocomplete="off" data-tt="placeholder" data-tt-placeholder="搜索技能名称、描述或触发语句...|Search by name, description or trigger..." />
       </div>
       <div class="skills-console-side">
-        <p class="skills-result" data-skills-summary>{SKILLS.length} skills ready</p>
+        <p class="skills-result" data-skills-summary><span class="t-zh">{SKILLS.length} 个技能就绪</span><span class="t-en">{SKILLS.length} skills ready</span></p>
       </div>
     </section>
 
     <div class="skills-workspace" data-skills-workspace>
       <section class="skills-pinned" data-pinned-section>
         <header class="section-head">
-          <h3>快速启动</h3>
+          <h3><span class="t-zh">快速启动</span><span class="t-en">Quick Launch</span></h3>
           <span class="latin">Launchpad</span>
-          <span class="count"><em>{pinnedSkills.length}</em> 个常用入口 · 点击命令徽章复制</span>
+          <span class="count"><span class="t-zh"><em>{pinnedSkills.length}</em> 个常用入口 · 点击命令徽章复制</span><span class="t-en"><em>{pinnedSkills.length}</em> entries · click a badge to copy</span></span>
         </header>
         <div class="skill-card-grid">
           {pinnedSkills.map((skill) => (
@@ -108,6 +111,9 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
                   data-cmd={skill.command}
                   title={`复制 ${skill.command}`}
                   aria-label={`复制命令 ${skill.command}`}
+                  data-tt="title,aria-label"
+                  data-tt-title={`复制 ${skill.command}|Copy ${skill.command}`}
+                  data-tt-aria-label={`复制命令 ${skill.command}|Copy command ${skill.command}`}
                 >
                   <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="4" width="9" height="11" rx="1.5"/><path d="M4 4V2.5A1.5 1.5 0 0 1 5.5 1h7A1.5 1.5 0 0 1 14 2.5v9A1.5 1.5 0 0 1 12.5 13H11"/></svg>
                   {skill.command}
@@ -135,9 +141,9 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
 
       <section class="skills-flow">
         <header class="section-head">
-          <h3>分类索引</h3>
+          <h3><span class="t-zh">分类索引</span><span class="t-en">Categories</span></h3>
           <span class="latin">Category Index</span>
-          <span class="count"><em>{SKILL_CATEGORIES.length}</em> Categories</span>
+          <span class="count"><span class="t-zh"><em>{SKILL_CATEGORIES.length}</em> 个分类</span><span class="t-en"><em>{SKILL_CATEGORIES.length}</em> Categories</span></span>
         </header>
 
         {categories.map((cat, catIndex) => (
@@ -149,10 +155,10 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
             <div class="skill-cat-head">
               <span class="num">{pad2(catIndex + 1)}</span>
               <div>
-                <h2>{cat.name}</h2>
+                <h2><span class="t-zh">{cat.name}</span><span class="t-en">{cat.english}</span></h2>
                 <p>{cat.summary}</p>
               </div>
-              <span class="cat-count">{cat.skills.length} Skills</span>
+              <span class="cat-count"><span class="t-zh">{cat.skills.length} 个技能</span><span class="t-en">{cat.skills.length} Skills</span></span>
               <span class="english">{cat.english}</span>
             </div>
             <div class="skill-table">
@@ -171,6 +177,9 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
                     data-cmd={skill.command}
                     title={`复制 ${skill.command}`}
                     aria-label={`复制命令 ${skill.command}`}
+                    data-tt="title,aria-label"
+                    data-tt-title={`复制 ${skill.command}|Copy ${skill.command}`}
+                    data-tt-aria-label={`复制命令 ${skill.command}|Copy command ${skill.command}`}
                   >
                     <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="4" width="9" height="11" rx="1.5"/><path d="M4 4V2.5A1.5 1.5 0 0 1 5.5 1h7A1.5 1.5 0 0 1 14 2.5v9A1.5 1.5 0 0 1 12.5 13H11"/></svg>
                     {skill.command}
@@ -186,7 +195,7 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
             </div>
           </section>
         ))}
-        <p class="skills-empty" hidden data-skills-empty>没有匹配到 Skill。换个关键词试试。</p>
+        <p class="skills-empty" hidden data-skills-empty><span class="t-zh">没有匹配到 Skill。换个关键词试试。</span><span class="t-en">No skills matched. Try another keyword.</span></p>
       </section>
     </div>
   </div>
@@ -246,9 +255,10 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
     if (emptyMsg) emptyMsg.hidden = visibleCount > 0;
 
     if (summary) {
-      var catLabel = currentCat === 'all' ? '全部' : currentCat;
+      var t = (window as any).__T || function (k: string) { return k; };
+      var catLabel = currentCat === 'all' ? t('allLabel') : currentCat;
       var queryLabel = currentQuery ? ' · "' + currentQuery + '"' : '';
-      summary.textContent = visibleCount + ' skills · ' + catLabel + queryLabel;
+      summary.textContent = String(t('skillsSummary')).replace('{n}', String(visibleCount)).replace('{label}', catLabel) + queryLabel;
     }
   }
 
@@ -291,7 +301,8 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
       navigator.clipboard.writeText(cmd).then(function () {
         _btn.classList.add('copied');
         var orig = _btn.innerHTML;
-        _btn.innerHTML = '<svg viewBox="0 0 16 16" style="width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><polyline points="2 8 6 12 14 4"/></svg> 已复制';
+        var copiedText = (window as any).__T ? (window as any).__T('copied') : '已复制';
+        _btn.innerHTML = '<svg viewBox="0 0 16 16" style="width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><polyline points="2 8 6 12 14 4"/></svg> ' + copiedText;
         setTimeout(function () {
           _btn.classList.remove('copied');
           _btn.innerHTML = orig;
@@ -312,5 +323,8 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
   }
 
   update();
+
+  // Re-render the summary line when the UI language toggles.
+  (window as any).__liliRefreshSkillsLang = update;
 })();
 </script>

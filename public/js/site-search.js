@@ -2,6 +2,9 @@
 // Loaded on demand when user triggers search (⌘K, /, or click).
 // Features: keyword highlight · tag filter chips · recommended articles.
 
+// UI-string lookup from window.__I18N__ (injected by BaseLayout).
+var T = function (key) { return window.__T ? window.__T(key) : key; };
+
 export function initSearch() {
   var searchInput = document.getElementById('search-input');
   var resultsContainer = document.getElementById('search-results');
@@ -173,10 +176,10 @@ export function initSearch() {
   function renderRecommended() {
     loadRecommended();
     if (!recommendedData || !recommendedData.length) {
-      resultsContainer.innerHTML = '<div class="search-note">输入关键词搜索文章</div>';
+      resultsContainer.innerHTML = '<div class="search-note">' + T('searchHint') + '</div>';
       return;
     }
-    resultsContainer.innerHTML = renderRecommendedCards(recommendedData, '推荐阅读 / Recommended');
+    resultsContainer.innerHTML = renderRecommendedCards(recommendedData, T('recommended'));
   }
 
   // ── Quick searches ────────────────────────────────────────────
@@ -243,34 +246,34 @@ export function initSearch() {
 
   // ── Loading / Error / Empty states ────────────────────────────
   function renderLoading() {
-    resultsContainer.innerHTML = '<div class="search-note">搜索中...</div>';
+    resultsContainer.innerHTML = '<div class="search-note">' + T('searching') + '</div>';
   }
 
   function renderError() {
-    resultsContainer.innerHTML = '<div class="search-note">搜索暂时不可用</div>';
+    resultsContainer.innerHTML = '<div class="search-note">' + T('searchUnavailable') + '</div>';
   }
 
   function renderEmpty() {
     loadRecommended();
-    var html = '<div class="search-note">没有找到相关内容</div>';
+    var html = '<div class="search-note">' + T('noResults') + '</div>';
     if (recommendedData && recommendedData.length) {
-      html += renderRecommendedCards(recommendedData.slice(0, 4), '试试这些文章？');
+      html += renderRecommendedCards(recommendedData.slice(0, 4), T('tryThese'));
     }
     resultsContainer.innerHTML = html;
   }
 
   function hitKind(meta, query, excerpt, rawTitle) {
     var terms = searchTerms(query);
-    if (!terms.length) return { label: '筛选结果', className: 'filter' };
+    if (!terms.length) return { label: T('hitFilter'), className: 'filter' };
 
     var tags = (meta.tags || []).join(' ');
     var aliases = (meta.aliases || []).join(' ');
-    if (includesAny(rawTitle, terms)) return { label: '标题命中', className: 'title' };
-    if (includesAny(tags, terms)) return { label: '标签命中', className: 'tag' };
-    if (includesAny(aliases, terms)) return { label: '别名命中', className: 'alias' };
-    if (meta.url && includesAny(meta.search || '', terms)) return { label: '资料命中', className: 'meta' };
-    if (includesAny(excerpt || '', terms)) return { label: '正文命中', className: 'body' };
-    return meta.url ? { label: '相关结果', className: 'related' } : { label: '页面结果', className: 'page' };
+    if (includesAny(rawTitle, terms)) return { label: T('hitTitle'), className: 'title' };
+    if (includesAny(tags, terms)) return { label: T('hitTag'), className: 'tag' };
+    if (includesAny(aliases, terms)) return { label: T('hitAlias'), className: 'alias' };
+    if (meta.url && includesAny(meta.search || '', terms)) return { label: T('hitMeta'), className: 'meta' };
+    if (includesAny(excerpt || '', terms)) return { label: T('hitBody'), className: 'body' };
+    return meta.url ? { label: T('hitRelated'), className: 'related' } : { label: T('hitPage'), className: 'page' };
   }
 
   // ── Core search ───────────────────────────────────────────────
@@ -438,6 +441,13 @@ export function initSearch() {
   window.__liliOpenSearch = openSearch;
 
   if (searchClose) searchClose.addEventListener('click', function (e) { e.preventDefault(); close(); });
+
+  // Re-render the visible state when the UI language toggles.
+  document.addEventListener('lang-change', function () {
+    if (!searchPage.classList.contains('search-active')) return;
+    if (!searchInput.value.trim() && !activeTags.length) renderRecommended();
+    else runSearch();
+  });
 
   // Escape closes overlay
   document.addEventListener('keydown', function (e) {

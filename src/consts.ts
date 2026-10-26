@@ -20,29 +20,32 @@ export const SITE = {
   avatar: "/img/avatar-ghl-ny.jpg",
   role: "SOFTWARE ENG · UX",
   bio: "热爱技术与生活，简单乐观，爱创造。Web & Mobile Lover，业余写代码、做菜、看星星。",
+  bioEn:
+    "In love with tech and life — simple, optimistic, always building. Web & Mobile lover; codes, cooks and stargazes in spare time.",
   epigraph:
     "When you look up at the stars, don't forget to look down at the dust.",
+  epigraphZh: "仰望星空，俯首尘埃。",
   beian: "京ICP备2022033467号-2",
   themeColor: "#000000",
 };
 
 // Sidebar /About 卡片下方 4 个快捷链接(社交三连 + 联系订阅锚点)
-export const SIDEBAR_LINKS: { badge: string; title: string; href: string }[] = [
+export const SIDEBAR_LINKS: { badge: string; title: string; titleEn?: string; href: string }[] = [
   { badge: "GH", title: "GitHub", href: "https://github.com/guanlili" },
-  { badge: "知", title: "知乎", href: "https://www.zhihu.com/people/xiao-li-ge-ge-38" },
+  { badge: "知", title: "知乎", titleEn: "Zhihu", href: "https://www.zhihu.com/people/xiao-li-ge-ge-38" },
   { badge: "CS", title: "CSDN", href: "https://blog.csdn.net/outman_1921" },
-  { badge: "@", title: "联系 / 订阅", href: "/about/#follow" },
+  { badge: "@", title: "联系 / 订阅", titleEn: "Contact / Subscribe", href: "/about/#follow" },
 ];
 
-export const NAV: { label: string; href: string; key: string }[] = [
-  { label: "首页 Home", href: "/", key: "home" },
-  { label: "作品 Portfolio", href: "/portfolio/", key: "portfolio" },
-  { label: "足迹 Map", href: "/footprints/", key: "footprints" },
-  { label: "工具 Tools", href: "/tools/", key: "tools" },
-  { label: "技能 Skills", href: "/skills/", key: "skills" },
-  { label: "归档 Archive", href: "/archive/", key: "archive" },
-  { label: "标签 Tags", href: "/tags/", key: "tags" },
-  { label: "关于 About", href: "/about/", key: "about" },
+export const NAV: { label: { zh: string; en: string }; href: string; key: string }[] = [
+  { label: { zh: "首页", en: "Home" }, href: "/", key: "home" },
+  { label: { zh: "作品", en: "Portfolio" }, href: "/portfolio/", key: "portfolio" },
+  { label: { zh: "足迹", en: "Map" }, href: "/footprints/", key: "footprints" },
+  { label: { zh: "工具", en: "Tools" }, href: "/tools/", key: "tools" },
+  { label: { zh: "技能", en: "Skills" }, href: "/skills/", key: "skills" },
+  { label: { zh: "归档", en: "Archive" }, href: "/archive/", key: "archive" },
+  { label: { zh: "标签", en: "Tags" }, href: "/tags/", key: "tags" },
+  { label: { zh: "关于", en: "About" }, href: "/about/", key: "about" },
 ];
 
 export const FRIENDS: { title: string; href: string }[] = [
@@ -70,11 +73,11 @@ export const SECONDARY_PLATFORMS: {
 ];
 
 // Sidebar "/Now" card — PLACEHOLDER content, edit freely.
-export const NOW: { ico: string; text: string }[] = [
-  { ico: "读", text: "《人月神话》重读" },
-  { ico: "写", text: "AI 工作室运营笔记" },
-  { ico: "折腾", text: "本地大模型 + 知识库" },
-  { ico: "城市", text: "北京" },
+export const NOW: { ico: string; icoEn: string; text: string; textEn: string }[] = [
+  { ico: "读", icoEn: "Read", text: "《人月神话》重读", textEn: "Re-reading The Mythical Man-Month" },
+  { ico: "写", icoEn: "Write", text: "AI 工作室运营笔记", textEn: "AI studio operations notes" },
+  { ico: "折腾", icoEn: "Build", text: "本地大模型 + 知识库", textEn: "Local LLMs + knowledge base" },
+  { ico: "城市", icoEn: "City", text: "北京", textEn: "Beijing" },
 ];
 
 // Analytics (empty = disabled), mirroring the old config.

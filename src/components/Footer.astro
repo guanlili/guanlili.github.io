@@ -1,19 +1,20 @@
 ---
 import { SITE, NAV } from "../consts";
+import T from "../i18n/T.astro";
 const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
   <div class="footer-mark">{SITE.brand} · {SITE.title}</div>
-  <nav class="footer-nav" aria-label="页脚导航">
-    {NAV.map((l) => <a href={l.href}>{l.label.split(" ")[0]}</a>)}
+  <nav class="footer-nav" aria-label="页脚导航" data-tt="aria-label" data-tt-aria-label="页脚导航|Footer navigation">
+    {NAV.map((l) => <a href={l.href}><T zh={l.label.zh} en={l.label.en} /></a>)}
     <a href="/feed.xml">RSS</a>
-    <a href={`mailto:${SITE.email}`}>来信</a>
+    <a href={`mailto:${SITE.email}`}><T zh="来信" en="Email me" /></a>
   </nav>
   <div class="footer-meta">
     <span>© {SITE.since}–{year} {SITE.title}</span>
     <span class="sep" aria-hidden="true">·</span>
     <a href="https://beian.miit.gov.cn/">{SITE.beian}</a>
     <span class="sep" aria-hidden="true">·</span>
-    <span>Set in system serif &amp; mono</span>
+    <span><T zh="系统衬线与等宽字体排印" en="Set in system serif &amp; mono" /></span>
   </div>
 </footer>

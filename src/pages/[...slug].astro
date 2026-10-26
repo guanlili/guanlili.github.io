@@ -113,7 +113,7 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
     <section class="article-head">
       <div class="kicker">
         <span class="rule"></span>
-        <span>No. {noN} · 手稿</span>
+        <span class="t-zh">第 {noN} 篇 · 手稿</span><span class="t-en">No. {noN} · Essay</span>
         <span class="rule"></span>
       </div>
       <h1 data-pagefind-meta="title" data-pagefind-weight="10">{data.title}</h1>
@@ -126,10 +126,10 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
         <span class="sep"></span>
         <span>{ymd}</span>
         <span class="sep"></span>
-        <span>{minutes} 分钟阅读 · 约 {chars} 字</span>
+        <span><span class="t-zh">{minutes} 分钟阅读 · 约 {chars} 字</span><span class="t-en">{minutes} min read · {chars} chars</span></span>
       </div>
       {data.tags.length > 0 && (
-        <div class="article-topics" aria-label="文章标签" data-pagefind-weight="4">
+        <div class="article-topics" aria-label="文章标签" data-tt="aria-label" data-tt-aria-label="文章标签|Article tags" data-pagefind-weight="4">
           {data.tags.map((tag) => <a href={`/tags/#${encodeURIComponent(tag)}`}>#{tag}</a>)}
         </div>
       )}
@@ -153,8 +153,8 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
     )}
 
     {showBrief && (
-      <aside class="reading-brief" aria-label="文章摘要" data-pagefind-ignore>
-        <span class="label">导读</span>
+      <aside class="reading-brief" aria-label="文章摘要" data-tt="aria-label" data-tt-aria-label="文章摘要|Article summary" data-pagefind-ignore>
+        <span class="label t-zh">导读</span><span class="label t-en">TL;DR</span>
         <p>{data.description}</p>
       </aside>
     )}
@@ -171,8 +171,8 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
       </div>
 
       {toc.length > 0 && (
-        <nav class="toc" aria-label="文章目录">
-          <div class="lbl">In This Issue · {sectionCount || toc.length}</div>
+        <nav class="toc" aria-label="文章目录" data-tt="aria-label" data-tt-aria-label="文章目录|Table of contents">
+          <div class="lbl"><span class="t-zh">本期看点 · {sectionCount || toc.length}</span><span class="t-en">In This Issue · {sectionCount || toc.length}</span></div>
           <ol>
             {toc.map((h) => (
               <li data-depth={h.depth}><a href={`#${h.slug}`}>{h.text}</a></li>
@@ -182,7 +182,7 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
       )}
 
       {toc.length > 0 && (
-        <button class="toc-fab" aria-label="打开目录" title="目录">
+        <button class="toc-fab" aria-label="打开目录" title="目录" data-tt="aria-label,title" data-tt-aria-label="打开目录|Open contents" data-tt-title="目录|Contents">
           <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="3" y1="4" x2="17" y2="4"/><line x1="3" y1="8" x2="14" y2="8"/><line x1="3" y1="12" x2="17" y2="12"/><line x1="3" y1="16" x2="14" y2="16"/></svg>
         </button>
       )}
@@ -190,8 +190,8 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
       {toc.length > 0 && (
         <div class="toc-sheet" aria-hidden="true" inert>
           <div class="toc-sheet-head">
-            <span>目录 / Contents</span>
-            <button class="toc-sheet-close" aria-label="关闭目录">&times;</button>
+            <span><span class="t-zh">目录</span><span class="t-en">Contents</span></span>
+            <button class="toc-sheet-close" aria-label="关闭目录" data-tt="aria-label" data-tt-aria-label="关闭目录|Close contents">&times;</button>
           </div>
           <ol>
             {toc.map((h) => (
@@ -203,14 +203,14 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
     </div>
 
     <div class="article-end">
-      <span>— 完 —</span>
+      <span class="t-zh">— 完 —</span><span class="t-en">— End —</span>
       <span class="glyph">&#10086;</span>
-      <span>{ymd} · 北京</span>
+      <span><span class="t-zh">{ymd} · 北京</span><span class="t-en">{ymd} · Beijing</span></span>
     </div>
 
     {footprints.length > 0 && (
       <section class="related-posts related-footprints" data-pagefind-ignore>
-        <div class="related-label">相关足迹 / Footprints</div>
+        <div class="related-label"><span class="t-zh">相关足迹</span><span class="t-en">Footprints</span></div>
         <div class="related-list">
           {footprints.map((f) => (
             <a class="related-card" href={f.path}>
@@ -224,7 +224,7 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
 
     {related.length > 0 && (
       <section class="related-posts">
-        <div class="related-label">继续阅读 / Related</div>
+        <div class="related-label"><span class="t-zh">继续阅读</span><span class="t-en">Related</span></div>
         <div class="related-list">
           {related.map((r: { title: string; path: string; tags: string[]; date: Date }) => {
             const rd = r.date;
@@ -246,19 +246,19 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
     <div class="next-prev">
       {newerPath ? (
         <a href={newerPath}>
-          <span class="nav-lbl">&larr; 上一篇 / Prev</span>
+          <span class="nav-lbl"><span class="t-zh">&larr; 上一篇</span><span class="t-en">&larr; Prev</span></span>
           <span class="nav-ttl">{newer!.entry.data.title}</span>
         </a>
       ) : (
-        <span class="np-empty"><span class="nav-lbl">已是最新</span><span class="nav-ttl">没有更新的文章了</span></span>
+        <span class="np-empty"><span class="nav-lbl"><span class="t-zh">已是最新</span><span class="t-en">Latest</span></span><span class="nav-ttl"><span class="t-zh">没有更新的文章了</span><span class="t-en">Nothing newer</span></span></span>
       )}
       {olderPath ? (
         <a href={olderPath}>
-          <span class="nav-lbl">下一篇 / Next &rarr;</span>
+          <span class="nav-lbl"><span class="t-zh">下一篇 &rarr;</span><span class="t-en">Next &rarr;</span></span>
           <span class="nav-ttl">{older!.entry.data.title}</span>
         </a>
       ) : (
-        <span class="np-empty"><span class="nav-lbl">已到底</span><span class="nav-ttl">没有更早的文章了</span></span>
+        <span class="np-empty"><span class="nav-lbl"><span class="t-zh">已到底</span><span class="t-en">The end</span></span><span class="nav-ttl"><span class="t-zh">没有更早的文章了</span><span class="t-en">Nothing older</span></span></span>
       )}
     </div>
   </div>

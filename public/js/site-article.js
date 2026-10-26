@@ -2,6 +2,9 @@
 // Loaded only on article pages. Contains TOC, lightbox, code blocks, progress bar, mermaid.
 // Reuses the global scroll handler from site.js if available.
 
+// UI-string lookup from window.__I18N__ (injected by BaseLayout).
+var T = function (key) { return window.__T ? window.__T(key) : key; };
+
 // ===== Scroll handler (reuse global or create) =====
 if (!window._scrollCallbacks) {
   window._scrollCallbacks = [];
@@ -83,7 +86,7 @@ function initTOC() {
       toggle.className = 'toc-toggle';
       toggle.textContent = '+';
       toggle.setAttribute('role', 'button');
-      toggle.setAttribute('aria-label', '展开子标题');
+      toggle.setAttribute('aria-label', T('expandSubheads'));
       link.parentNode.insertBefore(toggle, link.nextSibling);
 
       toggle.addEventListener('click', function (e) {
@@ -154,17 +157,17 @@ function initCodeBlocks() {
 
     var btn = document.createElement('button');
     btn.className = 'code-copy';
-    btn.setAttribute('aria-label', '复制代码');
-    btn.setAttribute('title', '复制');
-    btn.textContent = '复制';
+    btn.setAttribute('aria-label', T('copyCode'));
+    btn.setAttribute('title', T('copy'));
+    btn.textContent = T('copy');
     pre.appendChild(btn);
 
     btn.addEventListener('click', function () {
       navigator.clipboard.writeText(code.textContent).then(function () {
-        btn.textContent = '已复制';
+        btn.textContent = T('copied');
         btn.classList.add('code-copy-done');
         setTimeout(function () {
-          btn.textContent = '复制';
+          btn.textContent = T('copy');
           btn.classList.remove('code-copy-done');
         }, 1500);
       });
@@ -265,7 +268,7 @@ function initHeadingAnchors() {
     a.className = 'heading-anchor';
     a.href = '#' + h.id;
     a.textContent = '#';
-    a.setAttribute('aria-label', '复制本节链接');
+    a.setAttribute('aria-label', T('copySectionLink'));
     a.addEventListener('click', function () {
       if (!navigator.clipboard) return;
       var url = location.origin + location.pathname + '#' + h.id;
@@ -291,6 +294,22 @@ function initContentLinks() {
     a.classList.add('external-link');
   });
 }
+
+// ===== Keep JS-created strings in sync after a live language toggle =====
+document.addEventListener('lang-change', function () {
+  document.querySelectorAll('.code-copy').forEach(function (btn) {
+    if (btn.classList.contains('code-copy-done')) return;
+    btn.textContent = T('copy');
+    btn.setAttribute('aria-label', T('copyCode'));
+    btn.setAttribute('title', T('copy'));
+  });
+  document.querySelectorAll('.toc-toggle').forEach(function (el) {
+    el.setAttribute('aria-label', T('expandSubheads'));
+  });
+  document.querySelectorAll('.heading-anchor').forEach(function (a) {
+    a.setAttribute('aria-label', T('copySectionLink'));
+  });
+});
 
 // ===== Init all article features (View Transitions compatible) =====
 var _articleInited = false;
