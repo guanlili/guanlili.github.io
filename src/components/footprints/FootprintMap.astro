@@ -182,31 +182,31 @@ const journeys = [...journeyAggregates.values()]
     <div class="map-topline">
       <div class="map-title">
         <span>Footprint Atlas · China</span>
-        <strong data-map-title><span class="t-zh">我的城市足迹</span><span class="t-en">My City Footprints</span></strong>
+        <strong data-map-title><span class="t-zh" data-pagefind-ignore>我的城市足迹</span><span class="t-en" data-pagefind-ignore>My City Footprints</span></strong>
         <small data-map-focus-meta hidden></small>
       </div>
       <div class="map-toolbar">
-        <span><i class="legend-dot home"></i><span class="t-zh">常驻</span><span class="t-en">Home</span></span>
-        <span><i class="legend-dot lived"></i><span class="t-zh">曾居</span><span class="t-en">Lived</span></span>
-        <span><i class="legend-place legend-city"></i><span class="t-zh">到访城市</span><span class="t-en">Visited cities</span></span>
-        <span class="prefecture-legend" data-prefecture-legend hidden><i></i><span class="t-zh">行政区边界</span><span class="t-en">Prefecture borders</span></span>
-        <span class="journey-legend" data-journey-legend hidden><i></i><span class="t-zh">行程连线</span><span class="t-en">Journey lines</span></span>
-        <span class="map-filter-hint" data-map-filter-hint><span class="t-zh">点击省份进入省内视图</span><span class="t-en">Click a province to zoom in</span></span>
+        <span><i class="legend-dot home"></i><span class="t-zh" data-pagefind-ignore>常驻</span><span class="t-en" data-pagefind-ignore>Home</span></span>
+        <span><i class="legend-dot lived"></i><span class="t-zh" data-pagefind-ignore>曾居</span><span class="t-en" data-pagefind-ignore>Lived</span></span>
+        <span><i class="legend-place legend-city"></i><span class="t-zh" data-pagefind-ignore>到访城市</span><span class="t-en" data-pagefind-ignore>Visited cities</span></span>
+        <span class="prefecture-legend" data-prefecture-legend hidden><i></i><span class="t-zh" data-pagefind-ignore>行政区边界</span><span class="t-en" data-pagefind-ignore>Prefecture borders</span></span>
+        <span class="journey-legend" data-journey-legend hidden><i></i><span class="t-zh" data-pagefind-ignore>行程连线</span><span class="t-en" data-pagefind-ignore>Journey lines</span></span>
+        <span class="map-filter-hint" data-map-filter-hint><span class="t-zh" data-pagefind-ignore>点击省份进入省内视图</span><span class="t-en" data-pagefind-ignore>Click a province to zoom in</span></span>
         <span class="map-selection" data-map-selection hidden>
           <b data-map-selection-name></b>
           <em data-map-selection-count></em>
         </span>
-        <button type="button" data-map-reset><span class="t-zh">返回全国</span><span class="t-en">Back to China</span></button>
+        <button type="button" data-map-reset><span class="t-zh" data-pagefind-ignore>返回全国</span><span class="t-en" data-pagefind-ignore>Back to China</span></button>
       </div>
     </div>
 
     <div class="map-journey-bar" data-journey-bar>
-      <span class="journey-bar-label"><span class="t-zh">行程线</span><span class="t-en">Journeys</span></span>
+      <span class="journey-bar-label"><span class="t-zh" data-pagefind-ignore>行程线</span><span class="t-en" data-pagefind-ignore>Journeys</span></span>
       <div class="journey-chips">
         {journeys.map((journey) => (
           <button type="button" class="journey-chip" data-journey-id={journey.id} aria-pressed="false">
             <b>{journey.name}</b>
-            <small><span class="t-zh">{journey.stops.length} 站</span><span class="t-en">{journey.stops.length} stops</span></small>
+            <small><span class="t-zh" data-pagefind-ignore>{journey.stops.length} 站</span><span class="t-en" data-pagefind-ignore>{journey.stops.length} stops</span></small>
           </button>
         ))}
       </div>
@@ -329,10 +329,10 @@ const journeys = [...journeyAggregates.values()]
 
   <aside class="place-panel" aria-live="polite">
     <div class="panel-head">
-      <span class="panel-title"><span class="t-zh">最近地点</span><span class="t-en">Latest Notes</span></span>
+      <span class="panel-title"><span class="t-zh" data-pagefind-ignore>最近地点</span><span class="t-en" data-pagefind-ignore>Latest Notes</span></span>
       <div class="panel-nav">
-        <strong data-visible-count><span class="t-zh">最近 {defaultNoteCount} 条</span><span class="t-en">Latest {defaultNoteCount}</span></strong>
-        <span class="panel-scroll-hint"><span class="t-zh">横向浏览</span><span class="t-en">Scroll sideways</span></span>
+        <strong data-visible-count><span class="t-zh" data-pagefind-ignore>最近 {defaultNoteCount} 条</span><span class="t-en" data-pagefind-ignore>Latest {defaultNoteCount}</span></strong>
+        <span class="panel-scroll-hint"><span class="t-zh" data-pagefind-ignore>横向浏览</span><span class="t-en" data-pagefind-ignore>Scroll sideways</span></span>
         <button type="button" data-place-prev aria-label="向前浏览最近地点" data-tt="aria-label" data-tt-aria-label="向前浏览最近地点|Browse earlier places">←</button>
         <button type="button" data-place-next aria-label="向后浏览最近地点" data-tt="aria-label" data-tt-aria-label="向后浏览最近地点|Browse later places">→</button>
       </div>
@@ -354,12 +354,12 @@ const journeys = [...journeyAggregates.values()]
               : <span class="place-card-stamp" aria-hidden="true">{place.status === "home" ? "家" : place.status === "lived" ? "故" : place.city.slice(0, 1)}</span>}
             <span class="place-card-copy">
               <span class="place-meta">
-                <span class="t-zh">{place.status === "home"
+                <span class="t-zh" data-pagefind-ignore>{place.status === "home"
                   ? `常驻地 · Since ${place.since?.slice(0, 4) ?? "—"}`
                   : place.status === "lived"
                     ? (place.until ? `曾居地 · ${place.until.slice(0, 4)}年以前` : "曾居地")
                     : `城市 · ${place.province} · ${place.visited.at(-1)?.slice(0, 4)}`}</span>
-                <span class="t-en">{place.status === "home"
+                <span class="t-en" data-pagefind-ignore>{place.status === "home"
                   ? `Home base · Since ${place.since?.slice(0, 4) ?? "—"}`
                   : place.status === "lived"
                     ? (place.until ? `Former home · before ${place.until.slice(0, 4)}` : "Former home")
@@ -367,7 +367,7 @@ const journeys = [...journeyAggregates.values()]
               </span>
               <strong>{place.city}</strong>
               <small>{place.summary}</small>
-              <span class="place-link"><span class="t-zh">{place.contentLabel} · 查看记录 →</span><span class="t-en">{place.contentLabelEn} · View notes →</span></span>
+              <span class="place-link"><span class="t-zh" data-pagefind-ignore>{place.contentLabel} · 查看记录 →</span><span class="t-en" data-pagefind-ignore>{place.contentLabelEn} · View notes →</span></span>
             </span>
           </a>
         ))}

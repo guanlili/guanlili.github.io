@@ -74,27 +74,27 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
   active="footprints"
   title={data.title}
   description={data.summary}
-  image={data.cover ?? SITE.avatar}
+  image={data.cover}
   type="article"
   article={{ date: latest, author: SITE.author, tags: data.tags }}
   noindex={isThinFootprint(entry)}
 >
   <div class:list={["article-shell", "footprint-detail", { "status-home": isHome }]}>
     <nav class="footprint-breadcrumb" aria-label="面包屑" data-tt="aria-label" data-tt-aria-label="面包屑|Breadcrumb">
-      <a href="/footprints/"><span class="t-zh">我的足迹</span><span class="t-en">Footprints</span></a><span>/</span><span>{data.province}</span><span>/</span><strong>{data.city}</strong>
+      <a href="/footprints/"><span class="t-zh" data-pagefind-ignore>我的足迹</span><span class="t-en" data-pagefind-ignore>Footprints</span></a><span>/</span><span>{data.province}</span><span>/</span><strong>{data.city}</strong>
     </nav>
 
     <section class="footprint-case-head">
-      <div class="kicker"><span class="rule"></span><span><span class="t-zh">{isHome ? `常驻地 · ${data.province}` : isLived ? `曾居地 · ${data.province}` : `${data.province} · ${yearRange(entry)}`}</span><span class="t-en">{isHome ? `Home Base · ${data.province}` : isLived ? `Once Home · ${data.province}` : `${data.province} · ${yearRange(entry)}`}</span></span><span class="rule"></span></div>
+      <div class="kicker"><span class="rule"></span><span><span class="t-zh" data-pagefind-ignore>{isHome ? `常驻地 · ${data.province}` : isLived ? `曾居地 · ${data.province}` : `${data.province} · ${yearRange(entry)}`}</span><span class="t-en" data-pagefind-ignore>{isHome ? `Home Base · ${data.province}` : isLived ? `Once Home · ${data.province}` : `${data.province} · ${yearRange(entry)}`}</span></span><span class="rule"></span></div>
       <h1>{data.title}</h1>
       <p>{data.summary}</p>
       <div class="case-byline">
         {isHome
-          ? <><span><span class="t-zh">生活的圆心</span><span class="t-en">Center of life</span></span><span class="sep"></span><span><span class="t-zh">Since {homeSince.getFullYear()} · 至今</span><span class="t-en">Since {homeSince.getFullYear()} · present</span></span></>
+          ? <><span><span class="t-zh" data-pagefind-ignore>生活的圆心</span><span class="t-en" data-pagefind-ignore>Center of life</span></span><span class="sep"></span><span><span class="t-zh" data-pagefind-ignore>Since {homeSince.getFullYear()} · 至今</span><span class="t-en" data-pagefind-ignore>Since {homeSince.getFullYear()} · present</span></span></>
           : isLived
-            ? <><span><span class="t-zh">成长的原点</span><span class="t-en">Where it began</span></span><span class="sep"></span><span><span class="t-zh">{data.until ? `${data.until.getFullYear()}年以前` : yearRange(entry)}</span><span class="t-en">{data.until ? `before ${data.until.getFullYear()}` : yearRange(entry)}</span></span></>
-          : <><span><span class="t-zh">{data.visited.length} 次抵达</span><span class="t-en">{data.visited.length} visits</span></span><span class="sep"></span><span><span class="t-zh">最近 {ymd(latest)}</span><span class="t-en">Latest {ymd(latest)}</span></span></>}
-        {data.sample && <><span class="sep"></span><span class="accent"><span class="t-zh">示例内容</span><span class="t-en">Sample</span></span></>}
+            ? <><span><span class="t-zh" data-pagefind-ignore>成长的原点</span><span class="t-en" data-pagefind-ignore>Where it began</span></span><span class="sep"></span><span><span class="t-zh" data-pagefind-ignore>{data.until ? `${data.until.getFullYear()}年以前` : yearRange(entry)}</span><span class="t-en" data-pagefind-ignore>{data.until ? `before ${data.until.getFullYear()}` : yearRange(entry)}</span></span></>
+          : <><span><span class="t-zh" data-pagefind-ignore>{data.visited.length} 次抵达</span><span class="t-en" data-pagefind-ignore>{data.visited.length} visits</span></span><span class="sep"></span><span><span class="t-zh" data-pagefind-ignore>最近 {ymd(latest)}</span><span class="t-en" data-pagefind-ignore>Latest {ymd(latest)}</span></span></>}
+        {data.sample && <><span class="sep"></span><span class="accent"><span class="t-zh" data-pagefind-ignore>示例内容</span><span class="t-en" data-pagefind-ignore>Sample</span></span></>}
         {activeJourney && <><span class="sep"></span><span class="accent">{activeJourney.name}</span></>}
       </div>
     </section>
@@ -117,10 +117,10 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
     )}
 
     <div class="footprint-meta-strip">
-      <div><span class="label"><span class="t-zh">地点</span><span class="t-en">Place</span></span><span class="value">{placeLocation}</span></div>
-      <div><span class="label"><span class="t-zh">坐标</span><span class="t-en">Coords</span></span><span class="value">{data.coordinates[1].toFixed(2)}°N · {data.coordinates[0].toFixed(2)}°E</span></div>
-      <div><span class="label"><span class="t-zh">类型</span><span class="t-en">Type</span></span><span class="value"><span class="t-zh">{isHome ? "常驻地" : isLived ? "曾居地" : `城市 · ${data.visited.length} 次`}</span><span class="t-en">{isHome ? "Home Base" : isLived ? "Once Home" : `City · ${data.visited.length} visits`}</span></span></div>
-      <div><span class="label"><span class="t-zh">时间</span><span class="t-en">Time</span></span><span class="value"><span class="t-zh">{isHome ? `${homeSince.getFullYear()}—至今` : isLived && data.until ? `${data.until.getFullYear()}年以前` : yearRange(entry)}</span><span class="t-en">{isHome ? `${homeSince.getFullYear()}—present` : isLived && data.until ? `before ${data.until.getFullYear()}` : yearRange(entry)}</span></span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>地点</span><span class="t-en" data-pagefind-ignore>Place</span></span><span class="value">{placeLocation}</span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>坐标</span><span class="t-en" data-pagefind-ignore>Coords</span></span><span class="value">{data.coordinates[1].toFixed(2)}°N · {data.coordinates[0].toFixed(2)}°E</span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>类型</span><span class="t-en" data-pagefind-ignore>Type</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>{isHome ? "常驻地" : isLived ? "曾居地" : `城市 · ${data.visited.length} 次`}</span><span class="t-en" data-pagefind-ignore>{isHome ? "Home Base" : isLived ? "Once Home" : `City · ${data.visited.length} visits`}</span></span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>时间</span><span class="t-en" data-pagefind-ignore>Time</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>{isHome ? `${homeSince.getFullYear()}—至今` : isLived && data.until ? `${data.until.getFullYear()}年以前` : yearRange(entry)}</span><span class="t-en" data-pagefind-ignore>{isHome ? `${homeSince.getFullYear()}—present` : isLived && data.until ? `before ${data.until.getFullYear()}` : yearRange(entry)}</span></span></div>
     </div>
 
     <div class="footprint-story-layout">
@@ -130,7 +130,7 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
         {data.events.length > 0 && (
           <section class="footprint-event-section" aria-labelledby="footprint-event-title">
             <div class="photo-journal-head">
-              <h2 id="footprint-event-title"><span class="t-zh">时间轴</span><span class="t-en">Timeline</span></h2>
+              <h2 id="footprint-event-title"><span class="t-zh" data-pagefind-ignore>时间轴</span><span class="t-en" data-pagefind-ignore>Timeline</span></h2>
               <span>{data.events.length} Moments</span>
             </div>
             <ol class="footprint-events">
@@ -154,7 +154,7 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
         {relatedPosts.length > 0 && (
           <section class="footprint-event-section footprint-posts" aria-labelledby="footprint-posts-title">
             <div class="photo-journal-head">
-              <h2 id="footprint-posts-title"><span class="t-zh">相关文章</span><span class="t-en">Related Posts</span></h2>
+              <h2 id="footprint-posts-title"><span class="t-zh" data-pagefind-ignore>相关文章</span><span class="t-en" data-pagefind-ignore>Related Posts</span></h2>
               <span>{relatedPosts.length} Posts</span>
             </div>
             <ol class="footprint-events">
@@ -171,7 +171,7 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
         {data.photos.length > 0 && (
           <section class="photo-journal" aria-labelledby="photo-journal-title">
             <div class="photo-journal-head">
-              <h2 id="photo-journal-title"><span class="t-zh">照片记录</span><span class="t-en">Photo Journal</span></h2>
+              <h2 id="photo-journal-title"><span class="t-zh" data-pagefind-ignore>照片记录</span><span class="t-en" data-pagefind-ignore>Photo Journal</span></h2>
               <span>{photos.length} Frames</span>
             </div>
             <div class="photo-grid">
@@ -206,7 +206,7 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
 
       <aside class="footprint-side">
         <div class="side-block">
-          <span class="side-label"><span class="t-zh">位置</span><span class="t-en">Location</span></span>
+          <span class="side-label"><span class="t-zh" data-pagefind-ignore>位置</span><span class="t-en" data-pagefind-ignore>Location</span></span>
           <FootprintLocator
             city={data.city}
             province={data.province}
@@ -216,16 +216,16 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
           />
         </div>
         <div class="side-block">
-          <span class="side-label"><span class="t-zh">{isHome ? "常驻时间" : "到访日期"}</span><span class="t-en">{isHome ? "Living" : "Visited"}</span></span>
+          <span class="side-label"><span class="t-zh" data-pagefind-ignore>{isHome ? "常驻时间" : "到访日期"}</span><span class="t-en" data-pagefind-ignore>{isHome ? "Living" : "Visited"}</span></span>
           {isHome
-            ? <ol><li class="home-period"><span class="t-zh">{ymd(homeSince)} — 至今</span><span class="t-en">{ymd(homeSince)} — present</span></li></ol>
+            ? <ol><li class="home-period"><span class="t-zh" data-pagefind-ignore>{ymd(homeSince)} — 至今</span><span class="t-en" data-pagefind-ignore>{ymd(homeSince)} — present</span></li></ol>
             : isLived
-              ? <ol><li class="home-period"><span class="t-zh">{data.until ? `${data.until.getFullYear()}年以前` : yearRange(entry)}</span><span class="t-en">{data.until ? `before ${data.until.getFullYear()}` : yearRange(entry)}</span></li></ol>
+              ? <ol><li class="home-period"><span class="t-zh" data-pagefind-ignore>{data.until ? `${data.until.getFullYear()}年以前` : yearRange(entry)}</span><span class="t-en" data-pagefind-ignore>{data.until ? `before ${data.until.getFullYear()}` : yearRange(entry)}</span></li></ol>
               : <ol>{[...data.visited].sort((a, b) => b.getTime() - a.getTime()).map((date) => <li>{footprintDateLabel(date, data.precision)}</li>)}</ol>}
         </div>
         {activeJourney && journeyStops.length > 1 && (
           <div class="side-block footprint-journey-stops">
-            <span class="side-label"><span class="t-zh">本次行程</span><span class="t-en">Journey</span></span>
+            <span class="side-label"><span class="t-zh" data-pagefind-ignore>本次行程</span><span class="t-en" data-pagefind-ignore>Journey</span></span>
             <strong>{activeJourney.name}</strong>
             <ol>
               {journeyStops.map((stop) => (
@@ -235,12 +235,12 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
           </div>
         )}
         <div class="side-block">
-          <span class="side-label"><span class="t-zh">关键词</span><span class="t-en">Tags</span></span>
+          <span class="side-label"><span class="t-zh" data-pagefind-ignore>关键词</span><span class="t-en" data-pagefind-ignore>Tags</span></span>
           <div class="footprint-tags">{data.tags.map((tag) => <span>#{tag}</span>)}</div>
         </div>
         {toc.length > 0 && (
           <div class="side-block footprint-toc">
-            <span class="side-label"><span class="t-zh">此行小记</span><span class="t-en">Contents</span></span>
+            <span class="side-label"><span class="t-zh" data-pagefind-ignore>此行小记</span><span class="t-en" data-pagefind-ignore>Contents</span></span>
             <ol>{toc.map((heading) => <li data-depth={heading.depth}><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ol>
           </div>
         )}
@@ -248,9 +248,9 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
     </div>
 
     <div class="footprint-next-prev">
-      {previousStop ? <a href={footprintPath(previousStop)}><span><span class="t-zh">← {activeJourney ? "同程上一站" : "较近一站"}</span><span class="t-en">← {activeJourney ? "Previous stop" : "Nearer stop"}</span></span><strong>{previousStop.data.city}</strong></a> : <span></span>}
-      <a class="back-map" href={activeJourney ? `/footprints/?journey=${activeJourney.id}` : "/footprints/"}><span class="t-zh">回到地图</span><span class="t-en">Back to map</span></a>
-      {nextStop ? <a class="next" href={footprintPath(nextStop)}><span><span class="t-zh">{activeJourney ? "同程下一站" : "更早一站"} →</span><span class="t-en">{activeJourney ? "Next stop" : "Earlier stop"} →</span></span><strong>{nextStop.data.city}</strong></a> : <span></span>}
+      {previousStop ? <a href={footprintPath(previousStop)}><span><span class="t-zh" data-pagefind-ignore>← {activeJourney ? "同程上一站" : "较近一站"}</span><span class="t-en" data-pagefind-ignore>← {activeJourney ? "Previous stop" : "Nearer stop"}</span></span><strong>{previousStop.data.city}</strong></a> : <span></span>}
+      <a class="back-map" href={activeJourney ? `/footprints/?journey=${activeJourney.id}` : "/footprints/"}><span class="t-zh" data-pagefind-ignore>回到地图</span><span class="t-en" data-pagefind-ignore>Back to map</span></a>
+      {nextStop ? <a class="next" href={footprintPath(nextStop)}><span><span class="t-zh" data-pagefind-ignore>{activeJourney ? "同程下一站" : "更早一站"} →</span><span class="t-en" data-pagefind-ignore>{activeJourney ? "Next stop" : "Earlier stop"} →</span></span><strong>{nextStop.data.city}</strong></a> : <span></span>}
     </div>
   </div>
 

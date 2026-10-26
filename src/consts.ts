@@ -26,7 +26,9 @@ export const SITE = {
     "When you look up at the stars, don't forget to look down at the dust.",
   epigraphZh: "仰望星空，俯首尘埃。",
   beian: "京ICP备2022033467号-2",
-  themeColor: "#000000",
+  // Must stay in sync with the runtime values site.js sets (light bg / dark bg)
+  // and manifest theme_color — browsers see the static value pre-JS.
+  themeColor: "#f1ede3",
 };
 
 // Sidebar /About 卡片下方 4 个快捷链接(社交三连 + 联系订阅锚点)

@@ -14,4 +14,4 @@ interface Props {
 }
 const { zh, en, class: cls } = Astro.props;
 ---
-<span class:list={["t-zh", cls]}>{zh}</span><span class:list={["t-en", cls]}>{en}</span>
+<span class:list={["t-zh", cls]} data-pagefind-ignore>{zh}</span><span class:list={["t-en", cls]} data-pagefind-ignore>{en}</span>
