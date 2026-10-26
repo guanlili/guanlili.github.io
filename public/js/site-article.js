@@ -214,6 +214,9 @@ function initImageCaptions() {
     caption.className = 'image-caption';
     caption.textContent = alt;
     img.insertAdjacentElement('afterend', caption);
+    // The visible caption now carries the description; drop the img alt so
+    // screen readers don't announce the same text twice (axe image-redundant-alt).
+    img.alt = '';
   });
 }
 
@@ -240,20 +243,36 @@ function initDuplicateTitle() {
 function initMermaid() {
   var codes = document.querySelectorAll('pre > code.language-mermaid');
   if (!codes.length) return;
-  var dark = document.documentElement.getAttribute('data-theme') === 'dark';
   import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs')
     .then(function (mod) {
       var mermaid = mod.default;
-      mermaid.initialize({ startOnLoad: false, theme: dark ? 'dark' : 'neutral', securityLevel: 'loose' });
+      var themeNow = function () {
+        return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'neutral';
+      };
+      mermaid.initialize({ startOnLoad: false, theme: themeNow(), securityLevel: 'loose' });
       var nodes = [];
       codes.forEach(function (code) {
         var div = document.createElement('div');
         div.className = 'mermaid';
-        div.textContent = code.textContent;
+        div.dataset.source = code.textContent;
         code.parentElement.replaceWith(div);
         nodes.push(div);
       });
       mermaid.run({ nodes: nodes }).catch(function () {});
+      // Re-render diagrams when the light/dark theme toggles.
+      if (!window._mermaidThemeWatcher) {
+        window._mermaidThemeWatcher = true;
+        new MutationObserver(function () {
+          var live = document.querySelectorAll('.mermaid[data-source]');
+          if (!live.length) return;
+          mermaid.initialize({ startOnLoad: false, theme: themeNow(), securityLevel: 'loose' });
+          live.forEach(function (div) {
+            div.removeAttribute('data-processed');
+            div.textContent = div.dataset.source;
+          });
+          mermaid.run({ nodes: live }).catch(function () {});
+        }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      }
     })
     .catch(function () {});
 }

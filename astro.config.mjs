@@ -29,6 +29,8 @@ export default defineConfig({
   // Match the old Jekyll `permalink: pretty` URLs: /a/b/c/ → /a/b/c/index.html
   trailingSlash: "always",
   build: { format: "directory" },
+  // Prefetch pages on link hover so ClientRouter navigation is near-instant.
+  prefetch: { prefetchAll: true, defaultStrategy: "hover" },
   integrations: [sitemap({ filter: isIndexable }), imageCacheIntegration()],
   markdown: {
     processor: satteri({

@@ -5,6 +5,7 @@ import Icons from "../components/Icons.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import { absoluteUrl, siteImage } from "../lib/media";
+import { loadCache, getCached, getLocalDimensions } from "../lib/image-cache.mjs";
 import { getPosts } from "../lib/posts";
 import { ClientRouter } from "astro:transitions";
 import { SITE_SCRIPT_VERSION, SW_VERSION } from "../lib/asset-version";
@@ -42,6 +43,12 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const normalizedImage = siteImage(image) ?? OG_DEFAULT;
 const ogImage = absoluteUrl(normalizedImage, SITE.url);
 const isDefaultOg = normalizedImage === OG_DEFAULT;
+// og:image dimensions help social crawlers render the card without probing.
+loadCache();
+const ogDim = isDefaultOg
+  ? { w: 1200, h: 630 }
+  : getCached(normalizedImage) ??
+    (normalizedImage.startsWith("/") ? getLocalDimensions(normalizedImage) : null);
 const swVersion = SW_VERSION;
 
 // Recommended articles for search empty state (build-time)
@@ -99,10 +106,10 @@ const recommendedPosts = searchPosts.slice(0, 8);
     <meta property="article:tag" content={t} data-pagefind-filter="tag[content]" />
   ))}
   <meta property="og:image" content={ogImage} />
-  {isDefaultOg && (
+  {ogDim && (
     <>
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
+      <meta property="og:image:width" content={ogDim.w} />
+      <meta property="og:image:height" content={ogDim.h} />
     </>
   )}
   <meta property="og:image:alt" content={isDefaultOg ? `${SITE.brand} · ${SITE.title}` : (title ?? SITE.seoTitle)} />

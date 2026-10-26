@@ -35,7 +35,7 @@ const cover = siteImage(data.cover) ?? siteImage(data["header-img"]);
       <span class="t-zh" data-pagefind-ignore>{minutes} 分钟 · 约 {chars} 字</span><span class="t-en" data-pagefind-ignore>{minutes} min · {chars} chars</span>
     </div>
   </div>
-  <aside class="visual">
+  <div class="visual">
     {cover && <img class="feature-cover" src={cover} alt="" loading="eager" decoding="async" />}
     <div class="quote">
       <div class="body">{pull}</div>
@@ -45,5 +45,5 @@ const cover = siteImage(data.cover) ?? siteImage(data["header-img"]);
       <span class="lbl t-zh" data-pagefind-ignore>标签</span><span class="lbl t-en" data-pagefind-ignore>Tagged</span>
       {data.tags.map((t) => <span>{t}</span>)}
     </div>
-  </aside>
+  </div>
 </article>
