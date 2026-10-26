@@ -211,6 +211,7 @@ function initToolsStack() {
   var viewButtons = Array.prototype.slice.call(document.querySelectorAll('[data-view]'));
   var cards = Array.prototype.slice.call(document.querySelectorAll('[data-tool-card]'));
   var pinnedCards = Array.prototype.slice.call(document.querySelectorAll('[data-pinned-card]'));
+  var stars = Array.prototype.slice.call(document.querySelectorAll('[data-tool-star]'));
   var sections = Array.prototype.slice.call(document.querySelectorAll('[data-stage-section]'));
   var pinnedSection = document.querySelector('[data-pinned-section]');
   var workspace = document.querySelector('[data-tools-workspace]');
@@ -220,6 +221,9 @@ function initToolsStack() {
   var currentStage = activeButton ? activeButton.getAttribute('data-filter') || 'all' : 'all';
   var pinnedLimit = 9;
   var storageKey = 'lili-tools-clicks';
+  var pinsKey = 'lili-tools-pinned';
+
+  document.documentElement.classList.add('tools-star-ready');
 
   function isVisibleTool(el) {
     return !el.hidden;
@@ -243,10 +247,53 @@ function initToolsStack() {
     return Number(clicks[card.dataset.toolKey || ''] || 0);
   }
 
+  function readPins() {
+    try {
+      return JSON.parse(localStorage.getItem(pinsKey) || '{}');
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function writePins(pins) {
+    try {
+      localStorage.setItem(pinsKey, JSON.stringify(pins));
+    } catch (e) {}
+  }
+
+  function pinTime(card, pins) {
+    return Number(pins[card.dataset.toolKey || ''] || 0);
+  }
+
+  function syncStarStates() {
+    var pins = readPins();
+    stars.forEach(function (star) {
+      var card = star.closest('[data-tool-card]');
+      var pinned = !!card && !!pins[card.dataset.toolKey];
+      star.classList.toggle('is-pinned', pinned);
+      star.setAttribute('aria-pressed', pinned ? 'true' : 'false');
+      star.setAttribute('title', pinned ? '取消星标' : '星标置顶');
+    });
+  }
+
+  function togglePin(card) {
+    var key = card.dataset.toolKey;
+    if (!key) return;
+    var pins = readPins();
+    if (pins[key]) delete pins[key];
+    else pins[key] = Date.now();
+    writePins(pins);
+    syncStarStates();
+    applyFilter();
+  }
+
   function updatePinnedRanking() {
     var clicks = readClicks();
+    var pins = readPins();
     var visiblePinned = pinnedCards.filter(isVisibleTool);
     visiblePinned.sort(function (a, b) {
+      var pinDiff = pinTime(b, pins) - pinTime(a, pins);
+      if (pinDiff) return pinDiff;
       var scoreDiff = clickScore(b, clicks) - clickScore(a, clicks);
       if (scoreDiff) return scoreDiff;
       var pinnedDiff = (b.dataset.defaultPinned === 'true' ? 1 : 0) - (a.dataset.defaultPinned === 'true' ? 1 : 0);
@@ -329,6 +376,22 @@ function initToolsStack() {
       writeClicks(clicks);
     });
   });
+  stars.forEach(function (star) {
+    star.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var card = star.closest('[data-tool-card]');
+      if (card) togglePin(card);
+    });
+    star.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      e.stopPropagation();
+      var card = star.closest('[data-tool-card]');
+      if (card) togglePin(card);
+    });
+  });
+  syncStarStates();
   applyFilter();
 }
 
