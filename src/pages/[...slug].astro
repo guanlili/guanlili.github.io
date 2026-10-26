@@ -87,6 +87,8 @@ const sectionCount = headings.filter((h) => h.depth === 2).length;
 const olderPath = older ? older.route.path : null;
 const newerPath = newer ? newer.route.path : null;
 const description = data.description || data.subtitle || excerpt(post.body ?? "", 155);
+// Only show an authored summary when it adds something beyond the subtitle.
+const showBrief = Boolean(data.description?.trim() && data.description.trim() !== data.subtitle?.trim());
 const coverImage =
   siteImage(data.cover) ??
   siteImage(data["header-img"]) ??
@@ -111,7 +113,7 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
     <section class="article-head">
       <div class="kicker">
         <span class="rule"></span>
-        <span>No. {noN}{data.tags.length ? ` · ${data.tags.join(" / ")}` : ""}</span>
+        <span>No. {noN} · 手稿</span>
         <span class="rule"></span>
       </div>
       <h1 data-pagefind-meta="title" data-pagefind-weight="10">{data.title}</h1>
@@ -124,8 +126,13 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
         <span class="sep"></span>
         <span>{ymd}</span>
         <span class="sep"></span>
-        <span>{minutes} min read</span>
+        <span>{minutes} 分钟阅读 · 约 {chars} 字</span>
       </div>
+      {data.tags.length > 0 && (
+        <div class="article-topics" aria-label="文章标签" data-pagefind-weight="4">
+          {data.tags.map((tag) => <a href={`/tags/#${encodeURIComponent(tag)}`}>#{tag}</a>)}
+        </div>
+      )}
     </section>
 
     {coverImage && (
@@ -145,29 +152,12 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
       </figure>
     )}
 
-    <div class="article-meta-strip">
-      <div><span class="label">发表</span><span class="value">{ymd}</span></div>
-      <div><span class="label">字数</span><span class="value">约 {chars} 字</span></div>
-      <div><span class="label">阅读</span><span class="value">{minutes} min</span></div>
-      <div>
-        <span class="label">标签</span>
-        <span class="value article-tag-line" data-pagefind-weight="4">
-          {data.tags.length ? data.tags.map((tag) => <a href={`/tags/#${encodeURIComponent(tag)}`}>{tag}</a>) : "—"}
-        </span>
-      </div>
-    </div>
-
-    <aside class="reading-brief" data-pagefind-ignore>
-      <div>
-        <span class="label">Brief</span>
-        <p>{description}</p>
-      </div>
-      <div class="brief-stats">
-        <span><strong>{sectionCount || toc.length}</strong> Sections</span>
-        <span><strong>{minutes}</strong> Min</span>
-        <span><strong>{chars}</strong> Chars</span>
-      </div>
-    </aside>
+    {showBrief && (
+      <aside class="reading-brief" aria-label="文章摘要" data-pagefind-ignore>
+        <span class="label">导读</span>
+        <p>{data.description}</p>
+      </aside>
+    )}
 
     <div class="article-body">
       <aside class="gutter" aria-hidden="true">

@@ -175,6 +175,9 @@ function initResponsiveTables() {
     if (table.parentNode.classList.contains('table-responsive')) return;
     var wrapper = document.createElement('div');
     wrapper.className = 'table-responsive';
+    wrapper.setAttribute('role', 'region');
+    wrapper.setAttribute('aria-label', '文章表格，可横向滚动查看');
+    wrapper.tabIndex = 0;
     table.parentNode.insertBefore(wrapper, table);
     wrapper.appendChild(table);
     table.classList.add('table');
