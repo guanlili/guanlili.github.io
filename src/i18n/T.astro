@@ -1,0 +1,17 @@
+---
+// Bilingual inline text. Renders BOTH spans; CSS shows exactly one based on
+// <html data-lang> (set pre-paint by the inline script in BaseLayout):
+//   html:not([data-lang="en"]) .t-en { display: none; }
+//   html[data-lang="en"] .t-zh { display: none; }
+// Default (no attribute) is Chinese, so only the "en" state needs JS state.
+// For text with embedded markup, write the two spans by hand instead.
+// For attributes (placeholder/title/aria-label), use the data-tt convention
+// handled by site.js: data-tt="title,aria-label" data-tt-title="中文|English".
+interface Props {
+  zh: string | undefined;
+  en: string | undefined;
+  class?: string;
+}
+const { zh, en, class: cls } = Astro.props;
+---
+<span class:list={["t-zh", cls]}>{zh}</span><span class:list={["t-en", cls]}>{en}</span>

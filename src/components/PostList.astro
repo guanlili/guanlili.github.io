@@ -17,7 +17,7 @@ const pad2 = (n: number) => String(n).padStart(2, "0");
     const fill = Math.min(minutes, 60) / 60;
     return (
       <article class="post">
-        <div class="num">No. {pad2(offset + i + 1)}</div>
+        <div class="num"><span class="t-zh">第 {pad2(offset + i + 1)} 篇</span><span class="t-en">No. {pad2(offset + i + 1)}</span></div>
         <div class="body">
           {p.entry.data.tags.length > 0 && (
             <div class="tags">
@@ -33,7 +33,7 @@ const pad2 = (n: number) => String(n).padStart(2, "0");
         <div class="right">
           <span class="date">{ymd}</span>
           <span class="reading">
-            {minutes} min
+            <span class="t-zh">{minutes} 分钟</span><span class="t-en">{minutes} min</span>
             <span class="bar"><i style={`width:${fill * 100}%`}></i></span>
           </span>
         </div>

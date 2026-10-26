@@ -1,6 +1,9 @@
 // lili Blog — core script (all pages).
-// Theme toggle · back-to-top · responsive tables/videos · lazy images.
+// Theme toggle · language toggle · back-to-top · responsive tables/videos · lazy images.
 // Article features (TOC/lightbox/code/mermaid/progress) and search load on demand.
+
+// UI-string lookup from window.__I18N__ (injected by BaseLayout).
+var T = function (key) { return window.__T ? window.__T(key) : key; };
 
 // ===== Unified scroll handler (single rAF loop) =====
 if (!window._scrollCallbacks) {
@@ -56,7 +59,7 @@ function initThemeToggle() {
   function reflect(dark) {
     iconSvg.innerHTML = '<use href="#icon-' + (dark ? 'sun' : 'moon') + '"></use>';
     btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
-    btn.setAttribute('aria-label', dark ? '切换到浅色模式' : '切换到暗色模式');
+    btn.setAttribute('aria-label', dark ? T('themeToLight') : T('themeToDark'));
   }
   reflect(document.documentElement.getAttribute('data-theme') === 'dark');
 
@@ -72,7 +75,7 @@ function initThemeToggle() {
           var dark = e.matches;
           currentIconSvg.innerHTML = '<use href="#icon-' + (dark ? 'sun' : 'moon') + '"></use>';
           currentBtn.setAttribute('aria-pressed', dark ? 'true' : 'false');
-          currentBtn.setAttribute('aria-label', dark ? '切换到浅色模式' : '切换到暗色模式');
+          currentBtn.setAttribute('aria-label', dark ? T('themeToLight') : T('themeToDark'));
         }
       }
     });
@@ -91,6 +94,59 @@ function initThemeToggle() {
     reflect(dark);
     var meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', dark ? '#15130e' : '#f1ede3');
+  });
+}
+
+// ===== UI language toggle (zh ⇄ en) =====
+// <html data-lang="en"> shows .t-en spans (see base.less); default zh carries
+// no attribute. Static text swaps via CSS; [data-tt-*] attribute pairs swap here.
+function currentLang() {
+  return document.documentElement.getAttribute('data-lang') === 'en' ? 'en' : 'zh';
+}
+
+function applyI18nAttrs() {
+  var isEn = currentLang() === 'en';
+  document.querySelectorAll('[data-tt]').forEach(function (el) {
+    (el.getAttribute('data-tt') || '').split(',').forEach(function (attr) {
+      attr = attr.trim();
+      if (!attr) return;
+      var pair = (el.getAttribute('data-tt-' + attr) || '').split('|');
+      if (pair.length < 2) return;
+      el.setAttribute(attr, isEn ? pair[1] : pair[0]);
+    });
+  });
+}
+
+function initLangToggle() {
+  var btn = document.getElementById('lang-toggle-btn');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    var next = currentLang() === 'en' ? 'zh' : 'en';
+    var html = document.documentElement;
+    if (next === 'en') {
+      html.setAttribute('data-lang', 'en');
+      html.setAttribute('lang', 'en');
+    } else {
+      html.removeAttribute('data-lang');
+      html.setAttribute('lang', 'zh-CN');
+    }
+    try { localStorage.setItem('lang', next); } catch (e) {}
+    applyI18nAttrs();
+    document.dispatchEvent(new CustomEvent('lang-change', { detail: { lang: next } }));
+  });
+}
+
+// Keep JS-managed strings in sync after a live toggle (theme aria + tools page).
+if (!window._langChangeListenerAdded) {
+  window._langChangeListenerAdded = true;
+  document.addEventListener('lang-change', function () {
+    var btn = document.getElementById('theme-toggle-btn');
+    if (btn) {
+      var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      btn.setAttribute('aria-label', dark ? T('themeToLight') : T('themeToDark'));
+    }
+    if (window.__liliRefreshToolsLang) window.__liliRefreshToolsLang();
+    if (window.__liliRefreshSkillsLang) window.__liliRefreshSkillsLang();
   });
 }
 
@@ -129,7 +185,7 @@ function initLightbox() {
     overlay = document.createElement('div');
     overlay.className = 'img-lightbox';
     overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-label', '图片放大');
+    overlay.setAttribute('aria-label', T('lightboxLabel'));
     var img = document.createElement('img');
     img.src = src;
     img.alt = alt || '';
@@ -176,7 +232,7 @@ function initResponsiveTables() {
     var wrapper = document.createElement('div');
     wrapper.className = 'table-responsive';
     wrapper.setAttribute('role', 'region');
-    wrapper.setAttribute('aria-label', '文章表格，可横向滚动查看');
+    wrapper.setAttribute('aria-label', T('tableScrollHint'));
     wrapper.tabIndex = 0;
     table.parentNode.insertBefore(wrapper, table);
     wrapper.appendChild(table);
@@ -272,7 +328,7 @@ function initToolsStack() {
       var pinned = !!card && !!pins[card.dataset.toolKey];
       star.classList.toggle('is-pinned', pinned);
       star.setAttribute('aria-pressed', pinned ? 'true' : 'false');
-      star.setAttribute('title', pinned ? '取消星标' : '星标置顶');
+      star.setAttribute('title', pinned ? T('unpinTool') : T('pinTool'));
     });
   }
 
@@ -338,8 +394,8 @@ function initToolsStack() {
 
     visibleCount = Object.keys(visibleKeys).length;
     if (summary) {
-      var stageLabel = currentStage === 'all' ? '全部阶段' : currentStage;
-      summary.textContent = visibleCount + ' tools · ' + stageLabel;
+      var stageLabel = currentStage === 'all' ? T('toolsSummaryAll') : currentStage;
+      summary.textContent = T('toolsSummary').replace('{n}', String(visibleCount)).replace('{label}', stageLabel);
     }
     if (empty) empty.hidden = visibleCount > 0;
   }
@@ -393,6 +449,12 @@ function initToolsStack() {
   });
   syncStarStates();
   applyFilter();
+
+  // Refresh star titles + the summary line when the UI language toggles.
+  window.__liliRefreshToolsLang = function () {
+    syncStarStates();
+    applyFilter();
+  };
 }
 
 // ===== Search overlay — loads on first interaction =====
@@ -453,16 +515,29 @@ var _pageInited = false;
 function initPage() {
   initToolsStack();
   initSearchFromUrl();
+  applyI18nAttrs();
   if (_pageInited) return;
   _pageInited = true;
   initBackToTop();
   initThemeToggle();
+  initLangToggle();
   initNavToggle();
   initLightbox();
   initResponsiveTables();
   initResponsiveVideos();
   initLazyImages();
 }
+
+// Carry the saved language onto the incoming document before it is displayed,
+// so View Transitions never flash the wrong language.
+document.addEventListener('astro:before-swap', function (e) {
+  try {
+    if (localStorage.getItem('lang') === 'en') {
+      e.newDocument.documentElement.setAttribute('data-lang', 'en');
+      e.newDocument.documentElement.setAttribute('lang', 'en');
+    }
+  } catch (err) {}
+});
 
 document.addEventListener('astro:after-swap', function () {
   applyStoredTheme();

@@ -7,22 +7,25 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <div>
         <div class="kicker">
           <span class="dot"></span>
-          <span>Offline · 离线</span>
+          <span><span class="t-zh">离线</span><span class="t-en">Offline</span></span>
           <span class="rule"></span>
-          <span>Network Unavailable</span>
+          <span><span class="t-zh">网络不可用</span><span class="t-en">Network Unavailable</span></span>
         </div>
-        <h1>网络暂时断开了</h1>
-        <p class="sub">当前页面还没有缓存到本地。等网络恢复后，可以回首页或打开归档继续阅读。</p>
+        <h1><span class="t-zh">网络暂时断开了</span><span class="t-en">You are offline</span></h1>
+        <p class="sub">
+          <span class="t-zh">当前页面还没有缓存到本地。等网络恢复后，可以回首页或打开归档继续阅读。</span>
+          <span class="t-en">This page hasn't been cached yet. Once you're back online, return home or open the archive to keep reading.</span>
+        </p>
       </div>
       <div class="right">
         <div class="big">OFF</div>
-        <div>Network Offline</div>
+        <div><span class="t-zh">网络离线</span><span class="t-en">Network Offline</span></div>
       </div>
     </header>
     <nav class="pager-nav">
-      <a href="/">&larr; 回首页 Home</a>
+      <a href="/"><span class="t-zh">&larr; 回首页</span><span class="t-en">&larr; Home</span></a>
       <span class="spacer"></span>
-      <a href="/archive/">去归档 Archive &rarr;</a>
+      <a href="/archive/"><span class="t-zh">去归档 &rarr;</span><span class="t-en">Archive &rarr;</span></a>
     </nav>
   </div>
 </BaseLayout>

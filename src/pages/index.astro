@@ -10,7 +10,12 @@ const posts = await getPosts();
 const featured = posts[0];
 const recent = posts.slice(1, 11);
 const host = new URL(SITE.url).host;
-const focusPillars = ["AI 工程", "测试开发", "独立产品", "效率工具"];
+const focusPillars = [
+  { zh: "AI 工程", en: "AI Engineering" },
+  { zh: "测试开发", en: "Test Development" },
+  { zh: "独立产品", en: "Indie Products" },
+  { zh: "效率工具", en: "Productivity Tools" },
+];
 
 // real metrics
 const totalChars = posts.reduce(
@@ -50,16 +55,26 @@ const sectionNames = new Map<string, string>([
   ["leetcode", "算法"],
   ["essays", "杂文"],
 ]);
+const sectionNamesEn = new Map<string, string>([
+  ["AI", "AI"],
+  ["Tutorials", "Tutorials"],
+  ["study", "Study"],
+  ["blogSet", "Blog Setup"],
+  ["findJob", "Job Hunt"],
+  ["myself", "Essays"],
+  ["problemList", "Debugging"],
+  ["leetcode", "Algorithms"],
+  ["essays", "Misc"],
+]);
 const sections = new Map<string, number>();
 for (const p of posts) {
   const raw = (p.entry.filePath ?? p.entry.id).split("/").slice(-2, -1)[0] || "blog";
-  const name = sectionNames.get(raw) ?? raw;
-  sections.set(name, (sections.get(name) ?? 0) + 1);
+  sections.set(raw, (sections.get(raw) ?? 0) + 1);
 }
 const topSections = [...sections.entries()]
-  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "zh-CN"))
+  .sort((a, b) => b[1] - a[1] || (sectionNames.get(a[0]) ?? a[0]).localeCompare(sectionNames.get(b[0]) ?? b[0], "zh-CN"))
   .slice(0, 5)
-  .map(([name, n]) => ({ name, n }));
+  .map(([raw, n]) => ({ name: sectionNames.get(raw) ?? raw, nameEn: sectionNamesEn.get(raw) ?? raw, n }));
 const latestRead = featured ? readingStats(featured.entry.body ?? "") : null;
 
 // motto headline, split across two lines like the design
@@ -67,6 +82,7 @@ const motto = "离开世界之前 一切都是过程";
 const mp = motto.split(" ");
 const line1 = mp.slice(0, Math.ceil(mp.length / 2)).join(" ");
 const line2 = mp.slice(Math.ceil(mp.length / 2)).join(" ");
+const totalKChars = Math.round(totalChars / 1000);
 ---
 <BaseLayout active="home" description={SITE.description}>
   <div class="article-shell">
@@ -74,45 +90,49 @@ const line2 = mp.slice(Math.ceil(mp.length / 2)).join(" ");
       <div class="left">
         <div class="kicker">
           <span class="dot"></span>
-          <span>Since {SITE.since} · 手稿 {posts.length} 篇</span>
+          <span>Since {SITE.since} · <span class="t-zh">手稿 {posts.length} 篇</span><span class="t-en">{posts.length} essays</span></span>
           <span class="rule"></span>
           <span>{latest?.getFullYear()}</span>
         </div>
         <h1>
-          {line1}<br />
-          <span class="quote-mk">「</span>{line2}<span class="quote-mk">」</span>
+          <span class="t-zh">{line1}<br /><span class="quote-mk">「</span>{line2}<span class="quote-mk">」</span></span>
+          <span class="t-en">Everything is a journey<br />before we leave this world</span>
         </h1>
         <p class="sub">
-          这里是 <em>{SITE.author}（{SITE.handle}）</em> 的个人博客——一个写 AI、聊架构、记录踩坑日常的小角落。写作是把模糊的思考晾在阳光下，逼自己说人话。
+          <span class="t-zh">这里是 <em>{SITE.author}（{SITE.handle}）</em> 的个人博客——一个写 AI、聊架构、记录踩坑日常的小角落。写作是把模糊的思考晾在阳光下，逼自己说人话。</span>
+          <span class="t-en">The personal blog of <em>{SITE.author} ({SITE.handle})</em> — a small corner for writing about AI, architecture, and the everyday potholes of engineering. Writing airs fuzzy thinking in the sun and forces me to speak plainly.</span>
         </p>
-        <div class="focus-pills" aria-label="写作方向">
-          {focusPillars.map((item) => <span>{item}</span>)}
+        <div class="focus-pills" aria-label="写作方向" data-tt="aria-label" data-tt-aria-label="写作方向|Writing focus">
+          {focusPillars.map((item) => <span><span class="t-zh">{item.zh}</span><span class="t-en">{item.en}</span></span>)}
         </div>
       </div>
       <div class="right">
         <div class="issue">{posts.length}</div>
-        <div>篇 · ARTICLES</div>
-        <div>EST. {SITE.since} · 北京</div>
+        <div><span class="t-zh">篇 · 手稿</span><span class="t-en">Essays</span></div>
+        <div><span class="t-zh">EST. {SITE.since} · 北京</span><span class="t-en">EST. {SITE.since} · Beijing</span></div>
         <div style="margin-top:10px;color:var(--ink-4)">{host}</div>
       </div>
-      <div class="vertical-accent">仰望星空，俯首尘埃</div>
+      <div class="vertical-accent"><span class="t-zh">仰望星空，俯首尘埃</span><span class="t-en">Stars above, dust below</span></div>
     </section>
 
     <div class="index-strip">
-      <div><span class="label">本期主笔</span><span class="value">{SITE.author} · {SITE.handle}</span></div>
-      <div><span class="label">累计文章</span><span class="value">{posts.length} 篇 · 约 {wan}w 字</span></div>
-      <div><span class="label">最新更新</span><span class="value">{latestYmd}</span></div>
-      <div><span class="label">订阅 · 公众号</span><span class="value">微信「{SITE.wechatName}」</span></div>
+      <div><span class="label"><span class="t-zh">本期主笔</span><span class="t-en">Featured Author</span></span><span class="value">{SITE.author} · {SITE.handle}</span></div>
+      <div><span class="label"><span class="t-zh">累计文章</span><span class="t-en">Total Posts</span></span><span class="value"><span class="t-zh">{posts.length} 篇 · 约 {wan}w 字</span><span class="t-en">{posts.length} posts · ~{totalKChars}k chars</span></span></div>
+      <div><span class="label"><span class="t-zh">最新更新</span><span class="t-en">Latest Update</span></span><span class="value">{latestYmd}</span></div>
+      <div><span class="label"><span class="t-zh">订阅 · 公众号</span><span class="t-en">Subscribe · WeChat</span></span><span class="value"><span class="t-zh">微信「{SITE.wechatName}」</span><span class="t-en">WeChat “{SITE.wechatName}”</span></span></div>
     </div>
 
-    <section class="home-radar" aria-label="博客写作雷达">
+    <section class="home-radar" aria-label="博客写作雷达" data-tt="aria-label" data-tt-aria-label="博客写作雷达|Blog writing radar">
       <div class="radar-card radar-lead">
-        <span class="label">Current Signal</span>
+        <span class="label"><span class="t-zh">当前信号</span><span class="t-en">Current Signal</span></span>
         <strong>{featured?.entry.data.title}</strong>
-        <small>{latestRead ? `${latestRead.minutes} min · 约 ${latestRead.chars} 字` : "最近更新"}</small>
+        <small>
+          <span class="t-zh">{latestRead ? `${latestRead.minutes} 分钟 · 约 ${latestRead.chars} 字` : "最近更新"}</span>
+          <span class="t-en">{latestRead ? `${latestRead.minutes} min · ${latestRead.chars} chars` : "Latest"}</span>
+        </small>
       </div>
       <div class="radar-card">
-        <span class="label">Hot Tags</span>
+        <span class="label"><span class="t-zh">热门标签</span><span class="t-en">Hot Tags</span></span>
         <div class="radar-tags">
           {topTags.map((item) => (
             <a href={`/tags/#${encodeURIComponent(item.tag)}`}>
@@ -123,11 +143,11 @@ const line2 = mp.slice(Math.ceil(mp.length / 2)).join(" ");
         </div>
       </div>
       <div class="radar-card">
-        <span class="label">Knowledge Map</span>
+        <span class="label"><span class="t-zh">知识图谱</span><span class="t-en">Knowledge Map</span></span>
         <div class="radar-bars">
           {topSections.map((item) => (
             <div>
-              <span>{item.name}</span>
+              <span><span class="t-zh">{item.name}</span><span class="t-en">{item.nameEn}</span></span>
               <i style={`--w:${Math.max(12, (item.n / posts.length) * 100)}%`}></i>
               <em>{item.n}</em>
             </div>
@@ -141,13 +161,12 @@ const line2 = mp.slice(Math.ceil(mp.length / 2)).join(" ");
     <div class="layout-main">
       <section>
         <header class="section-head">
-          <h3>近期手稿</h3>
-          <span class="latin">Recent Dispatches</span>
-          <span class="count"><em>{recent.length}</em> 篇 / 共 {posts.length} 篇</span>
+          <h3><span class="t-zh">近期手稿</span><span class="t-en">Recent Posts</span></h3>
+          <span class="count"><span class="t-zh"><em>{recent.length}</em> 篇 / 共 {posts.length} 篇</span><span class="t-en"><em>{recent.length}</em> of {posts.length}</span></span>
         </header>
         <PostList posts={recent} offset={1} />
         <div class="see-all">
-          <a href="/archive/">查看全部归档 · See All Archive ↗</a>
+          <a href="/archive/"><span class="t-zh">查看全部归档 ↗</span><span class="t-en">See all archives ↗</span></a>
         </div>
       </section>
       <Sidebar tags={sidebarTags} />
