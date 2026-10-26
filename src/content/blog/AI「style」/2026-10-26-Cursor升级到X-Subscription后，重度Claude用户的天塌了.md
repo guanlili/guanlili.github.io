@@ -37,7 +37,13 @@ description: "Cursor 并进 The X Subscription 之后，Grok 额度翻倍，Clau
 
 官方说的「对应」，只是最接近的层级，不是原来那份套餐换了个马甲。新套餐在 Grok 编程用量上，至少是对应旧套餐的 **2 倍**；可与此同时，第三方模型的包含额度被拿掉了，再额外塞进 Grok 应用和 X Premium 的权益。
 
-有点像点了一份升级套餐：主食加量了，你真正想吃的那道菜，从套餐里划出去了。
+旧版付费 Cursor，说白了是三个东西：编辑器里的 Grok 额度、Claude 额度，再加上 Grok Bot。Grok 聊天、语音、生图那些 App，以及 X 的会员，本来都不在这份账单里。想用得另开 SuperGrok 或 X Premium。
+
+合并之后，相当于多了两端会员——Grok 应用，和 X Premium。官方自己也写了：Premium 这一档，打包的是以前 SuperGrok + Cursor Pro + X Premium+，分开买大约 $90/月，现在 $30 一口价。
+
+少的是什么？不是 Grok。Grok 在 Cursor 里还在，额度还加了；Grok Bot 也还在。被请出套餐的，是 Claude。
+
+有点像点了一份升级套餐：主食加量了，还送了两道以前要单点的菜，你真正想吃的那道，从套餐里划出去了。
 
 ------
 
@@ -88,6 +94,8 @@ description: "Cursor 并进 The X Subscription 之后，Grok 额度翻倍，Clau
 重置周期从每月一次变成每周一次。对偶尔爆肝的人是好事，一天用猛了不至于把整月额度吃光；对习惯一个月一个大池的人，就是账本节奏被改掉了。
 
 超额方式从「按需后付」变成「预付额度 + 可选自动充值」。账单入口也搬了家，从 `cursor.com/dashboard` 迁到 `grok.com/dashboard`。
+
+Grok Bot 本身没被砍。旧版付费 Cursor 就能用，新套餐 Premium 及以上也能用。变的是账本：以前它有自己那一格周额度，现在和 Cursor、Grok 应用喝同一口井。你在 Bot 里跑一上午，编辑器里的 Grok 额度也会跟着瘦。Plus 档（$8/月）没有 Grok Bot——只是普通付费用户对上的是 Premium，一般碰不到这层。
 
 账户余额更窝火。升级前账上剩的钱，会自动抵扣下一期及后续的统一订阅费用，但不能拿去跑 Claude。钱在，门不对。
 
