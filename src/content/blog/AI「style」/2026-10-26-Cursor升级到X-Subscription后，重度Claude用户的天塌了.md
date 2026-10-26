@@ -6,6 +6,7 @@ author: "lili"
 header-mask: 0.4
 tags: [AI, Cursor, Claude, 产品观察]
 description: "Cursor 并进 The X Subscription 之后，Grok 额度翻倍，Claude 的包含额度却没了。一个已经升级的重度 Claude 用户，把前后差异摊开来说清楚。"
+cover: "https://blog-1258476669.cos.ap-beijing.myqcloud.com/macAir/Gemini_Generated_Image_48bemz48bemz48be.jpeg?imageSlim"
 ---
 
 朋友们，我干了一件蠢事。
