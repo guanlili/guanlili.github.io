@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ToolStar from "../components/ToolStar.astro";
 import "../styles/pages/tools.less";
 import { TOOL_STAGES, TOOLS } from "../data/tools";
 
@@ -100,7 +101,7 @@ const stageId = (stage: string) => `stage-${keyOf(stage)}`;
         <header class="section-head">
           <h3>快捷启动</h3>
           <span class="latin">Launchpad</span>
-          <span class="count"><em>{pinnedLimit}</em> 个入口 · 点击后自动排序</span>
+          <span class="count"><em>{pinnedLimit}</em> 个入口 · 星标置顶 · 点击自动排序</span>
         </header>
         <div class="tool-card-grid">
           {TOOLS.map((tool, index) => (
@@ -124,7 +125,10 @@ const stageId = (stage: string) => `stage-${keyOf(stage)}`;
                   <span>{initialOf(tool.title)}</span>
                   <img src={logoUrl(tool.url)} alt="" loading="lazy" onerror="this.style.display='none'" />
                 </span>
-                <span class="tool-card-stage">{tool.stage}</span>
+                <span class="tool-card-top-side">
+                  <span class="tool-card-stage">{tool.stage}</span>
+                  <ToolStar />
+                </span>
               </div>
               <h2>{tool.title}</h2>
               <p>{tool.description}</p>
@@ -183,6 +187,7 @@ const stageId = (stage: string) => `stage-${keyOf(stage)}`;
                   </span>
                   <span class="role">{tool.role}</span>
                   <span class="tags">{tool.tags.slice(0, 3).join(" / ")}</span>
+                  <ToolStar />
                 </a>
               ))}
             </div>
