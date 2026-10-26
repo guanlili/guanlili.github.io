@@ -24,38 +24,38 @@ const slugOf = (id: string) => id.replace(/\.(md|markdown)$/i, "");
       <div>
         <div class="kicker">
           <span class="dot"></span>
-          <span><span class="t-zh">作品集</span><span class="t-en">Portfolio</span></span>
+          <span><span class="t-zh" data-pagefind-ignore>作品集</span><span class="t-en" data-pagefind-ignore>Portfolio</span></span>
           <span class="rule"></span>
-          <span><span class="t-zh">亲手做的东西</span><span class="t-en">Things I Built</span></span>
+          <span><span class="t-zh" data-pagefind-ignore>亲手做的东西</span><span class="t-en" data-pagefind-ignore>Things I Built</span></span>
         </div>
-        <h1><span class="t-zh">作品集，<br />把想法做成东西。</span><span class="t-en">Portfolio —<br />turning ideas into things.</span></h1>
+        <h1><span class="t-zh" data-pagefind-ignore>作品集，<br />把想法做成东西。</span><span class="t-en" data-pagefind-ignore>Portfolio —<br />turning ideas into things.</span></h1>
         <p class="sub">
-          <span class="t-zh">一些黑客松、AI 实验、工程工具和自己认真折腾过的小项目。这里记录的不只是结果，也包括问题、取舍和我当时怎么想。</span>
-          <span class="t-en">Hackathons, AI experiments, engineering tools and small projects I seriously tinkered with. Not just outcomes — also the problems, trade-offs, and how I was thinking at the time.</span>
+          <span class="t-zh" data-pagefind-ignore>一些黑客松、AI 实验、工程工具和自己认真折腾过的小项目。这里记录的不只是结果，也包括问题、取舍和我当时怎么想。</span>
+          <span class="t-en" data-pagefind-ignore>Hackathons, AI experiments, engineering tools and small projects I seriously tinkered with. Not just outcomes — also the problems, trade-offs, and how I was thinking at the time.</span>
         </p>
       </div>
       <div class="right">
         <div class="big">{projects.length}</div>
-        <div><span class="t-zh">作品总数</span><span class="t-en">Total Works</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>作品总数</span><span class="t-en" data-pagefind-ignore>Total Works</span></div>
         <div style="margin-top:10px">· · ·</div>
-        <div><span class="t-zh">{types.length} 种类型</span><span class="t-en">{types.length} Types</span></div>
-        <div><span class="t-zh">{tagCount} 个标签</span><span class="t-en">{tagCount} Tags</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>{types.length} 种类型</span><span class="t-en" data-pagefind-ignore>{types.length} Types</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>{tagCount} 个标签</span><span class="t-en" data-pagefind-ignore>{tagCount} Tags</span></div>
       </div>
     </section>
 
     <div class="portfolio-strip">
-      <div><span class="label"><span class="t-zh">主线</span><span class="t-en">Focus</span></span><span class="value"><span class="t-zh">AI · 工程效率</span><span class="t-en">AI · Engineering efficiency</span></span></div>
-      <div><span class="label"><span class="t-zh">项目类型</span><span class="t-en">Project Types</span></span><span class="value">{types.join(" / ")}</span></div>
-      <div><span class="label"><span class="t-zh">精选项目</span><span class="t-en">Featured</span></span><span class="value"><span class="t-zh">{featured.length} 个</span><span class="t-en">{featured.length}</span></span></div>
-      <div><span class="label"><span class="t-zh">联系</span><span class="t-en">Contact</span></span><span class="value">{SITE.email}</span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>主线</span><span class="t-en" data-pagefind-ignore>Focus</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>AI · 工程效率</span><span class="t-en" data-pagefind-ignore>AI · Engineering efficiency</span></span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>项目类型</span><span class="t-en" data-pagefind-ignore>Project Types</span></span><span class="value">{types.join(" / ")}</span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>精选项目</span><span class="t-en" data-pagefind-ignore>Featured</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>{featured.length} 个</span><span class="t-en" data-pagefind-ignore>{featured.length}</span></span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>联系</span><span class="t-en" data-pagefind-ignore>Contact</span></span><span class="value">{SITE.email}</span></div>
     </div>
 
     {featured.length > 0 && (
       <section class="portfolio-featured">
         <header class="section-head">
-          <h3><span class="t-zh">精选作品</span><span class="t-en">Featured</span></h3>
+          <h3><span class="t-zh" data-pagefind-ignore>精选作品</span><span class="t-en" data-pagefind-ignore>Featured</span></h3>
           <span class="latin">Featured Works</span>
-          <span class="count"><span class="t-zh"><em>{featured.length}</em> 个 / 共 {projects.length} 个</span><span class="t-en"><em>{featured.length}</em> of {projects.length}</span></span>
+          <span class="count"><span class="t-zh" data-pagefind-ignore><em>{featured.length}</em> 个 / 共 {projects.length} 个</span><span class="t-en" data-pagefind-ignore><em>{featured.length}</em> of {projects.length}</span></span>
         </header>
         <div class="featured-grid">
           {featured.map((project, index) => (
@@ -63,7 +63,7 @@ const slugOf = (id: string) => id.replace(/\.(md|markdown)$/i, "");
               {project.data.cover && <img src={project.data.cover} alt="" loading={index === 0 ? "eager" : "lazy"} />}
               <div class="body">
                 <div class="meta">
-                  <span><span class="t-zh">第 {pad2(index + 1)} 件</span><span class="t-en">No. {pad2(index + 1)}</span></span>
+                  <span><span class="t-zh" data-pagefind-ignore>第 {pad2(index + 1)} 件</span><span class="t-en" data-pagefind-ignore>No. {pad2(index + 1)}</span></span>
                   <span>{project.data.type}</span>
                   <span>{ymd(project.data.date)}</span>
                 </div>
@@ -82,9 +82,9 @@ const slugOf = (id: string) => id.replace(/\.(md|markdown)$/i, "");
 
     <section class="portfolio-index">
       <header class="section-head">
-        <h3><span class="t-zh">项目索引</span><span class="t-en">Projects</span></h3>
+        <h3><span class="t-zh" data-pagefind-ignore>项目索引</span><span class="t-en" data-pagefind-ignore>Projects</span></h3>
         <span class="latin">Project Index</span>
-        <span class="count"><span class="t-zh"><em>{projects.length}</em> 件作品</span><span class="t-en"><em>{projects.length}</em> Works</span></span>
+        <span class="count"><span class="t-zh" data-pagefind-ignore><em>{projects.length}</em> 件作品</span><span class="t-en" data-pagefind-ignore><em>{projects.length}</em> Works</span></span>
       </header>
       <div class="project-table">
         {projects.map((project, index) => (

@@ -16,22 +16,22 @@ const host = new URL(SITE.url).host;
       <div>
         <div class="kicker">
           <span class="dot"></span>
-          <span><span class="t-zh">关于此人</span><span class="t-en">About</span></span>
+          <span><span class="t-zh" data-pagefind-ignore>关于此人</span><span class="t-en" data-pagefind-ignore>About</span></span>
           <span class="rule"></span>
-          <span><span class="t-zh">第一人称</span><span class="t-en">First person</span></span>
+          <span><span class="t-zh" data-pagefind-ignore>第一人称</span><span class="t-en" data-pagefind-ignore>First person</span></span>
         </div>
-        <h1><span class="t-zh">关于我，<br />{SITE.author} ({SITE.handle})</span><span class="t-en">About me,<br />{SITE.author} ({SITE.handle})</span></h1>
+        <h1><span class="t-zh" data-pagefind-ignore>关于我，<br />{SITE.author} ({SITE.handle})</span><span class="t-en" data-pagefind-ignore>About me,<br />{SITE.author} ({SITE.handle})</span></h1>
         <p class="sub">
-          <span class="t-zh">{SITE.author}，{SITE.bio}<br />{SITE.epigraphZh}</span>
-          <span class="t-en">{SITE.author}, {SITE.bioEn}<br />{SITE.epigraph}</span>
+          <span class="t-zh" data-pagefind-ignore>{SITE.author}，{SITE.bio}<br />{SITE.epigraphZh}</span>
+          <span class="t-en" data-pagefind-ignore>{SITE.author}, {SITE.bioEn}<br />{SITE.epigraph}</span>
         </p>
       </div>
       <div class="right">
         <div class="big">{years}</div>
-        <div><span class="t-zh">写作年数</span><span class="t-en">Years Writing</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>写作年数</span><span class="t-en" data-pagefind-ignore>Years Writing</span></div>
         <div style="margin-top:10px">· · ·</div>
-        <div><span class="t-zh">北京</span><span class="t-en">Beijing</span></div>
-        <div><span class="t-zh">始于 MMXVII</span><span class="t-en">est. MMXVII</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>北京</span><span class="t-en" data-pagefind-ignore>Beijing</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>始于 MMXVII</span><span class="t-en" data-pagefind-ignore>est. MMXVII</span></div>
       </div>
     </section>
 
@@ -39,8 +39,8 @@ const host = new URL(SITE.url).host;
       <article class="long-form">
         <About />
 
-        <h2><span class="t-zh">履历</span><span class="t-en">Path</span></h2>
-        <div class="sub-h"><span class="t-zh">职业轨迹</span><span class="t-en">Professional Trajectory</span></div>
+        <h2><span class="t-zh" data-pagefind-ignore>履历</span><span class="t-en" data-pagefind-ignore>Path</span></h2>
+        <div class="sub-h"><span class="t-zh" data-pagefind-ignore>职业轨迹</span><span class="t-en" data-pagefind-ignore>Professional Trajectory</span></div>
         <div class="timeline-mini">
           <div class="row row--current"><span class="y">NOW</span><span class="b">超级个体 · AI 研发 / 架构 <small>带一支小队做内部 AI 平台，主攻文生视频、私域知识库与代码生成三条主线。</small></span></div>
           <div class="row"><span class="y">2025</span><span class="b">PMO → All in AI <small>从管人到管 AI。把过去两年的管理沉淀塞回键盘，做出几个让自己满意的 AI 产品。</small></span></div>
@@ -61,16 +61,16 @@ const host = new URL(SITE.url).host;
         </div>
 
         <div class="quotebox">
-          <span class="t-zh">离开世界之前，<br />一切都是过程。</span>
-          <span class="t-en">Before we leave this world,<br />everything is a process.</span>
+          <span class="t-zh" data-pagefind-ignore>离开世界之前，<br />一切都是过程。</span>
+          <span class="t-en" data-pagefind-ignore>Before we leave this world,<br />everything is a process.</span>
           <span class="attr">— Site Motto</span>
         </div>
 
         <div class="stat-strip">
-          <div><div class="lbl"><span class="t-zh">文章</span><span class="t-en">Posts</span></div><div class="val">{posts.length}</div></div>
-          <div><div class="lbl"><span class="t-zh">年数</span><span class="t-en">Years</span></div><div class="val">{years}</div></div>
-          <div><div class="lbl"><span class="t-zh">标签</span><span class="t-en">Tags</span></div><div class="val">{tagCount}</div></div>
-          <div><div class="lbl"><span class="t-zh">咖啡</span><span class="t-en">Coffee</span></div><div class="val">∞</div></div>
+          <div><div class="lbl"><span class="t-zh" data-pagefind-ignore>文章</span><span class="t-en" data-pagefind-ignore>Posts</span></div><div class="val">{posts.length}</div></div>
+          <div><div class="lbl"><span class="t-zh" data-pagefind-ignore>年数</span><span class="t-en" data-pagefind-ignore>Years</span></div><div class="val">{years}</div></div>
+          <div><div class="lbl"><span class="t-zh" data-pagefind-ignore>标签</span><span class="t-en" data-pagefind-ignore>Tags</span></div><div class="val">{tagCount}</div></div>
+          <div><div class="lbl"><span class="t-zh" data-pagefind-ignore>咖啡</span><span class="t-en" data-pagefind-ignore>Coffee</span></div><div class="val">∞</div></div>
         </div>
       </aside>
     </div>
@@ -80,32 +80,32 @@ const host = new URL(SITE.url).host;
         <div>
           <div class="kicker">
             <span class="rule"></span>
-            <span><span class="t-zh">保持联系</span><span class="t-en">Follow</span></span>
+            <span><span class="t-zh" data-pagefind-ignore>保持联系</span><span class="t-en" data-pagefind-ignore>Follow</span></span>
             <span class="rule"></span>
           </div>
-          <h2><span class="t-zh">微信公众号 &amp; 小红书</span><span class="t-en">WeChat &amp; Xiaohongshu</span><small><span class="t-zh">两个主阵地</span><span class="t-en">Two primary channels</span></small></h2>
+          <h2><span class="t-zh" data-pagefind-ignore>微信公众号 &amp; 小红书</span><span class="t-en" data-pagefind-ignore>WeChat &amp; Xiaohongshu</span><small><span class="t-zh" data-pagefind-ignore>两个主阵地</span><span class="t-en" data-pagefind-ignore>Two primary channels</span></small></h2>
         </div>
         <div class="note">
-          <span class="t-zh">长文 + 技术更新看公众号「{SITE.wechatName}」，<br />生活向 + AI 折腾日常看小红书。<br />其他平台同步分发，挑顺手的即可。</span>
-          <span class="t-en">Long-form writing and tech updates on the WeChat Official Account “{SITE.wechatName}”;<br />life and AI tinkering on Xiaohongshu.<br />Everything is cross-posted — pick whatever you like.</span>
+          <span class="t-zh" data-pagefind-ignore>长文 + 技术更新看公众号「{SITE.wechatName}」，<br />生活向 + AI 折腾日常看小红书。<br />其他平台同步分发，挑顺手的即可。</span>
+          <span class="t-en" data-pagefind-ignore>Long-form writing and tech updates on the WeChat Official Account “{SITE.wechatName}”;<br />life and AI tinkering on Xiaohongshu.<br />Everything is cross-posted — pick whatever you like.</span>
         </div>
       </header>
 
       <div class="primary-channels">
         <article class="channel-hero is-wechat">
           <img src="/img/weixin-qrcode.png" alt={`微信 · ${SITE.wechatName} · 微信搜一搜搜索昵称添加`} loading="lazy" />
-          <div class="label"><span class="accent"><span class="t-zh">微信搜一搜「{SITE.wechatName}」</span><span class="t-en">WeChat Search “{SITE.wechatName}”</span></span></div>
+          <div class="label"><span class="accent"><span class="t-zh" data-pagefind-ignore>微信搜一搜「{SITE.wechatName}」</span><span class="t-en" data-pagefind-ignore>WeChat Search “{SITE.wechatName}”</span></span></div>
         </article>
         <article class="channel-hero is-red">
           <img src="/img/redbook-qrcode.webp" alt={`小红书 · ${SITE.wechatName} · 扫码关注`} loading="lazy" />
-          <div class="label"><span class="accent"><span class="t-zh">小红书号 {SITE.redbookId}</span><span class="t-en">Xiaohongshu ID {SITE.redbookId}</span></span></div>
+          <div class="label"><span class="accent"><span class="t-zh" data-pagefind-ignore>小红书号 {SITE.redbookId}</span><span class="t-en" data-pagefind-ignore>Xiaohongshu ID {SITE.redbookId}</span></span></div>
         </article>
       </div>
 
       <section class="secondary-channels">
         <div class="head-row">
-          <span><span class="t-zh">同步分发</span><span class="t-en">Also Posted To</span></span>
-          <span class="count"><span class="t-zh"><em>{SECONDARY_PLATFORMS.length}</em> 个平台</span><span class="t-en"><em>{SECONDARY_PLATFORMS.length}</em> Platforms</span></span>
+          <span><span class="t-zh" data-pagefind-ignore>同步分发</span><span class="t-en" data-pagefind-ignore>Also Posted To</span></span>
+          <span class="count"><span class="t-zh" data-pagefind-ignore><em>{SECONDARY_PLATFORMS.length}</em> 个平台</span><span class="t-en" data-pagefind-ignore><em>{SECONDARY_PLATFORMS.length}</em> Platforms</span></span>
         </div>
         <ul>
           {SECONDARY_PLATFORMS.map((p) => (
@@ -122,13 +122,13 @@ const host = new URL(SITE.url).host;
 
       <section class="contact-letter" aria-labelledby="contact-heading">
         <div class="body">
-          <div class="kicker"><span class="t-zh">来信</span><span class="t-en">Direct</span></div>
-          <h3 id="contact-heading"><span class="t-zh">想说点什么，就写一封吧。</span><span class="t-en">Got something to say? Write a letter.</span></h3>
+          <div class="kicker"><span class="t-zh" data-pagefind-ignore>来信</span><span class="t-en" data-pagefind-ignore>Direct</span></div>
+          <h3 id="contact-heading"><span class="t-zh" data-pagefind-ignore>想说点什么，就写一封吧。</span><span class="t-en" data-pagefind-ignore>Got something to say? Write a letter.</span></h3>
           <a class="cta" href={`mailto:${SITE.email}`}>
             <span class="addr">{SITE.email}</span>
-            <span class="arrow"><span class="t-zh">写信 ↗</span><span class="t-en">Write ↗</span></span>
+            <span class="arrow"><span class="t-zh" data-pagefind-ignore>写信 ↗</span><span class="t-en" data-pagefind-ignore>Write ↗</span></span>
           </a>
-          <p class="note"><span class="t-zh">正事、合作、长信请走邮箱，响应大概「按周计」。广告与营销邮件请绕道，谢谢。</span><span class="t-en">For work, collaboration or long letters, email is best — replies run on a roughly weekly cadence. Ads and marketing mail: please pass by. Thanks.</span></p>
+          <p class="note"><span class="t-zh" data-pagefind-ignore>正事、合作、长信请走邮箱，响应大概「按周计」。广告与营销邮件请绕道，谢谢。</span><span class="t-en" data-pagefind-ignore>For work, collaboration or long letters, email is best — replies run on a roughly weekly cadence. Ads and marketing mail: please pass by. Thanks.</span></p>
         </div>
         <aside class="stamp" aria-hidden="true">
           <div class="seal">{SITE.brand.slice(0, 1)}</div>

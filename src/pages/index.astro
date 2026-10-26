@@ -90,49 +90,49 @@ const totalKChars = Math.round(totalChars / 1000);
       <div class="left">
         <div class="kicker">
           <span class="dot"></span>
-          <span>Since {SITE.since} · <span class="t-zh">手稿 {posts.length} 篇</span><span class="t-en">{posts.length} essays</span></span>
+          <span>Since {SITE.since} · <span class="t-zh" data-pagefind-ignore>手稿 {posts.length} 篇</span><span class="t-en" data-pagefind-ignore>{posts.length} essays</span></span>
           <span class="rule"></span>
           <span>{latest?.getFullYear()}</span>
         </div>
         <h1>
-          <span class="t-zh">{line1}<br /><span class="quote-mk">「</span>{line2}<span class="quote-mk">」</span></span>
-          <span class="t-en">Everything is a journey<br />before we leave this world</span>
+          <span class="t-zh" data-pagefind-ignore>{line1}<br /><span class="quote-mk">「</span>{line2}<span class="quote-mk">」</span></span>
+          <span class="t-en" data-pagefind-ignore>Everything is a journey<br />before we leave this world</span>
         </h1>
         <p class="sub">
-          <span class="t-zh">这里是 <em>{SITE.author}（{SITE.handle}）</em> 的个人博客——一个写 AI、聊架构、记录踩坑日常的小角落。写作是把模糊的思考晾在阳光下，逼自己说人话。</span>
-          <span class="t-en">The personal blog of <em>{SITE.author} ({SITE.handle})</em> — a small corner for writing about AI, architecture, and the everyday potholes of engineering. Writing airs fuzzy thinking in the sun and forces me to speak plainly.</span>
+          <span class="t-zh" data-pagefind-ignore>这里是 <em>{SITE.author}（{SITE.handle}）</em> 的个人博客——一个写 AI、聊架构、记录踩坑日常的小角落。写作是把模糊的思考晾在阳光下，逼自己说人话。</span>
+          <span class="t-en" data-pagefind-ignore>The personal blog of <em>{SITE.author} ({SITE.handle})</em> — a small corner for writing about AI, architecture, and the everyday potholes of engineering. Writing airs fuzzy thinking in the sun and forces me to speak plainly.</span>
         </p>
         <div class="focus-pills" aria-label="写作方向" data-tt="aria-label" data-tt-aria-label="写作方向|Writing focus">
-          {focusPillars.map((item) => <span><span class="t-zh">{item.zh}</span><span class="t-en">{item.en}</span></span>)}
+          {focusPillars.map((item) => <span><span class="t-zh" data-pagefind-ignore>{item.zh}</span><span class="t-en" data-pagefind-ignore>{item.en}</span></span>)}
         </div>
       </div>
       <div class="right">
         <div class="issue">{posts.length}</div>
-        <div><span class="t-zh">篇 · 手稿</span><span class="t-en">Essays</span></div>
-        <div><span class="t-zh">EST. {SITE.since} · 北京</span><span class="t-en">EST. {SITE.since} · Beijing</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>篇 · 手稿</span><span class="t-en" data-pagefind-ignore>Essays</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>EST. {SITE.since} · 北京</span><span class="t-en" data-pagefind-ignore>EST. {SITE.since} · Beijing</span></div>
         <div style="margin-top:10px;color:var(--ink-4)">{host}</div>
       </div>
-      <div class="vertical-accent"><span class="t-zh">仰望星空，俯首尘埃</span><span class="t-en">Stars above, dust below</span></div>
+      <div class="vertical-accent"><span class="t-zh" data-pagefind-ignore>仰望星空，俯首尘埃</span><span class="t-en" data-pagefind-ignore>Stars above, dust below</span></div>
     </section>
 
     <div class="index-strip">
-      <div><span class="label"><span class="t-zh">本期主笔</span><span class="t-en">Featured Author</span></span><span class="value">{SITE.author} · {SITE.handle}</span></div>
-      <div><span class="label"><span class="t-zh">累计文章</span><span class="t-en">Total Posts</span></span><span class="value"><span class="t-zh">{posts.length} 篇 · 约 {wan}w 字</span><span class="t-en">{posts.length} posts · ~{totalKChars}k chars</span></span></div>
-      <div><span class="label"><span class="t-zh">最新更新</span><span class="t-en">Latest Update</span></span><span class="value">{latestYmd}</span></div>
-      <div><span class="label"><span class="t-zh">订阅 · 公众号</span><span class="t-en">Subscribe · WeChat</span></span><span class="value"><span class="t-zh">微信「{SITE.wechatName}」</span><span class="t-en">WeChat “{SITE.wechatName}”</span></span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>本期主笔</span><span class="t-en" data-pagefind-ignore>Featured Author</span></span><span class="value">{SITE.author} · {SITE.handle}</span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>累计文章</span><span class="t-en" data-pagefind-ignore>Total Posts</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>{posts.length} 篇 · 约 {wan}w 字</span><span class="t-en" data-pagefind-ignore>{posts.length} posts · ~{totalKChars}k chars</span></span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>最新更新</span><span class="t-en" data-pagefind-ignore>Latest Update</span></span><span class="value">{latestYmd}</span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>订阅 · 公众号</span><span class="t-en" data-pagefind-ignore>Subscribe · WeChat</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>微信「{SITE.wechatName}」</span><span class="t-en" data-pagefind-ignore>WeChat “{SITE.wechatName}”</span></span></div>
     </div>
 
     <section class="home-radar" aria-label="博客写作雷达" data-tt="aria-label" data-tt-aria-label="博客写作雷达|Blog writing radar">
       <div class="radar-card radar-lead">
-        <span class="label"><span class="t-zh">当前信号</span><span class="t-en">Current Signal</span></span>
+        <span class="label"><span class="t-zh" data-pagefind-ignore>当前信号</span><span class="t-en" data-pagefind-ignore>Current Signal</span></span>
         <strong>{featured?.entry.data.title}</strong>
         <small>
-          <span class="t-zh">{latestRead ? `${latestRead.minutes} 分钟 · 约 ${latestRead.chars} 字` : "最近更新"}</span>
-          <span class="t-en">{latestRead ? `${latestRead.minutes} min · ${latestRead.chars} chars` : "Latest"}</span>
+          <span class="t-zh" data-pagefind-ignore>{latestRead ? `${latestRead.minutes} 分钟 · 约 ${latestRead.chars} 字` : "最近更新"}</span>
+          <span class="t-en" data-pagefind-ignore>{latestRead ? `${latestRead.minutes} min · ${latestRead.chars} chars` : "Latest"}</span>
         </small>
       </div>
       <div class="radar-card">
-        <span class="label"><span class="t-zh">热门标签</span><span class="t-en">Hot Tags</span></span>
+        <span class="label"><span class="t-zh" data-pagefind-ignore>热门标签</span><span class="t-en" data-pagefind-ignore>Hot Tags</span></span>
         <div class="radar-tags">
           {topTags.map((item) => (
             <a href={`/tags/#${encodeURIComponent(item.tag)}`}>
@@ -143,11 +143,11 @@ const totalKChars = Math.round(totalChars / 1000);
         </div>
       </div>
       <div class="radar-card">
-        <span class="label"><span class="t-zh">知识图谱</span><span class="t-en">Knowledge Map</span></span>
+        <span class="label"><span class="t-zh" data-pagefind-ignore>知识图谱</span><span class="t-en" data-pagefind-ignore>Knowledge Map</span></span>
         <div class="radar-bars">
           {topSections.map((item) => (
             <div>
-              <span><span class="t-zh">{item.name}</span><span class="t-en">{item.nameEn}</span></span>
+              <span><span class="t-zh" data-pagefind-ignore>{item.name}</span><span class="t-en" data-pagefind-ignore>{item.nameEn}</span></span>
               <i style={`--w:${Math.max(12, (item.n / posts.length) * 100)}%`}></i>
               <em>{item.n}</em>
             </div>
@@ -161,12 +161,12 @@ const totalKChars = Math.round(totalChars / 1000);
     <div class="layout-main">
       <section>
         <header class="section-head">
-          <h3><span class="t-zh">近期手稿</span><span class="t-en">Recent Posts</span></h3>
-          <span class="count"><span class="t-zh"><em>{recent.length}</em> 篇 / 共 {posts.length} 篇</span><span class="t-en"><em>{recent.length}</em> of {posts.length}</span></span>
+          <h3><span class="t-zh" data-pagefind-ignore>近期手稿</span><span class="t-en" data-pagefind-ignore>Recent Posts</span></h3>
+          <span class="count"><span class="t-zh" data-pagefind-ignore><em>{recent.length}</em> 篇 / 共 {posts.length} 篇</span><span class="t-en" data-pagefind-ignore><em>{recent.length}</em> of {posts.length}</span></span>
         </header>
         <PostList posts={recent} offset={1} />
         <div class="see-all">
-          <a href="/archive/"><span class="t-zh">查看全部归档 ↗</span><span class="t-en">See all archives ↗</span></a>
+          <a href="/archive/"><span class="t-zh" data-pagefind-ignore>查看全部归档 ↗</span><span class="t-en" data-pagefind-ignore>See all archives ↗</span></a>
         </div>
       </section>
       <Sidebar tags={sidebarTags} />

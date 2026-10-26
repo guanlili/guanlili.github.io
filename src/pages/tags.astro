@@ -88,22 +88,22 @@ const ymd = (d: Date) => `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.
       <div>
         <div class="kicker">
           <span class="dot"></span>
-          <span><span class="t-zh">标签索引</span><span class="t-en">Index</span></span>
+          <span><span class="t-zh" data-pagefind-ignore>标签索引</span><span class="t-en" data-pagefind-ignore>Index</span></span>
           <span class="rule"></span>
-          <span><span class="t-zh">按主题聚类</span><span class="t-en">Clustered by topic</span></span>
+          <span><span class="t-zh" data-pagefind-ignore>按主题聚类</span><span class="t-en" data-pagefind-ignore>Clustered by topic</span></span>
         </div>
-        <h1><span class="t-zh">标签</span><span class="t-en">Tags</span></h1>
+        <h1><span class="t-zh" data-pagefind-ignore>标签</span><span class="t-en" data-pagefind-ignore>Tags</span></h1>
         <p class="sub">
-          <span class="t-zh">这些年写下的东西并不多，但已经能看出一些反复回到的主题。以下按出现频率排列——字号代表频率。</span>
-          <span class="t-en">Not that much writing over the years, but recurring themes are already visible. Sorted by frequency below — font size marks frequency.</span>
+          <span class="t-zh" data-pagefind-ignore>这些年写下的东西并不多，但已经能看出一些反复回到的主题。以下按出现频率排列——字号代表频率。</span>
+          <span class="t-en" data-pagefind-ignore>Not that much writing over the years, but recurring themes are already visible. Sorted by frequency below — font size marks frequency.</span>
         </p>
       </div>
       <div class="right">
         <div class="big">{allTags.length}</div>
-        <div><span class="t-zh">独立标签</span><span class="t-en">Unique Tags</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>独立标签</span><span class="t-en" data-pagefind-ignore>Unique Tags</span></div>
         <div style="margin-top:10px">· · ·</div>
-        <div><span class="t-zh">{posts.length} 篇文章</span><span class="t-en">{posts.length} Posts</span></div>
-        <div><span class="t-zh">平均 {avg} 个标签 / 篇</span><span class="t-en">Avg {avg} tags / post</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>{posts.length} 篇文章</span><span class="t-en" data-pagefind-ignore>{posts.length} Posts</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>平均 {avg} 个标签 / 篇</span><span class="t-en" data-pagefind-ignore>Avg {avg} tags / post</span></div>
       </div>
     </section>
 
@@ -115,14 +115,14 @@ const ymd = (d: Date) => `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.
       </div>
       <div class="legend">
         <p>
-          <span class="t-zh">字号越大表示文章数越多。这些是写作期间反复回到的主题——可以视为一份「我在乎什么」的地图。</span>
-          <span class="t-en">Bigger type means more posts. These are the themes I keep returning to — a map of “what I care about”.</span>
+          <span class="t-zh" data-pagefind-ignore>字号越大表示文章数越多。这些是写作期间反复回到的主题——可以视为一份「我在乎什么」的地图。</span>
+          <span class="t-en" data-pagefind-ignore>Bigger type means more posts. These are the themes I keep returning to — a map of “what I care about”.</span>
         </p>
         <ul>
-          <li><span class="swatch" style="height:8px"></span><span class="t-zh">XL · 8 篇及以上</span><span class="t-en">XL · 8+ posts</span></li>
-          <li><span class="swatch" style="height:6px;opacity:.75"></span><span class="t-zh">L · 4 - 7 篇</span><span class="t-en">L · 4–7 posts</span></li>
-          <li><span class="swatch" style="height:4px;opacity:.55"></span><span class="t-zh">M · 2 - 3 篇</span><span class="t-en">M · 2–3 posts</span></li>
-          <li><span class="swatch" style="height:2px;opacity:.4"></span><span class="t-zh">S · 1 篇</span><span class="t-en">S · 1 post</span></li>
+          <li><span class="swatch" style="height:8px"></span><span class="t-zh" data-pagefind-ignore>XL · 8 篇及以上</span><span class="t-en" data-pagefind-ignore>XL · 8+ posts</span></li>
+          <li><span class="swatch" style="height:6px;opacity:.75"></span><span class="t-zh" data-pagefind-ignore>L · 4 - 7 篇</span><span class="t-en" data-pagefind-ignore>L · 4–7 posts</span></li>
+          <li><span class="swatch" style="height:4px;opacity:.55"></span><span class="t-zh" data-pagefind-ignore>M · 2 - 3 篇</span><span class="t-en" data-pagefind-ignore>M · 2–3 posts</span></li>
+          <li><span class="swatch" style="height:2px;opacity:.4"></span><span class="t-zh" data-pagefind-ignore>S · 1 篇</span><span class="t-en" data-pagefind-ignore>S · 1 post</span></li>
         </ul>
       </div>
     </section>
@@ -131,11 +131,11 @@ const ymd = (d: Date) => `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.
       <section class="tag-section" id={encodeURIComponent(t)}>
         <h3>
           <span class="pound">#</span>{t}
-          <span class="count"><span class="t-zh">{byTag.get(t)!.length} 篇</span><span class="t-en">{byTag.get(t)!.length} POSTS</span></span>
+          <span class="count"><span class="t-zh" data-pagefind-ignore>{byTag.get(t)!.length} 篇</span><span class="t-en" data-pagefind-ignore>{byTag.get(t)!.length} POSTS</span></span>
         </h3>
         {TAG_LEDE[t] && (
           <p class="lede">
-            <span class="t-zh">{TAG_LEDE[t].zh}</span><span class="t-en">{TAG_LEDE[t].en}</span>
+            <span class="t-zh" data-pagefind-ignore>{TAG_LEDE[t].zh}</span><span class="t-en" data-pagefind-ignore>{TAG_LEDE[t].en}</span>
           </p>
         )}
         <div class="items">

@@ -77,56 +77,56 @@ const places = footprints.map((entry) => ({
       <div>
         <div class="kicker">
           <span class="dot"></span>
-          <span><span class="t-zh">我的足迹</span><span class="t-en">Footprints</span></span>
+          <span><span class="t-zh" data-pagefind-ignore>我的足迹</span><span class="t-en" data-pagefind-ignore>Footprints</span></span>
           <span class="rule"></span>
-          <span><span class="t-zh">去过的地方</span><span class="t-en">Places I Have Been</span></span>
+          <span><span class="t-zh" data-pagefind-ignore>去过的地方</span><span class="t-en" data-pagefind-ignore>Places I Have Been</span></span>
         </div>
-        <h1><span class="t-zh">地图展开，<br />故事才刚刚开始。</span><span class="t-en">Unfold the map,<br />and the stories begin.</span></h1>
+        <h1><span class="t-zh" data-pagefind-ignore>地图展开，<br />故事才刚刚开始。</span><span class="t-en" data-pagefind-ignore>Unfold the map,<br />and the stories begin.</span></h1>
         <p class="sub">
-          <span class="t-zh">在地图上，重新经过那些抵达过的地方。这里收下沿途的文字、照片，以及一些后来才明白的事情。</span>
-          <span class="t-en">Revisit, on a map, the places I once arrived at. Words and photos from the road, and a few things only understood later.</span>
+          <span class="t-zh" data-pagefind-ignore>在地图上，重新经过那些抵达过的地方。这里收下沿途的文字、照片，以及一些后来才明白的事情。</span>
+          <span class="t-en" data-pagefind-ignore>Revisit, on a map, the places I once arrived at. Words and photos from the road, and a few things only understood later.</span>
         </p>
       </div>
     </section>
 
     {footprints.some((entry) => entry.data.sample) && (
       <aside class="sample-notice">
-        <span><span class="t-zh">示例数据</span><span class="t-en">Prototype</span></span>
-        <p><span class="t-zh">目前用四座城市演示版式与交互，地点、日期和文字请按你的真实经历替换；示例照片来自 Unsplash。</span><span class="t-en">Four cities currently demonstrate the layout and interactions — replace places, dates and copy with your own story. Sample photos are from Unsplash.</span></p>
+        <span><span class="t-zh" data-pagefind-ignore>示例数据</span><span class="t-en" data-pagefind-ignore>Prototype</span></span>
+        <p><span class="t-zh" data-pagefind-ignore>目前用四座城市演示版式与交互，地点、日期和文字请按你的真实经历替换；示例照片来自 Unsplash。</span><span class="t-en" data-pagefind-ignore>Four cities currently demonstrate the layout and interactions — replace places, dates and copy with your own story. Sample photos are from Unsplash.</span></p>
       </aside>
     )}
 
     <div class="footprints-strip">
-      <div><span class="label"><span class="t-zh">常驻</span><span class="t-en">Home Base</span></span><span class="value">{homeBase ? `${homeBase.data.city} · Since ${homeBase.data.since?.getFullYear() ?? firstYear}` : "—"}</span></div>
-      <div><span class="label"><span class="t-zh">省级地区</span><span class="t-en">Provinces</span></span><span class="value"><span class="t-zh">{provinces.size} 个省级地区</span><span class="t-en">{provinces.size} provinces</span></span></div>
-      <div><span class="label"><span class="t-zh">旅行记录</span><span class="t-en">Travel Log</span></span><span class="value"><span class="t-zh">{travelVisits} 次抵达 · {travelFootprints.length} 个地点</span><span class="t-en">{travelVisits} visits · {travelFootprints.length} places</span></span></div>
-      <div><span class="label"><span class="t-zh">最近旅行</span><span class="t-en">Latest Trip</span></span><span class="value">{latestTrip ? `${latestTrip.data.city} · ${footprintDateLabel(latestVisit(latestTrip), latestTrip.data.precision)}` : "—"}</span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>常驻</span><span class="t-en" data-pagefind-ignore>Home Base</span></span><span class="value">{homeBase ? `${homeBase.data.city} · Since ${homeBase.data.since?.getFullYear() ?? firstYear}` : "—"}</span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>省级地区</span><span class="t-en" data-pagefind-ignore>Provinces</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>{provinces.size} 个省级地区</span><span class="t-en" data-pagefind-ignore>{provinces.size} provinces</span></span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>旅行记录</span><span class="t-en" data-pagefind-ignore>Travel Log</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>{travelVisits} 次抵达 · {travelFootprints.length} 个地点</span><span class="t-en" data-pagefind-ignore>{travelVisits} visits · {travelFootprints.length} places</span></span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>最近旅行</span><span class="t-en" data-pagefind-ignore>Latest Trip</span></span><span class="value">{latestTrip ? `${latestTrip.data.city} · ${footprintDateLabel(latestVisit(latestTrip), latestTrip.data.precision)}` : "—"}</span></div>
     </div>
 
     <FootprintMap places={places} />
 
     <section class="footprint-index" data-footprint-archive>
       <header class="section-head">
-        <h3><span class="t-zh">抵达记录</span><span class="t-en">Arrivals</span></h3>
+        <h3><span class="t-zh" data-pagefind-ignore>抵达记录</span><span class="t-en" data-pagefind-ignore>Arrivals</span></h3>
         <span class="latin">Journey Archive</span>
-        <span class="count"><em data-archive-count>{footprints.length}</em> <span class="t-zh">个地点</span><span class="t-en">Places</span></span>
+        <span class="count"><em data-archive-count>{footprints.length}</em> <span class="t-zh" data-pagefind-ignore>个地点</span><span class="t-en" data-pagefind-ignore>Places</span></span>
       </header>
       <div class="archive-toolbar" aria-label="筛选足迹记录" data-tt="aria-label" data-tt-aria-label="筛选足迹记录|Filter journey records">
         <div class="archive-filter-group">
-          <span><span class="t-zh">年份</span><span class="t-en">Year</span></span>
-          <button type="button" class="active" data-archive-year="" aria-pressed="true"><span class="t-zh">全部</span><span class="t-en">All</span></button>
+          <span><span class="t-zh" data-pagefind-ignore>年份</span><span class="t-en" data-pagefind-ignore>Year</span></span>
+          <button type="button" class="active" data-archive-year="" aria-pressed="true"><span class="t-zh" data-pagefind-ignore>全部</span><span class="t-en" data-pagefind-ignore>All</span></button>
           {archiveYears.map((year) => <button type="button" data-archive-year={year} aria-pressed="false">{year}<small>{yearCounts.get(year)}</small></button>)}
         </div>
         <div class="archive-filter-group archive-content-filter">
-          <span><span class="t-zh">内容</span><span class="t-en">Content</span></span>
-          <button type="button" class="active" data-archive-content="" aria-pressed="true"><span class="t-zh">全部</span><span class="t-en">All</span></button>
+          <span><span class="t-zh" data-pagefind-ignore>内容</span><span class="t-en" data-pagefind-ignore>Content</span></span>
+          <button type="button" class="active" data-archive-content="" aria-pressed="true"><span class="t-zh" data-pagefind-ignore>全部</span><span class="t-en" data-pagefind-ignore>All</span></button>
           {contentFilters.map((filter) => (
             <button type="button" data-archive-content={filter.key} aria-pressed="false" disabled={filter.count === 0}>
-              <span class="t-zh">{filter.label.zh}</span><span class="t-en">{filter.label.en}</span><small>{filter.count}</small>
+              <span class="t-zh" data-pagefind-ignore>{filter.label.zh}</span><span class="t-en" data-pagefind-ignore>{filter.label.en}</span><small>{filter.count}</small>
             </button>
           ))}
         </div>
-        <div class="archive-filter-state"><span data-archive-province>全部地区</span><button type="button" data-archive-reset data-tt="aria-label" data-tt-aria-label="清除筛选|Clear filters"><span class="t-zh">清除筛选</span><span class="t-en">Clear filters</span></button></div>
+        <div class="archive-filter-state"><span data-archive-province>全部地区</span><button type="button" data-archive-reset data-tt="aria-label" data-tt-aria-label="清除筛选|Clear filters"><span class="t-zh" data-pagefind-ignore>清除筛选</span><span class="t-en" data-pagefind-ignore>Clear filters</span></button></div>
       </div>
 
       <div class="journey-years">
@@ -134,7 +134,7 @@ const places = footprints.map((entry) => ({
           const entries = archivedTrips.get(year) ?? [];
           return (
             <details class="journey-year" data-archive-group data-year={year} open={groupIndex < 2}>
-              <summary><strong>{year}</strong><span><span class="t-zh">{entries.length} 个地点</span><span class="t-en">{entries.length} places</span></span><i aria-hidden="true">＋</i></summary>
+              <summary><strong>{year}</strong><span><span class="t-zh" data-pagefind-ignore>{entries.length} 个地点</span><span class="t-en" data-pagefind-ignore>{entries.length} places</span></span><i aria-hidden="true">＋</i></summary>
               <div class="journey-rows">
                 {entries.map((entry) => (
                   <a
@@ -146,9 +146,9 @@ const places = footprints.map((entry) => ({
                     data-years={entry.data.visited.map((date) => date.getFullYear()).join(",")}
                     data-content={contentKey(entry)}
                   >
-                    <span class="journey-num"><span class="t-zh">第 {String(archiveNumber.get(footprintSlug(entry))).padStart(2, "0")} 站</span><span class="t-en">No. {String(archiveNumber.get(footprintSlug(entry))).padStart(2, "0")}</span></span>
+                    <span class="journey-num"><span class="t-zh" data-pagefind-ignore>第 {String(archiveNumber.get(footprintSlug(entry))).padStart(2, "0")} 站</span><span class="t-en" data-pagefind-ignore>No. {String(archiveNumber.get(footprintSlug(entry))).padStart(2, "0")}</span></span>
                     <span class="journey-row-copy">
-                      <span class="journey-meta"><span class="t-zh">城市 · {entry.data.province} · {yearRange(entry)} · {entry.data.visited.length} 次</span><span class="t-en">City · {entry.data.province} · {yearRange(entry)} · {entry.data.visited.length} visits</span> <em><span class="t-zh">{contentLabel(entry)}</span><span class="t-en">{contentLabelEn(entry)}</span></em></span>
+                      <span class="journey-meta"><span class="t-zh" data-pagefind-ignore>城市 · {entry.data.province} · {yearRange(entry)} · {entry.data.visited.length} 次</span><span class="t-en" data-pagefind-ignore>City · {entry.data.province} · {yearRange(entry)} · {entry.data.visited.length} visits</span> <em><span class="t-zh" data-pagefind-ignore>{contentLabel(entry)}</span><span class="t-en" data-pagefind-ignore>{contentLabelEn(entry)}</span></em></span>
                       <strong>{entry.data.city}</strong>
                       <small>{entry.data.summary}</small>
                       {entry.data.journeys.length > 0 && <span class="journey-name">↳ {entry.data.journeys.map((journey) => journey.name).join(" · ")}</span>}
@@ -163,7 +163,7 @@ const places = footprints.map((entry) => ({
 
         {residenceFootprints.length > 0 && (
           <details class="journey-year residence-year" data-archive-group open>
-            <summary><strong><span class="t-zh">生活坐标</span><span class="t-en">Home Bases</span></strong><span><span class="t-zh">{residenceFootprints.length} 个地点</span><span class="t-en">{residenceFootprints.length} places</span></span><i aria-hidden="true">＋</i></summary>
+            <summary><strong><span class="t-zh" data-pagefind-ignore>生活坐标</span><span class="t-en" data-pagefind-ignore>Home Bases</span></strong><span><span class="t-zh" data-pagefind-ignore>{residenceFootprints.length} 个地点</span><span class="t-en" data-pagefind-ignore>{residenceFootprints.length} places</span></span><i aria-hidden="true">＋</i></summary>
             <div class="journey-rows">
               {residenceFootprints.map((entry) => (
                 <a
@@ -175,9 +175,9 @@ const places = footprints.map((entry) => ({
                   data-years=""
                   data-content={contentKey(entry)}
                 >
-                  <span class="journey-num"><span class="t-zh">{entry.data.status === "home" ? "家" : "故"}</span><span class="t-en">{entry.data.status === "home" ? "Home" : "Past"}</span></span>
+                  <span class="journey-num"><span class="t-zh" data-pagefind-ignore>{entry.data.status === "home" ? "家" : "故"}</span><span class="t-en" data-pagefind-ignore>{entry.data.status === "home" ? "Home" : "Past"}</span></span>
                   <span class="journey-row-copy">
-                    <span class="journey-meta"><span class="t-zh">{entry.data.status === "home" ? `常驻地 · Since ${entry.data.since?.getFullYear() ?? firstYear}` : entry.data.until ? `曾居地 · ${entry.data.until.getFullYear()} 年以前` : "曾居地"}</span><span class="t-en">{entry.data.status === "home" ? `Home base · Since ${entry.data.since?.getFullYear() ?? firstYear}` : entry.data.until ? `Former home · before ${entry.data.until.getFullYear()}` : "Former home"}</span> <em><span class="t-zh">{contentLabel(entry)}</span><span class="t-en">{contentLabelEn(entry)}</span></em></span>
+                    <span class="journey-meta"><span class="t-zh" data-pagefind-ignore>{entry.data.status === "home" ? `常驻地 · Since ${entry.data.since?.getFullYear() ?? firstYear}` : entry.data.until ? `曾居地 · ${entry.data.until.getFullYear()} 年以前` : "曾居地"}</span><span class="t-en" data-pagefind-ignore>{entry.data.status === "home" ? `Home base · Since ${entry.data.since?.getFullYear() ?? firstYear}` : entry.data.until ? `Former home · before ${entry.data.until.getFullYear()}` : "Former home"}</span> <em><span class="t-zh" data-pagefind-ignore>{contentLabel(entry)}</span><span class="t-en" data-pagefind-ignore>{contentLabelEn(entry)}</span></em></span>
                     <strong>{entry.data.city}</strong>
                     <small>{entry.data.summary}</small>
                   </span>
@@ -189,9 +189,9 @@ const places = footprints.map((entry) => ({
         )}
       </div>
       <div class="archive-empty" data-archive-empty hidden aria-live="polite">
-        <strong><span class="t-zh">没有匹配的记录</span><span class="t-en">No matching records</span></strong>
-        <p><span class="t-zh">这类内容还在整理中，换个筛选条件看看。</span><span class="t-en">This kind of content is still being organized — try different filters.</span></p>
-        <button type="button" data-archive-empty-reset><span class="t-zh">查看全部足迹</span><span class="t-en">View all footprints</span></button>
+        <strong><span class="t-zh" data-pagefind-ignore>没有匹配的记录</span><span class="t-en" data-pagefind-ignore>No matching records</span></strong>
+        <p><span class="t-zh" data-pagefind-ignore>这类内容还在整理中，换个筛选条件看看。</span><span class="t-en" data-pagefind-ignore>This kind of content is still being organized — try different filters.</span></p>
+        <button type="button" data-archive-empty-reset><span class="t-zh" data-pagefind-ignore>查看全部足迹</span><span class="t-en" data-pagefind-ignore>View all footprints</span></button>
       </div>
     </section>
   </div>

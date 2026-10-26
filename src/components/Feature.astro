@@ -17,7 +17,7 @@ const cover = siteImage(data.cover) ?? siteImage(data["header-img"]);
   <div>
     <div class="meta">
       <span class="num">01</span>
-      <span class="t-zh">本期头条</span><span class="t-en">Featured</span>
+      <span class="t-zh" data-pagefind-ignore>本期头条</span><span class="t-en" data-pagefind-ignore>Featured</span>
       <span>·</span>
       <span>{data.tags.join(" / ")}</span>
     </div>
@@ -32,17 +32,17 @@ const cover = siteImage(data.cover) ?? siteImage(data["header-img"]);
       <span class="sep"></span>
       <span>{ymd}</span>
       <span class="sep"></span>
-      <span class="t-zh">{minutes} 分钟 · 约 {chars} 字</span><span class="t-en">{minutes} min · {chars} chars</span>
+      <span class="t-zh" data-pagefind-ignore>{minutes} 分钟 · 约 {chars} 字</span><span class="t-en" data-pagefind-ignore>{minutes} min · {chars} chars</span>
     </div>
   </div>
   <aside class="visual">
     {cover && <img class="feature-cover" src={cover} alt="" loading="eager" decoding="async" />}
     <div class="quote">
       <div class="body">{pull}</div>
-      <div class="attr t-zh">— 本期摘要</div><div class="attr t-en">— From this issue</div>
+      <div class="attr t-zh" data-pagefind-ignore>— 本期摘要</div><div class="attr t-en" data-pagefind-ignore>— From this issue</div>
     </div>
     <div class="tag-row">
-      <span class="lbl t-zh">标签</span><span class="lbl t-en">Tagged</span>
+      <span class="lbl t-zh" data-pagefind-ignore>标签</span><span class="lbl t-en" data-pagefind-ignore>Tagged</span>
       {data.tags.map((t) => <span>{t}</span>)}
     </div>
   </aside>

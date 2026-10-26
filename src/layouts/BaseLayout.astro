@@ -22,10 +22,14 @@ interface Props {
   noindex?: boolean;
 }
 
+// Default social share card (1200×630, see public/img/og-default.png).
+// Article covers override it via the `image` prop.
+const OG_DEFAULT = "/img/og-default.png";
+
 const {
   title,
   description = SITE.description,
-  image = SITE.avatar,
+  image = OG_DEFAULT,
   type = "website",
   active,
   bodyClass = "",
@@ -35,8 +39,9 @@ const {
 
 const pageTitle = title ? `${title} - ${SITE.seoTitle}` : SITE.seoTitle;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
-const normalizedImage = siteImage(image) ?? SITE.avatar;
+const normalizedImage = siteImage(image) ?? OG_DEFAULT;
 const ogImage = absoluteUrl(normalizedImage, SITE.url);
+const isDefaultOg = normalizedImage === OG_DEFAULT;
 const swVersion = SW_VERSION;
 
 // Recommended articles for search empty state (build-time)
@@ -94,6 +99,13 @@ const recommendedPosts = searchPosts.slice(0, 8);
     <meta property="article:tag" content={t} data-pagefind-filter="tag[content]" />
   ))}
   <meta property="og:image" content={ogImage} />
+  {isDefaultOg && (
+    <>
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+    </>
+  )}
+  <meta property="og:image:alt" content={isDefaultOg ? `${SITE.brand} · ${SITE.title}` : (title ?? SITE.seoTitle)} />
   <meta property="og:url" content={canonical} />
   <meta property="og:site_name" content={SITE.seoTitle} />
 
@@ -102,6 +114,7 @@ const recommendedPosts = searchPosts.slice(0, 8);
   <meta name="twitter:title" content={pageTitle} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImage} />
+  <meta name="twitter:image:alt" content={isDefaultOg ? `${SITE.brand} · ${SITE.title}` : (title ?? SITE.seoTitle)} />
 
   <title>{pageTitle}</title>
 
@@ -208,7 +221,7 @@ const recommendedPosts = searchPosts.slice(0, 8);
   <div class="reading-progress" aria-hidden="true"><div class="progress-fill"></div></div>
   <div data-pagefind-ignore>
     <Icons />
-    <a href="#main-content" class="skip-nav"><span class="t-zh">跳到正文</span><span class="t-en">Skip to content</span></a>
+    <a href="#main-content" class="skip-nav"><span class="t-zh" data-pagefind-ignore>跳到正文</span><span class="t-en" data-pagefind-ignore>Skip to content</span></a>
     <Nav active={active} />
   </div>
 

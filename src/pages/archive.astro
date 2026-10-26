@@ -27,22 +27,22 @@ const ymd = (d: Date) => `${d.getFullYear()}.${md(d)}`;
       <div>
         <div class="kicker">
           <span class="dot"></span>
-          <span><span class="t-zh">全部归档</span><span class="t-en">Archive</span></span>
+          <span><span class="t-zh" data-pagefind-ignore>全部归档</span><span class="t-en" data-pagefind-ignore>Archive</span></span>
           <span class="rule"></span>
-          <span><span class="t-zh">按年序排列</span><span class="t-en">Chronological by year</span></span>
+          <span><span class="t-zh" data-pagefind-ignore>按年序排列</span><span class="t-en" data-pagefind-ignore>Chronological by year</span></span>
         </div>
-        <h1><span class="t-zh">归档手稿</span><span class="t-en">Archive</span></h1>
+        <h1><span class="t-zh" data-pagefind-ignore>归档手稿</span><span class="t-en" data-pagefind-ignore>Archive</span></h1>
         <p class="sub">
-          <span class="t-zh">从 {SITE.since} 到今天——从测试到全栈，再到 AI 工程师。这里是所有正式发表的写作。</span>
-          <span class="t-en">From {SITE.since} to today — from testing to full-stack, and on to AI engineering. Everything formally published lives here.</span>
+          <span class="t-zh" data-pagefind-ignore>从 {SITE.since} 到今天——从测试到全栈，再到 AI 工程师。这里是所有正式发表的写作。</span>
+          <span class="t-en" data-pagefind-ignore>From {SITE.since} to today — from testing to full-stack, and on to AI engineering. Everything formally published lives here.</span>
         </p>
       </div>
       <div class="right">
         <div class="big">{posts.length}</div>
-        <div><span class="t-zh">累计文章</span><span class="t-en">Total Posts</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>累计文章</span><span class="t-en" data-pagefind-ignore>Total Posts</span></div>
         <div style="margin-top:10px">· · ·</div>
-        <div><span class="t-zh">{totalMin} 分钟</span><span class="t-en">{totalMin} min</span></div>
-        <div><span class="t-zh">{years.length} 年</span><span class="t-en">{years.length} Years</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>{totalMin} 分钟</span><span class="t-en" data-pagefind-ignore>{totalMin} min</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>{years.length} 年</span><span class="t-en" data-pagefind-ignore>{years.length} Years</span></div>
       </div>
     </section>
 
@@ -57,8 +57,8 @@ const ymd = (d: Date) => `${d.getFullYear()}.${md(d)}`;
             <div class="year-num">{y}</div>
             <div class="year-cn">{ganzhi(y)}</div>
             <div class="year-meta">
-              <span><span class="t-zh"><em>{list.length}</em> 篇 · {yearMin} 分钟</span><span class="t-en"><em>{list.length}</em> posts · {yearMin} min</span></span>
-              <span><span class="t-zh">最早 {md(oldest)} → 最新 {md(newest)}</span><span class="t-en">First {md(oldest)} → Last {md(newest)}</span></span>
+              <span><span class="t-zh" data-pagefind-ignore><em>{list.length}</em> 篇 · {yearMin} 分钟</span><span class="t-en" data-pagefind-ignore><em>{list.length}</em> posts · {yearMin} min</span></span>
+              <span><span class="t-zh" data-pagefind-ignore>最早 {md(oldest)} → 最新 {md(newest)}</span><span class="t-en" data-pagefind-ignore>First {md(oldest)} → Last {md(newest)}</span></span>
             </div>
           </div>
           <div class="timeline">
@@ -73,7 +73,7 @@ const ymd = (d: Date) => `${d.getFullYear()}.${md(d)}`;
                       {p.entry.data.tags.slice(0, 3).map((t) => <span class="tag">{t}</span>)}
                     </div>
                   </div>
-                  <span class="right"><span class="t-zh">{minutes} 分钟</span><span class="t-en">{minutes} min</span></span>
+                  <span class="right"><span class="t-zh" data-pagefind-ignore>{minutes} 分钟</span><span class="t-en" data-pagefind-ignore>{minutes} min</span></span>
                 </a>
               );
             })}

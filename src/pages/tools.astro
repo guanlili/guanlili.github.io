@@ -31,55 +31,55 @@ const stageId = (stage: string) => `stage-${keyOf(stage)}`;
       <div>
         <div class="kicker">
           <span class="dot"></span>
-          <span><span class="t-zh">工具导航</span><span class="t-en">OPC Stack</span></span>
+          <span><span class="t-zh" data-pagefind-ignore>工具导航</span><span class="t-en" data-pagefind-ignore>OPC Stack</span></span>
           <span class="rule"></span>
-          <span><span class="t-zh">一人公司</span><span class="t-en">One-Person Company</span></span>
+          <span><span class="t-zh" data-pagefind-ignore>一人公司</span><span class="t-en" data-pagefind-ignore>One-Person Company</span></span>
         </div>
-        <h1><span class="t-zh">一人公司，<br />也要有完整工具栈。</span><span class="t-en">A one-person company,<br />still deserves a full tool stack.</span></h1>
+        <h1><span class="t-zh" data-pagefind-ignore>一人公司，<br />也要有完整工具栈。</span><span class="t-en" data-pagefind-ignore>A one-person company,<br />still deserves a full tool stack.</span></h1>
         <p class="sub">
-          <span class="t-zh">这里不是普通收藏夹，而是我按软件研发与独立业务的真实流程整理的工作台：从机会洞察、产品设计、研发实现，到测试交付、内容增长、运营财务和知识协作。</span>
-          <span class="t-en">Not a plain bookmark folder, but a workbench organized by the real flow of software R&D and an indie business: from opportunity discovery, product design and building, to shipping, growth, operations and knowledge.</span>
+          <span class="t-zh" data-pagefind-ignore>这里不是普通收藏夹，而是我按软件研发与独立业务的真实流程整理的工作台：从机会洞察、产品设计、研发实现，到测试交付、内容增长、运营财务和知识协作。</span>
+          <span class="t-en" data-pagefind-ignore>Not a plain bookmark folder, but a workbench organized by the real flow of software R&D and an indie business: from opportunity discovery, product design and building, to shipping, growth, operations and knowledge.</span>
         </p>
       </div>
       <div class="right">
         <div class="big">{TOOLS.length}</div>
-        <div><span class="t-zh">工具总数</span><span class="t-en">Total Tools</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>工具总数</span><span class="t-en" data-pagefind-ignore>Total Tools</span></div>
         <div style="margin-top:10px">Tool x Thinking x Workflow</div>
-        <div><span class="t-zh">{TOOL_STAGES.length} 个阶段</span><span class="t-en">{TOOL_STAGES.length} Stages</span></div>
-        <div><span class="t-zh">{defaultPinnedTools.length} 个默认置顶</span><span class="t-en">{defaultPinnedTools.length} Default Pinned</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>{TOOL_STAGES.length} 个阶段</span><span class="t-en" data-pagefind-ignore>{TOOL_STAGES.length} Stages</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>{defaultPinnedTools.length} 个默认置顶</span><span class="t-en" data-pagefind-ignore>{defaultPinnedTools.length} Default Pinned</span></div>
       </div>
     </section>
 
     <div class="tools-strip">
-      <div><span class="label"><span class="t-zh">主线</span><span class="t-en">Focus</span></span><span class="value"><span class="t-zh">超级个体 · 软件研发</span><span class="t-en">Super-individual · Software R&D</span></span></div>
-      <div><span class="label"><span class="t-zh">流程</span><span class="t-en">Flow</span></span><span class="value">Discover / Design / Build / Ship / Grow / Operate</span></div>
-      <div><span class="label"><span class="t-zh">工具标签</span><span class="t-en">Tool Tags</span></span><span class="value"><span class="t-zh">{tagCount} 个标签</span><span class="t-en">{tagCount} Tags</span></span></div>
-      <div><span class="label"><span class="t-zh">理念</span><span class="t-en">Philosophy</span></span><span class="value"><span class="t-zh">降本增效，专注创造</span><span class="t-en">Lower costs, focus on creating</span></span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>主线</span><span class="t-en" data-pagefind-ignore>Focus</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>超级个体 · 软件研发</span><span class="t-en" data-pagefind-ignore>Super-individual · Software R&D</span></span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>流程</span><span class="t-en" data-pagefind-ignore>Flow</span></span><span class="value">Discover / Design / Build / Ship / Grow / Operate</span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>工具标签</span><span class="t-en" data-pagefind-ignore>Tool Tags</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>{tagCount} 个标签</span><span class="t-en" data-pagefind-ignore>{tagCount} Tags</span></span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>理念</span><span class="t-en" data-pagefind-ignore>Philosophy</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>降本增效，专注创造</span><span class="t-en" data-pagefind-ignore>Lower costs, focus on creating</span></span></div>
     </div>
 
     <section class="tools-workbench" data-pagefind-ignore>
       <div class="workbench-lead">
         <span class="label">Workbench</span>
-        <h2><span class="t-zh">从想法到上线，一屏调度。</span><span class="t-en">From idea to launch, on one screen.</span></h2>
-        <p><span class="t-zh">把工具按真实工作流摆放：先判断机会，再做设计和研发，最后交付、增长、运营和沉淀。</span><span class="t-en">Tools laid out by the real workflow: judge the opportunity first, then design and build, then ship, grow, operate and archive.</span></p>
+        <h2><span class="t-zh" data-pagefind-ignore>从想法到上线，一屏调度。</span><span class="t-en" data-pagefind-ignore>From idea to launch, on one screen.</span></h2>
+        <p><span class="t-zh" data-pagefind-ignore>把工具按真实工作流摆放：先判断机会，再做设计和研发，最后交付、增长、运营和沉淀。</span><span class="t-en" data-pagefind-ignore>Tools laid out by the real workflow: judge the opportunity first, then design and build, then ship, grow, operate and archive.</span></p>
       </div>
       <div class="workbench-metrics">
-        <div><span>{TOOLS.length}</span><small><span class="t-zh">工具总数</span><span class="t-en">Total Tools</span></small></div>
-        <div><span>{TOOL_STAGES.length}</span><small><span class="t-zh">工作流阶段</span><span class="t-en">Workflow Stages</span></small></div>
-        <div><span>{defaultPinnedTools.length}</span><small><span class="t-zh">置顶入口</span><span class="t-en">Pinned Entries</span></small></div>
+        <div><span>{TOOLS.length}</span><small><span class="t-zh" data-pagefind-ignore>工具总数</span><span class="t-en" data-pagefind-ignore>Total Tools</span></small></div>
+        <div><span>{TOOL_STAGES.length}</span><small><span class="t-zh" data-pagefind-ignore>工作流阶段</span><span class="t-en" data-pagefind-ignore>Workflow Stages</span></small></div>
+        <div><span>{defaultPinnedTools.length}</span><small><span class="t-zh" data-pagefind-ignore>置顶入口</span><span class="t-en" data-pagefind-ignore>Pinned Entries</span></small></div>
       </div>
     </section>
 
     <nav class="stage-rail" aria-label="工作流阶段" data-tt="aria-label" data-tt-aria-label="工作流阶段|Workflow stages">
       <button type="button" class="active" data-filter="all">
-        <span><span class="t-zh">全部</span><span class="t-en">All</span></span>
-        <strong><span class="t-zh">全部工具</span><span class="t-en">All Tools</span></strong>
+        <span><span class="t-zh" data-pagefind-ignore>全部</span><span class="t-en" data-pagefind-ignore>All</span></span>
+        <strong><span class="t-zh" data-pagefind-ignore>全部工具</span><span class="t-en" data-pagefind-ignore>All Tools</span></strong>
         <em>{TOOLS.length}</em>
       </button>
       {categories.map((stage, index) => (
         <button type="button" data-filter={stage.name} data-stage-target={`#${stageId(stage.name)}`}>
-          <span><span class="t-zh">{pad2(index + 1)}</span><span class="t-en">{pad2(index + 1)} · {stage.english}</span></span>
-          <strong><span class="t-zh">{stage.name}</span><span class="t-en">{stage.english}</span></strong>
+          <span><span class="t-zh" data-pagefind-ignore>{pad2(index + 1)}</span><span class="t-en" data-pagefind-ignore>{pad2(index + 1)} · {stage.english}</span></span>
+          <strong><span class="t-zh" data-pagefind-ignore>{stage.name}</span><span class="t-en" data-pagefind-ignore>{stage.english}</span></strong>
           <em>{stage.tools.length}</em>
         </button>
       ))}
@@ -87,24 +87,24 @@ const stageId = (stage: string) => `stage-${keyOf(stage)}`;
 
     <section class="tools-console" data-pagefind-ignore>
       <div class="tools-search">
-        <label for="tools-search-input"><span class="t-zh">搜索工具栈</span><span class="t-en">Search Stack</span></label>
+        <label for="tools-search-input"><span class="t-zh" data-pagefind-ignore>搜索工具栈</span><span class="t-en" data-pagefind-ignore>Search Stack</span></label>
         <input id="tools-search-input" type="search" placeholder="搜索工具、用途、阶段或标签..." autocomplete="off" data-tt="placeholder" data-tt-placeholder="搜索工具、用途、阶段或标签...|Search tools, uses, stages or tags..." />
       </div>
       <div class="tools-console-side">
         <div class="tools-view-toggle" aria-label="工具视图" data-tt="aria-label" data-tt-aria-label="工具视图|Tool view">
-          <button type="button" class="active" data-view="balanced"><span class="t-zh">标准</span><span class="t-en">Balanced</span></button>
-          <button type="button" data-view="compact"><span class="t-zh">紧凑</span><span class="t-en">Compact</span></button>
+          <button type="button" class="active" data-view="balanced"><span class="t-zh" data-pagefind-ignore>标准</span><span class="t-en" data-pagefind-ignore>Balanced</span></button>
+          <button type="button" data-view="compact"><span class="t-zh" data-pagefind-ignore>紧凑</span><span class="t-en" data-pagefind-ignore>Compact</span></button>
         </div>
-        <p class="tools-result" data-tools-summary><span class="t-zh">{TOOLS.length} 个工具就绪</span><span class="t-en">{TOOLS.length} tools ready</span></p>
+        <p class="tools-result" data-tools-summary><span class="t-zh" data-pagefind-ignore>{TOOLS.length} 个工具就绪</span><span class="t-en" data-pagefind-ignore>{TOOLS.length} tools ready</span></p>
       </div>
     </section>
 
     <div class="tools-workspace" data-tools-workspace data-view="balanced">
       <section class="tools-pinned" data-pinned-section>
         <header class="section-head">
-          <h3><span class="t-zh">快捷启动</span><span class="t-en">Quick Launch</span></h3>
+          <h3><span class="t-zh" data-pagefind-ignore>快捷启动</span><span class="t-en" data-pagefind-ignore>Quick Launch</span></h3>
           <span class="latin">Launchpad</span>
-          <span class="count"><span class="t-zh"><em>{pinnedLimit}</em> 个入口 · 星标置顶 · 点击自动排序</span><span class="t-en"><em>{pinnedLimit}</em> entries · star to pin · click to sort</span></span>
+          <span class="count"><span class="t-zh" data-pagefind-ignore><em>{pinnedLimit}</em> 个入口 · 星标置顶 · 点击自动排序</span><span class="t-en" data-pagefind-ignore><em>{pinnedLimit}</em> entries · star to pin · click to sort</span></span>
         </header>
         <div class="tool-card-grid">
           {TOOLS.map((tool, index) => (
@@ -149,9 +149,9 @@ const stageId = (stage: string) => `stage-${keyOf(stage)}`;
 
       <section class="tools-flow">
         <header class="section-head">
-          <h3><span class="t-zh">流程索引</span><span class="t-en">Workflow</span></h3>
+          <h3><span class="t-zh" data-pagefind-ignore>流程索引</span><span class="t-en" data-pagefind-ignore>Workflow</span></h3>
           <span class="latin">Workflow Index</span>
-          <span class="count"><span class="t-zh"><em>{TOOL_STAGES.length}</em> 个阶段</span><span class="t-en"><em>{TOOL_STAGES.length}</em> Stages</span></span>
+          <span class="count"><span class="t-zh" data-pagefind-ignore><em>{TOOL_STAGES.length}</em> 个阶段</span><span class="t-en" data-pagefind-ignore><em>{TOOL_STAGES.length}</em> Stages</span></span>
         </header>
 
         {categories.map((category, stageIndex) => (
@@ -159,10 +159,10 @@ const stageId = (stage: string) => `stage-${keyOf(stage)}`;
             <div class="tool-stage-head">
               <span class="num">{pad2(stageIndex + 1)}</span>
               <div>
-                <h2><span class="t-zh">{category.name}</span><span class="t-en">{category.english}</span></h2>
+                <h2><span class="t-zh" data-pagefind-ignore>{category.name}</span><span class="t-en" data-pagefind-ignore>{category.english}</span></h2>
                 <p>{category.summary}</p>
               </div>
-              <span class="stage-count"><span class="t-zh">{category.tools.length} 个工具</span><span class="t-en">{category.tools.length} Tools</span></span>
+              <span class="stage-count"><span class="t-zh" data-pagefind-ignore>{category.tools.length} 个工具</span><span class="t-en" data-pagefind-ignore>{category.tools.length} Tools</span></span>
               <span class="english">{category.english}</span>
             </div>
             <div class="tool-table">
@@ -196,7 +196,7 @@ const stageId = (stage: string) => `stage-${keyOf(stage)}`;
             </div>
           </section>
         ))}
-        <p class="tools-empty" hidden data-tools-empty><span class="t-zh">没有匹配到工具。换个关键词，或者先把它加入这套 Stack。</span><span class="t-en">No tools matched. Try another keyword, or add it to the stack first.</span></p>
+        <p class="tools-empty" hidden data-tools-empty><span class="t-zh" data-pagefind-ignore>没有匹配到工具。换个关键词，或者先把它加入这套 Stack。</span><span class="t-en" data-pagefind-ignore>No tools matched. Try another keyword, or add it to the stack first.</span></p>
       </section>
     </div>
   </div>

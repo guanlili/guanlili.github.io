@@ -21,7 +21,7 @@ const { active } = Astro.props as { active?: string };
       <svg class="icon" id="theme-icon-svg"><use href="#icon-moon"></use></svg>
     </button>
     <button class="iconbtn lang-toggle" type="button" id="lang-toggle-btn" aria-label="切换语言" data-tt="title,aria-label" data-tt-title="切换到 English|Switch to Chinese" data-tt-aria-label="切换语言|Switch language">
-      <span class="t-zh">EN</span><span class="t-en">中</span>
+      <span class="t-zh" data-pagefind-ignore>EN</span><span class="t-en" data-pagefind-ignore>中</span>
     </button>
     <button class="iconbtn nav-toggle" type="button" id="nav-toggle-btn" aria-label="菜单" aria-controls="primary-nav" aria-expanded="false" data-tt="aria-label" data-tt-aria-label="菜单|Menu">
       <svg class="icon" id="nav-toggle-icon"><use href="#icon-menu"></use></svg>
