@@ -85,3 +85,13 @@ export const NOW: { ico: string; icoEn: string; text: string; textEn: string }[]
 // Analytics (empty = disabled), mirroring the old config.
 export const GA_TRACK_ID = "";
 export const BAIDU_TRACK_ID = "";
+
+// giscus 评论（基于 GitHub Discussions）。四项填齐后文章页自动开启评论区：
+// 1. 仓库 Settings → 开启 Discussions；2. 安装 giscus GitHub App；
+// 3. 建一个 announcement 类型的分类；4. 到 https://giscus.app 生成配置取 repoId/categoryId。
+export const GISCUS = {
+  repo: "", // 如 "guanlili/guanlili.github.io"
+  repoId: "",
+  category: "Announcements",
+  categoryId: "",
+};

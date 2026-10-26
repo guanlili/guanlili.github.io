@@ -1,6 +1,7 @@
 ---
 import { render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Giscus from "../components/Giscus.astro";
 import { SITE } from "../consts";
 import { excerpt, firstImage, getPosts, readingStats, type LoadedPost } from "../lib/posts";
 import { siteImage } from "../lib/media";
@@ -261,6 +262,8 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
         <span class="np-empty"><span class="nav-lbl"><span class="t-zh" data-pagefind-ignore>已到底</span><span class="t-en" data-pagefind-ignore>The end</span></span><span class="nav-ttl"><span class="t-zh" data-pagefind-ignore>没有更早的文章了</span><span class="t-en" data-pagefind-ignore>Nothing older</span></span></span>
       )}
     </div>
+
+    <Giscus />
   </div>
 
   <script is:inline defer src={`/js/site-article.js?v=${encodeURIComponent(articleScriptVersion)}`}></script>
