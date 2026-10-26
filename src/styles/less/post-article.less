@@ -42,7 +42,7 @@
 
 // ── Masthead ───────────────────────────────────────────────────
 .article-head {
-  padding: var(--space-11) 0 var(--space-8);
+  padding: var(--space-9) 0 var(--space-6);
   border-bottom: var(--surface-border);
   max-width: 880px;
   margin: 0 auto;
@@ -82,9 +82,9 @@
 .article-head .byline {
   display: inline-flex; align-items: center; gap: 14px;
   font-family: var(--mono);
-  font-size: var(--text-meta);
+  font-size: 12px;
   color: var(--ink-3);
-  letter-spacing: .04em;
+  letter-spacing: .02em;
   padding-top: 18px;
   border-top: var(--surface-border-soft);
 }
@@ -122,48 +122,21 @@
   text-align: center;
 }
 
-// ── Meta strip ─────────────────────────────────────────────────
-.article-meta-strip {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-  border-bottom: var(--surface-border);
-  font-family: var(--mono);
-  font-size: var(--text-sm);
-  color: var(--ink-3);
-  max-width: 880px;
-  margin: 0 auto;
-}
-.article-meta-strip > div {
-  padding: 18px 22px;
-  border-right: var(--surface-border-soft);
-  display: flex; flex-direction: column; gap: 4px;
-}
-.article-meta-strip > div:last-child { border-right: 0; }
-.article-meta-strip .label {
-  text-transform: uppercase; letter-spacing: var(--tracking-meta);
-  color: var(--ink-4); font-size: var(--text-xs);
-}
-.article-meta-strip .value {
-  font-family: var(--serif);
-  font-size: var(--text-base);
-  color: var(--ink);
-}
-.article-tag-line {
+// ── Article topics: metadata appears once, in the header ──────
+.article-topics {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
-  font-size: var(--text-body);
+  justify-content: center;
+  gap: 8px 16px;
+  margin-top: var(--space-4);
+  font-size: 12px;
+  line-height: 1.6;
 }
-.article-tag-line a {
+.article-topics a {
   color: var(--accent);
-  border-bottom: 0;
+  text-decoration: none;
 }
-.article-tag-line a::before {
-  content: "#";
-  opacity: .56;
-  margin-right: 1px;
-}
+.article-topics a:hover { text-decoration: underline; }
 @media (max-width: 760px) {
   .article-head {
     padding: 44px 0 var(--space-6);
@@ -197,78 +170,28 @@
   .article-cover img {
     max-height: 300px;
   }
-  .article-meta-strip { grid-template-columns: repeat(2, 1fr); }
-  .article-meta-strip > div {
-    padding: 14px 16px;
-  }
-  .article-meta-strip > div:nth-child(2n) { border-right: 0; }
+  .article-topics { justify-content: flex-start; }
 }
 
-// ── Reading brief ──────────────────────────────────────────────
+// ── Reading brief: authored summaries only ───────────────────
 .reading-brief {
   max-width: 880px;
-  margin: 0 auto;
-  padding: var(--space-5) 0 var(--space-7);
-  border-top: var(--surface-border);
-  border-bottom: var(--surface-border);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--space-7);
-  align-items: center;
+  margin: var(--space-5) auto 0;
+  padding: var(--space-4) var(--space-5);
+  border-left: 2px solid var(--accent);
+  background: var(--hl);
 }
 .reading-brief .label {
   display: block;
   margin-bottom: var(--space-2);
-  font-family: var(--mono);
-  font-size: var(--text-xs);
-  letter-spacing: var(--tracking-loose);
-  text-transform: uppercase;
+  font-size: 12px;
   color: var(--accent);
 }
 .reading-brief p {
   margin: 0;
-  max-width: 640px;
   color: var(--ink-2);
   font-size: 15px;
-  line-height: 1.72;
-  text-wrap: pretty;
-}
-.brief-stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(72px, auto));
-  border: var(--surface-border-soft);
-  background: color-mix(in srgb, var(--paper) 74%, transparent);
-}
-.brief-stats span {
-  padding: var(--space-3) var(--space-4);
-  border-left: var(--surface-border-soft);
-  font-family: var(--mono);
-  font-size: var(--text-xs);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  text-align: center;
-}
-.brief-stats span:first-child { border-left: 0; }
-.brief-stats strong {
-  display: block;
-  margin-bottom: 2px;
-  font-family: var(--serif);
-  font-size: 22px;
-  line-height: 1;
-  color: var(--ink);
-  letter-spacing: 0;
-  font-variant-numeric: tabular-nums;
-}
-@media (max-width: 760px) {
-  .reading-brief {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-    padding: var(--space-5) 0;
-  }
-  .brief-stats { grid-template-columns: repeat(3, 1fr); }
-  .brief-stats span { padding: var(--space-3) var(--space-2); }
-  .brief-stats strong { font-size: 20px; }
+  line-height: 1.75;
 }
 
 // ── Body grid: gutter rail · content · TOC ─────────────────────
@@ -281,7 +204,7 @@
   justify-content: center;
   gap: 44px;
   margin: 0 auto;
-  padding: var(--space-11) 0 var(--space-12);
+  padding: var(--space-8) 0 var(--space-10);
 }
 @media (max-width: 1040px) {
   .article-body { grid-template-columns: minmax(0, 1fr); justify-content: stretch; gap: 28px; padding: 36px 0 48px; }
@@ -334,12 +257,14 @@
 
 // ── Article content (the rendered Markdown) ────────────────────
 .article-content {
+  width: 100%;
+  min-width: 0;
   max-width: var(--read-col);
+  margin-inline: auto;
   font-family: var(--sans);
   font-size: var(--text-prose);
   line-height: var(--line-prose);
   color: var(--ink-2);
-  counter-reset: h2c;
   overflow-wrap: break-word;
   // Hang opening punctuation (quotes / 「」) into the margin on first lines —
   // a typographic nicety for Chinese prose (progressive; Safari-only today).
@@ -350,14 +275,14 @@
 .article-content > p:first-of-type::first-letter {
   font-family: var(--serif);
   float: left;
-  font-size: 76px;
+  font-size: 56px;
   line-height: .85;
   font-weight: 500;
   color: var(--accent);
-  padding: 6px 10px 0 0;
-  margin-top: 6px;
+  padding: 4px 8px 0 0;
+  margin-top: 4px;
 }
-.article-content p { margin: 0 0 var(--space-5); }
+.article-content p { margin: 0 0 var(--space-4); }
 .article-content p strong { color: var(--ink); font-weight: 600; }
 .article-content a {
   color: var(--accent);
@@ -367,31 +292,43 @@
 .article-content a:hover { color: var(--accent-ink); border-bottom-color: currentColor; }
 .article-content h2 {
   font-family: var(--serif);
-  font-size: var(--text-title-md);
+  font-size: 24px;
   font-weight: 600;
-  margin: 48px 0 12px;
+  line-height: 1.5;
+  margin: 32px 0 14px;
+  padding-left: 12px;
+  border-left: 3px solid var(--accent);
   color: var(--ink);
-  display: flex; align-items: baseline; gap: 14px;
-}
-.article-content h2::before {
-  content: counter(h2c, decimal-leading-zero);
-  counter-increment: h2c;
-  font-family: var(--mono);
-  font-size: 13px;
-  letter-spacing: .08em;
-  color: var(--accent);
-  font-weight: 400;
-  border: 1px solid var(--accent);
-  padding: 2px 8px;
-  align-self: center;
 }
 .article-content h3 {
   font-family: var(--serif);
   font-size: var(--text-subhead);
   font-weight: 600;
-  margin: 32px 0 10px;
+  line-height: 1.5;
+  margin: 26px 0 12px;
   color: var(--ink);
   position: relative;
+}
+.article-content h4,
+.article-content h5,
+.article-content h6 {
+  font-size: 17px;
+  line-height: 1.6;
+  margin: 22px 0 10px;
+  color: var(--ink);
+}
+.article-content h2,
+.article-content h3,
+.article-content h4,
+.article-content h5,
+.article-content h6 {
+  scroll-margin-top: 24px;
+}
+.article-content > :first-child { margin-top: 0; }
+@media (max-width: 760px) {
+  .article-content h2 { font-size: 21px; margin-top: 26px; }
+  .article-content h3 { font-size: 19px; margin-top: 22px; }
+  .article-content > p:first-of-type::first-letter { font-size: 44px; }
 }
 
 // ── Heading anchor link (hover-revealed, click = copy deep URL) ─
@@ -441,11 +378,12 @@
   background: var(--paper);
   border-left: 3px solid var(--accent);
   font-family: var(--serif);
-  font-style: italic;
-  font-size: 17.5px;
+  font-style: normal;
+  font-size: 17px;
   color: var(--ink);
-  line-height: 1.55;
+  line-height: 1.8;
 }
+.article-content blockquote > :last-child { margin-bottom: 0; }
 .article-content code {
   font-family: var(--mono);
   font-size: var(--text-body);
@@ -571,18 +509,59 @@
 
 // ── Image lightbox — styles live globally in base.less so non-article
 //    pages (e.g. About's QR banners) can use the same overlay. ───────
+// Tables retain native table semantics; a wrapper handles overflow.
+.article-content .table-responsive {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 22px 0;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+.article-content .table-responsive:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.article-content table {
+  width: 100%;
+  margin: 22px 0;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.article-content .table-responsive > table { margin: 0; }
+.article-content th,
+.article-content td {
+  padding: 10px 14px;
+  border: var(--surface-border);
+  vertical-align: top;
+  overflow-wrap: break-word;
+  min-width: 88px;
+}
+.article-content th {
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 600;
+}
+.article-content td { background: color-mix(in srgb, var(--paper) 35%, transparent); }
+.article-content td > :last-child,
+.article-content th > :last-child { margin-bottom: 0; }
+@media (max-width: 760px) {
+  .article-content th,
+  .article-content td { padding: 8px 10px; }
+}
+
 .article-content hr {
+  width: 32%;
+  max-width: 128px;
+  height: 0;
   border: 0;
-  text-align: center;
-  margin: 40px 0;
-  position: relative;
-  height: 24px;
+  border-top: var(--surface-border);
+  margin: 18px auto;
 }
-.article-content hr::before {
-  content: "\2766"; // ❦
-  color: var(--ink-4);
-  font-size: 18px;
-}
+.article-content hr::before,
+.article-content hr::after { content: none; }
+.article-content hr + h2,
+.article-content hr + h3 { margin-top: 22px; }
 
 // ── Table of contents (right rail) ─────────────────────────────
 .toc {
@@ -892,7 +871,7 @@
   // Hide non-content elements
   .topbar,
   .article-head .kicker,
-  .article-meta-strip,
+  .reading-brief,
   .gutter,
   .toc,
   .toc-fab,
