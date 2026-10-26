@@ -14,7 +14,7 @@ description: "Cursor 并进 The X Subscription 之后，Grok 额度翻倍，Clau
 
 我点了升级。
 
-升级前，设置里还能看到两坨额度：Grok 一坨，Claude 一坨。升级后再打开，只剩一个共享池。Claude 那一栏，直接没了。
+升级前，设置里还能看到两坨额度：Cursor Models 一坨，Other Models 也就是 Claude 一坨。升级后再打开，只剩一个共享池。Claude 那一栏，直接没了。
 
 ![调整前是 Cursor Models、Other Models 两池加 Grok Bot，调整后只剩一个周刷新的共享池](https://blog-1258476669.cos.ap-beijing.myqcloud.com/macAir/image-20261026123150665.png?imageSlim)
 
