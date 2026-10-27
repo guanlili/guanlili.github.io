@@ -1,19 +1,25 @@
 ---
 title: "牙克石｜呼伦贝尔线起点"
+titleEn: "Yakeshi | Start of the Hulunbuir Route"
 province: "内蒙古自治区"
+provinceEn: "Inner Mongolia"
 prefecture: "呼伦贝尔市"
 city: "牙克石"
+cityEn: "Yakeshi"
 coordinates: [120.7117, 49.2856]
 status: "visited"
 precision: "month"
 visited: [2019-07-01]
 journeys:
-  - { id: "hulunbuir-2019", name: "2019 呼伦贝尔线", order: 1, date: 2019-07-01 }
+  - { id: "hulunbuir-2019", name: "2019 呼伦贝尔线", nameEn: "2019 Hulunbuir Route", order: 1, date: 2019-07-01 }
 events:
   - date: 2019-07-01
     title: "呼伦贝尔线第一站"
+    titleEn: "Hulunbuir Route, Stop 1"
     note: "从牙克石出发，之后前往呼伦贝尔、满洲里。"
+    noteEn: "Setting out from Yakeshi, toward Hulunbuir and Manzhouli."
 summary: "2019 年 7 月内蒙古之行的第一站，随后继续前往呼伦贝尔和满洲里。"
+summaryEn: "First stop of the July 2019 Inner Mongolia run, then on to Hulunbuir and Manzhouli."
 photos: []
 tags: [内蒙古, 牙克石, 呼伦贝尔线, "2019"]
 ---

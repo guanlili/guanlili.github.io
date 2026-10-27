@@ -19,6 +19,7 @@ const logoUrl = (url: string) => {
 const initialOf = (title: string) => title.trim().slice(0, 1).toUpperCase();
 const keyOf = (title: string) => title.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-").replace(/^-|-$/g, "");
 const stageId = (stage: string) => `stage-${keyOf(stage)}`;
+const stageEnOf = (stage: string) => TOOL_STAGES.find((s) => s.name === stage)?.english ?? stage;
 ---
 <BaseLayout
   active="tools"
@@ -129,17 +130,17 @@ const stageId = (stage: string) => `stage-${keyOf(stage)}`;
                   <img src={logoUrl(tool.url)} alt="" loading="lazy" onerror="this.style.display='none'" />
                 </span>
                 <span class="tool-card-top-side">
-                  <span class="tool-card-stage">{tool.stage}</span>
+                  <span class="tool-card-stage"><span class="t-zh" data-pagefind-ignore>{tool.stage}</span><span class="t-en" data-pagefind-ignore>{stageEnOf(tool.stage)}</span></span>
                   <ToolStar />
                 </span>
               </div>
               <h2>{tool.title}</h2>
-              <p>{tool.description}</p>
+              <p><span class="t-zh" data-pagefind-ignore>{tool.description}</span><span class="t-en" data-pagefind-ignore>{tool.descriptionEn ?? tool.description}</span></p>
               <div class="tool-card-tags">
                 {tool.tags.slice(0, 3).map((tag) => <span>{tag}</span>)}
               </div>
               <div class="tool-card-foot">
-                <span>{tool.role}</span>
+                <span><span class="t-zh" data-pagefind-ignore>{tool.role}</span><span class="t-en" data-pagefind-ignore>{tool.roleEn ?? tool.role}</span></span>
                 <span>OPEN</span>
               </div>
             </a>
@@ -160,7 +161,7 @@ const stageId = (stage: string) => `stage-${keyOf(stage)}`;
               <span class="num">{pad2(stageIndex + 1)}</span>
               <div>
                 <h2><span class="t-zh" data-pagefind-ignore>{category.name}</span><span class="t-en" data-pagefind-ignore>{category.english}</span></h2>
-                <p>{category.summary}</p>
+                <p><span class="t-zh" data-pagefind-ignore>{category.summary}</span><span class="t-en" data-pagefind-ignore>{category.summaryEn ?? category.summary}</span></p>
               </div>
               <span class="stage-count"><span class="t-zh" data-pagefind-ignore>{category.tools.length} 个工具</span><span class="t-en" data-pagefind-ignore>{category.tools.length} Tools</span></span>
               <span class="english">{category.english}</span>
@@ -186,9 +187,9 @@ const stageId = (stage: string) => `stage-${keyOf(stage)}`;
                   </span>
                   <span class="main">
                     <strong>{tool.title}</strong>
-                    <small>{tool.description}</small>
+                    <small><span class="t-zh" data-pagefind-ignore>{tool.description}</span><span class="t-en" data-pagefind-ignore>{tool.descriptionEn ?? tool.description}</span></small>
                   </span>
-                  <span class="role">{tool.role}</span>
+                  <span class="role"><span class="t-zh" data-pagefind-ignore>{tool.role}</span><span class="t-en" data-pagefind-ignore>{tool.roleEn ?? tool.role}</span></span>
                   <span class="tags">{tool.tags.slice(0, 3).join(" / ")}</span>
                   <ToolStar />
                 </a>

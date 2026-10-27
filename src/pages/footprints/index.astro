@@ -51,12 +51,16 @@ const archiveNumber = new Map(footprints.map((entry, index) => [footprintSlug(en
 const places = footprints.map((entry) => ({
   slug: footprintSlug(entry),
   title: entry.data.title,
+  titleEn: entry.data.titleEn,
   province: entry.data.province,
+  provinceEn: entry.data.provinceEn,
   prefecture: entry.data.prefecture,
   city: entry.data.city,
+  cityEn: entry.data.cityEn,
   coordinates: entry.data.coordinates,
   visited: entry.data.visited.map((date) => date.toISOString().slice(0, 10)),
   summary: entry.data.summary,
+  summaryEn: entry.data.summaryEn,
   cover: entry.data.cover,
   status: entry.data.status,
   since: entry.data.since?.toISOString().slice(0, 10),
@@ -97,10 +101,10 @@ const places = footprints.map((entry) => ({
     )}
 
     <div class="footprints-strip">
-      <div><span class="label"><span class="t-zh" data-pagefind-ignore>常驻</span><span class="t-en" data-pagefind-ignore>Home Base</span></span><span class="value">{homeBase ? `${homeBase.data.city} · Since ${homeBase.data.since?.getFullYear() ?? firstYear}` : "—"}</span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>常驻</span><span class="t-en" data-pagefind-ignore>Home Base</span></span><span class="value">{homeBase ? <><span class="t-zh" data-pagefind-ignore>{`${homeBase.data.city} · Since ${homeBase.data.since?.getFullYear() ?? firstYear}`}</span><span class="t-en" data-pagefind-ignore>{`${homeBase.data.cityEn ?? homeBase.data.city} · Since ${homeBase.data.since?.getFullYear() ?? firstYear}`}</span></> : "—"}</span></div>
       <div><span class="label"><span class="t-zh" data-pagefind-ignore>省级地区</span><span class="t-en" data-pagefind-ignore>Provinces</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>{provinces.size} 个省级地区</span><span class="t-en" data-pagefind-ignore>{provinces.size} provinces</span></span></div>
       <div><span class="label"><span class="t-zh" data-pagefind-ignore>旅行记录</span><span class="t-en" data-pagefind-ignore>Travel Log</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>{travelVisits} 次抵达 · {travelFootprints.length} 个地点</span><span class="t-en" data-pagefind-ignore>{travelVisits} visits · {travelFootprints.length} places</span></span></div>
-      <div><span class="label"><span class="t-zh" data-pagefind-ignore>最近旅行</span><span class="t-en" data-pagefind-ignore>Latest Trip</span></span><span class="value">{latestTrip ? `${latestTrip.data.city} · ${footprintDateLabel(latestVisit(latestTrip), latestTrip.data.precision)}` : "—"}</span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>最近旅行</span><span class="t-en" data-pagefind-ignore>Latest Trip</span></span><span class="value">{latestTrip ? <><span class="t-zh" data-pagefind-ignore>{`${latestTrip.data.city} · ${footprintDateLabel(latestVisit(latestTrip), latestTrip.data.precision)}`}</span><span class="t-en" data-pagefind-ignore>{`${latestTrip.data.cityEn ?? latestTrip.data.city} · ${footprintDateLabel(latestVisit(latestTrip), latestTrip.data.precision)}`}</span></> : "—"}</span></div>
     </div>
 
     <FootprintMap places={places} />
@@ -149,9 +153,9 @@ const places = footprints.map((entry) => ({
                     <span class="journey-num"><span class="t-zh" data-pagefind-ignore>第 {String(archiveNumber.get(footprintSlug(entry))).padStart(2, "0")} 站</span><span class="t-en" data-pagefind-ignore>No. {String(archiveNumber.get(footprintSlug(entry))).padStart(2, "0")}</span></span>
                     <span class="journey-row-copy">
                       <span class="journey-meta"><span class="t-zh" data-pagefind-ignore>城市 · {entry.data.province} · {yearRange(entry)} · {entry.data.visited.length} 次</span><span class="t-en" data-pagefind-ignore>City · {entry.data.province} · {yearRange(entry)} · {entry.data.visited.length} visits</span> <em><span class="t-zh" data-pagefind-ignore>{contentLabel(entry)}</span><span class="t-en" data-pagefind-ignore>{contentLabelEn(entry)}</span></em></span>
-                      <strong>{entry.data.city}</strong>
-                      <small>{entry.data.summary}</small>
-                      {entry.data.journeys.length > 0 && <span class="journey-name">↳ {entry.data.journeys.map((journey) => journey.name).join(" · ")}</span>}
+                      <strong><span class="t-zh" data-pagefind-ignore>{entry.data.city}</span><span class="t-en" data-pagefind-ignore>{entry.data.cityEn ?? entry.data.city}</span></strong>
+                      <small><span class="t-zh" data-pagefind-ignore>{entry.data.summary}</span><span class="t-en" data-pagefind-ignore>{entry.data.summaryEn ?? entry.data.summary}</span></small>
+                      {entry.data.journeys.length > 0 && <span class="journey-name">↳ <span class="t-zh" data-pagefind-ignore>{entry.data.journeys.map((journey) => journey.name).join(" · ")}</span><span class="t-en" data-pagefind-ignore>{entry.data.journeys.map((journey) => journey.nameEn ?? journey.name).join(" · ")}</span></span>}
                     </span>
                     <span class="journey-arrow" aria-hidden="true">→</span>
                   </a>
@@ -178,8 +182,8 @@ const places = footprints.map((entry) => ({
                   <span class="journey-num"><span class="t-zh" data-pagefind-ignore>{entry.data.status === "home" ? "家" : "故"}</span><span class="t-en" data-pagefind-ignore>{entry.data.status === "home" ? "Home" : "Past"}</span></span>
                   <span class="journey-row-copy">
                     <span class="journey-meta"><span class="t-zh" data-pagefind-ignore>{entry.data.status === "home" ? `常驻地 · Since ${entry.data.since?.getFullYear() ?? firstYear}` : entry.data.until ? `曾居地 · ${entry.data.until.getFullYear()} 年以前` : "曾居地"}</span><span class="t-en" data-pagefind-ignore>{entry.data.status === "home" ? `Home base · Since ${entry.data.since?.getFullYear() ?? firstYear}` : entry.data.until ? `Former home · before ${entry.data.until.getFullYear()}` : "Former home"}</span> <em><span class="t-zh" data-pagefind-ignore>{contentLabel(entry)}</span><span class="t-en" data-pagefind-ignore>{contentLabelEn(entry)}</span></em></span>
-                    <strong>{entry.data.city}</strong>
-                    <small>{entry.data.summary}</small>
+                    <strong><span class="t-zh" data-pagefind-ignore>{entry.data.city}</span><span class="t-en" data-pagefind-ignore>{entry.data.cityEn ?? entry.data.city}</span></strong>
+                    <small><span class="t-zh" data-pagefind-ignore>{entry.data.summary}</span><span class="t-en" data-pagefind-ignore>{entry.data.summaryEn ?? entry.data.summary}</span></small>
                   </span>
                   <span class="journey-arrow" aria-hidden="true">→</span>
                 </a>

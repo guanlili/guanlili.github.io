@@ -1,15 +1,19 @@
 ---
 title: "永州｜2023 年盛夏"
+titleEn: "Yongzhou | Midsummer 2023"
 province: "湖南省"
+provinceEn: "Hunan"
 prefecture: "永州市"
 city: "永州"
+cityEn: "Yongzhou"
 coordinates: [111.6134, 26.4204]
 status: "visited"
 precision: "month"
 visited: [2023-07-01]
 journeys:
-  - { id: "hunan-guangxi-2023", name: "2023 湘桂盛夏", order: 1, date: 2023-07-01 }
+  - { id: "hunan-guangxi-2023", name: "2023 湘桂盛夏", nameEn: "2023 Hunan–Guangxi Summer", order: 1, date: 2023-07-01 }
 summary: "2023 年 7 月到访湖南永州，之后继续前往桂林阳朔。"
+summaryEn: "Yongzhou, Hunan, in July 2023, then on to Guilin and Yangshuo."
 photos: []
 tags: [湖南, 夏天, "2023"]
 ---

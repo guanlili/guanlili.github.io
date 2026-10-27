@@ -1,19 +1,25 @@
 ---
 title: "汕头｜潮汕行"
+titleEn: "Shantou | The Chaoshan Trip"
 province: "广东省"
+provinceEn: "Guangdong"
 prefecture: "汕头市"
 city: "汕头"
+cityEn: "Shantou"
 coordinates: [116.6822, 23.3535]
 status: "visited"
 precision: "month"
 visited: [2024-10-01]
 journeys:
-  - { id: "lingnan-2024", name: "2024 岭南之行", order: 2, date: 2024-10-01 }
+  - { id: "lingnan-2024", name: "2024 岭南之行", nameEn: "2024 Lingnan Trip", order: 2, date: 2024-10-01 }
 events:
   - date: 2024-10-01
     title: "潮汕行"
+    titleEn: "The Chaoshan Trip"
     note: "原始记录只写了潮汕，地图暂以汕头作为城市锚点。"
+    noteEn: "The original log only says Chaoshan; Shantou anchors the pin for now."
 summary: "2024 年 10 月从广州继续前往潮汕，暂以汕头作为这段区域旅行的城市坐标。"
+summaryEn: "October 2024, Guangzhou to Chaoshan — Shantou anchors this leg for now."
 photos: []
 tags: [广东, 汕头, 潮汕, "2024"]
 ---
