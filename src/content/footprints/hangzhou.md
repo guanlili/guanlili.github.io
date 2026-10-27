@@ -1,15 +1,19 @@
 ---
 title: "杭州｜2021 年秋天"
+titleEn: "Hangzhou | Autumn 2021"
 province: "浙江省"
+provinceEn: "Zhejiang"
 prefecture: "杭州市"
 city: "杭州"
+cityEn: "Hangzhou"
 coordinates: [120.1551, 30.2741]
 status: "visited"
 precision: "month"
 visited: [2021-10-01]
 journeys:
-  - { id: "southbound-2021", name: "2021 秋日南行", order: 1, date: 2021-10-01 }
+  - { id: "southbound-2021", name: "2021 秋日南行", nameEn: "2021 Autumn Southward", order: 1, date: 2021-10-01 }
 summary: "2021 年 10 月到访杭州，也是那年秋天向南旅行的一站。"
+summaryEn: "Hangzhou in October 2021, one stop on that autumn's southward run."
 photos: []
 tags: [浙江, "2021", 秋天]
 ---

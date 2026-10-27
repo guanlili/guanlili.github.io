@@ -17,6 +17,9 @@ interface Place {
   journeys: Array<{ id: string; name: string; order: number; date: string }>;
   contentLabel: string;
   contentLabelEn: string;
+  titleEn?: string;
+  summaryEn?: string;
+  cityEn?: string;
   sample: boolean;
 }
 
@@ -365,8 +368,8 @@ const journeys = [...journeyAggregates.values()]
                     ? (place.until ? `Former home · before ${place.until.slice(0, 4)}` : "Former home")
                     : `City · ${place.province} · ${place.visited.at(-1)?.slice(0, 4)}`}</span>
               </span>
-              <strong>{place.city}</strong>
-              <small>{place.summary}</small>
+              <strong><span class="t-zh" data-pagefind-ignore>{place.city}</span><span class="t-en" data-pagefind-ignore>{place.cityEn ?? place.city}</span></strong>
+              <small><span class="t-zh" data-pagefind-ignore>{place.summary}</span><span class="t-en" data-pagefind-ignore>{place.summaryEn ?? place.summary}</span></small>
               <span class="place-link"><span class="t-zh" data-pagefind-ignore>{place.contentLabel} · 查看记录 →</span><span class="t-en" data-pagefind-ignore>{place.contentLabelEn} · View notes →</span></span>
             </span>
           </a>

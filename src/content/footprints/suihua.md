@@ -1,8 +1,11 @@
 ---
 title: "绥化｜成长的原点"
+titleEn: "Suihua | Where I Grew Up"
 province: "黑龙江省"
+provinceEn: "Heilongjiang"
 prefecture: "绥化市"
 city: "绥化"
+cityEn: "Suihua"
 coordinates: [126.9689, 46.6538]
 status: "lived"
 until: 2019-08-31
@@ -12,8 +15,11 @@ events:
   - date: 2019-01-01
     precision: "year"
     title: "2019 年以前"
+    titleEn: "Before 2019"
     note: "主要在黑龙江绥化生活。"
+    noteEn: "Living mainly in Suihua, Heilongjiang."
 summary: "2019 年以前主要生活在这里。它不是一次旅行，而是后来所有出发的原点。"
+summaryEn: "Where I lived before 2019. Not a trip — the origin point of every departure since."
 photos: []
 tags: [曾居地, 故乡, 黑龙江]
 ---

@@ -68,6 +68,7 @@ const cover = data.cover ? responsiveImage(data.cover, [800, 1200, 1600]) : unde
 const photos = data.photos.map((photo) => ({ ...photo, image: responsiveImage(photo.src, [480, 800, 1200]) }));
 const photoSizes = photos.length === 1 ? "(max-width: 760px) 100vw, 720px" : "(max-width: 560px) 100vw, (max-width: 760px) 50vw, 350px";
 const placeLocation = [data.province, data.prefecture, data.city].filter((value, index, values) => value && values.indexOf(value) === index).join(" · ");
+const placeLocationEn = [data.provinceEn, data.prefecture, data.cityEn].filter((value, index, values) => value && values.indexOf(value) === index).join(" · ");
 ---
 
 <BaseLayout
@@ -81,13 +82,13 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
 >
   <div class:list={["article-shell", "footprint-detail", { "status-home": isHome }]}>
     <nav class="footprint-breadcrumb" aria-label="面包屑" data-tt="aria-label" data-tt-aria-label="面包屑|Breadcrumb">
-      <a href="/footprints/"><span class="t-zh" data-pagefind-ignore>我的足迹</span><span class="t-en" data-pagefind-ignore>Footprints</span></a><span>/</span><span>{data.province}</span><span>/</span><strong>{data.city}</strong>
+      <a href="/footprints/"><span class="t-zh" data-pagefind-ignore>我的足迹</span><span class="t-en" data-pagefind-ignore>Footprints</span></a><span>/</span><span><span class="t-zh" data-pagefind-ignore>{data.province}</span><span class="t-en" data-pagefind-ignore>{data.provinceEn ?? data.province}</span></span><span>/</span><strong><span class="t-zh" data-pagefind-ignore>{data.city}</span><span class="t-en" data-pagefind-ignore>{data.cityEn ?? data.city}</span></strong>
     </nav>
 
     <section class="footprint-case-head">
       <div class="kicker"><span class="rule"></span><span><span class="t-zh" data-pagefind-ignore>{isHome ? `常驻地 · ${data.province}` : isLived ? `曾居地 · ${data.province}` : `${data.province} · ${yearRange(entry)}`}</span><span class="t-en" data-pagefind-ignore>{isHome ? `Home Base · ${data.province}` : isLived ? `Once Home · ${data.province}` : `${data.province} · ${yearRange(entry)}`}</span></span><span class="rule"></span></div>
-      <h1>{data.title}</h1>
-      <p>{data.summary}</p>
+      <h1><span class="t-zh" data-pagefind-ignore>{data.title}</span><span class="t-en" data-pagefind-ignore>{data.titleEn ?? data.title}</span></h1>
+      <p><span class="t-zh" data-pagefind-ignore>{data.summary}</span><span class="t-en" data-pagefind-ignore>{data.summaryEn ?? data.summary}</span></p>
       <div class="case-byline">
         {isHome
           ? <><span><span class="t-zh" data-pagefind-ignore>生活的圆心</span><span class="t-en" data-pagefind-ignore>Center of life</span></span><span class="sep"></span><span><span class="t-zh" data-pagefind-ignore>Since {homeSince.getFullYear()} · 至今</span><span class="t-en" data-pagefind-ignore>Since {homeSince.getFullYear()} · present</span></span></>
@@ -112,12 +113,12 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
           decoding="async"
           fetchpriority="high"
         />
-        <figcaption>{data.city} · {isHome ? `Home Base Since ${homeSince.getFullYear()}` : yearRange(entry)}</figcaption>
+        <figcaption><span class="t-zh" data-pagefind-ignore>{data.city}</span><span class="t-en" data-pagefind-ignore>{data.cityEn ?? data.city}</span> · {isHome ? `Home Base Since ${homeSince.getFullYear()}` : yearRange(entry)}</figcaption>
       </figure>
     )}
 
     <div class="footprint-meta-strip">
-      <div><span class="label"><span class="t-zh" data-pagefind-ignore>地点</span><span class="t-en" data-pagefind-ignore>Place</span></span><span class="value">{placeLocation}</span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>地点</span><span class="t-en" data-pagefind-ignore>Place</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>{placeLocation}</span><span class="t-en" data-pagefind-ignore>{placeLocationEn}</span></span></div>
       <div><span class="label"><span class="t-zh" data-pagefind-ignore>坐标</span><span class="t-en" data-pagefind-ignore>Coords</span></span><span class="value">{data.coordinates[1].toFixed(2)}°N · {data.coordinates[0].toFixed(2)}°E</span></div>
       <div><span class="label"><span class="t-zh" data-pagefind-ignore>类型</span><span class="t-en" data-pagefind-ignore>Type</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>{isHome ? "常驻地" : isLived ? "曾居地" : `城市 · ${data.visited.length} 次`}</span><span class="t-en" data-pagefind-ignore>{isHome ? "Home Base" : isLived ? "Once Home" : `City · ${data.visited.length} visits`}</span></span></div>
       <div><span class="label"><span class="t-zh" data-pagefind-ignore>时间</span><span class="t-en" data-pagefind-ignore>Time</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>{isHome ? `${homeSince.getFullYear()}—至今` : isLived && data.until ? `${data.until.getFullYear()}年以前` : yearRange(entry)}</span><span class="t-en" data-pagefind-ignore>{isHome ? `${homeSince.getFullYear()}—present` : isLived && data.until ? `before ${data.until.getFullYear()}` : yearRange(entry)}</span></span></div>
@@ -138,12 +139,12 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
                 <li>
                   <time>{footprintDateLabel(event.date, event.precision)}</time>
                   <div>
-                    <strong>{event.href
+                    <strong><span class="t-zh" data-pagefind-ignore>{event.href
                       ? event.href.startsWith("/")
                         ? <a href={event.href}>{event.title} ↗</a>
                         : <a href={event.href} target="_blank" rel="noopener">{event.title} ↗</a>
-                      : event.title}</strong>
-                    {event.note && <p>{event.note}</p>}
+                      : event.title}</span><span class="t-en" data-pagefind-ignore>{event.titleEn ?? event.title}</span></strong>
+                    {event.note && <p><span class="t-zh" data-pagefind-ignore>{event.note}</span><span class="t-en" data-pagefind-ignore>{event.noteEn ?? event.note}</span></p>}
                   </div>
                 </li>
               ))}
@@ -226,7 +227,7 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
         {activeJourney && journeyStops.length > 1 && (
           <div class="side-block footprint-journey-stops">
             <span class="side-label"><span class="t-zh" data-pagefind-ignore>本次行程</span><span class="t-en" data-pagefind-ignore>Journey</span></span>
-            <strong>{activeJourney.name}</strong>
+            <strong><span class="t-zh" data-pagefind-ignore>{activeJourney.name}</span><span class="t-en" data-pagefind-ignore>{activeJourney.nameEn ?? activeJourney.name}</span></strong>
             <ol>
               {journeyStops.map((stop) => (
                 <li class:list={{ current: stop.current }}><a href={stop.path}><span>{String(stop.order).padStart(2, "0")}</span>{stop.city}</a></li>
@@ -248,9 +249,9 @@ const placeLocation = [data.province, data.prefecture, data.city].filter((value,
     </div>
 
     <div class="footprint-next-prev">
-      {previousStop ? <a href={footprintPath(previousStop)}><span><span class="t-zh" data-pagefind-ignore>← {activeJourney ? "同程上一站" : "较近一站"}</span><span class="t-en" data-pagefind-ignore>← {activeJourney ? "Previous stop" : "Nearer stop"}</span></span><strong>{previousStop.data.city}</strong></a> : <span></span>}
+      {previousStop ? <a href={footprintPath(previousStop)}><span><span class="t-zh" data-pagefind-ignore>← {activeJourney ? "同程上一站" : "较近一站"}</span><span class="t-en" data-pagefind-ignore>← {activeJourney ? "Previous stop" : "Nearer stop"}</span></span><strong><span class="t-zh" data-pagefind-ignore>{previousStop.data.city}</span><span class="t-en" data-pagefind-ignore>{previousStop.data.cityEn ?? previousStop.data.city}</span></strong></a> : <span></span>}
       <a class="back-map" href={activeJourney ? `/footprints/?journey=${activeJourney.id}` : "/footprints/"}><span class="t-zh" data-pagefind-ignore>回到地图</span><span class="t-en" data-pagefind-ignore>Back to map</span></a>
-      {nextStop ? <a class="next" href={footprintPath(nextStop)}><span><span class="t-zh" data-pagefind-ignore>{activeJourney ? "同程下一站" : "更早一站"} →</span><span class="t-en" data-pagefind-ignore>{activeJourney ? "Next stop" : "Earlier stop"} →</span></span><strong>{nextStop.data.city}</strong></a> : <span></span>}
+      {nextStop ? <a class="next" href={footprintPath(nextStop)}><span><span class="t-zh" data-pagefind-ignore>{activeJourney ? "同程下一站" : "更早一站"} →</span><span class="t-en" data-pagefind-ignore>{activeJourney ? "Next stop" : "Earlier stop"} →</span></span><strong><span class="t-zh" data-pagefind-ignore>{nextStop.data.city}</span><span class="t-en" data-pagefind-ignore>{nextStop.data.cityEn ?? nextStop.data.city}</span></strong></a> : <span></span>}
     </div>
   </div>
 

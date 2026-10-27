@@ -1,19 +1,25 @@
 ---
 title: "桂林｜阳朔山水之间"
+titleEn: "Guilin | Among the Karst Rivers of Yangshuo"
 province: "广西壮族自治区"
+provinceEn: "Guangxi"
 prefecture: "桂林市"
 city: "桂林"
+cityEn: "Guilin"
 coordinates: [110.2902, 25.2736]
 status: "visited"
 precision: "month"
 visited: [2023-07-01]
 journeys:
-  - { id: "hunan-guangxi-2023", name: "2023 湘桂盛夏", order: 2, date: 2023-07-01 }
+  - { id: "hunan-guangxi-2023", name: "2023 湘桂盛夏", nameEn: "2023 Hunan–Guangxi Summer", order: 2, date: 2023-07-01 }
 events:
   - date: 2023-07-01
     title: "桂林与阳朔"
+    titleEn: "Guilin & Yangshuo"
     note: "地图以桂林市作为城市坐标，阳朔保留在旅行记录中。"
+    noteEn: "Guilin anchors the map pin; Yangshuo stays in the travel log."
 summary: "2023 年 7 月，从湖南永州继续前往桂林、阳朔，以桂林作为这段山水旅程的城市坐标。"
+summaryEn: "July 2023, from Yongzhou into Guilin and Yangshuo — Guilin anchors this karst-river journey."
 photos: []
 tags: [广西, 桂林, 阳朔, "2023"]
 ---

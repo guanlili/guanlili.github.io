@@ -12,6 +12,7 @@ const totalTags = new Set(SKILLS.flatMap((s) => s.tags)).size;
 const pad2 = (n: number) => String(n).padStart(2, "0");
 const keyOf = (s: string) => s.toLowerCase().replace(/[^a-z0-9一-龥]+/g, "-").replace(/^-|-$/g, "");
 const catId = (cat: string) => `cat-${keyOf(cat)}`;
+const catEnOf = (cat: string) => SKILL_CATEGORIES.find((c) => c.name === cat)?.english ?? cat;
 ---
 <BaseLayout
   active="skills"
@@ -102,7 +103,7 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
               data-skill-card
               data-pinned={skill.pinned ? "true" : "false"}
               data-cat={skill.category}
-              data-search={`${skill.name} ${skill.command} ${skill.title} ${skill.description} ${skill.category} ${skill.triggers.join(" ")} ${skill.tags.join(" ")}`.toLowerCase()}
+              data-search={`${skill.name} ${skill.command} ${skill.title} ${skill.titleEn ?? ""} ${skill.description} ${skill.descriptionEn ?? ""} ${skill.category} ${catEnOf(skill.category)} ${skill.triggers.join(" ")} ${skill.tags.join(" ")}`.toLowerCase()}
             >
               <div class="skill-card-top">
                 <button
@@ -118,10 +119,10 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
                   <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="4" width="9" height="11" rx="1.5"/><path d="M4 4V2.5A1.5 1.5 0 0 1 5.5 1h7A1.5 1.5 0 0 1 14 2.5v9A1.5 1.5 0 0 1 12.5 13H11"/></svg>
                   {skill.command}
                 </button>
-                <span class="skill-cat-badge">{skill.category}</span>
+                <span class="skill-cat-badge"><span class="t-zh" data-pagefind-ignore>{skill.category}</span><span class="t-en" data-pagefind-ignore>{catEnOf(skill.category)}</span></span>
               </div>
-              <h2>{skill.title}</h2>
-              <p>{skill.description}</p>
+              <h2><span class="t-zh" data-pagefind-ignore>{skill.title}</span><span class="t-en" data-pagefind-ignore>{skill.titleEn ?? skill.title}</span></h2>
+              <p><span class="t-zh" data-pagefind-ignore>{skill.description}</span><span class="t-en" data-pagefind-ignore>{skill.descriptionEn ?? skill.description}</span></p>
               {skill.triggers.length > 0 && (
                 <div class="skill-triggers">
                   {skill.triggers.slice(0, 3).map((t) => (
@@ -156,7 +157,7 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
               <span class="num">{pad2(catIndex + 1)}</span>
               <div>
                 <h2><span class="t-zh" data-pagefind-ignore>{cat.name}</span><span class="t-en" data-pagefind-ignore>{cat.english}</span></h2>
-                <p>{cat.summary}</p>
+                <p><span class="t-zh" data-pagefind-ignore>{cat.summary}</span><span class="t-en" data-pagefind-ignore>{cat.summaryEn ?? cat.summary}</span></p>
               </div>
               <span class="cat-count"><span class="t-zh" data-pagefind-ignore>{cat.skills.length} 个技能</span><span class="t-en" data-pagefind-ignore>{cat.skills.length} Skills</span></span>
               <span class="english">{cat.english}</span>
@@ -168,7 +169,7 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
                   data-skill-card
                   data-skill-kind="row"
                   data-cat={skill.category}
-                  data-search={`${skill.name} ${skill.command} ${skill.title} ${skill.description} ${skill.category} ${skill.triggers.join(" ")} ${skill.tags.join(" ")}`.toLowerCase()}
+                  data-search={`${skill.name} ${skill.command} ${skill.title} ${skill.titleEn ?? ""} ${skill.description} ${skill.descriptionEn ?? ""} ${skill.category} ${catEnOf(skill.category)} ${skill.triggers.join(" ")} ${skill.tags.join(" ")}`.toLowerCase()}
                 >
                   <span class="num">{pad2(skillIndex + 1)}</span>
                   <button
@@ -185,10 +186,10 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
                     {skill.command}
                   </button>
                   <span class="main">
-                    <strong>{skill.title}</strong>
-                    <small>{skill.description}</small>
+                    <strong><span class="t-zh" data-pagefind-ignore>{skill.title}</span><span class="t-en" data-pagefind-ignore>{skill.titleEn ?? skill.title}</span></strong>
+                    <small><span class="t-zh" data-pagefind-ignore>{skill.description}</span><span class="t-en" data-pagefind-ignore>{skill.descriptionEn ?? skill.description}</span></small>
                   </span>
-                  <span class="row-cat">{skill.category}</span>
+                  <span class="row-cat"><span class="t-zh" data-pagefind-ignore>{skill.category}</span><span class="t-en" data-pagefind-ignore>{catEnOf(skill.category)}</span></span>
                   <span class="row-triggers">{skill.triggers.slice(0, 2).join(" / ")}</span>
                 </div>
               ))}

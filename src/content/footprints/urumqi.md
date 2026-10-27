@@ -1,19 +1,25 @@
 ---
 title: "乌鲁木齐｜新疆之行第一站"
+titleEn: "Ürümqi | First Stop of the Xinjiang Trip"
 province: "新疆维吾尔自治区"
+provinceEn: "Xinjiang"
 prefecture: "乌鲁木齐市"
 city: "乌鲁木齐"
+cityEn: "Ürümqi"
 coordinates: [87.6168, 43.8256]
 status: "visited"
 precision: "month"
 visited: [2025-03-01]
 journeys:
-  - { id: "xinjiang-2025", name: "2025 新疆之行", order: 1, date: 2025-03-01 }
+  - { id: "xinjiang-2025", name: "2025 新疆之行", nameEn: "2025 Xinjiang Trip", order: 1, date: 2025-03-01 }
 events:
   - date: 2025-03-01
     title: "新疆之行第一站"
+    titleEn: "Xinjiang Trip, Stop 1"
     note: "从乌鲁木齐开始，继续前往赛里木湖、喀纳斯和阿勒泰。"
+    noteEn: "Starting in Ürümqi, on to Sayram Lake, Kanas and Altay."
 summary: "2025 年 3 月新疆之行的起点，随后一路前往赛里木湖、喀纳斯和阿勒泰。"
+summaryEn: "The start of the March 2025 Xinjiang trip, then on to Sayram Lake, Kanas and Altay."
 photos: []
 tags: [新疆, 乌鲁木齐, 新疆线, "2025"]
 ---

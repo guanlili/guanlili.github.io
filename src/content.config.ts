@@ -53,9 +53,12 @@ const footprints = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/footprints" }),
   schema: z.object({
     title: z.string(),
+    titleEn: z.string().optional(),
     province: z.string(),
+    provinceEn: z.string().optional(),
     prefecture: z.string(),
     city: z.string(),
+    cityEn: z.string().optional(),
     coordinates: z.tuple([z.number(), z.number()]),
     status: z.enum(["home", "lived", "visited"]).default("visited"),
     since: z.coerce.date().optional(),
@@ -68,7 +71,9 @@ const footprints = defineCollection({
           date: z.coerce.date(),
           precision: z.enum(["day", "month", "year"]).default("month"),
           title: z.string(),
+          titleEn: z.string().optional(),
           note: z.string().optional(),
+          noteEn: z.string().optional(),
           href: z.string().optional(),
         }),
       )
@@ -78,12 +83,14 @@ const footprints = defineCollection({
         z.object({
           id: z.string(),
           name: z.string(),
+          nameEn: z.string().optional(),
           order: z.number().int().positive(),
           date: z.coerce.date(),
         }),
       )
       .default([]),
     summary: z.string(),
+    summaryEn: z.string().optional(),
     cover: z.string().optional(),
     coverAlt: z.string().optional(),
     photos: z
