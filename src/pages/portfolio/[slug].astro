@@ -26,6 +26,7 @@ const links = project.data.links ?? {};
   description={project.data.summary}
   image={project.data.cover}
   type="article"
+  indexable
   article={{ date: d, author: SITE.author, tags: project.data.tags }}
 >
   <div class="article-shell">

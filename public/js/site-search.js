@@ -26,7 +26,8 @@ export function initSearch() {
   var catalogByUrl = null;
   var catalogItems = [];
   var catalogLoading = null;
-  var quickSearches = ['Dify', 'RAG', 'PDF解析', '本地部署', '代码生成', 'ComfyUI'];
+  // Quick-search chips follow the UI language (brand terms work in both).
+  var quickSearches = T('quickWords').split(',');
 
   function syncSearchQuery(query) {
     var url = new URL(window.location.href);
@@ -444,6 +445,8 @@ export function initSearch() {
 
   // Re-render the visible state when the UI language toggles.
   document.addEventListener('lang-change', function () {
+    quickSearches = T('quickWords').split(',');
+    renderQuickSearches();
     if (!searchPage.classList.contains('search-active')) return;
     if (!searchInput.value.trim() && !activeTags.length) renderRecommended();
     else runSearch();
