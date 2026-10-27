@@ -1,5 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PostList from "../components/PostList.astro";
+import { getPosts } from "../lib/posts";
+
+const recent = (await getPosts()).slice(0, 4);
 ---
 <BaseLayout title="404">
   <div class="article-shell">
@@ -19,6 +23,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       </div>
       <div class="right"><div class="big">404</div><div><span class="t-zh" data-pagefind-ignore>页面未找到</span><span class="t-en" data-pagefind-ignore>Page Not Found</span></div></div>
     </header>
+
+    <section class="nf-recents">
+      <header class="section-head">
+        <h3><span class="t-zh" data-pagefind-ignore>不如读读这些</span><span class="t-en" data-pagefind-ignore>Maybe read these instead</span></h3>
+        <span class="count"><span class="t-zh" data-pagefind-ignore>最新 <em>{recent.length}</em> 篇</span><span class="t-en" data-pagefind-ignore>Latest <em>{recent.length}</em></span></span>
+      </header>
+      <PostList posts={recent} />
+    </section>
+
     <nav class="pager-nav">
       <a href="/"><span class="t-zh" data-pagefind-ignore>&larr; 回首页</span><span class="t-en" data-pagefind-ignore>&larr; Home</span></a>
       <span class="spacer"></span>

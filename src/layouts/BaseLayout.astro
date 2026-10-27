@@ -21,6 +21,9 @@ interface Props {
   article?: { date?: Date; updated?: Date; author?: string; tags?: string[] };
   // Also drops the page from the sitemap (see sitemap filter in astro.config.mjs).
   noindex?: boolean;
+  // Only detail pages join the Pagefind index; list pages (home/archive/tags…)
+  // previously polluted results with themselves for article-title queries.
+  indexable?: boolean;
 }
 
 // Default social share card (1200×630, see public/img/og-default.png).
@@ -36,6 +39,7 @@ const {
   bodyClass = "",
   article,
   noindex = false,
+  indexable = false,
 } = Astro.props;
 
 const pageTitle = title ? `${title} - ${SITE.seoTitle}` : SITE.seoTitle;
@@ -130,6 +134,7 @@ const recommendedPosts = searchPosts.slice(0, 8);
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
   <link rel="canonical" href={canonical} />
   <link rel="alternate" type="application/rss+xml" title={SITE.seoTitle} href={`${SITE.url}/feed.xml`} />
+  <link rel="alternate" type="application/rss+xml" title={`${SITE.seoTitle} · 全文`} href={`${SITE.url}/feed-full.xml`} />
 
   <!-- JSON-LD: Person (author entity, all pages) -->
   <script is:inline type="application/ld+json" set:html={JSON.stringify({
@@ -254,7 +259,7 @@ const recommendedPosts = searchPosts.slice(0, 8);
     </div>
   </div>
 
-  <main id="main-content" data-pagefind-body>
+  <main id="main-content" data-pagefind-body={indexable || undefined}>
     <slot />
   </main>
 

@@ -1,0 +1,49 @@
+name: Link check
+
+on:
+  schedule:
+    # 3rd of every month, 09:00 UTC
+    - cron: "0 9 3 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run remote link check
+        id: links
+        run: |
+          node scripts/check-links.mjs --remote 2>&1 | tee link-report.txt
+          # Real dead links only — 403/521 are mostly anti-bot false positives.
+          grep -E -- '-> (404|410|timeout|ECONNRESET|ENOTFOUND)' link-report.txt > dead.txt || true
+          if [ -s dead.txt ]; then
+            echo "dead=1" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Open issue on dead links
+        if: steps.links.outputs.dead == '1'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          {
+            echo "月度死链巡检发现 **$(wc -l < dead.txt | tr -d ' ')** 条疑似真死链（403/521 反爬误报已过滤）："
+            echo
+            echo '```'
+            cat dead.txt
+            echo '```'
+            echo
+            echo "完整报告见 workflow 日志：$GITHUB_SERVER_URL/$REPO/actions/runs/$GITHUB_RUN_ID"
+          } > issue-body.md
+          gh issue create \
+            --title "🔗 月度死链巡检：$(wc -l < dead.txt | tr -d ' ') 条疑似死链" \
+            --body-file issue-body.md

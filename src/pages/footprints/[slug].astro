@@ -77,6 +77,7 @@ const placeLocationEn = [data.provinceEn, data.prefecture, data.cityEn].filter((
   description={data.summary}
   image={data.cover}
   type="article"
+  indexable
   article={{ date: latest, author: SITE.author, tags: data.tags }}
   noindex={isThinFootprint(entry)}
 >

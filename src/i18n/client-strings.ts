@@ -48,6 +48,7 @@ export const CLIENT_STRINGS: { zh: Record<string, string>; en: Record<string, st
     hitBody: "正文命中",
     hitRelated: "相关结果",
     hitPage: "页面结果",
+    quickWords: "Dify,RAG,PDF解析,本地部署,代码生成,ComfyUI",
     // site-article.js — TOC / code copy / anchors
     expandSubheads: "展开子标题",
     copyCode: "复制代码",
@@ -100,6 +101,7 @@ export const CLIENT_STRINGS: { zh: Record<string, string>; en: Record<string, st
     hitBody: "Body match",
     hitRelated: "Related",
     hitPage: "Page result",
+    quickWords: "Dify,RAG,Cursor,Claude,Agent,ComfyUI",
     // site-article.js — TOC / code copy / anchors
     expandSubheads: "Expand subheadings",
     copyCode: "Copy code",
