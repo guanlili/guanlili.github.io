@@ -115,6 +115,9 @@ function applyI18nAttrs() {
       el.setAttribute(attr, isEn ? pair[1] : pair[0]);
     });
   });
+  // Reflect the current language on the toggle (fresh DOM after view swaps).
+  var langBtn = document.getElementById('lang-toggle-btn');
+  if (langBtn) langBtn.setAttribute('aria-pressed', isEn ? 'true' : 'false');
 }
 
 function initLangToggle() {
