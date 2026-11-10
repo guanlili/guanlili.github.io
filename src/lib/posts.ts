@@ -33,10 +33,10 @@ function getBlogCollection(): Promise<CollectionEntry<"blog">[]> {
 }
 
 let postsPromise: Promise<LoadedPost[]> | undefined;
-export function getPosts(): Promise<LoadedPost[]> {
-  if (!import.meta.env.PROD) return loadPosts();
-  postsPromise ??= loadPosts();
-  return postsPromise;
+export async function getPosts(options: { includeUnlisted?: boolean } = {}): Promise<LoadedPost[]> {
+  if (import.meta.env.PROD) postsPromise ??= loadPosts();
+  const posts = await (import.meta.env.PROD ? postsPromise! : loadPosts());
+  return options.includeUnlisted ? posts : posts.filter((post) => !post.entry.data.unlisted);
 }
 
 async function loadPosts(): Promise<LoadedPost[]> {

@@ -25,7 +25,8 @@ function buildCoverSrcset(src: string, width: number): string | undefined {
 }
 
 export async function getStaticPaths() {
-  const posts = await getPosts(); // newest-first, date-prefixed only
+  const posts = await getPosts({ includeUnlisted: true }); // Keep retired URLs reachable.
+  const listedPosts = posts.filter((post) => !post.entry.data.unlisted);
   const footprintsByPost = new Map<string, { city: string; province: string; path: string }[]>();
   for (const entry of await getFootprints()) {
     for (const path of footprintPostPaths(entry)) {
@@ -34,14 +35,15 @@ export async function getStaticPaths() {
     }
   }
   const postsByTag = new Map<string, LoadedPost[]>();
-  for (const post of posts) {
+  for (const post of listedPosts) {
     for (const tag of post.entry.data.tags || []) {
       if (!postsByTag.has(tag)) postsByTag.set(tag, []);
       postsByTag.get(tag)!.push(post);
     }
   }
 
-  return posts.map((p, i) => {
+  return posts.map((p) => {
+    const i = listedPosts.indexOf(p);
     // Related articles: score only posts sharing at least one tag.
     const candidates = new Map<LoadedPost, number>();
     for (const tag of p.entry.data.tags || []) {
@@ -65,7 +67,7 @@ export async function getStaticPaths() {
     return {
       params: { slug: p.route.param },
       // older = next index, newer = previous index; n = sequence (newest = 01)
-      props: { post: p.entry, older: posts[i + 1], newer: posts[i - 1], n: i + 1, related, footprints: footprintsByPost.get(p.route.path) ?? [] },
+      props: { post: p.entry, older: i >= 0 ? listedPosts[i + 1] : undefined, newer: i >= 0 ? listedPosts[i - 1] : undefined, n: i + 1, related, footprints: footprintsByPost.get(p.route.path) ?? [] },
     };
   });
 }
@@ -80,7 +82,7 @@ const d = data.date;
 const updated = data.updated ?? d;
 const pad = (v: number) => String(v).padStart(2, "0");
 const ymd = `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())}`;
-const noN = pad(n); // article number, e.g. 01 (newest)
+const noN = data.unlisted ? "—" : pad(n); // article number, e.g. 01 (newest)
 const { chars, minutes } = readingStats(post.body ?? "");
 
 const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
@@ -107,7 +109,8 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
   description={description || SITE.description}
   image={coverImage}
   type="article"
-  indexable
+  indexable={!data.unlisted}
+  noindex={data.unlisted}
   bodyClass="layout-post"
   article={{ date: d, updated, author: data.author || SITE.author, tags: data.tags }}
 >
@@ -115,7 +118,7 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
     <section class="article-head">
       <div class="kicker">
         <span class="rule"></span>
-        <span class="t-zh" data-pagefind-ignore>第 {noN} 篇 · 手稿</span><span class="t-en" data-pagefind-ignore>No. {noN} · Essay</span>
+        <span class="t-zh" data-pagefind-ignore>{data.unlisted ? "历史手稿" : `第 ${noN} 篇 · 手稿`}</span><span class="t-en" data-pagefind-ignore>{data.unlisted ? "Archived essay" : `No. ${noN} · Essay`}</span>
         <span class="rule"></span>
       </div>
       <h1 data-pagefind-meta="title" data-pagefind-weight="10">{data.title}</h1>
@@ -245,6 +248,7 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
       </section>
     )}
 
+    {!data.unlisted && (
     <div class="next-prev">
       {newerPath ? (
         <a href={newerPath}>
@@ -263,6 +267,8 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
         <span class="np-empty"><span class="nav-lbl"><span class="t-zh" data-pagefind-ignore>已到底</span><span class="t-en" data-pagefind-ignore>The end</span></span><span class="nav-ttl"><span class="t-zh" data-pagefind-ignore>没有更早的文章了</span><span class="t-en" data-pagefind-ignore>Nothing older</span></span></span>
       )}
     </div>
+
+    )}
 
     <Giscus />
   </div>

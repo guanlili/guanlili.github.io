@@ -45,26 +45,16 @@ const topTags = [...counts.entries()]
   .map(([tag, n]) => ({ tag, n }));
 
 const sectionNames = new Map<string, string>([
-  ["AI", "AI"],
-  ["Tutorials", "教程"],
-  ["study", "学习"],
-  ["blogSet", "博客搭建"],
-  ["findJob", "求职"],
-  ["myself", "随笔"],
-  ["problemList", "问题排查"],
-  ["leetcode", "算法"],
-  ["essays", "杂文"],
+  ["AI与产品", "AI 与产品"],
+  ["技术与工程", "技术与工程"],
+  ["职业与成长", "职业与成长"],
+  ["生活与阅读", "生活与阅读"],
 ]);
 const sectionNamesEn = new Map<string, string>([
-  ["AI", "AI"],
-  ["Tutorials", "Tutorials"],
-  ["study", "Study"],
-  ["blogSet", "Blog Setup"],
-  ["findJob", "Job Hunt"],
-  ["myself", "Essays"],
-  ["problemList", "Debugging"],
-  ["leetcode", "Algorithms"],
-  ["essays", "Misc"],
+  ["AI与产品", "AI & Products"],
+  ["技术与工程", "Technology & Engineering"],
+  ["职业与成长", "Career & Growth"],
+  ["生活与阅读", "Life & Reading"],
 ]);
 const sections = new Map<string, number>();
 for (const p of posts) {

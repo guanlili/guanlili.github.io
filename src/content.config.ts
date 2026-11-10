@@ -16,6 +16,8 @@ const blog = defineCollection({
     // Keep unfinished posts in the repository without exposing them in routes,
     // feeds, search, or related-content lists.
     draft: z.boolean().default(false),
+    // Preserve legacy URLs while excluding retired posts from discovery.
+    unlisted: z.boolean().default(false),
     tags: z
       .union([z.array(z.string()), z.string().transform((s) => [s])])
       .default([]),
