@@ -1,20 +1,41 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PostList from "../components/PostList.astro";
+import { getPosts } from "../lib/posts";
+
+const recent = (await getPosts()).slice(0, 4);
 ---
 <BaseLayout title="404">
   <div class="article-shell">
     <header class="page-head">
       <div>
-        <div class="kicker"><span class="dot"></span><span>404 · Not Found</span><span class="rule"></span><span>Page Not Found</span></div>
-        <h1>这一页走丢了</h1>
-        <p class="sub">链接可能已经失效，或者文章被搬到了别处。不如回首页，或翻翻归档。</p>
+        <div class="kicker">
+          <span class="dot"></span>
+          <span><span class="t-zh" data-pagefind-ignore>404 · 未找到</span><span class="t-en" data-pagefind-ignore>404 · Not Found</span></span>
+          <span class="rule"></span>
+          <span><span class="t-zh" data-pagefind-ignore>页面不存在</span><span class="t-en" data-pagefind-ignore>Page Not Found</span></span>
+        </div>
+        <h1><span class="t-zh" data-pagefind-ignore>这一页走丢了</span><span class="t-en" data-pagefind-ignore>This page went missing</span></h1>
+        <p class="sub">
+          <span class="t-zh" data-pagefind-ignore>链接可能已经失效，或者文章被搬到了别处。不如回首页，或翻翻归档。</span>
+          <span class="t-en" data-pagefind-ignore>The link may be broken, or the post may have moved. Head home, or browse the archive.</span>
+        </p>
       </div>
-      <div class="right"><div class="big">404</div><div>Page Not Found</div></div>
+      <div class="right"><div class="big">404</div><div><span class="t-zh" data-pagefind-ignore>页面未找到</span><span class="t-en" data-pagefind-ignore>Page Not Found</span></div></div>
     </header>
+
+    <section class="nf-recents">
+      <header class="section-head">
+        <h3><span class="t-zh" data-pagefind-ignore>不如读读这些</span><span class="t-en" data-pagefind-ignore>Maybe read these instead</span></h3>
+        <span class="count"><span class="t-zh" data-pagefind-ignore>最新 <em>{recent.length}</em> 篇</span><span class="t-en" data-pagefind-ignore>Latest <em>{recent.length}</em></span></span>
+      </header>
+      <PostList posts={recent} />
+    </section>
+
     <nav class="pager-nav">
-      <a href="/">&larr; 回首页 Home</a>
+      <a href="/"><span class="t-zh" data-pagefind-ignore>&larr; 回首页</span><span class="t-en" data-pagefind-ignore>&larr; Home</span></a>
       <span class="spacer"></span>
-      <a href="/archive/">去归档 Archive &rarr;</a>
+      <a href="/archive/"><span class="t-zh" data-pagefind-ignore>去归档 &rarr;</span><span class="t-en" data-pagefind-ignore>Archive &rarr;</span></a>
     </nav>
   </div>
 </BaseLayout>

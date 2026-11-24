@@ -1,22 +1,29 @@
 ---
 title: "三亚｜两段海南记忆与陵水途中"
+titleEn: "Sanya | Two Hainan Memories, via Lingshui"
 province: "海南省"
+provinceEn: "Hainan"
 prefecture: "三亚市"
 city: "三亚"
+cityEn: "Sanya"
 coordinates: [109.5121, 18.2528]
 status: "visited"
 precision: "month"
 visited: [2021-10-01, 2023-03-01]
 journeys:
-  - { id: "southbound-2021", name: "2021 秋日南行", order: 3, date: 2021-10-01 }
-  - { id: "hainan-east-2023", name: "2023 海南环岛东线", order: 5, date: 2023-03-01 }
+  - { id: "southbound-2021", name: "2021 秋日南行", nameEn: "2021 Autumn Southward", order: 3, date: 2021-10-01 }
+  - { id: "hainan-east-2023", name: "2023 海南环岛东线", nameEn: "2023 Hainan East Loop", order: 5, date: 2023-03-01 }
 events:
   - date: 2021-10-01
     title: "第一次到访三亚"
+    titleEn: "First Visit to Sanya"
   - date: 2023-03-01
     title: "经陵水抵达三亚"
+    titleEn: "To Sanya via Lingshui"
     note: "海南环岛东线途经陵水，地图以相邻且同程的三亚作为城市坐标。"
+    noteEn: "The east loop passes Lingshui; Sanya anchors the pin as the nearby same-leg city."
 summary: "2021 年第一次抵达，2023 年海南环岛东线经陵水再次来到三亚。"
+summaryEn: "First arrived in 2021; again in 2023 on the east loop, by way of Lingshui."
 photos: []
 tags: [海南, 陵水, 三亚, 海岛, 两次到访]
 ---

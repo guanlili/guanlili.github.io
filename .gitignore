@@ -26,3 +26,6 @@ BROKEN-IMAGES.generated.md
 # Obsidian
 .obsidian/
 
+
+# ZCode local session artifacts
+.zcode/

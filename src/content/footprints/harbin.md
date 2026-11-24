@@ -1,13 +1,17 @@
 ---
 title: "哈尔滨｜2026 年冬天"
+titleEn: "Harbin | Winter 2026"
 province: "黑龙江省"
+provinceEn: "Heilongjiang"
 prefecture: "哈尔滨市"
 city: "哈尔滨"
+cityEn: "Harbin"
 coordinates: [126.6425, 45.7560]
 status: "visited"
 precision: "month"
 visited: [2026-02-01]
 summary: "2026 年 2 月前往哈尔滨，重新回到黑龙江的冬天。"
+summaryEn: "Harbin in February 2026 — back to a Heilongjiang winter."
 photos: []
 tags: [黑龙江, 哈尔滨, 冬天, "2026"]
 ---

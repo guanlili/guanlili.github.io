@@ -1,0 +1,65 @@
+---
+// giscus comments (GitHub Discussions backed). Renders nothing until
+// GISCUS in consts.ts is fully configured (repo/repoId/categoryId).
+// Theme follows the site's light/dark toggle via a MutationObserver.
+import { GISCUS } from "../consts";
+
+const configured = Boolean(GISCUS.repo && GISCUS.repoId && GISCUS.categoryId);
+---
+{configured && (
+  <section class="article-comments" data-pagefind-ignore>
+    <div id="giscus-container"></div>
+  </section>
+)}
+{configured && (
+  <script is:inline define:vars={{ giscusConfig: GISCUS }}>
+    (function () {
+      function initGiscus() {
+        var container = document.getElementById('giscus-container');
+        if (!container || container.firstChild) return;
+
+        function theme() {
+          return document.documentElement.getAttribute('data-theme') === 'dark'
+            ? 'transparent_dark'
+            : 'light';
+        }
+
+        var s = document.createElement('script');
+        s.src = 'https://giscus.app/client.js';
+        s.async = true;
+        s.crossOrigin = 'anonymous';
+        s.setAttribute('data-repo', giscusConfig.repo);
+        s.setAttribute('data-repo-id', giscusConfig.repoId);
+        s.setAttribute('data-category', giscusConfig.category);
+        s.setAttribute('data-category-id', giscusConfig.categoryId);
+        s.setAttribute('data-mapping', 'pathname');
+        s.setAttribute('data-strict', '1');
+        s.setAttribute('data-reactions-enabled', '1');
+        s.setAttribute('data-emit-metadata', '0');
+        s.setAttribute('data-input-position', 'top');
+        s.setAttribute('data-theme', theme());
+        s.setAttribute('data-lang', 'zh-CN');
+        container.appendChild(s);
+
+        if (!window._giscusThemeWatcher) {
+          window._giscusThemeWatcher = true;
+          new MutationObserver(function () {
+            var iframe = document.querySelector('iframe.giscus-frame');
+            if (!iframe || !iframe.contentWindow) return;
+            iframe.contentWindow.postMessage(
+              { giscus: { setConfig: { theme: theme() } } },
+              'https://giscus.app'
+            );
+          }).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme'],
+          });
+        }
+      }
+
+      window.__initGiscus = initGiscus;
+      document.addEventListener('astro:page-load', initGiscus);
+      initGiscus();
+    })();
+  </script>
+)}
