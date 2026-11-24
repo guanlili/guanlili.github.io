@@ -1,19 +1,25 @@
 ---
 title: "烟台｜2019 年蓬莱一站"
+titleEn: "Yantai | Penglai Stop, 2019"
 province: "山东省"
+provinceEn: "Shandong"
 prefecture: "烟台市"
 city: "烟台"
+cityEn: "Yantai"
 coordinates: [121.4479, 37.4638]
 status: "visited"
 precision: "month"
 visited: [2019-06-01]
 journeys:
-  - { id: "north-coast-2019", name: "2019 北方沿海行", order: 4, date: 2019-06-01 }
+  - { id: "north-coast-2019", name: "2019 北方沿海行", nameEn: "2019 North Coast Run", order: 4, date: 2019-06-01 }
 events:
   - date: 2019-06-01
     title: "抵达蓬莱"
+    titleEn: "Arriving in Penglai"
     note: "蓬莱现为烟台市蓬莱区，地图按城市级口径记录为烟台。"
+    noteEn: "Penglai is now a district of Yantai, so the pin records Yantai at city level."
 summary: "2019 年 6 月到访蓬莱；地图按城市级口径归入烟台。"
+summaryEn: "Penglai in June 2019; recorded under Yantai at city level."
 photos: []
 tags: [山东, 烟台, 蓬莱, 海滨, "2019"]
 ---
