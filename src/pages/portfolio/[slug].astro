@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import "../../styles/pages/portfolio.less";
 import { SITE } from "../../consts";
+import { coverImage } from "../../lib/footprint-media";
 
 export async function getStaticPaths() {
   const projects = await getCollection("portfolio");
@@ -19,6 +20,8 @@ const pad2 = (n: number) => String(n).padStart(2, "0");
 const ymd = `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.getDate())}`;
 const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 const links = project.data.links ?? {};
+// The cover gets a COS srcset when its dimensions are cached.
+const cover = project.data.cover ? coverImage(project.data.cover) : undefined;
 ---
 <BaseLayout
   active="portfolio"
@@ -45,9 +48,19 @@ const links = project.data.links ?? {};
       </div>
     </section>
 
-    {project.data.cover && (
+    {cover && (
       <figure class="portfolio-cover">
-        <img src={project.data.cover} alt="" loading="eager" decoding="async" fetchpriority="high" />
+        <img
+          src={cover.src}
+          width={cover.width}
+          height={cover.height}
+          srcset={cover.srcset}
+          sizes={cover.srcset ? "(min-width: 1744px) 1440px, 84vw" : undefined}
+          alt=""
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+        />
       </figure>
     )}
 

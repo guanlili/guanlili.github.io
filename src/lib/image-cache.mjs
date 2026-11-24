@@ -143,8 +143,13 @@ async function probeAll(urls) {
   return results;
 }
 
-// Markdown directories that are scanned for remote images.
-export const IMAGE_CONTENT_DIRS = ["src/content/blog", "src/content/footprints"];
+// Markdown directories that are scanned for remote images. Portfolio is in
+// here because its covers are only referenced from its own frontmatter.
+export const IMAGE_CONTENT_DIRS = [
+  "src/content/blog",
+  "src/content/footprints",
+  "src/content/portfolio",
+];
 
 /**
  * Pre-build step: scan all markdown, probe remote image dimensions, save cache.
