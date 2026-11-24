@@ -144,13 +144,13 @@ URL 会按文件名自动生成，例如：
 
 ## 构建健康检查
 
-`npm run verify` 会依次执行类型检查、站点构建、Pagefind 索引生成和 `dist/` 产物检查。`scripts/check-dist.mjs` 会确认首页、RSS、sitemap、离线页、Pagefind、PWA manifest 和 Service Worker 等关键文件存在且非空。
+`npm run verify` 会依次执行类型检查、站点构建、Pagefind 索引生成和 `dist/` 产物检查。`scripts/check-dist.mjs` 会确认首页、RSS、sitemap、离线页、Pagefind、PWA manifest 和 Service Worker 等关键文件存在且非空，并确认文章正文里的 COS 图片大多带有 `loading="lazy"`，防止 `src/lib/satteri-image-attrs.mjs` 在构建中静默失效。
 
 `npm run check:links` 默认检查本地资源路径，并统计远程 URL。需要真实探测外链状态时运行 `npm run check:links:remote`。
 
 ## 图片与内容维护
 
-构建时会通过 `src/lib/astro-image-cache.mjs` 探测图片尺寸，并把结果写入 `.image-dimensions.json`。这个文件用于稳定文章图片布局。
+构建、`npm run dev` 启动和 `astro check` 时，`src/lib/astro-image-cache.mjs` 会在任何 Markdown 被处理之前探测尚未缓存的图片尺寸，并把结果写入 `.image-dimensions.json`。有了这些尺寸，正文图才会带上宽高、懒加载和 srcset。
 
 `npm run images:report` 可以查看本地缺失图片、远程图片尺寸缓存、最近探测失败和未探测图片；需要生成临时 Markdown 报告时运行 `npm run images:report:write`。历史欠账图基本都已改挂远程图床，剩余失效外链以该报告为准。
 
