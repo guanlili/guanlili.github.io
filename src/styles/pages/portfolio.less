@@ -36,7 +36,8 @@
   grid-template-rows: auto 1fr;
   min-width: 0;
 }
-.featured-work img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-bottom: var(--surface-border); filter: saturate(.86) contrast(1.02); }
+// `height: auto` keeps the width/height attributes on the cover from acting as a fixed height.
+.featured-work img { width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-bottom: var(--surface-border); filter: saturate(.86) contrast(1.02); }
 .featured-work .body { padding: 24px 24px 22px; display: flex; flex-direction: column; gap: 14px; }
 .featured-work .meta { display: flex; flex-wrap: wrap; gap: 10px 14px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
 .featured-work h2 { font-family: var(--serif); font-size: clamp(24px, 3vw, 34px); line-height: var(--line-title); font-weight: 600; margin: 0; color: var(--ink); letter-spacing: 0; text-wrap: balance; }

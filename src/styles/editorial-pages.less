@@ -366,6 +366,10 @@
 .feature-cover {
   display: block;
   width: 100%;
+  // The cover carries width/height attributes (from the dimension cache).
+  // Without `height: auto` they would act as a fixed height and the 16 / 10 box
+  // below would be ignored.
+  height: auto;
   aspect-ratio: 16 / 10;
   object-fit: cover;
   border-bottom: var(--surface-border);

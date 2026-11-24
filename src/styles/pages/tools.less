@@ -542,7 +542,8 @@ html.tools-star-ready .tool-star { display: inline-flex; }
 }
 
 .portfolio-cover { margin: 36px 0 0; border: 1px solid var(--rule); background: var(--paper); padding: 12px; }
-.portfolio-cover img { display: block; width: 100%; max-height: 520px; object-fit: cover; }
+// `height: auto` keeps the width/height attributes on the cover from acting as a fixed height.
+.portfolio-cover img { display: block; width: 100%; height: auto; max-height: 520px; object-fit: cover; }
 
 .portfolio-meta-strip {
   display: grid;
