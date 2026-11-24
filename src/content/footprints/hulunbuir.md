@@ -1,19 +1,25 @@
 ---
 title: "呼伦贝尔｜草原旅程中段"
+titleEn: "Hulunbuir | Midpoint of the Grassland Route"
 province: "内蒙古自治区"
+provinceEn: "Inner Mongolia"
 prefecture: "呼伦贝尔市"
 city: "呼伦贝尔"
+cityEn: "Hulunbuir"
 coordinates: [119.7658, 49.2116]
 status: "visited"
 precision: "month"
 visited: [2019-07-01]
 journeys:
-  - { id: "hulunbuir-2019", name: "2019 呼伦贝尔线", order: 2, date: 2019-07-01 }
+  - { id: "hulunbuir-2019", name: "2019 呼伦贝尔线", nameEn: "2019 Hulunbuir Route", order: 2, date: 2019-07-01 }
 events:
   - date: 2019-07-01
     title: "呼伦贝尔线第二站"
+    titleEn: "Hulunbuir Route, Stop 2"
     note: "从牙克石抵达呼伦贝尔，之后继续前往满洲里。地图点位采用海拉尔城区坐标。"
+    noteEn: "Yakeshi to Hulunbuir, then on to Manzhouli. The pin uses downtown Hailar."
 summary: "2019 年 7 月，从牙克石继续到呼伦贝尔，随后向满洲里出发。"
+summaryEn: "July 2019, from Yakeshi on to Hulunbuir, then toward Manzhouli."
 photos: []
 tags: [内蒙古, 呼伦贝尔, 草原, "2019"]
 ---

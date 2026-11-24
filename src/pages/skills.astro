@@ -12,6 +12,7 @@ const totalTags = new Set(SKILLS.flatMap((s) => s.tags)).size;
 const pad2 = (n: number) => String(n).padStart(2, "0");
 const keyOf = (s: string) => s.toLowerCase().replace(/[^a-z0-9一-龥]+/g, "-").replace(/^-|-$/g, "");
 const catId = (cat: string) => `cat-${keyOf(cat)}`;
+const catEnOf = (cat: string) => SKILL_CATEGORIES.find((c) => c.name === cat)?.english ?? cat;
 ---
 <BaseLayout
   active="skills"
@@ -24,52 +25,55 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
       <div>
         <div class="kicker">
           <span class="dot"></span>
-          <span>Claude Code · Skills 导航</span>
+          <span><span class="t-zh" data-pagefind-ignore>Skills 导航</span><span class="t-en" data-pagefind-ignore>Claude Code · Skills</span></span>
           <span class="rule"></span>
           <span>Slash Commands</span>
         </div>
-        <h1>常用 Skills，<br />一处收藏，随取随用。</h1>
-        <p class="sub">这里收藏的是我在 Claude Code 里最常调用的 Skill，从写作、代码审查到文档处理和系统配置。点击任意 <code>/command</code> 徽章即可复制命令。</p>
+        <h1><span class="t-zh" data-pagefind-ignore>常用 Skills，<br />一处收藏，随取随用。</span><span class="t-en" data-pagefind-ignore>The Skills I use most,<br />collected in one place.</span></h1>
+        <p class="sub">
+          <span class="t-zh" data-pagefind-ignore>这里收藏的是我在 Claude Code 里最常调用的 Skill，从写作、代码审查到文档处理和系统配置。点击任意 <code>/command</code> 徽章即可复制命令。</span>
+          <span class="t-en" data-pagefind-ignore>The Skills I invoke most in Claude Code — from writing and code review to docs and system setup. Click any <code>/command</code> badge to copy it.</span>
+        </p>
       </div>
       <div class="right">
         <div class="big">{SKILLS.length}</div>
-        <div>Total Skills</div>
-        <div class="cat-count">{SKILL_CATEGORIES.length} Categories</div>
-        <div>{pinnedSkills.length} Pinned</div>
+        <div><span class="t-zh" data-pagefind-ignore>技能总数</span><span class="t-en" data-pagefind-ignore>Total Skills</span></div>
+        <div class="cat-count"><span class="t-zh" data-pagefind-ignore>{SKILL_CATEGORIES.length} 个分类</span><span class="t-en" data-pagefind-ignore>{SKILL_CATEGORIES.length} Categories</span></div>
+        <div><span class="t-zh" data-pagefind-ignore>{pinnedSkills.length} 个置顶</span><span class="t-en" data-pagefind-ignore>{pinnedSkills.length} Pinned</span></div>
       </div>
     </section>
 
     <div class="skills-strip">
-      <div><span class="label">用途</span><span class="value">写作 · 代码 · 文档 · 系统</span></div>
-      <div><span class="label">调用方式</span><span class="value">Claude Code 内输入 /skill-name</span></div>
-      <div><span class="label">技能标签</span><span class="value">{totalTags} Tags</span></div>
-      <div><span class="label">理念</span><span class="value">省去重复描述，专注创造</span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>用途</span><span class="t-en" data-pagefind-ignore>Use</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>写作 · 代码 · 文档 · 系统</span><span class="t-en" data-pagefind-ignore>Writing · Code · Docs · System</span></span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>调用方式</span><span class="t-en" data-pagefind-ignore>Invoke</span></span><span class="value">Claude Code 内输入 /skill-name</span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>技能标签</span><span class="t-en" data-pagefind-ignore>Skill Tags</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>{totalTags} 个标签</span><span class="t-en" data-pagefind-ignore>{totalTags} Tags</span></span></div>
+      <div><span class="label"><span class="t-zh" data-pagefind-ignore>理念</span><span class="t-en" data-pagefind-ignore>Philosophy</span></span><span class="value"><span class="t-zh" data-pagefind-ignore>省去重复描述，专注创造</span><span class="t-en" data-pagefind-ignore>Skip the repetition, focus on creating</span></span></div>
     </div>
 
     <section class="skills-workbench" data-pagefind-ignore>
       <div class="skills-workbench-lead">
         <span class="label">Skills Launchpad</span>
-        <h2>Skill 让 Claude 更懂你的工作流。</h2>
-        <p>每个 Skill 是一段预设好的指令集：触发一个词，Claude 就知道该怎么做。这里收藏的都是我真实在用的，按类目整理，支持搜索过滤。</p>
+        <h2><span class="t-zh" data-pagefind-ignore>Skill 让 Claude 更懂你的工作流。</span><span class="t-en" data-pagefind-ignore>Skills teach Claude your workflow.</span></h2>
+        <p><span class="t-zh" data-pagefind-ignore>每个 Skill 是一段预设好的指令集：触发一个词，Claude 就知道该怎么做。这里收藏的都是我真实在用的，按类目整理，支持搜索过滤。</span><span class="t-en" data-pagefind-ignore>Each Skill is a preset instruction set: trigger one word and Claude knows what to do. Everything here is in real use — organized by category, searchable and filterable.</span></p>
       </div>
       <div class="skills-metrics">
-        <div><span>{SKILLS.length}</span><small>Total Skills</small></div>
-        <div><span>{SKILL_CATEGORIES.length}</span><small>Categories</small></div>
-        <div><span>{pinnedSkills.length}</span><small>Pinned</small></div>
-        <div><span>{totalTags}</span><small>Tags</small></div>
+        <div><span>{SKILLS.length}</span><small><span class="t-zh" data-pagefind-ignore>技能总数</span><span class="t-en" data-pagefind-ignore>Total Skills</span></small></div>
+        <div><span>{SKILL_CATEGORIES.length}</span><small><span class="t-zh" data-pagefind-ignore>分类</span><span class="t-en" data-pagefind-ignore>Categories</span></small></div>
+        <div><span>{pinnedSkills.length}</span><small><span class="t-zh" data-pagefind-ignore>置顶</span><span class="t-en" data-pagefind-ignore>Pinned</span></small></div>
+        <div><span>{totalTags}</span><small><span class="t-zh" data-pagefind-ignore>标签</span><span class="t-en" data-pagefind-ignore>Tags</span></small></div>
       </div>
     </section>
 
-    <nav class="skill-cat-rail" aria-label="技能分类">
+    <nav class="skill-cat-rail" aria-label="技能分类" data-tt="aria-label" data-tt-aria-label="技能分类|Skill categories">
       <button type="button" class="active" data-cat-filter="all">
         <span>00 · ALL</span>
-        <strong>全部</strong>
+        <strong><span class="t-zh" data-pagefind-ignore>全部</span><span class="t-en" data-pagefind-ignore>All</span></strong>
         <em>{SKILLS.length}</em>
       </button>
       {categories.map((cat, index) => (
         <button type="button" data-cat-filter={cat.name} data-cat-target={`#${catId(cat.name)}`}>
-          <span>{pad2(index + 1)} · {cat.english}</span>
-          <strong>{cat.name}</strong>
+          <span><span class="t-zh" data-pagefind-ignore>{pad2(index + 1)}</span><span class="t-en" data-pagefind-ignore>{pad2(index + 1)} · {cat.english}</span></span>
+          <strong><span class="t-zh" data-pagefind-ignore>{cat.name}</span><span class="t-en" data-pagefind-ignore>{cat.english}</span></strong>
           <em>{cat.skills.length}</em>
         </button>
       ))}
@@ -77,20 +81,20 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
 
     <section class="skills-console" data-skills-console data-pagefind-ignore>
       <div class="skills-search">
-        <label for="skills-search-input">Search Skills</label>
-        <input id="skills-search-input" type="search" placeholder="搜索技能名称、描述或触发语句..." autocomplete="off" />
+        <label for="skills-search-input"><span class="t-zh" data-pagefind-ignore>搜索技能</span><span class="t-en" data-pagefind-ignore>Search Skills</span></label>
+        <input id="skills-search-input" type="search" placeholder="搜索技能名称、描述或触发语句..." autocomplete="off" data-tt="placeholder" data-tt-placeholder="搜索技能名称、描述或触发语句...|Search by name, description or trigger..." />
       </div>
       <div class="skills-console-side">
-        <p class="skills-result" data-skills-summary>{SKILLS.length} skills ready</p>
+        <p class="skills-result" data-skills-summary><span class="t-zh" data-pagefind-ignore>{SKILLS.length} 个技能就绪</span><span class="t-en" data-pagefind-ignore>{SKILLS.length} skills ready</span></p>
       </div>
     </section>
 
     <div class="skills-workspace" data-skills-workspace>
       <section class="skills-pinned" data-pinned-section>
         <header class="section-head">
-          <h3>快速启动</h3>
+          <h3><span class="t-zh" data-pagefind-ignore>快速启动</span><span class="t-en" data-pagefind-ignore>Quick Launch</span></h3>
           <span class="latin">Launchpad</span>
-          <span class="count"><em>{pinnedSkills.length}</em> 个常用入口 · 点击命令徽章复制</span>
+          <span class="count"><span class="t-zh" data-pagefind-ignore><em>{pinnedSkills.length}</em> 个常用入口 · 点击命令徽章复制</span><span class="t-en" data-pagefind-ignore><em>{pinnedSkills.length}</em> entries · click a badge to copy</span></span>
         </header>
         <div class="skill-card-grid">
           {pinnedSkills.map((skill) => (
@@ -99,7 +103,7 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
               data-skill-card
               data-pinned={skill.pinned ? "true" : "false"}
               data-cat={skill.category}
-              data-search={`${skill.name} ${skill.command} ${skill.title} ${skill.description} ${skill.category} ${skill.triggers.join(" ")} ${skill.tags.join(" ")}`.toLowerCase()}
+              data-search={`${skill.name} ${skill.command} ${skill.title} ${skill.titleEn ?? ""} ${skill.description} ${skill.descriptionEn ?? ""} ${skill.category} ${catEnOf(skill.category)} ${skill.triggers.join(" ")} ${skill.tags.join(" ")}`.toLowerCase()}
             >
               <div class="skill-card-top">
                 <button
@@ -108,14 +112,17 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
                   data-cmd={skill.command}
                   title={`复制 ${skill.command}`}
                   aria-label={`复制命令 ${skill.command}`}
+                  data-tt="title,aria-label"
+                  data-tt-title={`复制 ${skill.command}|Copy ${skill.command}`}
+                  data-tt-aria-label={`复制命令 ${skill.command}|Copy command ${skill.command}`}
                 >
                   <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="4" width="9" height="11" rx="1.5"/><path d="M4 4V2.5A1.5 1.5 0 0 1 5.5 1h7A1.5 1.5 0 0 1 14 2.5v9A1.5 1.5 0 0 1 12.5 13H11"/></svg>
                   {skill.command}
                 </button>
-                <span class="skill-cat-badge">{skill.category}</span>
+                <span class="skill-cat-badge"><span class="t-zh" data-pagefind-ignore>{skill.category}</span><span class="t-en" data-pagefind-ignore>{catEnOf(skill.category)}</span></span>
               </div>
-              <h2>{skill.title}</h2>
-              <p>{skill.description}</p>
+              <h2><span class="t-zh" data-pagefind-ignore>{skill.title}</span><span class="t-en" data-pagefind-ignore>{skill.titleEn ?? skill.title}</span></h2>
+              <p><span class="t-zh" data-pagefind-ignore>{skill.description}</span><span class="t-en" data-pagefind-ignore>{skill.descriptionEn ?? skill.description}</span></p>
               {skill.triggers.length > 0 && (
                 <div class="skill-triggers">
                   {skill.triggers.slice(0, 3).map((t) => (
@@ -135,9 +142,9 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
 
       <section class="skills-flow">
         <header class="section-head">
-          <h3>分类索引</h3>
+          <h3><span class="t-zh" data-pagefind-ignore>分类索引</span><span class="t-en" data-pagefind-ignore>Categories</span></h3>
           <span class="latin">Category Index</span>
-          <span class="count"><em>{SKILL_CATEGORIES.length}</em> Categories</span>
+          <span class="count"><span class="t-zh" data-pagefind-ignore><em>{SKILL_CATEGORIES.length}</em> 个分类</span><span class="t-en" data-pagefind-ignore><em>{SKILL_CATEGORIES.length}</em> Categories</span></span>
         </header>
 
         {categories.map((cat, catIndex) => (
@@ -149,10 +156,10 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
             <div class="skill-cat-head">
               <span class="num">{pad2(catIndex + 1)}</span>
               <div>
-                <h2>{cat.name}</h2>
-                <p>{cat.summary}</p>
+                <h2><span class="t-zh" data-pagefind-ignore>{cat.name}</span><span class="t-en" data-pagefind-ignore>{cat.english}</span></h2>
+                <p><span class="t-zh" data-pagefind-ignore>{cat.summary}</span><span class="t-en" data-pagefind-ignore>{cat.summaryEn ?? cat.summary}</span></p>
               </div>
-              <span class="cat-count">{cat.skills.length} Skills</span>
+              <span class="cat-count"><span class="t-zh" data-pagefind-ignore>{cat.skills.length} 个技能</span><span class="t-en" data-pagefind-ignore>{cat.skills.length} Skills</span></span>
               <span class="english">{cat.english}</span>
             </div>
             <div class="skill-table">
@@ -162,7 +169,7 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
                   data-skill-card
                   data-skill-kind="row"
                   data-cat={skill.category}
-                  data-search={`${skill.name} ${skill.command} ${skill.title} ${skill.description} ${skill.category} ${skill.triggers.join(" ")} ${skill.tags.join(" ")}`.toLowerCase()}
+                  data-search={`${skill.name} ${skill.command} ${skill.title} ${skill.titleEn ?? ""} ${skill.description} ${skill.descriptionEn ?? ""} ${skill.category} ${catEnOf(skill.category)} ${skill.triggers.join(" ")} ${skill.tags.join(" ")}`.toLowerCase()}
                 >
                   <span class="num">{pad2(skillIndex + 1)}</span>
                   <button
@@ -171,22 +178,25 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
                     data-cmd={skill.command}
                     title={`复制 ${skill.command}`}
                     aria-label={`复制命令 ${skill.command}`}
+                    data-tt="title,aria-label"
+                    data-tt-title={`复制 ${skill.command}|Copy ${skill.command}`}
+                    data-tt-aria-label={`复制命令 ${skill.command}|Copy command ${skill.command}`}
                   >
                     <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="4" width="9" height="11" rx="1.5"/><path d="M4 4V2.5A1.5 1.5 0 0 1 5.5 1h7A1.5 1.5 0 0 1 14 2.5v9A1.5 1.5 0 0 1 12.5 13H11"/></svg>
                     {skill.command}
                   </button>
                   <span class="main">
-                    <strong>{skill.title}</strong>
-                    <small>{skill.description}</small>
+                    <strong><span class="t-zh" data-pagefind-ignore>{skill.title}</span><span class="t-en" data-pagefind-ignore>{skill.titleEn ?? skill.title}</span></strong>
+                    <small><span class="t-zh" data-pagefind-ignore>{skill.description}</span><span class="t-en" data-pagefind-ignore>{skill.descriptionEn ?? skill.description}</span></small>
                   </span>
-                  <span class="row-cat">{skill.category}</span>
+                  <span class="row-cat"><span class="t-zh" data-pagefind-ignore>{skill.category}</span><span class="t-en" data-pagefind-ignore>{catEnOf(skill.category)}</span></span>
                   <span class="row-triggers">{skill.triggers.slice(0, 2).join(" / ")}</span>
                 </div>
               ))}
             </div>
           </section>
         ))}
-        <p class="skills-empty" hidden data-skills-empty>没有匹配到 Skill。换个关键词试试。</p>
+        <p class="skills-empty" hidden data-skills-empty><span class="t-zh" data-pagefind-ignore>没有匹配到 Skill。换个关键词试试。</span><span class="t-en" data-pagefind-ignore>No skills matched. Try another keyword.</span></p>
       </section>
     </div>
   </div>
@@ -246,9 +256,10 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
     if (emptyMsg) emptyMsg.hidden = visibleCount > 0;
 
     if (summary) {
-      var catLabel = currentCat === 'all' ? '全部' : currentCat;
+      var t = (window as any).__T || function (k: string) { return k; };
+      var catLabel = currentCat === 'all' ? t('allLabel') : currentCat;
       var queryLabel = currentQuery ? ' · "' + currentQuery + '"' : '';
-      summary.textContent = visibleCount + ' skills · ' + catLabel + queryLabel;
+      summary.textContent = String(t('skillsSummary')).replace('{n}', String(visibleCount)).replace('{label}', catLabel) + queryLabel;
     }
   }
 
@@ -291,7 +302,8 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
       navigator.clipboard.writeText(cmd).then(function () {
         _btn.classList.add('copied');
         var orig = _btn.innerHTML;
-        _btn.innerHTML = '<svg viewBox="0 0 16 16" style="width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><polyline points="2 8 6 12 14 4"/></svg> 已复制';
+        var copiedText = (window as any).__T ? (window as any).__T('copied') : '已复制';
+        _btn.innerHTML = '<svg viewBox="0 0 16 16" style="width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><polyline points="2 8 6 12 14 4"/></svg> ' + copiedText;
         setTimeout(function () {
           _btn.classList.remove('copied');
           _btn.innerHTML = orig;
@@ -312,5 +324,8 @@ const catId = (cat: string) => `cat-${keyOf(cat)}`;
   }
 
   update();
+
+  // Re-render the summary line when the UI language toggles.
+  (window as any).__liliRefreshSkillsLang = update;
 })();
 </script>

@@ -41,6 +41,8 @@ git checkout master && git pull && git branch -d <branch>
 
 ## 内容规范
 
+写/润色博客前先读 `.cursor/skills/lili-writing-style/SKILL.md`（作者写作风格 + 本仓库落盘约定）。
+
 **博客** — `src/content/blog/<分类>/YYYY-MM-DD-<slug>.md`
 - 文件名日期前缀决定 URL：`/:year/:month/:day/:slug/`（月日零填充，结尾斜杠）
 - frontmatter：`title` / `date` / `subtitle` / `description` / `cover` / `header-mask` / `tags` / `draft`

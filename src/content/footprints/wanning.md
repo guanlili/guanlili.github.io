@@ -1,19 +1,24 @@
 ---
 title: "万宁｜海南环岛东线"
+titleEn: "Wanning | Hainan East Loop"
 province: "海南省"
+provinceEn: "Hainan"
 prefecture: "万宁市"
 city: "万宁"
+cityEn: "Wanning"
 coordinates: [110.3816, 18.7951]
 status: "visited"
 precision: "month"
 visited: [2023-03-01]
 journeys:
-  - { id: "hainan-east-2023", name: "2023 海南环岛东线", order: 3, date: 2023-03-01 }
+  - { id: "hainan-east-2023", name: "2023 海南环岛东线", nameEn: "2023 Hainan East Loop", order: 3, date: 2023-03-01 }
 events:
   - date: 2023-03-01
     title: "万宁"
+    titleEn: "Wanning"
     href: "https://baike.baidu.com/item/%E4%B8%87%E5%AE%81/1118984?fromModule=lemma_inlink"
 summary: "2023 年 3 月海南环岛东线的一站。"
+summaryEn: "One stop on the March 2023 Hainan east-loop run."
 photos: []
 tags: [海南, 环岛东线, "2023"]
 ---
