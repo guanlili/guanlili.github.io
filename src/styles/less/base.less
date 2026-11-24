@@ -10,6 +10,13 @@
 // div never takes up space on non-article pages.
 .reading-progress { display: none; }
 
+// ── Language toggle (UI i18n) ───────────────────────────────────
+// <html data-lang="en"> shows .t-en spans and hides .t-zh; without the
+// attribute (default, Chinese) the reverse. Mirrored in the critical inline
+// styles in BaseLayout to avoid a flash of the wrong language.
+html:not([data-lang="en"]) .t-en { display: none; }
+html[data-lang="en"] .t-zh { display: none; }
+
 // ── Skip-to-content link (a11y, WCAG 2.4.1) ────────────────────
 // Visually hidden until focused, then surfaces top-left for keyboard users.
 .skip-nav {

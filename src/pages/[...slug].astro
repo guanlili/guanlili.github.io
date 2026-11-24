@@ -1,6 +1,7 @@
 ---
 import { render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Giscus from "../components/Giscus.astro";
 import { SITE } from "../consts";
 import { excerpt, firstImage, getPosts, readingStats, type LoadedPost } from "../lib/posts";
 import { siteImage } from "../lib/media";
@@ -24,7 +25,8 @@ function buildCoverSrcset(src: string, width: number): string | undefined {
 }
 
 export async function getStaticPaths() {
-  const posts = await getPosts(); // newest-first, date-prefixed only
+  const posts = await getPosts({ includeUnlisted: true }); // Keep retired URLs reachable.
+  const listedPosts = posts.filter((post) => !post.entry.data.unlisted);
   const footprintsByPost = new Map<string, { city: string; province: string; path: string }[]>();
   for (const entry of await getFootprints()) {
     for (const path of footprintPostPaths(entry)) {
@@ -33,14 +35,15 @@ export async function getStaticPaths() {
     }
   }
   const postsByTag = new Map<string, LoadedPost[]>();
-  for (const post of posts) {
+  for (const post of listedPosts) {
     for (const tag of post.entry.data.tags || []) {
       if (!postsByTag.has(tag)) postsByTag.set(tag, []);
       postsByTag.get(tag)!.push(post);
     }
   }
 
-  return posts.map((p, i) => {
+  return posts.map((p) => {
+    const i = listedPosts.indexOf(p);
     // Related articles: score only posts sharing at least one tag.
     const candidates = new Map<LoadedPost, number>();
     for (const tag of p.entry.data.tags || []) {
@@ -64,7 +67,7 @@ export async function getStaticPaths() {
     return {
       params: { slug: p.route.param },
       // older = next index, newer = previous index; n = sequence (newest = 01)
-      props: { post: p.entry, older: posts[i + 1], newer: posts[i - 1], n: i + 1, related, footprints: footprintsByPost.get(p.route.path) ?? [] },
+      props: { post: p.entry, older: i >= 0 ? listedPosts[i + 1] : undefined, newer: i >= 0 ? listedPosts[i - 1] : undefined, n: i + 1, related, footprints: footprintsByPost.get(p.route.path) ?? [] },
     };
   });
 }
@@ -79,7 +82,7 @@ const d = data.date;
 const updated = data.updated ?? d;
 const pad = (v: number) => String(v).padStart(2, "0");
 const ymd = `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())}`;
-const noN = pad(n); // article number, e.g. 01 (newest)
+const noN = data.unlisted ? "—" : pad(n); // article number, e.g. 01 (newest)
 const { chars, minutes } = readingStats(post.body ?? "");
 
 const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
@@ -87,6 +90,8 @@ const sectionCount = headings.filter((h) => h.depth === 2).length;
 const olderPath = older ? older.route.path : null;
 const newerPath = newer ? newer.route.path : null;
 const description = data.description || data.subtitle || excerpt(post.body ?? "", 155);
+// Only show an authored summary when it adds something beyond the subtitle.
+const showBrief = Boolean(data.description?.trim() && data.description.trim() !== data.subtitle?.trim());
 const coverImage =
   siteImage(data.cover) ??
   siteImage(data["header-img"]) ??
@@ -102,8 +107,10 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
 <BaseLayout
   title={data.title}
   description={description || SITE.description}
-  image={coverImage ?? SITE.avatar}
+  image={coverImage}
   type="article"
+  indexable={!data.unlisted}
+  noindex={data.unlisted}
   bodyClass="layout-post"
   article={{ date: d, updated, author: data.author || SITE.author, tags: data.tags }}
 >
@@ -111,7 +118,7 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
     <section class="article-head">
       <div class="kicker">
         <span class="rule"></span>
-        <span>No. {noN}{data.tags.length ? ` · ${data.tags.join(" / ")}` : ""}</span>
+        <span class="t-zh" data-pagefind-ignore>{data.unlisted ? "历史手稿" : `第 ${noN} 篇 · 手稿`}</span><span class="t-en" data-pagefind-ignore>{data.unlisted ? "Archived essay" : `No. ${noN} · Essay`}</span>
         <span class="rule"></span>
       </div>
       <h1 data-pagefind-meta="title" data-pagefind-weight="10">{data.title}</h1>
@@ -124,8 +131,13 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
         <span class="sep"></span>
         <span>{ymd}</span>
         <span class="sep"></span>
-        <span>{minutes} min read</span>
+        <span><span class="t-zh" data-pagefind-ignore>{minutes} 分钟阅读 · 约 {chars} 字</span><span class="t-en" data-pagefind-ignore>{minutes} min read · {chars} chars</span></span>
       </div>
+      {data.tags.length > 0 && (
+        <div class="article-topics" aria-label="文章标签" data-tt="aria-label" data-tt-aria-label="文章标签|Article tags" data-pagefind-weight="4">
+          {data.tags.map((tag) => <a href={`/tags/#${encodeURIComponent(tag)}`}>#{tag}</a>)}
+        </div>
+      )}
     </section>
 
     {coverImage && (
@@ -145,29 +157,12 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
       </figure>
     )}
 
-    <div class="article-meta-strip">
-      <div><span class="label">发表</span><span class="value">{ymd}</span></div>
-      <div><span class="label">字数</span><span class="value">约 {chars} 字</span></div>
-      <div><span class="label">阅读</span><span class="value">{minutes} min</span></div>
-      <div>
-        <span class="label">标签</span>
-        <span class="value article-tag-line" data-pagefind-weight="4">
-          {data.tags.length ? data.tags.map((tag) => <a href={`/tags/#${encodeURIComponent(tag)}`}>{tag}</a>) : "—"}
-        </span>
-      </div>
-    </div>
-
-    <aside class="reading-brief" data-pagefind-ignore>
-      <div>
-        <span class="label">Brief</span>
-        <p>{description}</p>
-      </div>
-      <div class="brief-stats">
-        <span><strong>{sectionCount || toc.length}</strong> Sections</span>
-        <span><strong>{minutes}</strong> Min</span>
-        <span><strong>{chars}</strong> Chars</span>
-      </div>
-    </aside>
+    {showBrief && (
+      <aside class="reading-brief" aria-label="文章摘要" data-tt="aria-label" data-tt-aria-label="文章摘要|Article summary" data-pagefind-ignore>
+        <span class="label t-zh" data-pagefind-ignore>导读</span><span class="label t-en" data-pagefind-ignore>TL;DR</span>
+        <p>{data.description}</p>
+      </aside>
+    )}
 
     <div class="article-body">
       <aside class="gutter" aria-hidden="true">
@@ -181,8 +176,8 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
       </div>
 
       {toc.length > 0 && (
-        <nav class="toc" aria-label="文章目录">
-          <div class="lbl">In This Issue · {sectionCount || toc.length}</div>
+        <nav class="toc" aria-label="文章目录" data-tt="aria-label" data-tt-aria-label="文章目录|Table of contents">
+          <div class="lbl"><span class="t-zh" data-pagefind-ignore>本期看点 · {sectionCount || toc.length}</span><span class="t-en" data-pagefind-ignore>In This Issue · {sectionCount || toc.length}</span></div>
           <ol>
             {toc.map((h) => (
               <li data-depth={h.depth}><a href={`#${h.slug}`}>{h.text}</a></li>
@@ -192,7 +187,7 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
       )}
 
       {toc.length > 0 && (
-        <button class="toc-fab" aria-label="打开目录" title="目录">
+        <button class="toc-fab" aria-label="打开目录" title="目录" data-tt="aria-label,title" data-tt-aria-label="打开目录|Open contents" data-tt-title="目录|Contents">
           <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="3" y1="4" x2="17" y2="4"/><line x1="3" y1="8" x2="14" y2="8"/><line x1="3" y1="12" x2="17" y2="12"/><line x1="3" y1="16" x2="14" y2="16"/></svg>
         </button>
       )}
@@ -200,8 +195,8 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
       {toc.length > 0 && (
         <div class="toc-sheet" aria-hidden="true" inert>
           <div class="toc-sheet-head">
-            <span>目录 / Contents</span>
-            <button class="toc-sheet-close" aria-label="关闭目录">&times;</button>
+            <span><span class="t-zh" data-pagefind-ignore>目录</span><span class="t-en" data-pagefind-ignore>Contents</span></span>
+            <button class="toc-sheet-close" aria-label="关闭目录" data-tt="aria-label" data-tt-aria-label="关闭目录|Close contents">&times;</button>
           </div>
           <ol>
             {toc.map((h) => (
@@ -213,14 +208,14 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
     </div>
 
     <div class="article-end">
-      <span>— 完 —</span>
+      <span class="t-zh" data-pagefind-ignore>— 完 —</span><span class="t-en" data-pagefind-ignore>— End —</span>
       <span class="glyph">&#10086;</span>
-      <span>{ymd} · 北京</span>
+      <span><span class="t-zh" data-pagefind-ignore>{ymd} · 北京</span><span class="t-en" data-pagefind-ignore>{ymd} · Beijing</span></span>
     </div>
 
     {footprints.length > 0 && (
       <section class="related-posts related-footprints" data-pagefind-ignore>
-        <div class="related-label">相关足迹 / Footprints</div>
+        <div class="related-label"><span class="t-zh" data-pagefind-ignore>相关足迹</span><span class="t-en" data-pagefind-ignore>Footprints</span></div>
         <div class="related-list">
           {footprints.map((f) => (
             <a class="related-card" href={f.path}>
@@ -234,7 +229,7 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
 
     {related.length > 0 && (
       <section class="related-posts">
-        <div class="related-label">继续阅读 / Related</div>
+        <div class="related-label"><span class="t-zh" data-pagefind-ignore>继续阅读</span><span class="t-en" data-pagefind-ignore>Related</span></div>
         <div class="related-list">
           {related.map((r: { title: string; path: string; tags: string[]; date: Date }) => {
             const rd = r.date;
@@ -253,24 +248,29 @@ const articleScriptVersion = ARTICLE_SCRIPT_VERSION;
       </section>
     )}
 
+    {!data.unlisted && (
     <div class="next-prev">
       {newerPath ? (
         <a href={newerPath}>
-          <span class="nav-lbl">&larr; 上一篇 / Prev</span>
+          <span class="nav-lbl"><span class="t-zh" data-pagefind-ignore>&larr; 上一篇</span><span class="t-en" data-pagefind-ignore>&larr; Prev</span></span>
           <span class="nav-ttl">{newer!.entry.data.title}</span>
         </a>
       ) : (
-        <span class="np-empty"><span class="nav-lbl">已是最新</span><span class="nav-ttl">没有更新的文章了</span></span>
+        <span class="np-empty"><span class="nav-lbl"><span class="t-zh" data-pagefind-ignore>已是最新</span><span class="t-en" data-pagefind-ignore>Latest</span></span><span class="nav-ttl"><span class="t-zh" data-pagefind-ignore>没有更新的文章了</span><span class="t-en" data-pagefind-ignore>Nothing newer</span></span></span>
       )}
       {olderPath ? (
         <a href={olderPath}>
-          <span class="nav-lbl">下一篇 / Next &rarr;</span>
+          <span class="nav-lbl"><span class="t-zh" data-pagefind-ignore>下一篇 &rarr;</span><span class="t-en" data-pagefind-ignore>Next &rarr;</span></span>
           <span class="nav-ttl">{older!.entry.data.title}</span>
         </a>
       ) : (
-        <span class="np-empty"><span class="nav-lbl">已到底</span><span class="nav-ttl">没有更早的文章了</span></span>
+        <span class="np-empty"><span class="nav-lbl"><span class="t-zh" data-pagefind-ignore>已到底</span><span class="t-en" data-pagefind-ignore>The end</span></span><span class="nav-ttl"><span class="t-zh" data-pagefind-ignore>没有更早的文章了</span><span class="t-en" data-pagefind-ignore>Nothing older</span></span></span>
       )}
     </div>
+
+    )}
+
+    <Giscus />
   </div>
 
   <script is:inline defer src={`/js/site-article.js?v=${encodeURIComponent(articleScriptVersion)}`}></script>

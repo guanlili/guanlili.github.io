@@ -1,13 +1,17 @@
 ---
 title: "秦皇岛｜2023 年初夏"
+titleEn: "Qinhuangdao | Early Summer 2023"
 province: "河北省"
+provinceEn: "Hebei"
 prefecture: "秦皇岛市"
 city: "秦皇岛"
+cityEn: "Qinhuangdao"
 coordinates: [119.6005, 39.9354]
 status: "visited"
 precision: "month"
 visited: [2023-06-01]
 summary: "2023 年 6 月到访秦皇岛。"
+summaryEn: "Qinhuangdao in June 2023."
 photos: []
 tags: [河北, 海边, "2023"]
 ---

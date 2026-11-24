@@ -2,6 +2,9 @@
 // Loaded only on article pages. Contains TOC, lightbox, code blocks, progress bar, mermaid.
 // Reuses the global scroll handler from site.js if available.
 
+// UI-string lookup from window.__I18N__ (injected by BaseLayout).
+var T = function (key) { return window.__T ? window.__T(key) : key; };
+
 // ===== Scroll handler (reuse global or create) =====
 if (!window._scrollCallbacks) {
   window._scrollCallbacks = [];
@@ -83,7 +86,7 @@ function initTOC() {
       toggle.className = 'toc-toggle';
       toggle.textContent = '+';
       toggle.setAttribute('role', 'button');
-      toggle.setAttribute('aria-label', '展开子标题');
+      toggle.setAttribute('aria-label', T('expandSubheads'));
       link.parentNode.insertBefore(toggle, link.nextSibling);
 
       toggle.addEventListener('click', function (e) {
@@ -154,17 +157,17 @@ function initCodeBlocks() {
 
     var btn = document.createElement('button');
     btn.className = 'code-copy';
-    btn.setAttribute('aria-label', '复制代码');
-    btn.setAttribute('title', '复制');
-    btn.textContent = '复制';
+    btn.setAttribute('aria-label', T('copyCode'));
+    btn.setAttribute('title', T('copy'));
+    btn.textContent = T('copy');
     pre.appendChild(btn);
 
     btn.addEventListener('click', function () {
       navigator.clipboard.writeText(code.textContent).then(function () {
-        btn.textContent = '已复制';
+        btn.textContent = T('copied');
         btn.classList.add('code-copy-done');
         setTimeout(function () {
-          btn.textContent = '复制';
+          btn.textContent = T('copy');
           btn.classList.remove('code-copy-done');
         }, 1500);
       });
@@ -211,6 +214,9 @@ function initImageCaptions() {
     caption.className = 'image-caption';
     caption.textContent = alt;
     img.insertAdjacentElement('afterend', caption);
+    // The visible caption now carries the description; drop the img alt so
+    // screen readers don't announce the same text twice (axe image-redundant-alt).
+    img.alt = '';
   });
 }
 
@@ -237,20 +243,36 @@ function initDuplicateTitle() {
 function initMermaid() {
   var codes = document.querySelectorAll('pre > code.language-mermaid');
   if (!codes.length) return;
-  var dark = document.documentElement.getAttribute('data-theme') === 'dark';
   import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs')
     .then(function (mod) {
       var mermaid = mod.default;
-      mermaid.initialize({ startOnLoad: false, theme: dark ? 'dark' : 'neutral', securityLevel: 'loose' });
+      var themeNow = function () {
+        return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'neutral';
+      };
+      mermaid.initialize({ startOnLoad: false, theme: themeNow(), securityLevel: 'loose' });
       var nodes = [];
       codes.forEach(function (code) {
         var div = document.createElement('div');
         div.className = 'mermaid';
-        div.textContent = code.textContent;
+        div.dataset.source = code.textContent;
         code.parentElement.replaceWith(div);
         nodes.push(div);
       });
       mermaid.run({ nodes: nodes }).catch(function () {});
+      // Re-render diagrams when the light/dark theme toggles.
+      if (!window._mermaidThemeWatcher) {
+        window._mermaidThemeWatcher = true;
+        new MutationObserver(function () {
+          var live = document.querySelectorAll('.mermaid[data-source]');
+          if (!live.length) return;
+          mermaid.initialize({ startOnLoad: false, theme: themeNow(), securityLevel: 'loose' });
+          live.forEach(function (div) {
+            div.removeAttribute('data-processed');
+            div.textContent = div.dataset.source;
+          });
+          mermaid.run({ nodes: live }).catch(function () {});
+        }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      }
     })
     .catch(function () {});
 }
@@ -265,7 +287,7 @@ function initHeadingAnchors() {
     a.className = 'heading-anchor';
     a.href = '#' + h.id;
     a.textContent = '#';
-    a.setAttribute('aria-label', '复制本节链接');
+    a.setAttribute('aria-label', T('copySectionLink'));
     a.addEventListener('click', function () {
       if (!navigator.clipboard) return;
       var url = location.origin + location.pathname + '#' + h.id;
@@ -291,6 +313,22 @@ function initContentLinks() {
     a.classList.add('external-link');
   });
 }
+
+// ===== Keep JS-created strings in sync after a live language toggle =====
+document.addEventListener('lang-change', function () {
+  document.querySelectorAll('.code-copy').forEach(function (btn) {
+    if (btn.classList.contains('code-copy-done')) return;
+    btn.textContent = T('copy');
+    btn.setAttribute('aria-label', T('copyCode'));
+    btn.setAttribute('title', T('copy'));
+  });
+  document.querySelectorAll('.toc-toggle').forEach(function (el) {
+    el.setAttribute('aria-label', T('expandSubheads'));
+  });
+  document.querySelectorAll('.heading-anchor').forEach(function (a) {
+    a.setAttribute('aria-label', T('copySectionLink'));
+  });
+});
 
 // ===== Init all article features (View Transitions compatible) =====
 var _articleInited = false;

@@ -1,19 +1,25 @@
 ---
 title: "阿勒泰｜喀纳斯与北疆山湖"
+titleEn: "Altay | Kanas & the Northern Xinjiang Lakes"
 province: "新疆维吾尔自治区"
+provinceEn: "Xinjiang"
 prefecture: "阿勒泰地区"
 city: "阿勒泰"
+cityEn: "Altay"
 coordinates: [88.1413, 47.8449]
 status: "visited"
 precision: "month"
 visited: [2025-03-01]
 journeys:
-  - { id: "xinjiang-2025", name: "2025 新疆之行", order: 3, date: 2025-03-01 }
+  - { id: "xinjiang-2025", name: "2025 新疆之行", nameEn: "2025 Xinjiang Trip", order: 3, date: 2025-03-01 }
 events:
   - date: 2025-03-01
     title: "喀纳斯与阿勒泰"
+    titleEn: "Kanas & Altay"
     note: "地图以阿勒泰作为城市坐标，喀纳斯保留在这段北疆行程中。"
+    noteEn: "Altay anchors the map pin; Kanas stays part of this northern route."
 summary: "2025 年 3 月前往喀纳斯与阿勒泰，地图以阿勒泰作为这段北疆旅程的城市坐标。"
+summaryEn: "March 2025, up to Kanas and Altay — Altay anchors this northern Xinjiang journey on the map."
 photos: []
 tags: [新疆, 阿勒泰, 喀纳斯, 新疆线, "2025"]
 ---

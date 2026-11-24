@@ -1,15 +1,19 @@
 ---
 title: "扬州｜2021 年夏天"
+titleEn: "Yangzhou | Summer 2021"
 province: "江苏省"
+provinceEn: "Jiangsu"
 prefecture: "扬州市"
 city: "扬州"
+cityEn: "Yangzhou"
 coordinates: [119.4127, 32.3932]
 status: "visited"
 precision: "month"
 visited: [2021-07-01]
 journeys:
-  - { id: "jiangsu-2021", name: "2021 江苏之行", order: 2, date: 2021-07-01 }
+  - { id: "jiangsu-2021", name: "2021 江苏之行", nameEn: "2021 Jiangsu Trip", order: 2, date: 2021-07-01 }
 summary: "2021 年 7 月，与南京一起构成那次江苏之行。"
+summaryEn: "July 2021, paired with Nanjing on that Jiangsu trip."
 photos: []
 tags: [江苏, 夏天, "2021"]
 ---
