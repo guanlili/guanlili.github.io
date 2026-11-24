@@ -1,6 +1,9 @@
 // lili Blog — core script (all pages).
-// Theme toggle · back-to-top · responsive tables/videos · lazy images.
+// Theme toggle · language toggle · back-to-top · responsive tables/videos · lazy images.
 // Article features (TOC/lightbox/code/mermaid/progress) and search load on demand.
+
+// UI-string lookup from window.__I18N__ (injected by BaseLayout).
+var T = function (key) { return window.__T ? window.__T(key) : key; };
 
 // ===== Unified scroll handler (single rAF loop) =====
 if (!window._scrollCallbacks) {
@@ -56,7 +59,7 @@ function initThemeToggle() {
   function reflect(dark) {
     iconSvg.innerHTML = '<use href="#icon-' + (dark ? 'sun' : 'moon') + '"></use>';
     btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
-    btn.setAttribute('aria-label', dark ? '切换到浅色模式' : '切换到暗色模式');
+    btn.setAttribute('aria-label', dark ? T('themeToLight') : T('themeToDark'));
   }
   reflect(document.documentElement.getAttribute('data-theme') === 'dark');
 
@@ -72,7 +75,7 @@ function initThemeToggle() {
           var dark = e.matches;
           currentIconSvg.innerHTML = '<use href="#icon-' + (dark ? 'sun' : 'moon') + '"></use>';
           currentBtn.setAttribute('aria-pressed', dark ? 'true' : 'false');
-          currentBtn.setAttribute('aria-label', dark ? '切换到浅色模式' : '切换到暗色模式');
+          currentBtn.setAttribute('aria-label', dark ? T('themeToLight') : T('themeToDark'));
         }
       }
     });
@@ -91,6 +94,62 @@ function initThemeToggle() {
     reflect(dark);
     var meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', dark ? '#15130e' : '#f1ede3');
+  });
+}
+
+// ===== UI language toggle (zh ⇄ en) =====
+// <html data-lang="en"> shows .t-en spans (see base.less); default zh carries
+// no attribute. Static text swaps via CSS; [data-tt-*] attribute pairs swap here.
+function currentLang() {
+  return document.documentElement.getAttribute('data-lang') === 'en' ? 'en' : 'zh';
+}
+
+function applyI18nAttrs() {
+  var isEn = currentLang() === 'en';
+  document.querySelectorAll('[data-tt]').forEach(function (el) {
+    (el.getAttribute('data-tt') || '').split(',').forEach(function (attr) {
+      attr = attr.trim();
+      if (!attr) return;
+      var pair = (el.getAttribute('data-tt-' + attr) || '').split('|');
+      if (pair.length < 2) return;
+      el.setAttribute(attr, isEn ? pair[1] : pair[0]);
+    });
+  });
+  // Reflect the current language on the toggle (fresh DOM after view swaps).
+  var langBtn = document.getElementById('lang-toggle-btn');
+  if (langBtn) langBtn.setAttribute('aria-pressed', isEn ? 'true' : 'false');
+}
+
+function initLangToggle() {
+  var btn = document.getElementById('lang-toggle-btn');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    var next = currentLang() === 'en' ? 'zh' : 'en';
+    var html = document.documentElement;
+    if (next === 'en') {
+      html.setAttribute('data-lang', 'en');
+      html.setAttribute('lang', 'en');
+    } else {
+      html.removeAttribute('data-lang');
+      html.setAttribute('lang', 'zh-CN');
+    }
+    try { localStorage.setItem('lang', next); } catch (e) {}
+    applyI18nAttrs();
+    document.dispatchEvent(new CustomEvent('lang-change', { detail: { lang: next } }));
+  });
+}
+
+// Keep JS-managed strings in sync after a live toggle (theme aria + tools page).
+if (!window._langChangeListenerAdded) {
+  window._langChangeListenerAdded = true;
+  document.addEventListener('lang-change', function () {
+    var btn = document.getElementById('theme-toggle-btn');
+    if (btn) {
+      var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      btn.setAttribute('aria-label', dark ? T('themeToLight') : T('themeToDark'));
+    }
+    if (window.__liliRefreshToolsLang) window.__liliRefreshToolsLang();
+    if (window.__liliRefreshSkillsLang) window.__liliRefreshSkillsLang();
   });
 }
 
@@ -129,7 +188,7 @@ function initLightbox() {
     overlay = document.createElement('div');
     overlay.className = 'img-lightbox';
     overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-label', '图片放大');
+    overlay.setAttribute('aria-label', T('lightboxLabel'));
     var img = document.createElement('img');
     img.src = src;
     img.alt = alt || '';
@@ -175,6 +234,9 @@ function initResponsiveTables() {
     if (table.parentNode.classList.contains('table-responsive')) return;
     var wrapper = document.createElement('div');
     wrapper.className = 'table-responsive';
+    wrapper.setAttribute('role', 'region');
+    wrapper.setAttribute('aria-label', T('tableScrollHint'));
+    wrapper.tabIndex = 0;
     table.parentNode.insertBefore(wrapper, table);
     wrapper.appendChild(table);
     table.classList.add('table');
@@ -208,6 +270,7 @@ function initToolsStack() {
   var viewButtons = Array.prototype.slice.call(document.querySelectorAll('[data-view]'));
   var cards = Array.prototype.slice.call(document.querySelectorAll('[data-tool-card]'));
   var pinnedCards = Array.prototype.slice.call(document.querySelectorAll('[data-pinned-card]'));
+  var stars = Array.prototype.slice.call(document.querySelectorAll('[data-tool-star]'));
   var sections = Array.prototype.slice.call(document.querySelectorAll('[data-stage-section]'));
   var pinnedSection = document.querySelector('[data-pinned-section]');
   var workspace = document.querySelector('[data-tools-workspace]');
@@ -217,6 +280,9 @@ function initToolsStack() {
   var currentStage = activeButton ? activeButton.getAttribute('data-filter') || 'all' : 'all';
   var pinnedLimit = 9;
   var storageKey = 'lili-tools-clicks';
+  var pinsKey = 'lili-tools-pinned';
+
+  document.documentElement.classList.add('tools-star-ready');
 
   function isVisibleTool(el) {
     return !el.hidden;
@@ -240,10 +306,53 @@ function initToolsStack() {
     return Number(clicks[card.dataset.toolKey || ''] || 0);
   }
 
+  function readPins() {
+    try {
+      return JSON.parse(localStorage.getItem(pinsKey) || '{}');
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function writePins(pins) {
+    try {
+      localStorage.setItem(pinsKey, JSON.stringify(pins));
+    } catch (e) {}
+  }
+
+  function pinTime(card, pins) {
+    return Number(pins[card.dataset.toolKey || ''] || 0);
+  }
+
+  function syncStarStates() {
+    var pins = readPins();
+    stars.forEach(function (star) {
+      var card = star.closest('[data-tool-card]');
+      var pinned = !!card && !!pins[card.dataset.toolKey];
+      star.classList.toggle('is-pinned', pinned);
+      star.setAttribute('aria-pressed', pinned ? 'true' : 'false');
+      star.setAttribute('title', pinned ? T('unpinTool') : T('pinTool'));
+    });
+  }
+
+  function togglePin(card) {
+    var key = card.dataset.toolKey;
+    if (!key) return;
+    var pins = readPins();
+    if (pins[key]) delete pins[key];
+    else pins[key] = Date.now();
+    writePins(pins);
+    syncStarStates();
+    applyFilter();
+  }
+
   function updatePinnedRanking() {
     var clicks = readClicks();
+    var pins = readPins();
     var visiblePinned = pinnedCards.filter(isVisibleTool);
     visiblePinned.sort(function (a, b) {
+      var pinDiff = pinTime(b, pins) - pinTime(a, pins);
+      if (pinDiff) return pinDiff;
       var scoreDiff = clickScore(b, clicks) - clickScore(a, clicks);
       if (scoreDiff) return scoreDiff;
       var pinnedDiff = (b.dataset.defaultPinned === 'true' ? 1 : 0) - (a.dataset.defaultPinned === 'true' ? 1 : 0);
@@ -288,8 +397,8 @@ function initToolsStack() {
 
     visibleCount = Object.keys(visibleKeys).length;
     if (summary) {
-      var stageLabel = currentStage === 'all' ? '全部阶段' : currentStage;
-      summary.textContent = visibleCount + ' tools · ' + stageLabel;
+      var stageLabel = currentStage === 'all' ? T('toolsSummaryAll') : currentStage;
+      summary.textContent = T('toolsSummary').replace('{n}', String(visibleCount)).replace('{label}', stageLabel);
     }
     if (empty) empty.hidden = visibleCount > 0;
   }
@@ -326,7 +435,29 @@ function initToolsStack() {
       writeClicks(clicks);
     });
   });
+  stars.forEach(function (star) {
+    star.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var card = star.closest('[data-tool-card]');
+      if (card) togglePin(card);
+    });
+    star.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      e.stopPropagation();
+      var card = star.closest('[data-tool-card]');
+      if (card) togglePin(card);
+    });
+  });
+  syncStarStates();
   applyFilter();
+
+  // Refresh star titles + the summary line when the UI language toggles.
+  window.__liliRefreshToolsLang = function () {
+    syncStarStates();
+    applyFilter();
+  };
 }
 
 // ===== Search overlay — loads on first interaction =====
@@ -387,16 +518,29 @@ var _pageInited = false;
 function initPage() {
   initToolsStack();
   initSearchFromUrl();
+  applyI18nAttrs();
   if (_pageInited) return;
   _pageInited = true;
   initBackToTop();
   initThemeToggle();
+  initLangToggle();
   initNavToggle();
   initLightbox();
   initResponsiveTables();
   initResponsiveVideos();
   initLazyImages();
 }
+
+// Carry the saved language onto the incoming document before it is displayed,
+// so View Transitions never flash the wrong language.
+document.addEventListener('astro:before-swap', function (e) {
+  try {
+    if (localStorage.getItem('lang') === 'en') {
+      e.newDocument.documentElement.setAttribute('data-lang', 'en');
+      e.newDocument.documentElement.setAttribute('lang', 'en');
+    }
+  } catch (err) {}
+});
 
 document.addEventListener('astro:after-swap', function () {
   applyStoredTheme();

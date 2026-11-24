@@ -9,7 +9,7 @@ export default function imageCacheIntegration() {
     name: "image-cache",
     hooks: {
       "astro:build:start": async () => {
-        await preheat("src/content/blog");
+        await preheat(["src/content/blog", "src/content/footprints"]);
       },
     },
   };

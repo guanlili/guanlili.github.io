@@ -117,7 +117,7 @@
 .prefecture-region.active-region path { fill: color-mix(in srgb, var(--accent) 42%, var(--paper)); stroke: var(--accent-ink); stroke-width: 1.1; outline: none; }
 .prefecture-label { fill: var(--ink-3); stroke: color-mix(in srgb, var(--paper) 94%, transparent); stroke-width: 1.8; paint-order: stroke fill; font-family: var(--serif); font-size: var(--prefecture-label-size, 4.2px); font-weight: 600; text-anchor: middle; pointer-events: none; }
 .prefecture-region:not(.visited) .prefecture-label { opacity: .72; font-weight: 500; }
-.prefecture-region.visited .prefecture-label { fill: var(--accent-ink); font-weight: 700; }
+.prefecture-region.visited .prefecture-label { fill: var(--accent-ink); font-weight: 700; font-size: var(--prefecture-visited-label-size, var(--prefecture-label-size, 4.2px)); }
 .map-canvas.is-loading-prefectures .prefecture-layer { opacity: .35; }
 /* 行程线：chip 栏 + 连线图层 */
 .map-journey-bar { position: relative; z-index: 3; display: flex; align-items: center; gap: 14px; padding: 13px 0 3px; }
@@ -259,8 +259,8 @@
   .map-title strong { font-size: 19px; }
   .map-toolbar { margin-top: 11px; gap: 12px; justify-content: flex-start; }
   .map-toolbar button { margin-left: 0; }
-  .china-map { min-height: 270px; }
   .city-label { font-size: 13px; }
+  .prefecture-region:not(.visited) .prefecture-label { display: none; }
   .city-point.status-home .city-label,
   .city-point.status-lived .city-label { font-size: 14px; }
   .place-list { grid-auto-columns: 82vw; }
@@ -285,6 +285,9 @@
 .archive-filter-group > span { margin-right: 3px; font-family: var(--mono); font-size: 9px; letter-spacing: .16em; color: var(--ink-4); }
 .archive-filter-group button, .archive-filter-state button { min-height: 32px; appearance: none; padding: 0 10px; border: 1px solid var(--rule); background: transparent; color: var(--ink-3); font-family: var(--mono); font-size: 9px; letter-spacing: .06em; cursor: pointer; }
 .archive-filter-group button:hover, .archive-filter-group button.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); color: var(--accent); }
+.archive-filter-group button small { margin-left: 5px; font-size: 8px; color: var(--ink-4); }
+.archive-filter-group button.active small { color: inherit; }
+.archive-filter-group button:disabled { border-style: dashed; border-color: var(--rule); background: transparent; color: var(--ink-4); cursor: not-allowed; opacity: .55; }
 .archive-filter-state { display: flex; align-items: center; justify-content: flex-end; gap: 9px; white-space: nowrap; }
 .archive-filter-state span { font-family: var(--mono); font-size: 9px; color: var(--accent); }
 .archive-filter-state button { border: 0; border-bottom: 1px solid var(--rule); padding: 0 2px; }
@@ -369,6 +372,16 @@
 .side-block ol { margin: 0; padding: 0; list-style: none; }
 .side-block li { margin: 7px 0; font-family: var(--mono); font-size: 10.5px; line-height: 1.5; color: var(--ink-3); }
 .side-block li.home-period { color: var(--accent); font-weight: 600; letter-spacing: .08em; }
+.footprint-locator { margin: 0; }
+.footprint-locator svg { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; border: 1px solid var(--rule-soft); background: var(--paper); }
+.footprint-locator figcaption { margin-top: 8px; font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em; color: var(--ink-3); }
+.locator-provinces path { fill: color-mix(in srgb, var(--paper) 69%, #94aaa4); stroke: color-mix(in srgb, var(--paper) 62%, var(--ink)); stroke-width: 1; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.locator-provinces path.current { fill: color-mix(in srgb, var(--accent) 34%, var(--paper)); }
+.locator-route { fill: none; stroke: var(--accent-ink); stroke-width: 1.3; stroke-dasharray: 4 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; opacity: .8; }
+.locator-stop { fill: var(--paper); stroke: var(--accent-ink); stroke-width: 1.3; vector-effect: non-scaling-stroke; transition: fill .16s ease; }
+.footprint-locator a:hover .locator-stop, .footprint-locator a:focus-visible .locator-stop { fill: var(--accent); }
+.locator-here { fill: var(--accent); stroke: var(--paper); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.locator-here-ring { fill: color-mix(in srgb, var(--accent) 16%, transparent); stroke: var(--accent); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .footprint-tags { display: flex; flex-wrap: wrap; gap: 8px 12px; font-family: var(--mono); font-size: 10px; color: var(--ink-3); }
 .footprint-journey-stops > strong { display: block; margin-bottom: 12px; font-family: var(--serif); font-size: 17px; color: var(--ink); }
 .footprint-journey-stops li a { display: flex; align-items: center; gap: 9px; color: var(--ink-3); }
@@ -422,7 +435,7 @@
 .photo-grid figcaption a, .photo-grid figcaption small { flex-shrink: 0; font-family: var(--mono); font-size: 8.5px; color: var(--ink-4); border: 0; }
 @media (max-width: 560px) { .photo-grid { grid-template-columns: 1fr; } .photo-grid figure:first-child:nth-last-child(1) { grid-column: auto; } }
 
-.photo-lightbox { width: min(1100px, calc(100vw - 36px)); max-width: none; height: min(86vh, 800px); padding: 0; border: 1px solid color-mix(in srgb, var(--paper) 30%, transparent); background: #111; color: #fff; overflow: hidden; }
+.photo-lightbox { width: min(1100px, calc(100vw - 36px)); max-width: none; height: min(86vh, 800px); padding: 0; overscroll-behavior: contain; touch-action: pan-y pinch-zoom; border: 1px solid color-mix(in srgb, var(--paper) 30%, transparent); background: #111; color: #fff; overflow: hidden; }
 .photo-lightbox::backdrop { background: rgba(0, 0, 0, .84); backdrop-filter: blur(4px); }
 .photo-lightbox[open] { display: grid; grid-template-columns: 54px 1fr 54px; align-items: center; }
 .photo-lightbox figure { min-width: 0; height: 100%; margin: 0; display: grid; grid-template-rows: 1fr auto; align-items: center; }
