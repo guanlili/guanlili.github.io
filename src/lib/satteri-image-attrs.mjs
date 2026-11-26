@@ -1,7 +1,7 @@
 import { defineMdastPlugin } from "satteri";
 import { loadCache, getCached } from "./image-cache.mjs";
+import { COS_HOST, cosResized, cosSrcset } from "./cos-image.mjs";
 
-const COS_HOST = "blog-1258476669.cos.ap-beijing.myqcloud.com";
 const SRCSET_WIDTHS = [480, 800, 1200];
 const SIZES_ATTR = "(max-width: 768px) 100vw, 880px";
 
@@ -11,13 +11,11 @@ const escapeAttr = (value) =>
 // GIF 缩略会被 COS 输出成静态图（丢动画），一律不缩。
 const isGif = (src) => /\.gif(\?|$)/i.test(src);
 
+// 候选档位和原图本身，共用 cos-image.mjs 的 WebP 缩略图逻辑。
 function buildSrcsetAttrs(src, dim, sizes) {
-  const candidates = SRCSET_WIDTHS.filter((w) => w < dim.w);
-  if (candidates.length < 2) return null;
-  const sep = src.includes("?") ? "&" : "?";
-  const parts = candidates.map((w) => `${escapeAttr(`${src}${sep}imageMogr2/thumbnail/${w}x`)} ${w}w`);
-  parts.push(`${escapeAttr(src)} ${dim.w}w`);
-  return `srcset="${parts.join(", ")}" sizes="${escapeAttr(sizes)}"`;
+  const srcset = cosSrcset(src, dim.w, SRCSET_WIDTHS);
+  if (!srcset) return null;
+  return `srcset="${escapeAttr(srcset)}" sizes="${escapeAttr(sizes)}"`;
 }
 
 // 手写 <img> 常带 Jekyll 时代的百分比宽度（width="50%"），
@@ -64,7 +62,7 @@ export default function satteriImageAttrs() {
     },
     // 兜底：Markdown 里手写的裸 <img>（Jekyll 时代遗留，常带 zoom 样式）
     // 不经过 image 节点路径。补 lazy；COS 大图按缓存尺寸上完整 srcset
-    // （无缓存时退回固定 1600x 单档止损）。
+    // （无缓存时退回 1600x 只缩不放的单档止损）。
     html(node) {
       if (typeof node.value !== "string" || !/^<img\s/i.test(node.value.trim())) return;
       let tag = node.value.trim();
@@ -86,8 +84,9 @@ export default function satteriImageAttrs() {
         if (srcset) {
           tag = tag.replace(/^<img\s/i, `<img ${srcset} `);
         } else {
-          const sep = rawSrc.includes("?") ? "&" : "?";
-          tag = tag.replace(srcMatch[0], `src="${rawSrc}${sep}imageMogr2/thumbnail/1600x"`);
+          // 没有可用尺寸时退回单档止损；`>` 只缩不放，避免把小图放大。
+          const resized = cosResized(rawSrc, 1600);
+          if (resized) tag = tag.replace(srcMatch[0], `src="${resized}"`);
         }
       }
       if (tag !== node.value.trim()) return { type: "html", value: tag };
