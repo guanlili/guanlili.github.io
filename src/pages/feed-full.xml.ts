@@ -8,6 +8,10 @@ import type { APIContext } from "astro";
 import { excerpt, getPosts, type LoadedPost } from "../lib/posts";
 import { SITE } from "../consts";
 
+// Every item carries a whole rendered article, and with all posts the feed came
+// to 1.5MB per fetch. Readers only ever need items newer than their last poll.
+const FULL_FEED_LIMIT = 20;
+
 const ABSOLUTE = (html: string) =>
   html.replace(/(\s(?:src|href)=")\/(?!\/)/g, `$1${SITE.url}/`);
 
@@ -26,7 +30,8 @@ async function mapLimit<T, R>(items: T[], limit: number, fn: (item: T) => Promis
 }
 
 export async function GET(context: APIContext) {
-  const posts = await getPosts();
+  // getPosts() returns newest first.
+  const posts = (await getPosts()).slice(0, FULL_FEED_LIMIT);
   const container = await AstroContainer.create();
 
   const items = await mapLimit(posts, 8, async (p: LoadedPost) => {

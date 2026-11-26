@@ -20,7 +20,9 @@ const { active } = Astro.props as { active?: string };
     <button class="iconbtn" type="button" id="theme-toggle-btn" title="切换暗色模式" aria-label="切换暗色模式">
       <svg class="icon" id="theme-icon-svg"><use href="#icon-moon"></use></svg>
     </button>
-    <button class="iconbtn lang-toggle" type="button" id="lang-toggle-btn" aria-pressed="false" aria-label="切换语言" data-tt="title,aria-label" data-tt-title="切换到 English|Switch to Chinese" data-tt-aria-label="切换语言|Switch language">
+    {/* The accessible name must contain the visible label ("EN" / "中"), and it
+        must not wrap it in parentheses: that still fails the label-in-name check. */}
+    <button class="iconbtn lang-toggle" type="button" id="lang-toggle-btn" aria-pressed="false" aria-label="切换语言 EN" data-tt="title,aria-label" data-tt-title="切换到 English|Switch to Chinese" data-tt-aria-label="切换语言 EN|Switch language 中">
       <span class="t-zh" data-pagefind-ignore>EN</span><span class="t-en" data-pagefind-ignore>中</span>
     </button>
     <button class="iconbtn nav-toggle" type="button" id="nav-toggle-btn" aria-label="菜单" aria-controls="primary-nav" aria-expanded="false" data-tt="aria-label" data-tt-aria-label="菜单|Menu">
