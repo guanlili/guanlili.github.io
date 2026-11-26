@@ -18,6 +18,11 @@ export const SITE = {
   since: 2019,
   locale: "zh-CN",
   avatar: "/img/avatar-ghl-ny.jpg",
+  // Smaller renditions for the places the avatar is shown small. The 1200px
+  // original only earns its bytes on the about page, where it fills a column.
+  avatarSmall: "/img/avatar-ghl-ny-240.webp",
+  avatarMedium: "/img/avatar-ghl-ny-600.webp",
+  avatarLarge: "/img/avatar-ghl-ny-800.webp",
   role: "SOFTWARE ENG · UX",
   bio: "热爱技术与生活，简单乐观，爱创造。Web & Mobile Lover，业余写代码、做菜、看星星。",
   bioEn:

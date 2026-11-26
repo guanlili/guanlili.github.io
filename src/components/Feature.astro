@@ -28,7 +28,7 @@ const cover = coverSrc ? coverImage(coverSrc) : undefined;
     <p class="excerpt">{excerpt(post.entry.body ?? "", 180)}</p>
     <div class="byline">
       <span class="author">
-        <img src={SITE.avatar} alt="" />
+        <img src={SITE.avatarSmall} alt="" width="240" height="240" />
         <span>{SITE.author}</span>
       </span>
       <span class="sep"></span>
