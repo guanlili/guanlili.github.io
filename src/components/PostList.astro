@@ -5,8 +5,11 @@ import { excerpt, readingStats } from "../lib/posts";
 interface Props {
   posts: LoadedPost[];
   offset?: number; // running index of the first item (for the №)
+  // Title heading level, picked so the titles follow the heading above them.
+  headingLevel?: 3 | 4;
 }
-const { posts, offset = 0 } = Astro.props;
+const { posts, offset = 0, headingLevel = 4 } = Astro.props;
+const Title = `h${headingLevel}`;
 const pad2 = (n: number) => String(n).padStart(2, "0");
 ---
 <div class="posts">
@@ -26,7 +29,7 @@ const pad2 = (n: number) => String(n).padStart(2, "0");
               ))}
             </div>
           )}
-          <h4><a href={p.route.path}>{p.entry.data.title}</a></h4>
+          <Title><a href={p.route.path}>{p.entry.data.title}</a></Title>
           {p.entry.data.subtitle && <p class="dek">{p.entry.data.subtitle}</p>}
           <p class="preview">{excerpt(p.entry.body ?? "")}</p>
         </div>

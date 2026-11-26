@@ -81,7 +81,7 @@ const cover = project.data.cover ? coverImage(project.data.cover) : undefined;
 
       <aside class="portfolio-case-side">
         <div class="side-block">
-          <h5>Tech Stack</h5>
+          <h2>Tech Stack</h2>
           <div class="case-tags">
             {project.data.tags.map((tag) => <span>{tag}</span>)}
           </div>
@@ -89,7 +89,7 @@ const cover = project.data.cover ? coverImage(project.data.cover) : undefined;
 
         {(links.github || links.demo || links.article) && (
           <div class="side-block">
-            <h5>Links</h5>
+            <h2>Links</h2>
             <div class="case-links">
               {links.github && <a href={links.github} target="_blank" rel="noopener">GitHub ↗</a>}
               {links.demo && <a href={links.demo} target="_blank" rel="noopener">Demo ↗</a>}
@@ -100,7 +100,7 @@ const cover = project.data.cover ? coverImage(project.data.cover) : undefined;
 
         {toc.length > 0 && (
           <div class="side-block case-toc">
-            <h5>Case Study</h5>
+            <h2>Case Study</h2>
             <ol>
               {toc.map((h) => (
                 <li data-depth={h.depth}><a href={`#${h.slug}`}>{h.text}</a></li>
