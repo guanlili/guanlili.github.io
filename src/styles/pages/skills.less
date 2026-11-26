@@ -141,6 +141,10 @@
 }
 .skill-cat-rail button:hover strong,
 .skill-cat-rail button.active strong { color: var(--accent); }
+// On the highlighted background the regular accent only reaches 4.09:1 for the
+// small count badge, so the active category uses the darker accent ink.
+.skill-cat-rail button:hover em,
+.skill-cat-rail button.active em { color: var(--accent-ink); }
 .skill-cat-rail em {
   align-self: flex-start;
   font-family: var(--mono);
@@ -219,7 +223,8 @@
   .skills-result { font-size: 11px; }
 }
 
-// Command badge — the core interactive element
+// Command badge — the core interactive element. The text is small, so it uses
+// the darker accent ink: the regular accent only reaches 4.28:1 on the tinted chip.
 .skill-cmd {
   display: inline-flex;
   align-items: center;
@@ -227,7 +232,7 @@
   font-family: var(--mono);
   font-size: 11.5px;
   letter-spacing: .04em;
-  color: var(--accent);
+  color: var(--accent-ink);
   background: color-mix(in srgb, var(--accent) 9%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
   border-radius: var(--radius-sm);

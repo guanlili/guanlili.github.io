@@ -542,7 +542,8 @@ html.tools-star-ready .tool-star { display: inline-flex; }
 }
 
 .portfolio-cover { margin: 36px 0 0; border: 1px solid var(--rule); background: var(--paper); padding: 12px; }
-.portfolio-cover img { display: block; width: 100%; max-height: 520px; object-fit: cover; }
+// `height: auto` keeps the width/height attributes on the cover from acting as a fixed height.
+.portfolio-cover img { display: block; width: 100%; height: auto; max-height: 520px; object-fit: cover; }
 
 .portfolio-meta-strip {
   display: grid;
@@ -565,7 +566,7 @@ html.tools-star-ready .tool-star { display: inline-flex; }
 .portfolio-case-body { max-width: 720px; }
 .portfolio-case-side { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 26px; }
 .portfolio-case-side .side-block { border-top: 1px solid var(--rule); padding-top: 16px; }
-.portfolio-case-side h5 { margin: 0 0 14px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-3); }
+.portfolio-case-side h2 { margin: 0 0 14px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-3); }
 .case-tags { display: flex; flex-wrap: wrap; gap: 8px 12px; }
 .case-tags span { font-family: var(--mono); font-size: 10.5px; color: var(--accent); }
 .case-tags span::before { content: "#"; opacity: .6; }

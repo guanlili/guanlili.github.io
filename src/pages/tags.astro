@@ -129,10 +129,10 @@ const ymd = (d: Date) => `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.
 
     {featured.map((t) => (
       <section class="tag-section" id={encodeURIComponent(t)}>
-        <h3>
+        <h2>
           <span class="pound">#</span>{t}
           <span class="count"><span class="t-zh" data-pagefind-ignore>{byTag.get(t)!.length} 篇</span><span class="t-en" data-pagefind-ignore>{byTag.get(t)!.length} POSTS</span></span>
-        </h3>
+        </h2>
         {TAG_LEDE[t] && (
           <p class="lede">
             <span class="t-zh" data-pagefind-ignore>{TAG_LEDE[t].zh}</span><span class="t-en" data-pagefind-ignore>{TAG_LEDE[t].en}</span>
