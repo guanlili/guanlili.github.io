@@ -254,6 +254,8 @@ const journeys = [...journeyAggregates.values()]
             leaderStartX: x + 5, leaderStartY: y - 5, leaderEndX: x + 10, leaderEndY: y - 8,
           };
           const markerLabel = place.status === "home" ? "家" : place.status === "lived" ? "故" : "";
+          // The badge and the city name are both visible text, so the accessible
+          // name has to carry them in that order (label in name).
           return (
             <a
               href={`/footprints/${place.slug}/`}
@@ -267,12 +269,12 @@ const journeys = [...journeyAggregates.values()]
               data-city={place.city}
               data-visited={place.visited.join(",")}
               data-journeys={place.journeys.map((journey) => journey.id).join(",")}
-              aria-label={place.status === "home" ? `查看常驻地${place.city}（家）` : place.status === "lived" ? `查看${place.city}足迹（故）` : `查看${place.city}足迹`}
+              aria-label={place.status === "home" ? `家 · ${place.city}（常驻地）` : place.status === "lived" ? `故 · ${place.city}（曾经居住）` : `查看${place.city}足迹`}
               data-tt="aria-label"
               data-tt-aria-label={place.status === "home"
-                ? `查看常驻地${place.city}（家）|Home base: ${place.city}`
+                ? `家 · ${place.city}（常驻地）|家 · ${place.city} — Home base`
                 : place.status === "lived"
-                  ? `查看${place.city}足迹（故）|Once home: ${place.city}`
+                  ? `故 · ${place.city}（曾经居住）|故 · ${place.city} — Once home`
                   : `查看${place.city}足迹|Footprints: ${place.city}`}
               tabindex="-1"
             >
