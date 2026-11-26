@@ -26,10 +26,10 @@ const recent = (await getPosts()).slice(0, 4);
 
     <section class="nf-recents">
       <header class="section-head">
-        <h3><span class="t-zh" data-pagefind-ignore>不如读读这些</span><span class="t-en" data-pagefind-ignore>Maybe read these instead</span></h3>
+        <h2><span class="t-zh" data-pagefind-ignore>不如读读这些</span><span class="t-en" data-pagefind-ignore>Maybe read these instead</span></h2>
         <span class="count"><span class="t-zh" data-pagefind-ignore>最新 <em>{recent.length}</em> 篇</span><span class="t-en" data-pagefind-ignore>Latest <em>{recent.length}</em></span></span>
       </header>
-      <PostList posts={recent} />
+      <PostList posts={recent} headingLevel={3} />
     </section>
 
     <nav class="pager-nav">

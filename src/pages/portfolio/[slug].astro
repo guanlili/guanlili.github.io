@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import "../../styles/pages/portfolio.less";
 import { SITE } from "../../consts";
+import { coverImage } from "../../lib/footprint-media";
 
 export async function getStaticPaths() {
   const projects = await getCollection("portfolio");
@@ -19,6 +20,8 @@ const pad2 = (n: number) => String(n).padStart(2, "0");
 const ymd = `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.getDate())}`;
 const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 const links = project.data.links ?? {};
+// The cover gets a COS srcset when its dimensions are cached.
+const cover = project.data.cover ? coverImage(project.data.cover) : undefined;
 ---
 <BaseLayout
   active="portfolio"
@@ -45,9 +48,19 @@ const links = project.data.links ?? {};
       </div>
     </section>
 
-    {project.data.cover && (
+    {cover && (
       <figure class="portfolio-cover">
-        <img src={project.data.cover} alt="" loading="eager" decoding="async" fetchpriority="high" />
+        <img
+          src={cover.src}
+          width={cover.width}
+          height={cover.height}
+          srcset={cover.srcset}
+          sizes={cover.srcset ? "(min-width: 1744px) 1440px, 84vw" : undefined}
+          alt=""
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+        />
       </figure>
     )}
 
@@ -68,7 +81,7 @@ const links = project.data.links ?? {};
 
       <aside class="portfolio-case-side">
         <div class="side-block">
-          <h5>Tech Stack</h5>
+          <h2>Tech Stack</h2>
           <div class="case-tags">
             {project.data.tags.map((tag) => <span>{tag}</span>)}
           </div>
@@ -76,7 +89,7 @@ const links = project.data.links ?? {};
 
         {(links.github || links.demo || links.article) && (
           <div class="side-block">
-            <h5>Links</h5>
+            <h2>Links</h2>
             <div class="case-links">
               {links.github && <a href={links.github} target="_blank" rel="noopener">GitHub ↗</a>}
               {links.demo && <a href={links.demo} target="_blank" rel="noopener">Demo ↗</a>}
@@ -87,7 +100,7 @@ const links = project.data.links ?? {};
 
         {toc.length > 0 && (
           <div class="side-block case-toc">
-            <h5>Case Study</h5>
+            <h2>Case Study</h2>
             <ol>
               {toc.map((h) => (
                 <li data-depth={h.depth}><a href={`#${h.slug}`}>{h.text}</a></li>

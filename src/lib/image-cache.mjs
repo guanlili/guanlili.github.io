@@ -143,9 +143,18 @@ async function probeAll(urls) {
   return results;
 }
 
+// Markdown directories that are scanned for remote images. Portfolio is in
+// here because its covers are only referenced from its own frontmatter.
+export const IMAGE_CONTENT_DIRS = [
+  "src/content/blog",
+  "src/content/footprints",
+  "src/content/portfolio",
+];
+
 /**
  * Pre-build step: scan all markdown, probe remote image dimensions, save cache.
- * Call from an Astro integration hook before the build.
+ * `npm run verify` runs it first from scripts/preheat-images.mjs; the hook in
+ * astro-image-cache.mjs is the fallback for a direct `astro build` or dev.
  */
 export async function preheat(contentDirs) {
   loadCache();
