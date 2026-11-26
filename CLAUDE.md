@@ -1,12 +1,12 @@
 # CLAUDE.md — guanlili.github.io
 
-个人博客 + 作品集站点。Astro v6（静态生成），内容是 Markdown，`master` 分支即生产；`master` 一更新，GitHub Actions 的 build + deploy 自动跑。**合并 = 上线。**
+个人博客 + 作品集站点。Astro v7（静态生成），内容是 Markdown，`master` 分支即生产；`master` 一更新，GitHub Actions 的 build + deploy 自动跑。**合并 = 上线。**
 
 ## 常用命令
 
 - `npm run dev` — 本地预览（http://localhost:4321/ ，页面 URL 结尾带斜杠）
 - `npm run build` — 构建 + pagefind 搜索索引
-- `npm run verify` — 内容检查 + astro check + build + dist 检查（提 PR 前跑一遍最稳）
+- `npm run verify` — 内容检查 + 图片尺寸探测 + astro check + build + dist 检查（提 PR 前跑一遍最稳）
 
 ## Git 工作流（重要）
 

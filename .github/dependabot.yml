@@ -1,0 +1,21 @@
+version: 2
+# Weekly dependency updates, grouped so the repo gets one PR per ecosystem
+# instead of one per package. `npm run verify` runs on each PR, and merging is
+# what ships, so read the diff before merging.
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 2
+    groups:
+      npm-dependencies:
+        patterns: ["*"]
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 2
+    groups:
+      github-actions:
+        patterns: ["*"]
