@@ -31,13 +31,13 @@
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
-    "@astrojs/sitemap": "^3.7.3",
-    "astro": "^7.2.9",
-    "probe-image-size": "^7.4.0"
+    "@astrojs/sitemap": "^3.7.6",
+    "astro": "^7.4.13",
+    "probe-image-size": "^7.5.0"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.10",
-    "less": "^4.9.0",
-    "pagefind": "^1.5.2"
+    "@astrojs/check": "^0.9.12",
+    "less": "^4.9.1",
+    "pagefind": "^1.6.0"
   }
 }
