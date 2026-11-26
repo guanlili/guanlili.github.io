@@ -3,11 +3,18 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import "../../styles/pages/portfolio.less";
 import { SITE } from "../../consts";
+import { coverImage } from "../../lib/footprint-media";
 
 const projects = (await getCollection("portfolio")).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 );
 const featured = projects.filter((p) => p.data.featured);
+// Covers get a COS srcset when their dimensions are cached.
+const featuredItems = featured.map((project, index) => ({
+  project,
+  index,
+  cover: project.data.cover ? coverImage(project.data.cover) : undefined,
+}));
 const types = [...new Set(projects.map((p) => p.data.type))];
 const tagCount = new Set(projects.flatMap((p) => p.data.tags)).size;
 const pad2 = (n: number) => String(n).padStart(2, "0");
@@ -53,21 +60,32 @@ const slugOf = (id: string) => id.replace(/\.(md|markdown)$/i, "");
     {featured.length > 0 && (
       <section class="portfolio-featured">
         <header class="section-head">
-          <h3><span class="t-zh" data-pagefind-ignore>精选作品</span><span class="t-en" data-pagefind-ignore>Featured</span></h3>
+          <h2><span class="t-zh" data-pagefind-ignore>精选作品</span><span class="t-en" data-pagefind-ignore>Featured</span></h2>
           <span class="latin">Featured Works</span>
           <span class="count"><span class="t-zh" data-pagefind-ignore><em>{featured.length}</em> 个 / 共 {projects.length} 个</span><span class="t-en" data-pagefind-ignore><em>{featured.length}</em> of {projects.length}</span></span>
         </header>
         <div class="featured-grid">
-          {featured.map((project, index) => (
+          {featuredItems.map(({ project, index, cover }) => (
             <a class="featured-work" href={`/portfolio/${slugOf(project.id)}/`}>
-              {project.data.cover && <img src={project.data.cover} alt="" loading={index === 0 ? "eager" : "lazy"} />}
+              {cover && (
+                <img
+                  src={cover.src}
+                  width={cover.width}
+                  height={cover.height}
+                  srcset={cover.srcset}
+                  sizes={cover.srcset ? "(max-width: 900px) 100vw, (min-width: 1744px) 736px, 40vw" : undefined}
+                  alt=""
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+              )}
               <div class="body">
                 <div class="meta">
                   <span><span class="t-zh" data-pagefind-ignore>第 {pad2(index + 1)} 件</span><span class="t-en" data-pagefind-ignore>No. {pad2(index + 1)}</span></span>
                   <span>{project.data.type}</span>
                   <span>{ymd(project.data.date)}</span>
                 </div>
-                <h2>{project.data.title}</h2>
+                <h3>{project.data.title}</h3>
                 <p>{project.data.summary}</p>
                 <div class="impact">{project.data.impact}</div>
                 <div class="tags">
@@ -82,7 +100,7 @@ const slugOf = (id: string) => id.replace(/\.(md|markdown)$/i, "");
 
     <section class="portfolio-index">
       <header class="section-head">
-        <h3><span class="t-zh" data-pagefind-ignore>项目索引</span><span class="t-en" data-pagefind-ignore>Projects</span></h3>
+        <h2><span class="t-zh" data-pagefind-ignore>项目索引</span><span class="t-en" data-pagefind-ignore>Projects</span></h2>
         <span class="latin">Project Index</span>
         <span class="count"><span class="t-zh" data-pagefind-ignore><em>{projects.length}</em> 件作品</span><span class="t-en" data-pagefind-ignore><em>{projects.length}</em> Works</span></span>
       </header>

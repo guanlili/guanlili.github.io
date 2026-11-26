@@ -53,7 +53,18 @@ const host = new URL(SITE.url).host;
 
       <aside class="about-side">
         <div class="portrait">
-          <div class="img-box"><img src={SITE.avatar} alt={SITE.author} /></div>
+          <div class="img-box">
+            {/* The portrait fills its column: laptops need the 600px file,
+                2x phones the 800px one, and only 3x phones the full-size one. */}
+            <img
+              src={SITE.avatarMedium}
+              srcset={`${SITE.avatarMedium} 600w, ${SITE.avatarLarge} 800w, ${SITE.avatar} 1200w`}
+              sizes="(max-width: 980px) calc(100vw - 66px), 270px"
+              width="600"
+              height="600"
+              alt={SITE.author}
+            />
+          </div>
           <div class="caption">
             <span>Li Li </span>
             <span class="accent">No. {posts.length}</span>

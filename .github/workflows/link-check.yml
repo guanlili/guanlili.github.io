@@ -10,6 +10,11 @@ permissions:
   contents: read
   issues: write
 
+# There is one rolling report issue. While dead links remain it is updated in
+# place, and once a run finds none it is closed.
+env:
+  REPORT_SEARCH: "月度死链巡检 in:title"
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -29,7 +34,7 @@ jobs:
           if [ -s dead.txt ]; then
             echo "dead=1" >> "$GITHUB_OUTPUT"
           fi
-      - name: Open issue on dead links
+      - name: Update the report issue on dead links
         if: steps.links.outputs.dead == '1'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -44,6 +49,19 @@ jobs:
             echo
             echo "完整报告见 workflow 日志：$GITHUB_SERVER_URL/$REPO/actions/runs/$GITHUB_RUN_ID"
           } > issue-body.md
-          gh issue create \
-            --title "🔗 月度死链巡检：$(wc -l < dead.txt | tr -d ' ') 条疑似死链" \
-            --body-file issue-body.md
+          TITLE="🔗 月度死链巡检：$(wc -l < dead.txt | tr -d ' ') 条疑似死链"
+          OPEN=$(gh issue list --state open --search "$REPORT_SEARCH" --json number --jq '.[0].number')
+          if [ -n "$OPEN" ]; then
+            gh issue edit "$OPEN" --title "$TITLE" --body-file issue-body.md
+          else
+            gh issue create --title "$TITLE" --body-file issue-body.md
+          fi
+      - name: Close the report issue once the links are fixed
+        if: steps.links.outputs.dead != '1'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          OPEN=$(gh issue list --state open --search "$REPORT_SEARCH" --json number --jq '.[0].number')
+          if [ -n "$OPEN" ]; then
+            gh issue close "$OPEN" --comment "本次巡检未发现死链，自动关闭。"
+          fi
