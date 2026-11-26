@@ -60,7 +60,7 @@ const slugOf = (id: string) => id.replace(/\.(md|markdown)$/i, "");
     {featured.length > 0 && (
       <section class="portfolio-featured">
         <header class="section-head">
-          <h3><span class="t-zh" data-pagefind-ignore>精选作品</span><span class="t-en" data-pagefind-ignore>Featured</span></h3>
+          <h2><span class="t-zh" data-pagefind-ignore>精选作品</span><span class="t-en" data-pagefind-ignore>Featured</span></h2>
           <span class="latin">Featured Works</span>
           <span class="count"><span class="t-zh" data-pagefind-ignore><em>{featured.length}</em> 个 / 共 {projects.length} 个</span><span class="t-en" data-pagefind-ignore><em>{featured.length}</em> of {projects.length}</span></span>
         </header>
@@ -85,7 +85,7 @@ const slugOf = (id: string) => id.replace(/\.(md|markdown)$/i, "");
                   <span>{project.data.type}</span>
                   <span>{ymd(project.data.date)}</span>
                 </div>
-                <h2>{project.data.title}</h2>
+                <h3>{project.data.title}</h3>
                 <p>{project.data.summary}</p>
                 <div class="impact">{project.data.impact}</div>
                 <div class="tags">
@@ -100,7 +100,7 @@ const slugOf = (id: string) => id.replace(/\.(md|markdown)$/i, "");
 
     <section class="portfolio-index">
       <header class="section-head">
-        <h3><span class="t-zh" data-pagefind-ignore>项目索引</span><span class="t-en" data-pagefind-ignore>Projects</span></h3>
+        <h2><span class="t-zh" data-pagefind-ignore>项目索引</span><span class="t-en" data-pagefind-ignore>Projects</span></h2>
         <span class="latin">Project Index</span>
         <span class="count"><span class="t-zh" data-pagefind-ignore><em>{projects.length}</em> 件作品</span><span class="t-en" data-pagefind-ignore><em>{projects.length}</em> Works</span></span>
       </header>

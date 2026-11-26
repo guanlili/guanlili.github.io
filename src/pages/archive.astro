@@ -68,7 +68,7 @@ const ymd = (d: Date) => `${d.getFullYear()}.${md(d)}`;
                 <a href={p.route.path} class="entry">
                   <span class="date-cell">{ymd(p.entry.data.date)}</span>
                   <div>
-                    <h4>{p.entry.data.title}</h4>
+                    <h2>{p.entry.data.title}</h2>
                     <div class="meta-row">
                       {p.entry.data.tags.slice(0, 3).map((t) => <span class="tag">{t}</span>)}
                     </div>
